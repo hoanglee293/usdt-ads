@@ -22,46 +22,77 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
     className = ''
 }) => {
     return (
-        <div className='relative'>
-            <select
-                id={id}
-                value={value}
-                onChange={onChange}
-                disabled={disabled}
-                className={`
-                    w-full px-4 py-3 pr-10 
-                    border border-solid 
-                    focus:border-gray-300 
-                    border-theme-gray-100 
-                    rounded-full 
-                    outline-none 
-                    transition-all 
-                    bg-gray-50
-                    appearance-none
-                    cursor-pointer
-                    disabled:cursor-not-allowed
-                    ${!value && placeholder ? 'text-gray-400' : ''}
-                    ${className}
-                `}
-            >
-                {placeholder && (
-                    <option value="" disabled>
-                        {placeholder}
-                    </option>
-                )}
-                {options.map((option) => (
-                    <option key={option.value} value={option.value}>
-                        {option.label}
-                    </option>
-                ))}
-            </select>
-            <div className='absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none'>
-                <ChevronDown 
-                    size={20} 
-                    className={`text-gray-400 transition-transform ${disabled ? 'opacity-50' : ''}`}
-                />
+        <>
+            <style dangerouslySetInnerHTML={{
+                __html: `
+                    select#${id} option {
+                        padding: 12px 16px;
+                        background-color: white;
+                        color: #374151;
+                        font-size: 14px;
+                        line-height: 1.5;
+                    }
+                    select#${id} option:hover {
+                        background-color: #f3f4f6;
+                    }
+                    select#${id} option:checked {
+                        background-color: #fef3f2;
+                        color: #ec4899;
+                        font-weight: 500;
+                    }
+                    select#${id} option:disabled {
+                        color: #9ca3af;
+                        font-style: italic;
+                    }
+                `
+            }} />
+            <div className='relative'>
+                <select
+                    id={id}
+                    value={value}
+                    onChange={onChange}
+                    disabled={disabled}
+                    className={`
+                        w-full px-4 py-3 pr-10 
+                        border border-solid 
+                        focus:border-gray-300 
+                        border-theme-gray-100 
+                        rounded-full 
+                        outline-none 
+                        transition-all 
+                        bg-gray-50
+                        appearance-none
+                        cursor-pointer
+                        disabled:cursor-not-allowed
+                        text-sm
+                        font-medium
+                        ${!value && placeholder ? 'text-gray-400' : 'text-gray-700'}
+                        ${className}
+                    `}
+                >
+                    {placeholder && (
+                        <option value="" disabled className="text-gray-400">
+                            {placeholder}
+                        </option>
+                    )}
+                    {options.map((option) => (
+                        <option 
+                            key={option.value} 
+                            value={option.value}
+                            className="py-2 px-3"
+                        >
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+                <div className='absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none'>
+                    <ChevronDown 
+                        size={20} 
+                        className={`text-gray-400 transition-transform ${disabled ? 'opacity-50' : ''}`}
+                    />
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 
