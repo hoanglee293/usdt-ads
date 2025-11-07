@@ -41,6 +41,20 @@ const page = () => {
     }
   }, [profile])
 
+  // Show error toast when profile error occurs
+  useEffect(() => {
+    if (profileError) {
+      toast.error(profileError.message || 'Không thể tải thông tin profile')
+    }
+  }, [profileError])
+
+  // Show error toast when update error occurs
+  useEffect(() => {
+    if (updateError) {
+      toast.error(updateError.message || 'Có lỗi xảy ra khi cập nhật')
+    }
+  }, [updateError])
+
   // Handle edit field
   const handleEditField = (field: 'displayName' | 'birthday' | 'sex') => {
     setEditingField(field)
@@ -110,20 +124,6 @@ const page = () => {
       </div>
     )
   }
-
-  // Show error toast when profile error occurs
-  useEffect(() => {
-    if (profileError) {
-      toast.error(profileError.message || 'Không thể tải thông tin profile')
-    }
-  }, [profileError])
-
-  // Show error toast when update error occurs
-  useEffect(() => {
-    if (updateError) {
-      toast.error(updateError.message || 'Có lỗi xảy ra khi cập nhật')
-    }
-  }, [updateError])
 
   if (profileError || !profile) {
     return (

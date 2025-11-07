@@ -1,4 +1,5 @@
 import axios from "axios"
+import { useAuthStore } from "@/hooks/useAuth"
 
 const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 const axiosClient = axios.create({
@@ -31,7 +32,18 @@ axiosClient.interceptors.response.use(
         });   
         // Retry request gốc
         return axiosClient(originalRequest);
-      } catch (refreshError) {
+      } catch (refreshError: any) {
+        // Nếu refresh token trả về 419, tự động logout
+        if (refreshError?.response?.status === 419) {
+          // Chỉ logout nếu đang ở client-side
+          if (typeof window !== "undefined") {
+            useAuthStore.getState().logout();
+            // Redirect về trang login nếu chưa ở đó
+            if (window.location.pathname !== "/login") {
+              window.location.href = "/login";
+            }
+          }
+        }
         console.warn("Refresh token failed:", refreshError);
       }
     } else if (error.code === "ERR_NETWORK") {
