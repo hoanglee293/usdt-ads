@@ -5,6 +5,7 @@ import CustomDateInput from '@/components/CustomDateInput'
 import CustomSelect from '@/components/CustomSelect'
 import { UserProfile } from '@/services/AuthService'
 import { Pencil, Check, X, User2 } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 const page = () => {
   const { profile, loading: profileLoading, error: profileError } = useProfile()
@@ -21,9 +22,6 @@ const page = () => {
   const [tempDisplayName, setTempDisplayName] = useState('')
   const [tempBirthday, setTempBirthday] = useState('')
   const [tempSex, setTempSex] = useState<'man' | 'woman' | 'other'>('man')
-
-  const [error, setError] = useState('')
-  const [success, setSuccess] = useState('')
 
   // Initialize form with profile data
   useEffect(() => {
@@ -46,8 +44,6 @@ const page = () => {
   // Handle edit field
   const handleEditField = (field: 'displayName' | 'birthday' | 'sex') => {
     setEditingField(field)
-    setError('')
-    setSuccess('')
 
     if (field === 'displayName') {
       setTempDisplayName(displayName)
@@ -61,15 +57,10 @@ const page = () => {
   // Handle cancel edit
   const handleCancelEdit = () => {
     setEditingField(null)
-    setError('')
-    setSuccess('')
   }
 
   // Handle save field
   const handleSaveField = async (field: 'displayName' | 'birthday' | 'sex') => {
-    setError('')
-    setSuccess('')
-
     try {
       // Always include display_name in update (required field)
       const updateData: { display_name: string; birthday?: string; sex?: 'man' | 'woman' | 'other' } = {
@@ -79,7 +70,7 @@ const page = () => {
       if (field === 'displayName') {
         const value = tempDisplayName.trim()
         if (!value) {
-          setError('Tên hiển thị không được để trống')
+          toast.error('Tên hiển thị không được để trống')
           return
         }
         updateData.display_name = value
@@ -93,18 +84,13 @@ const page = () => {
       }
 
       await updateProfile(updateData)
-      setSuccess('Cập nhật thông tin thành công!')
+      toast.success('Cập nhật thông tin thành công!')
       setEditingField(null)
-
-      // Clear success message after 3 seconds
-      setTimeout(() => {
-        setSuccess('')
-      }, 3000)
     } catch (err: any) {
       const errorMessage = err?.message ||
         err?.response?.data?.message ||
         'Không thể cập nhật thông tin. Vui lòng thử lại.'
-      setError(errorMessage)
+      toast.error(errorMessage)
     }
   }
 
@@ -125,6 +111,20 @@ const page = () => {
     )
   }
 
+  // Show error toast when profile error occurs
+  useEffect(() => {
+    if (profileError) {
+      toast.error(profileError.message || 'Không thể tải thông tin profile')
+    }
+  }, [profileError])
+
+  // Show error toast when update error occurs
+  useEffect(() => {
+    if (updateError) {
+      toast.error(updateError.message || 'Có lỗi xảy ra khi cập nhật')
+    }
+  }, [updateError])
+
   if (profileError || !profile) {
     return (
       <div className='w-full min-h-screen flex justify-center items-center p-6'>
@@ -140,24 +140,6 @@ const page = () => {
   return (
     <div className='w-full min-h-svh flex justify-center items-center p-6 bg-[#FFFCF9] flex-1'>
       <div className='w-full max-w-2xl bg-white rounded-2xl shadow-lg p-8'>
-        {error && (
-          <div className='w-full mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm'>
-            {error}
-          </div>
-        )}
-
-        {success && (
-          <div className='w-full mb-4 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm'>
-            {success}
-          </div>
-        )}
-
-        {updateError && (
-          <div className='w-full mb-4 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm'>
-            {updateError.message || 'Có lỗi xảy ra khi cập nhật'}
-          </div>
-        )}
-
         <div className='space-y-6'>
           <div className='flex justify-center items-center bg-theme-gray-100 rounded-full p-2 w-20 h-20 mx-auto'>
             <User2 size={32} />

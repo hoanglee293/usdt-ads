@@ -2,23 +2,20 @@
 import React, { useState } from 'react'
 import { resetPasswordRequest } from '@/services/AuthService'
 import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
 
 const ForgotPasswordPage = () => {
     const [email, setEmail] = useState('')
-    const [error, setError] = useState('')
-    const [success, setSuccess] = useState('')
     const [loading, setLoading] = useState(false)
     const router = useRouter()
 
     // Handle email submission
     const handleEmailSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        setError('')
-        setSuccess('')
         setLoading(true)
 
         if (!email.trim()) {
-            setError('Vui lòng nhập email')
+            toast.error('Vui lòng nhập email')
             setLoading(false)
             return
         }
@@ -26,7 +23,7 @@ const ForgotPasswordPage = () => {
         // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(email.trim())) {
-            setError('Email không hợp lệ')
+            toast.error('Email không hợp lệ')
             setLoading(false)
             return
         }
@@ -34,13 +31,13 @@ const ForgotPasswordPage = () => {
         try {
             const response = await resetPasswordRequest(email.trim())
             if (response && response.statusCode === 200) {
-                setSuccess('Nếu email tồn tại, chúng tôi đã gửi link reset mật khẩu đến email của bạn. Vui lòng kiểm tra hộp thư và click vào link để đặt lại mật khẩu.')
+                toast.success('Nếu email tồn tại, chúng tôi đã gửi link reset mật khẩu đến email của bạn. Vui lòng kiểm tra hộp thư và click vào link để đặt lại mật khẩu.')
             }
         } catch (err: any) {
             const errorMessage = err?.message || 
                 err?.response?.data?.message || 
                 'Không thể gửi yêu cầu reset mật khẩu. Vui lòng thử lại sau.'
-            setError(errorMessage)
+            toast.error(errorMessage)
         } finally {
             setLoading(false)
         }
@@ -63,18 +60,6 @@ const ForgotPasswordPage = () => {
                     <h2 className='text-2xl font-semibold text-gray-800 mb-2'>
                         Quên mật khẩu
                     </h2>
-                    
-                    {error && (
-                        <div className='w-full mt-2 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm'>
-                            {error}
-                        </div>
-                    )}
-
-                    {success && (
-                        <div className='w-full mt-2 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm'>
-                            {success}
-                        </div>
-                    )}
 
                     <form onSubmit={handleEmailSubmit} className='w-full flex flex-col gap-4 mt-6'>
                         <div className='space-y-1'>

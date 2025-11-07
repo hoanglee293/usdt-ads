@@ -3,6 +3,7 @@ import React, { useState, useEffect, Suspense } from 'react'
 import { setNewPassword } from '@/services/AuthService'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Eye, EyeOff } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 const ChangePasswordContent = () => {
     const router = useRouter()
@@ -13,15 +14,12 @@ const ChangePasswordContent = () => {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-    
-    const [error, setError] = useState('')
-    const [success, setSuccess] = useState('')
     const [loading, setLoading] = useState(false)
 
     // Check if token exists
     useEffect(() => {
         if (!token) {
-            setError('Token không hợp lệ hoặc đã hết hạn. Vui lòng yêu cầu reset mật khẩu lại.')
+            toast.error('Token không hợp lệ hoặc đã hết hạn. Vui lòng yêu cầu reset mật khẩu lại.')
         }
     }, [token])
 
@@ -30,29 +28,27 @@ const ChangePasswordContent = () => {
         e.preventDefault()
         
         if (!token) {
-            setError('Token không hợp lệ. Vui lòng yêu cầu reset mật khẩu lại.')
+            toast.error('Token không hợp lệ. Vui lòng yêu cầu reset mật khẩu lại.')
             return
         }
 
-        setError('')
-        setSuccess('')
         setLoading(true)
 
         // Validation
         if (!password.trim()) {
-            setError('Vui lòng nhập mật khẩu mới')
+            toast.error('Vui lòng nhập mật khẩu mới')
             setLoading(false)
             return
         }
 
         if (password.length < 6) {
-            setError('Mật khẩu phải có ít nhất 6 ký tự')
+            toast.error('Mật khẩu phải có ít nhất 6 ký tự')
             setLoading(false)
             return
         }
 
         if (password !== confirmPassword) {
-            setError('Mật khẩu xác nhận không khớp')
+            toast.error('Mật khẩu xác nhận không khớp')
             setLoading(false)
             return
         }
@@ -61,7 +57,7 @@ const ChangePasswordContent = () => {
             // Sử dụng token như code trong API
             const response = await setNewPassword(token, password)
             if (response && response.statusCode === 200) {
-                setSuccess('Đặt lại mật khẩu thành công! Đang chuyển đến trang đăng nhập...')
+                toast.success('Đặt lại mật khẩu thành công! Đang chuyển đến trang đăng nhập...')
                 setTimeout(() => {
                     router.push('/login')
                 }, 2000)
@@ -70,7 +66,7 @@ const ChangePasswordContent = () => {
             const errorMessage = err?.message || 
                 err?.response?.data?.message || 
                 'Không thể đặt lại mật khẩu. Token có thể đã hết hạn. Vui lòng yêu cầu reset mật khẩu lại.'
-            setError(errorMessage)
+            toast.error(errorMessage)
         } finally {
             setLoading(false)
         }
@@ -93,18 +89,6 @@ const ChangePasswordContent = () => {
                     <h2 className='text-2xl font-semibold text-gray-800 mb-2'>
                         Đặt lại mật khẩu
                     </h2>
-                    
-                    {error && (
-                        <div className='w-full mt-2 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm'>
-                            {error}
-                        </div>
-                    )}
-
-                    {success && (
-                        <div className='w-full mt-2 p-3 bg-green-50 border border-green-200 text-green-700 rounded-lg text-sm'>
-                            {success}
-                        </div>
-                    )}
 
                     {!token ? (
                         <div className='w-full mt-6'>

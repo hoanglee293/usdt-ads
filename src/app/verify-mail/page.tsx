@@ -3,10 +3,10 @@ import React, { useState, useRef, useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { verifyEmail, generateCodeVerifyEmail } from '@/services/AuthService'
 import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
 
 const page = () => {
     const [code, setCode] = useState<string[]>(['', '', '', '', '', ''])
-    const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
     const [resendCountdown, setResendCountdown] = useState(0)
     const [resendLoading, setResendLoading] = useState(false)
@@ -61,9 +61,13 @@ const page = () => {
         try {
             await generateCodeVerifyEmail()
             setResendCountdown(60)
+            toast.success('Mã xác thực đã được gửi lại thành công!')
         } catch (err: any) {
             console.error('Error resending code:', err)
-            setError('Không thể gửi lại mã. Vui lòng thử lại sau.')
+            const errorMessage = err?.message || 
+                err?.response?.data?.message || 
+                'Không thể gửi lại mã. Vui lòng thử lại sau.'
+            toast.error(errorMessage)
         } finally {
             setResendLoading(false)
         }
@@ -80,12 +84,11 @@ const page = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        setError('')
         setLoading(true)
 
         const codeString = code.join('')
         if (codeString.length !== 6) {
-            setError('Vui lòng nhập đầy đủ 6 ký tự')
+            toast.error('Vui lòng nhập đầy đủ 6 ký tự')
             setLoading(false)
             return
         }
@@ -93,9 +96,17 @@ const page = () => {
         try {
             const response = await verifyEmail({ code: codeString })
             console.log(response)
+            toast.success('Xác thực email thành công! Đang chuyển đến trang đăng nhập...')
             setLoading(false)
+            setTimeout(() => {
+                router.push('/login')
+            }, 1000)
         } catch (err: any) {
             console.log(err)
+            const errorMessage = err?.message || 
+                err?.response?.data?.message || 
+                'Mã xác thực không hợp lệ. Vui lòng thử lại.'
+            toast.error(errorMessage)
             setLoading(false)
         }
     }

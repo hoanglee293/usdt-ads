@@ -4,41 +4,38 @@ import { useAuth } from '@/hooks/useAuth'
 import { registerPassword, RegisterData } from '@/services/AuthService'
 import { useRouter } from 'next/navigation'
 import { Eye, EyeOff } from 'lucide-react'
+import toast from 'react-hot-toast'
 
 const page = () => {
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
-    const [confirmPassword, setConfirmPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [refCode, setRefCode] = useState('')
     const [fullName, setFullName] = useState('')
-    const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
     const { login } = useAuth()
     const router = useRouter()
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        setError('')
         setLoading(true)
 
         // Validation các trường bắt buộc
         if (!username.trim() || !email.trim() || !password.trim() || !fullName.trim() || !refCode.trim()) {
-            setError('Vui lòng nhập đầy đủ thông tin bắt buộc')
+            toast.error('Vui lòng nhập đầy đủ thông tin bắt buộc')
             setLoading(false)
             return
         }
 
         // if (password !== confirmPassword) {
-        //     setError('Mật khẩu xác nhận không khớp')
+        //     toast.error('Mật khẩu xác nhận không khớp')
         //     setLoading(false)
         //     return
         // }
 
         if (password.length < 6) {
-            setError('Mật khẩu phải có ít nhất 6 ký tự')
+            toast.error('Mật khẩu phải có ít nhất 6 ký tự')
             setLoading(false)
             return
         }
@@ -46,7 +43,7 @@ const page = () => {
         // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(email)) {
-            setError('Email không hợp lệ')
+            toast.error('Email không hợp lệ')
             setLoading(false)
             return
         }
@@ -61,15 +58,16 @@ const page = () => {
             }
 
             const response = await registerPassword(registerData)
+            console.log("response", response)
             if (response) {
-                login()
+                toast.success('Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.')
                 router.push('/verify-mail')
             }
         } catch (err: any) {
-            setError(
-                err?.response?.data?.message ||
+            const errorMessage = err?.message || 
+                err?.response?.data?.message || 
                 'Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.'
-            )
+            toast.error(errorMessage)
         } finally {
             setLoading(false)
         }
@@ -90,12 +88,6 @@ const page = () => {
                 <div className='w-full max-w-md flex flex-col items-center'>
                     <img src="/logo.png" alt="logo" className='w-20 h-20 object-contain mb-6' />
                     <h2 className='text-2xl font-semibold text-gray-800 mb-2'>Create Account</h2>
-
-                    {error && (
-                        <div className='w-full mt-2 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm'>
-                            {error}
-                        </div>
-                    )}
 
                     <form onSubmit={handleSubmit} className='w-full flex flex-col gap-4 mt-6'>
                         <div className='space-y-1'>
