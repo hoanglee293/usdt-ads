@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { Copy, ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
@@ -8,7 +8,7 @@ import { getWalletByNetwork, getBalance, type WalletByNetworkResponse, type Bala
 import { Skeleton } from '@/ui/skeleton'
 import { Button } from '@/ui/button'
 
-export default function DepositPage() {
+function DepositPageContent() {
     const searchParams = useSearchParams()
     const router = useRouter()
 
@@ -176,6 +176,21 @@ export default function DepositPage() {
                 </div>
             </div>
         </div>
+    )
+}
+
+export default function DepositPage() {
+    return (
+        <Suspense fallback={
+            <div className='w-full min-h-svh flex pt-24 justify-center items-start p-6 bg-[#FFFCF9] flex-1'>
+                <div className='w-full max-w-2xl'>
+                    <Skeleton className="h-10 w-32 mb-4" />
+                    <Skeleton className="h-64 w-full" />
+                </div>
+            </div>
+        }>
+            <DepositPageContent />
+        </Suspense>
     )
 }
 
