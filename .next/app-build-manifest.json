@@ -1,86 +1,25 @@
 {
   "pages": {
-    "/_not-found/page": [
-      "static/chunks/webpack-1479f5c4bf6466fc.js",
-      "static/chunks/4bd1b696-9357eb0f247a5c9f.js",
-      "static/chunks/684-e1b9d44e8949a8e7.js",
-      "static/chunks/main-app-3ca11ac9059cf605.js",
-      "static/chunks/app/_not-found/page-0c1fba07cabe3af7.js"
-    ],
     "/layout": [
-      "static/chunks/webpack-1479f5c4bf6466fc.js",
-      "static/chunks/4bd1b696-9357eb0f247a5c9f.js",
-      "static/chunks/684-e1b9d44e8949a8e7.js",
-      "static/chunks/main-app-3ca11ac9059cf605.js",
-      "static/css/c13bbdd12b2d1a32.css",
-      "static/chunks/127-ba3772e83ce8720a.js",
-      "static/chunks/697-939826501f60be54.js",
-      "static/chunks/850-60941ac2d40a1cb7.js",
-      "static/chunks/app/layout-00d76835bbd7ea23.js"
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/css/app/layout.css",
+      "static/chunks/app/layout.js"
     ],
-    "/change-password/page": [
-      "static/chunks/webpack-1479f5c4bf6466fc.js",
-      "static/chunks/4bd1b696-9357eb0f247a5c9f.js",
-      "static/chunks/684-e1b9d44e8949a8e7.js",
-      "static/chunks/main-app-3ca11ac9059cf605.js",
-      "static/chunks/127-ba3772e83ce8720a.js",
-      "static/chunks/app/change-password/page-570c514c1ba87fd6.js"
-    ],
-    "/forgot-password/page": [
-      "static/chunks/webpack-1479f5c4bf6466fc.js",
-      "static/chunks/4bd1b696-9357eb0f247a5c9f.js",
-      "static/chunks/684-e1b9d44e8949a8e7.js",
-      "static/chunks/main-app-3ca11ac9059cf605.js",
-      "static/chunks/127-ba3772e83ce8720a.js",
-      "static/chunks/app/forgot-password/page-5f3c9fab02ef8aea.js"
-    ],
-    "/login/page": [
-      "static/chunks/webpack-1479f5c4bf6466fc.js",
-      "static/chunks/4bd1b696-9357eb0f247a5c9f.js",
-      "static/chunks/684-e1b9d44e8949a8e7.js",
-      "static/chunks/main-app-3ca11ac9059cf605.js",
-      "static/chunks/127-ba3772e83ce8720a.js",
-      "static/chunks/app/login/page-61bce6bd4d5e241f.js"
-    ],
-    "/my-profile/page": [
-      "static/chunks/webpack-1479f5c4bf6466fc.js",
-      "static/chunks/4bd1b696-9357eb0f247a5c9f.js",
-      "static/chunks/684-e1b9d44e8949a8e7.js",
-      "static/chunks/main-app-3ca11ac9059cf605.js",
-      "static/chunks/127-ba3772e83ce8720a.js",
-      "static/chunks/697-939826501f60be54.js",
-      "static/chunks/app/my-profile/page-326d00539a6d0f07.js"
-    ],
-    "/page": [
-      "static/chunks/webpack-1479f5c4bf6466fc.js",
-      "static/chunks/4bd1b696-9357eb0f247a5c9f.js",
-      "static/chunks/684-e1b9d44e8949a8e7.js",
-      "static/chunks/main-app-3ca11ac9059cf605.js",
-      "static/chunks/app/page-687dfdffc8d1b6e5.js"
-    ],
-    "/register/page": [
-      "static/chunks/webpack-1479f5c4bf6466fc.js",
-      "static/chunks/4bd1b696-9357eb0f247a5c9f.js",
-      "static/chunks/684-e1b9d44e8949a8e7.js",
-      "static/chunks/main-app-3ca11ac9059cf605.js",
-      "static/chunks/127-ba3772e83ce8720a.js",
-      "static/chunks/app/register/page-45aba74afc31769c.js"
-    ],
-    "/verify-mail/page": [
-      "static/chunks/webpack-1479f5c4bf6466fc.js",
-      "static/chunks/4bd1b696-9357eb0f247a5c9f.js",
-      "static/chunks/684-e1b9d44e8949a8e7.js",
-      "static/chunks/main-app-3ca11ac9059cf605.js",
-      "static/chunks/127-ba3772e83ce8720a.js",
-      "static/chunks/app/verify-mail/page-9bff58281c31bf2d.js"
+    "/wallet/deposit/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/wallet/deposit/page.js"
     ],
     "/wallet/page": [
-      "static/chunks/webpack-1479f5c4bf6466fc.js",
-      "static/chunks/4bd1b696-9357eb0f247a5c9f.js",
-      "static/chunks/684-e1b9d44e8949a8e7.js",
-      "static/chunks/main-app-3ca11ac9059cf605.js",
-      "static/chunks/85-2d14b335f068353f.js",
-      "static/chunks/app/wallet/page-aed8e1b999fd9953.js"
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/wallet/page.js"
+    ],
+    "/wallet/withdraw/page": [
+      "static/chunks/webpack.js",
+      "static/chunks/main-app.js",
+      "static/chunks/app/wallet/withdraw/page.js"
     ]
   }
 }

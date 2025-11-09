@@ -1,11 +1,5 @@
 {
-  "/change-password/page": "app/change-password/page.js",
-  "/forgot-password/page": "app/forgot-password/page.js",
-  "/login/page": "app/login/page.js",
-  "/my-profile/page": "app/my-profile/page.js",
-  "/page": "app/page.js",
-  "/register/page": "app/register/page.js",
-  "/verify-mail/page": "app/verify-mail/page.js",
-  "/wallet/page": "app/wallet/page.js",
-  "/_not-found/page": "app/_not-found/page.js"
+  "/wallet/deposit/page": "app/wallet/deposit/page.js",
+  "/wallet/withdraw/page": "app/wallet/withdraw/page.js",
+  "/wallet/page": "app/wallet/page.js"
 }
