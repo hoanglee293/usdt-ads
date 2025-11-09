@@ -90,6 +90,54 @@ export interface WalletByNetworkResponse {
   };
 }
 
+// ==================== Withdraw Interfaces ====================
+
+export interface WithdrawRequest {
+  network: string | number;  // net_id hoặc net_symbol
+  coin: string | number;      // coin_id hoặc coin_symbol
+  address: string;            // Địa chỉ ví nhận
+  amount: number;             // >= 0.00000001
+}
+
+export interface WithdrawResponse {
+  statusCode: 200;
+  message: string;
+  data: {
+    transaction_hash: string;
+    history_id: number;
+  };
+}
+
+// ==================== Transaction History Interfaces ====================
+
+export interface TransactionHistoryItem {
+  id: number;
+  wallet_network_id: number | null;
+  type: "crypto";
+  option: "withdraw" | "deposit";
+  coin_id: number;
+  amount: number;
+  hash: string;
+  image_verify: string | null;
+  status: "success" | "pending" | "failed" | string;
+  node: string;               // Network symbol
+  user_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TransactionHistoryResponse {
+  statusCode: 200;
+  message: string;
+  data: TransactionHistoryItem[];
+}
+
+export interface TransactionHistoryParams {
+  coin?: string;              // Coin symbol (e.g., "USDT")
+  network?: string;           // Network symbol (e.g., "ETH")
+  type?: "withdraw" | "deposit" | null;
+}
+
 // ==================== API Functions ====================
 
 /**
@@ -204,6 +252,67 @@ export const getWalletByNetwork = async (network_id: number): Promise<WalletByNe
     return response.data;
   } catch (error) {
     console.error('Error fetching wallet by network:', error);
+    throw error;
+  }
+}
+
+/**
+ * Rút tiền Onchain
+ * @param withdrawData - Dữ liệu rút tiền
+ * @returns Promise<WithdrawResponse>
+ */
+export const withdrawFunds = async (withdrawData: WithdrawRequest): Promise<WithdrawResponse> => {
+  try {
+    // Validation
+    if (!withdrawData.network) {
+      throw new Error('Network is required');
+    }
+    if (!withdrawData.coin) {
+      throw new Error('Coin is required');
+    }
+    if (!withdrawData.address || withdrawData.address.trim() === '') {
+      throw new Error('Address is required');
+    }
+    if (!withdrawData.amount || withdrawData.amount < 0.00000001) {
+      throw new Error('Amount must be >= 0.00000001');
+    }
+
+    const response = await axiosClient.post('/wallets/withdraw', withdrawData);
+    return response.data;
+  } catch (error) {
+    console.error('Error withdrawing funds:', error);
+    throw error;
+  }
+}
+
+/**
+ * Lấy lịch sử giao dịch
+ * @param params - Query parameters (optional)
+ * @returns Promise<TransactionHistoryResponse>
+ */
+export const getTransactionHistory = async (
+  params?: TransactionHistoryParams
+): Promise<TransactionHistoryResponse> => {
+  try {
+    const queryParams = new URLSearchParams();
+    
+    if (params?.coin) {
+      queryParams.append('coin', params.coin);
+    }
+    if (params?.network) {
+      queryParams.append('network', params.network);
+    }
+    if (params?.type) {
+      queryParams.append('type', params.type);
+    }
+
+    const queryString = queryParams.toString();
+    const url = `/wallets/transaction-history${queryString ? `?${queryString}` : ''}`;
+    
+    const response = await axiosClient.get(url);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching transaction history:', error);
     throw error;
   }
 }

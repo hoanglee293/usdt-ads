@@ -12,13 +12,16 @@ import {
     getMyWallets,
     handleCheckNetwork,
     createWallet,
+    getTransactionHistory,
     type Network,
     type Coin,
     type ListNetworksResponse,
     type ListCoinsResponse,
     type BalanceResponse,
     type MyWalletResponse,
-    type CheckWalletNetworkResponse
+    type CheckWalletNetworkResponse,
+    type TransactionHistoryResponse,
+    type TransactionHistoryItem
 } from '@/services/WalletService'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
@@ -31,7 +34,8 @@ import {
 } from '@/ui/dialog'
 import { Skeleton } from '@/ui/skeleton'
 
-interface Transaction {
+// Helper function to map API transaction to UI format
+const mapTransactionToUI = (transaction: TransactionHistoryItem, coinSymbol?: string): {
     id: number
     time: string
     type: string
@@ -40,71 +44,33 @@ interface Transaction {
     toAddress: string
     transactionId: string
     status: 'Complete' | 'Lỗi'
-}
+} => {
+    // Format date
+    const date = new Date(transaction.created_at)
+    const time = date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    const dateStr = date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
+    const formattedTime = `${time} ${dateStr}`
 
-const fakeTransactions: Transaction[] = [
-    {
-        id: 1,
-        time: '11:23:45 24/02/2025',
-        type: 'Nạp',
-        amount: '100 USDT',
-        fromAddress: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        toAddress: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        transactionId: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        status: 'Complete'
-    },
-    {
-        id: 2,
-        time: '11:23:45 24/02/2025',
-        type: 'Nạp',
-        amount: '100 USDT',
-        fromAddress: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        toAddress: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        transactionId: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        status: 'Lỗi'
-    },
-    {
-        id: 3,
-        time: '11:23:45 24/02/2025',
-        type: 'Nạp',
-        amount: '100 USDT',
-        fromAddress: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        toAddress: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        transactionId: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        status: 'Lỗi'
-    },
-    {
-        id: 4,
-        time: '11:23:45 24/02/2025',
-        type: 'Nạp',
-        amount: '100 USDT',
-        fromAddress: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        toAddress: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        transactionId: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        status: 'Complete'
-    },
-    {
-        id: 5,
-        time: '11:23:45 24/02/2025',
-        type: 'Nạp',
-        amount: '100 USDT',
-        fromAddress: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        toAddress: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        transactionId: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        status: 'Complete'
-    },
-    {
-        id: 6,
-        time: '11:23:45 24/02/2025',
-        type: 'Nạp',
-        amount: '100 USDT',
-        fromAddress: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        toAddress: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        transactionId: '9BB6F8A3C2D1E4F5A6B7C8D9E0F1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D7E8F9pump',
-        status: 'Lỗi'
+    // Map option to type
+    const type = transaction.option === 'withdraw' ? 'Rút' : 'Nạp'
+
+    // Format amount
+    const amount = `${transaction.amount} ${coinSymbol || 'USDT'}`
+
+    // Map status
+    const status = transaction.status === 'success' ? 'Complete' : 'Lỗi'
+
+    return {
+        id: transaction.id,
+        time: formattedTime,
+        type,
+        amount,
+        fromAddress: transaction.hash || '', // Using hash as fromAddress for now
+        toAddress: transaction.hash || '', // Using hash as toAddress for now
+        transactionId: transaction.hash,
+        status
     }
-
-]
+}
 
 export default function WalletPage() {
     const [selectedNetwork, setSelectedNetwork] = useState<string>('')
@@ -184,6 +150,8 @@ export default function WalletPage() {
             toast.error(message)
         }
     })
+
+    // 7. Transaction History (moved after selectedCoinInfo definition)
 
     // ==================== Error Handling ====================
     useEffect(() => {
@@ -277,6 +245,28 @@ export default function WalletPage() {
         return coinsResponse.data.find((c: Coin) => c.coin_id?.toString() === selectedCoin)
     }, [selectedCoin, coinsResponse])
 
+    // 7. Transaction History
+    const { data: transactionHistoryResponse, isLoading: isLoadingTransactionHistory } = useQuery<TransactionHistoryResponse>({
+        queryKey: ['transaction-history', selectedCoin, selectedNetworkSymbol],
+        queryFn: async () => {
+            const params: any = {}
+            if (selectedCoinInfo?.coin_symbol) {
+                params.coin = selectedCoinInfo.coin_symbol
+            }
+            if (selectedNetworkSymbol) {
+                params.network = selectedNetworkSymbol
+            }
+            return await getTransactionHistory(params)
+        },
+        enabled: true // Always fetch, filters are optional
+    })
+
+    // Map transactions to UI format
+    const transactions = useMemo(() => {
+        if (!transactionHistoryResponse?.data) return []
+        return transactionHistoryResponse.data.map(t => mapTransactionToUI(t, selectedCoinInfo?.coin_symbol))
+    }, [transactionHistoryResponse, selectedCoinInfo])
+
     // ==================== Event Handlers ====================
 
     const handleNetworkChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -346,8 +336,31 @@ export default function WalletPage() {
             toast.error('Vui lòng tạo ví trước khi rút tiền')
             return
         }
-        // TODO: Implement withdraw dialog
-        toast.info('Tính năng rút tiền đang được phát triển')
+        if (!selectedNetwork) {
+            toast.error('Vui lòng chọn mạng lưới trước')
+            return
+        }
+        
+        // Build query params
+        const params = new URLSearchParams({
+            networkId: selectedNetwork,
+        })
+        
+        if (selectedNetworkInfo?.net_name) {
+            params.append('networkName', selectedNetworkInfo.net_name)
+        }
+        if (selectedNetworkInfo?.net_symbol) {
+            params.append('networkSymbol', selectedNetworkInfo.net_symbol)
+        }
+        if (selectedCoinInfo?.coin_symbol) {
+            params.append('coinSymbol', selectedCoinInfo.coin_symbol)
+        }
+        if (selectedCoin) {
+            params.append('coinId', selectedCoin)
+        }
+        
+        // Navigate to withdraw page
+        router.push(`/wallet/withdraw?${params.toString()}`)
     }
 
     const formatAddress = (address: string) => {
@@ -539,7 +552,20 @@ export default function WalletPage() {
                     <div className={tableContainerStyles} ref={tableRef}>
                         <table className={tableStyles}>
                             <tbody>
-                                {fakeTransactions.map((transaction) => (
+                                {isLoadingTransactionHistory ? (
+                                    <tr>
+                                        <td colSpan={8} className="text-center py-8">
+                                            <Skeleton className="h-8 w-full" />
+                                        </td>
+                                    </tr>
+                                ) : transactions.length === 0 ? (
+                                    <tr>
+                                        <td colSpan={8} className="text-center py-8 text-gray-500">
+                                            Không có giao dịch nào
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    transactions.map((transaction) => (
                                     <tr key={transaction.id} className="group transition-colors">
                                         <td className={`${tableCellStyles} w-[5%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
                                             {transaction.id}
@@ -606,7 +632,8 @@ export default function WalletPage() {
                                             </span>
                                         </td>
                                     </tr>
-                                ))}
+                                    ))
+                                )}
                             </tbody>
                         </table>
                     </div>

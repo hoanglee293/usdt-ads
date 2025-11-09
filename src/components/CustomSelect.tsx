@@ -53,7 +53,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
                     onChange={onChange}
                     disabled={disabled}
                     className={`
-                        w-full px-4 py-3 pr-10 
+                        w-full px-4 py-2 pr-10 
                         border border-solid 
                         focus:border-gray-300 
                         border-theme-gray-100 
