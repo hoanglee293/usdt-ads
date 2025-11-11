@@ -39,6 +39,7 @@ const config: Config = {
           red: {
             DEFAULT: '#D40000',
             100: '#D61F00',
+            200: '#FE645F'
           },
           pink: {
             DEFAULT: '#ffeaea',
@@ -48,6 +49,17 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addUtilities }) {
+      addUtilities({
+        '.text-gradient-primary': {
+          'background': 'linear-gradient(180deg, #FE645F 0%, #C68AFE 100%)',
+          'background-clip': 'text',
+          '-webkit-background-clip': 'text',
+          '-webkit-text-fill-color': 'transparent',
+        },
+      });
+    }),
+  ],
 };
 export default config;

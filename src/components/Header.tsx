@@ -14,7 +14,7 @@ export default function Header() {
     },
     {
       name: 'Tham gia kiếm tiền',
-      href: '/join',
+      href: '/make-money',
     },
     {
       name: 'Nhận phần thưởng',

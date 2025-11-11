@@ -67,7 +67,7 @@ const mapTransactionToUI = (transaction: TransactionHistoryItem, coinSymbol?: st
         amount,
         fromAddress: transaction.hash || '', // Using hash as fromAddress for now
         toAddress: transaction.hash || '', // Using hash as toAddress for now
-        transactionId: transaction.hash,
+        transactionId: transaction.hash || '',
         status
     }
 }
@@ -363,7 +363,8 @@ export default function WalletPage() {
         router.push(`/wallet/withdraw?${params.toString()}`)
     }
 
-    const formatAddress = (address: string) => {
+    const formatAddress = (address: string | null | undefined) => {
+        if (!address) return ''
         if (address.length <= 10) return address
         // Extract "pump" from the end if it exists, otherwise use last 4 characters
         const endsWithPump = address.toLowerCase().endsWith('pump')
@@ -390,10 +391,11 @@ export default function WalletPage() {
 
     // Format balance number
     const formatBalance = (balance: number) => {
-        return new Intl.NumberFormat('vi-VN', {
+        const balanceFormatted = parseFloat(balance.toFixed(2))
+        return new Intl.NumberFormat('en-US', {
             minimumFractionDigits: 2,
             maximumFractionDigits: 6
-        }).format(balance)
+        }).format(balanceFormatted)
     }
 
     return (
@@ -529,7 +531,7 @@ export default function WalletPage() {
                     </Button>
                 </div>}
 
-                <div className="hidden sm:block overflow-hidden rounded-md">
+                <div className="hidden sm:block overflow-hidden rounded-md shadow-md border border-gray-200 border-solid">
                     {/* Fixed Header */}
                     <div className="overflow-hidden rounded-t-md">
                         <table className={tableStyles}>

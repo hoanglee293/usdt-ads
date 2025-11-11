@@ -4,10 +4,10 @@ import { useSearchParams, useRouter } from 'next/navigation'
 import { ArrowLeft, Loader2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { 
-    getListNetworks, 
-    getListCoins, 
-    getBalance, 
+import {
+    getListNetworks,
+    getListCoins,
+    getBalance,
     getWalletByNetwork,
     withdrawFunds,
     type ListNetworksResponse,
@@ -100,6 +100,16 @@ function WithdrawPageContent() {
             setSelectedCoinId(coinId)
         }
     }, [networkId, coinId, selectedNetworkId, selectedCoinId])
+
+    // Auto-select first coin if not provided
+    useEffect(() => {
+        if (coinsResponse?.data && coinsResponse.data.length > 0 && !selectedCoinId) {
+            const firstCoin = coinsResponse.data[0]
+            if (firstCoin.coin_id) {
+                setSelectedCoinId(firstCoin.coin_id.toString())
+            }
+        }
+    }, [coinsResponse, selectedCoinId])
 
     // Network options
     const networkOptions = useMemo(() => {
@@ -211,20 +221,19 @@ function WithdrawPageContent() {
 
     return (
         <div className='w-full min-h-svh flex pt-24 justify-center items-start p-6 bg-[#FFFCF9] flex-1'>
-            <div className='w-full max-w-2xl'>
+            <div className='w-full max-w-2xl space-y-6'>
                 {/* Back Button */}
                 <Button
                     onClick={handleBack}
                     variant="ghost"
-                    className="mb-4 text-gray-600 cursor-pointer border-none bg-transparent hover:text-pink-500"
+                    className="text-gray-600 cursor-pointer border-none bg-transparent hover:text-pink-500 p-0"
                 >
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Quay lại
                 </Button>
 
-                {/* Header */}
-                <div className="text-center mb-8">
-                    {/* Balance Section */}
+                {/* Top Section - Balance Display */}
+                <div className="flex items-center justify-center">
                     <div className='flex items-end justify-center mb-6'>
                         <img src="/logo.png" alt="logo" className='w-10 h-10 object-cover pt-2' />
                         <div className='flex flex-col items-center mx-4'>
@@ -233,7 +242,7 @@ function WithdrawPageContent() {
                             ) : balanceResponse?.data ? (
                                 <div className='flex flex-col items-center'>
                                     <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
-                                        Số dư: {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || coinSymbol || 'USDT'}
+                                        Số dư: {formatBalance(balanceResponse.data.balance)} {coinSymbol || 'USDT'}
                                     </span>
                                     {(balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
                                         <span className='text-sm text-gray-600 mt-1'>
@@ -243,7 +252,7 @@ function WithdrawPageContent() {
                                 </div>
                             ) : (
                                 <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
-                                    Số dư: 0.00 {selectedCoinInfo?.coin_symbol || coinSymbol || 'USDT'}
+                                    Số dư: 0.00 {coinSymbol || 'USDT'}
                                 </span>
                             )}
                         </div>
@@ -251,150 +260,125 @@ function WithdrawPageContent() {
                     </div>
                 </div>
 
-                {/* Withdraw Form */}
-                <div className="bg-white rounded-lg border border-gray-200 shadow-md p-6">
-                    <h2 className="text-xl font-semibold text-theme-red-100 mb-6 text-center">
-                        Rút tiền Onchain
-                    </h2>
+                {/* Middle Section - Withdrawal Amount Block */}
+                <div className="bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 rounded-full p-6 shadow-lg">
+                    <h3 className="text-white text-center font-semibold mb-4 text-lg">
+                        Nhập số tiền muốn rút
+                    </h3>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="flex items-center gap-3 mb-3 w-full relative">
+                        <Input
+                            id="amount"
+                            type="number"
+                            step="0.00000001"
+                            min="0.00000001"
+                            value={withdrawAmount}
+                            onChange={(e) => setWithdrawAmount(e.target.value)}
+                            placeholder="0"
+                            disabled={withdrawMutation.isPending}
+                            className="max-w-[300px] mx-auto bg-white text-center text-lg font-semibold rounded-xl border-none h-10 text-gray-800"
+                            required
+                        />
+                        <Button
+                            type="button"
+                            onClick={handleMaxAmount}
+                            disabled={withdrawMutation.isPending || !balanceResponse?.data}
+                            className="bg-pink-500 absolute right-0 hover:bg-pink-600 text-white rounded-xl px-6 h-8 font-semibold uppercase border-none disabled:opacity-50"
+                        >
+                            MAX
+                        </Button>
+                    </div>
+
+                    {balanceResponse?.data && (
+                        <p className="text-white text-center text-sm opacity-90">
+                            Số dư {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || coinSymbol || 'USDT'}
+                        </p>
+                    )}
+                </div>
+
+                {/* Lower Middle Section - Network and Address */}
+                <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center gap-6">
+                    <div className="grid grid-cols-2 gap-4 w-full">
                         {/* Network Selection */}
                         <div className="space-y-2">
                             <Label htmlFor="network" className="text-sm font-medium text-theme-red-100">
-                                Mạng lưới *
+                                Chọn mạng lưới
                             </Label>
                             {isLoadingNetworks ? (
-                                <Skeleton className="h-10 w-full" />
+                                <Skeleton className="h-12 w-full rounded-full" />
                             ) : (
                                 <CustomSelect
                                     id="network"
                                     value={selectedNetworkId}
                                     onChange={handleNetworkChange}
                                     options={networkOptions}
-                                    placeholder="Chọn mạng lưới"
+                                    placeholder="Chọn"
                                     disabled={isLoadingNetworks}
                                 />
                             )}
                         </div>
 
-                        {/* Coin Selection */}
-                        <div className="space-y-2">
-                            <Label htmlFor="coin" className="text-sm font-medium text-theme-red-100">
-                                Coin *
-                            </Label>
-                            {isLoadingCoins ? (
-                                <Skeleton className="h-10 w-full" />
-                            ) : (
-                                <CustomSelect
-                                    id="coin"
-                                    value={selectedCoinId}
-                                    onChange={handleCoinChange}
-                                    options={coinOptions}
-                                    placeholder="Chọn coin"
-                                    disabled={isLoadingCoins}
-                                />
-                            )}
-                        </div>
-
                         {/* Wallet Address Input */}
-                        <div className="space-y-2">
+                        <div className="space-y-2 w-full">
                             <Label htmlFor="address" className="text-sm font-medium text-theme-red-100">
-                                Địa chỉ ví nhận *
+                                Địa chỉ ví
                             </Label>
                             <Input
                                 id="address"
                                 type="text"
                                 value={withdrawAddress}
                                 onChange={(e) => setWithdrawAddress(e.target.value)}
-                                placeholder="Nhập địa chỉ ví nhận (ví dụ: 0x1234...)"
-                                className="font-mono"
+                                placeholder="Nhập"
+                                className="rounded-full placeholder:text-gray-400 border border-gray-200 border-solid w-full"
                                 disabled={withdrawMutation.isPending}
                                 required
                             />
-                            {walletResponse?.data && (
-                                <p className="text-xs text-gray-500">
-                                    Địa chỉ ví của bạn: {walletResponse.data.public_key.substring(0, 10)}...{walletResponse.data.public_key.substring(walletResponse.data.public_key.length - 8)}
-                                </p>
-                            )}
                         </div>
+                    </div>
 
-                        {/* Amount Input */}
-                        <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                                <Label htmlFor="amount" className="text-sm font-medium text-theme-red-100">
-                                    Số tiền rút *
-                                </Label>
-                                {balanceResponse?.data && (
-                                    <button
-                                        type="button"
-                                        onClick={handleMaxAmount}
-                                        className="text-xs text-pink-500 hover:text-pink-600 underline"
-                                        disabled={withdrawMutation.isPending}
-                                    >
-                                        Tối đa
-                                    </button>
-                                )}
-                            </div>
-                            <Input
-                                id="amount"
-                                type="number"
-                                step="0.00000001"
-                                min="0.00000001"
-                                value={withdrawAmount}
-                                onChange={(e) => setWithdrawAmount(e.target.value)}
-                                placeholder="0.00000001"
-                                disabled={withdrawMutation.isPending}
-                                required
-                            />
-                            <p className="text-xs text-gray-500">
-                                Số tiền tối thiểu: 0.00000001 {selectedCoinInfo?.coin_symbol || coinSymbol || 'coin'}
-                            </p>
-                            {balanceResponse?.data && (
-                                <p className="text-xs text-gray-500">
-                                    Số dư khả dụng: {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || coinSymbol || 'coin'}
-                                </p>
-                            )}
-                        </div>
-
-                        {/* Submit Button */}
-                        <Button
-                            type="submit"
-                            disabled={
-                                withdrawMutation.isPending ||
-                                !selectedNetworkId ||
-                                !selectedCoinId ||
-                                !withdrawAddress ||
-                                !withdrawAmount ||
-                                isLoadingBalance
-                            }
-                            className="w-full bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none h-12 text-lg font-semibold hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
-                            {withdrawMutation.isPending ? (
-                                <>
-                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                                    Đang xử lý...
-                                </>
-                            ) : (
-                                'Rút tiền'
-                            )}
-                        </Button>
-                    </form>
-
-                    {/* Success Message */}
-                    {withdrawMutation.isSuccess && withdrawMutation.data?.data && (
-                        <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
-                            <p className="text-sm text-green-800 font-medium mb-2">
-                                Rút tiền thành công!
-                            </p>
-                            <p className="text-xs text-green-700">
-                                Transaction Hash: {withdrawMutation.data.data.transaction_hash}
-                            </p>
-                            <p className="text-xs text-green-700">
-                                History ID: {withdrawMutation.data.data.history_id}
-                            </p>
-                        </div>
+                    {/* Coin Selection - Hidden but required for API */}
+                    {selectedCoinId && (
+                        <input type="hidden" name="coin" value={selectedCoinId} />
                     )}
-                </div>
+
+                    {/* Submit Button */}
+                    <Button
+                        type="submit"
+                        disabled={
+                            withdrawMutation.isPending ||
+                            !selectedNetworkId ||
+                            !selectedCoinId ||
+                            !withdrawAddress ||
+                            !withdrawAmount ||
+                            isLoadingBalance
+                        }
+                        className="w-full mt-6 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none h-10 text-lg font-bold uppercase hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                    >
+                        {withdrawMutation.isPending ? (
+                            <>
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                Đang xử lý...
+                            </>
+                        ) : (
+                            'RÚT'
+                        )}
+                    </Button>
+                </form>
+
+                {/* Success Message */}
+                {withdrawMutation.isSuccess && withdrawMutation.data?.data && (
+                    <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                        <p className="text-sm text-green-800 font-medium mb-2">
+                            Rút tiền thành công!
+                        </p>
+                        <p className="text-xs text-green-700">
+                            Transaction Hash: {withdrawMutation.data.data.transaction_hash}
+                        </p>
+                        <p className="text-xs text-green-700">
+                            History ID: {withdrawMutation.data.data.history_id}
+                        </p>
+                    </div>
+                )}
             </div>
         </div>
     )
