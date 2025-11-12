@@ -531,7 +531,7 @@ export default function WalletPage() {
                     </Button>
                 </div>}
 
-                <div className="hidden sm:block overflow-hidden rounded-md shadow-md border border-gray-200 border-solid">
+                <div className="hidden sm:block overflow-hidden rounded-md bg-transparent border border-none">
                     {/* Fixed Header */}
                     <div className="overflow-hidden rounded-t-md">
                         <table className={tableStyles}>

@@ -1,11 +1,12 @@
 'use client'
-import React, { useState, useMemo, useEffect } from 'react'
+import React, { useState, useMemo, useEffect, useRef } from 'react'
 import { Loader2, Calendar, DollarSign, Target, Clock, CheckCircle2, XCircle } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/ui/button'
 import { Input } from '@/ui/input'
 import CustomSelect from '@/components/CustomSelect'
 import { Skeleton } from '@/ui/skeleton'
+import { Progress } from '@/ui/progress'
 import Modal from '@/components/Modal'
 import {
     getListCoins,
@@ -19,21 +20,27 @@ import {
     joinStakingPackage,
     getCurrentStaking,
     getStakingHistories,
+    claimMissionReward,
+    getMissionNow,
     type StakingPackage,
     type JoinStakingRequest,
     type CurrentStakingResponse,
     type StakingHistoriesResponse,
+    type MissionClaimResponse,
+    type MissionNowResponse,
 } from '@/services/StakingService'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 export default function MakeMoneyPage() {
     const queryClient = useQueryClient()
+    const tableRef = useRef<HTMLDivElement>(null)
 
     // Form state
     const [stakingType, setStakingType] = useState<'1d' | '7d' | '30d'>('1d')
     const [stakingAmount, setStakingAmount] = useState<string>('')
     const [usdtCoinId, setUsdtCoinId] = useState<string>('')
     const [isStakingModalOpen, setIsStakingModalOpen] = useState<boolean>(false)
+    const [currentTime, setCurrentTime] = useState<Date>(new Date())
 
     // ==================== React Query Hooks ====================
 
@@ -78,13 +85,28 @@ export default function MakeMoneyPage() {
         staleTime: 2 * 60 * 1000, // Cache 2 phút
     })
 
-    // 5. Join Base Mutation
+    // 5. Get Mission Progress
+    const currentStaking = useMemo(() => {
+        return currentStakingResponse?.data || null
+    }, [currentStakingResponse])
+
+    const { data: missionNowResponse, isLoading: isLoadingMission } = useQuery<MissionNowResponse>({
+        queryKey: ['mission-now'],
+        queryFn: getMissionNow,
+        enabled: !!currentStaking && currentStaking.status === 'running', // Chỉ query khi có staking running
+        refetchInterval: 30000, // Refetch mỗi 30 giây để cập nhật countdown
+        refetchOnWindowFocus: false,
+        retry: false, // Không retry nếu 400 (không có staking)
+    })
+
+    // 6. Join Base Mutation
     const joinBaseMutation = useMutation({
         mutationFn: joinBasePackage,
         onSuccess: () => {
             toast.success('Tham gia gói Base thành công!')
             queryClient.invalidateQueries({ queryKey: ['current-staking'] })
             queryClient.invalidateQueries({ queryKey: ['staking-histories'] })
+            queryClient.invalidateQueries({ queryKey: ['mission-now'] })
             refetchBalance()
             refetchCurrentStaking()
         },
@@ -94,7 +116,7 @@ export default function MakeMoneyPage() {
         }
     })
 
-    // 6. Join Staking Mutation
+    // 7. Join Staking Mutation
     const joinStakingMutation = useMutation({
         mutationFn: (data: JoinStakingRequest) => joinStakingPackage(data),
         onSuccess: () => {
@@ -103,11 +125,29 @@ export default function MakeMoneyPage() {
             setIsStakingModalOpen(false)
             queryClient.invalidateQueries({ queryKey: ['current-staking'] })
             queryClient.invalidateQueries({ queryKey: ['staking-histories'] })
+            queryClient.invalidateQueries({ queryKey: ['mission-now'] })
             refetchBalance()
             refetchCurrentStaking()
         },
         onError: (error: any) => {
             const message = error?.response?.data?.message || 'Không thể tham gia gói Staking'
+            toast.error(message)
+        }
+    })
+
+    // 8. Claim Mission Reward Mutation
+    const claimMissionMutation = useMutation({
+        mutationFn: claimMissionReward,
+        onSuccess: (data: MissionClaimResponse) => {
+            toast.success(`Claim thành công! Nhận được ${formatNumber(data.data.total_reward)} USDT`)
+            queryClient.invalidateQueries({ queryKey: ['current-staking'] })
+            queryClient.invalidateQueries({ queryKey: ['staking-histories'] })
+            queryClient.invalidateQueries({ queryKey: ['mission-now'] })
+            refetchBalance()
+            refetchCurrentStaking()
+        },
+        onError: (error: any) => {
+            const message = error?.response?.data?.message || 'Không thể claim phần thưởng'
             toast.error(message)
         }
     })
@@ -126,6 +166,15 @@ export default function MakeMoneyPage() {
         }
     }, [coinsResponse, usdtCoinId])
 
+    // Update current time every second to check claim availability
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentTime(new Date())
+        }, 1000) // Update every second for accurate countdown
+
+        return () => clearInterval(interval)
+    }, [])
+
     // ==================== Computed Values ====================
 
     const usdtBalance = useMemo(() => {
@@ -141,14 +190,68 @@ export default function MakeMoneyPage() {
         return usdtBalance < 10 || !!currentStakingResponse?.data
     }, [usdtBalance, currentStakingResponse])
 
-    const currentStaking = useMemo(() => {
-        return currentStakingResponse?.data || null
-    }, [currentStakingResponse])
-    console.log(currentStaking)
+    // currentStaking đã được định nghĩa ở trên (sau query mission-now)
 
     const stakingHistories = useMemo(() => {
         return historiesResponse?.data || []
     }, [historiesResponse])
+
+    // Mission progress computed values
+    const missionProgress = useMemo(() => {
+        if (!missionNowResponse?.data) return null;
+        
+        const { turn_setting, turn_day, time_watch_new, time_gap } = missionNowResponse.data;
+        
+        // Calculate next watch time
+        let canWatchNext = true;
+        let nextWatchTime: Date | null = null;
+        let timeRemaining: number = 0;
+        
+        if (time_watch_new) {
+            const lastWatchTime = new Date(time_watch_new);
+            nextWatchTime = new Date(lastWatchTime.getTime() + time_gap * 60 * 1000);
+            const now = currentTime.getTime();
+            timeRemaining = Math.max(0, nextWatchTime.getTime() - now);
+            canWatchNext = timeRemaining === 0;
+        }
+        
+        return {
+            completed: turn_day,
+            total: turn_setting,
+            progress: turn_setting > 0 ? Math.round((turn_day / turn_setting) * 100) : 0,
+            canWatchNext,
+            nextWatchTime,
+            timeRemaining,
+            isCompleted: turn_day >= turn_setting,
+        };
+    }, [missionNowResponse, currentTime]);
+
+    // Combine current staking and histories for table display
+    const allPackages = useMemo(() => {
+        const packages: StakingPackage[] = []
+        const packageIds = new Set<number>()
+        
+        // Add current staking if exists
+        if (currentStaking) {
+            packages.push(currentStaking)
+            packageIds.add(currentStaking.id)
+        }
+        
+        // Add all histories (excluding duplicates)
+        if (stakingHistories.length > 0) {
+            stakingHistories.forEach((history) => {
+                if (!packageIds.has(history.id)) {
+                    packages.push(history)
+                    packageIds.add(history.id)
+                }
+            })
+        }
+        
+        // Sort by date_start (newest first)
+        return packages.sort((a, b) => {
+            return new Date(b.date_start).getTime() - new Date(a.date_start).getTime()
+        })
+    }, [currentStaking, stakingHistories])
 
     // Calculate progress percentage
     const calculateProgress = (staking: StakingPackage): number => {
@@ -174,6 +277,18 @@ export default function MakeMoneyPage() {
         })
     }
 
+    // Format participation time (HH:mm:ss DD/MM/YYYY)
+    const formatParticipationTime = (dateString: string): string => {
+        const date = new Date(dateString)
+        const hours = date.getHours().toString().padStart(2, '0')
+        const minutes = date.getMinutes().toString().padStart(2, '0')
+        const seconds = date.getSeconds().toString().padStart(2, '0')
+        const day = date.getDate().toString().padStart(2, '0')
+        const month = (date.getMonth() + 1).toString().padStart(2, '0')
+        const year = date.getFullYear()
+        return `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`
+    }
+
     // Format number
     const formatNumber = (num: number): string => {
         console.log(num)
@@ -183,6 +298,18 @@ export default function MakeMoneyPage() {
             minimumFractionDigits: 2,
             maximumFractionDigits: 2
         }).format(rounded)
+    }
+
+    // Get reward amount - ưu tiên real_reward, fallback về estimated_reward hoặc tính toán
+    const getRewardAmount = (staking: StakingPackage): number => {
+        if (staking.real_reward !== undefined && staking.real_reward !== null) {
+            return staking.real_reward
+        }
+        if (staking.estimated_reward !== undefined && staking.estimated_reward !== null) {
+            return staking.estimated_reward
+        }
+        // Fallback: tính toán 30% của amount
+        return staking.amount * 0.3
     }
 
     // Get status badge
@@ -255,10 +382,15 @@ export default function MakeMoneyPage() {
             case 'pending-claim':
                 return 'Chờ nhận thưởng'
             case 'ended':
-                return 'Đã kết thúc'
+                return 'Hoàn thành'
             default:
                 return status
         }
+    }
+
+    // Check if reward was claimed (assume ended status means claimed)
+    const isRewardClaimed = (status: string): boolean => {
+        return status === 'ended'
     }
 
     // Format date (date only, no time)
@@ -269,6 +401,44 @@ export default function MakeMoneyPage() {
             month: '2-digit',
             year: 'numeric'
         })
+    }
+
+    // Format time remaining for countdown
+    const formatTimeRemaining = (milliseconds: number): string => {
+        if (milliseconds <= 0) return 'Có thể xem ngay'
+        
+        const totalSeconds = Math.floor(milliseconds / 1000)
+        const minutes = Math.floor(totalSeconds / 60)
+        const seconds = totalSeconds % 60
+        
+        if (minutes > 0) {
+            return `${minutes} phút ${seconds} giây`
+        }
+        return `${seconds} giây`
+    }
+
+    // Check if claim is available based on end date
+    // Can only claim after 00:05:00 UTC of the day after staking ends
+    const canClaimReward = (staking: StakingPackage): boolean => {
+        if (staking.status !== 'pending-claim') {
+            return false
+        }
+
+        const endDate = new Date(staking.date_end)
+        
+        // Get UTC date components of end date
+        const endYear = endDate.getUTCFullYear()
+        const endMonth = endDate.getUTCMonth()
+        const endDay = endDate.getUTCDate()
+        
+        // Create the claim available date: next day at 00:05:00 UTC
+        const claimAvailableDate = new Date(Date.UTC(endYear, endMonth, endDay + 1, 0, 5, 0, 0))
+
+        // Compare with current time (both in UTC)
+        const now = currentTime.getTime()
+        const claimTime = claimAvailableDate.getTime()
+        
+        return now >= claimTime
     }
 
     // ==================== Event Handlers ====================
@@ -321,12 +491,18 @@ export default function MakeMoneyPage() {
         { value: '30d', label: '30 Ngày' },
     ]
 
+    // Table styles (matching wallet page)
+    const tableContainerStyles = "max-h-[60vh] sm:max-h-[65.5vh] overflow-y-auto overflow-x-auto -mx-3 sm:mx-0"
+    const tableStyles = "w-full table-fixed border-separate border-spacing-y-1"
+    const tableHeaderStyles = "px-2 py-2 sm:px-3 text-left text-xs sm:text-sm lg:text-base font-semibold text-theme-red-100 uppercase bg-white"
+    const tableCellStyles = "px-2 py-3 sm:px-3 text-xs sm:text-sm lg:text-base text-theme-gray-200 bg-white border-y border-black dark:border-gray-700 group-hover:bg-gray-100 dark:group-hover:bg-gray-800 font-light"
+
     return (
         <div className='w-full min-h-svh flex pt-24 justify-center items-start p-6 bg-[#FFFCF9] flex-1'>
             <div className='w-full max-w-7xl'>
                 {/* Header Section */}
                 {currentStaking && (
-                    <div className='flex flex-col items-center justify-center mb-8'>
+                    <div className='flex flex-col items-center justify-center mb-2'>
                         <div className='flex items-end justify-center mb-4'>
                             <img src="/logo.png" alt="logo" className='w-12 h-12 object-cover pt-2' />
                             <div className='flex flex-col items-center mx-4'>
@@ -365,48 +541,108 @@ export default function MakeMoneyPage() {
 
                             {/* Right Column */}
                             <div className='p-3 bg-white rounded-full flex items-center gap-3 justify-start shadow-md'>
-                                <p className='text-sm text-gray-600 pl-1'>Thời gian tham gia:</p>
+                                <p className='text-sm text-gray-600 pl-1'>Thời gian bắt đầu:</p>
                                 <p className='text-sm font-medium text-red-600'>{formatDateOnly(currentStaking.date_start)}</p>
                             </div>
 
                             {/* Left Column */}
                             <div className='p-3 bg-white rounded-full flex items-center gap-3 justify-start shadow-md'>
-                                <p className='text-sm text-gray-600 pl-1'>Tổng phần thưởng:</p>
-                                <p className='text-lg font-semibold text-red-600'>{formatNumber(currentStaking.amount * 0.3)} USDT</p>
+                                <p className='text-sm text-gray-600 pl-1'>Thời gian kết thúc:</p>
+                                <p className='text-sm font-medium text-red-600'>{formatDateOnly(currentStaking.date_end)}</p>
                             </div>
 
                             {/* Right Column */}
+                            <div className='p-3 bg-white rounded-full flex items-center gap-3 justify-start shadow-md'>
+                                <p className='text-sm text-gray-600 pl-1'>Tổng phần thưởng:</p>
+                                <div className='flex gap-2 items-center'>
+                                    <p className='text-lg font-semibold text-red-600'>{formatNumber(getRewardAmount(currentStaking))} USDT</p>
+                                    {currentStaking.estimated_reward !== undefined && 
+                                     currentStaking.real_reward !== undefined && 
+                                     currentStaking.estimated_reward !== currentStaking.real_reward && (
+                                        <p className='text-xs text-gray-500'>
+                                            (Ước tính: {formatNumber(currentStaking.estimated_reward)} USDT)
+                                        </p>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Left Column */}
                             <div className='p-3 bg-white rounded-full flex items-center gap-3 justify-start shadow-md'>
                                 <p className='text-sm text-gray-600 pl-1'>Trạng thái:</p>
                                 <p className='text-sm font-medium text-gray-900'>{getStatusText(currentStaking.status)}</p>
                             </div>
                         </div>
-
-                        {/* Progress Bar */}
-                        {/* <div className='mb-4'>
-                            <div className='flex justify-between items-center mb-2'>
-                                <span className='text-sm text-gray-600'>Tiến độ</span>
-                                <span className='text-sm font-semibold text-pink-500'>{calculateProgress(currentStaking)}%</span>
+                        {/* Tasks - Chỉ hiển thị khi có dữ liệu mission-now */}
+                        {missionNowResponse?.data ? (
+                            <div className='grid grid-cols-2 gap-4 max-w-[50vw] mx-auto'>
+                                <div className='p-4 bg-blue-50 rounded-lg border border-blue-200'>
+                                    <div className='flex items-center justify-between mb-2'>
+                                        <p className='text-sm text-blue-600 font-medium'>Lượt xem video</p>
+                                        {missionProgress ? (
+                                            <p className='text-sm font-semibold text-blue-900'>
+                                                {missionProgress.completed}/{missionProgress.total}
+                                            </p>
+                                        ) : (
+                                            <p className='text-sm font-semibold text-blue-900'>
+                                                {missionNowResponse.data.turn_setting}
+                                            </p>
+                                        )}
+                                    </div>
+                                    {missionProgress ? (
+                                        <>
+                                            <Progress value={missionProgress.progress} className='h-2 mb-2' />
+                                            <p className='text-xs text-blue-500'>
+                                                {missionProgress.isCompleted ? '✅ Đã hoàn thành' : `Còn lại: ${missionProgress.total - missionProgress.completed} video`}
+                                            </p>
+                                            {!missionProgress.canWatchNext && missionProgress.timeRemaining > 0 && (
+                                                <p className='text-xs text-orange-600 mt-1'>
+                                                    ⏱️ Có thể xem tiếp sau: {formatTimeRemaining(missionProgress.timeRemaining)}
+                                                </p>
+                                            )}
+                                            {missionProgress.canWatchNext && !missionProgress.isCompleted && (
+                                                <p className='text-xs text-green-600 mt-1'>
+                                                    ✅ Có thể xem video ngay
+                                                </p>
+                                            )}
+                                        </>
+                                    ) : (
+                                        <Skeleton className='h-2 w-full' />
+                                    )}
+                                </div>
+                                <div className='p-4 bg-green-50 rounded-lg border border-green-200'>
+                                    <div className='flex items-center justify-between mb-2'>
+                                        <p className='text-sm text-green-600 font-medium'>Số thiết bị</p>
+                                        <p className='text-sm font-semibold text-green-900'>
+                                            {missionNowResponse.data.devices}
+                                        </p>
+                                    </div>
+                                    <p className='text-xs text-green-500'>
+                                        Số thiết bị cho phép xem video
+                                    </p>
+                                </div>
                             </div>
-                            <div className='w-full bg-gray-200 rounded-full h-3'>
-                                <div
-                                    className='bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 h-3 rounded-full transition-all duration-300'
-                                    style={{ width: `${calculateProgress(currentStaking)}%` }}
-                                />
+                        ) : isLoadingMission ? (
+                            <div className='grid grid-cols-2 gap-4 max-w-[50vw] mx-auto'>
+                                <Skeleton className='h-24 w-full rounded-lg' />
+                                <Skeleton className='h-24 w-full rounded-lg' />
                             </div>
-                        </div> */}
-
-                        {/* Tasks */}
-                        {/* <div className='grid grid-cols-2 gap-4'>
-                            <div className='p-3 bg-blue-50 rounded-lg border border-blue-200'>
-                                <p className='text-sm text-blue-600 mb-1'>Lượt xem video</p>
-                                <p className='text-lg font-bold text-blue-900'>{currentStaking.turn_setting}</p>
-                            </div>
-                            <div className='p-3 bg-green-50 rounded-lg border border-green-200'>
-                                <p className='text-sm text-green-600 mb-1'>Số thiết bị</p>
-                                <p className='text-lg font-bold text-green-900'>{currentStaking.devices_setting}</p>
-                            </div>
-                        </div> */}
+                        ) : null}
+                        <div className='flex flex-col items-center mt-4 gap-2'>
+                            <Button
+                                onClick={() => claimMissionMutation.mutate()}
+                                disabled={claimMissionMutation.isPending || !canClaimReward(currentStaking)}
+                                className='w-[200px] text-center bg-theme-red-200 text-white text-lg uppercase font-semibold rounded-full border-none h-10 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
+                            >
+                                {claimMissionMutation.isPending ? (
+                                    <>
+                                        <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+                                        Đang xử lý...
+                                    </>
+                                ) : (
+                                    'Claim'
+                                )}
+                            </Button>
+                        </div>
                     </div>
                 ) : (
                     /* Join Package Section */
@@ -520,59 +756,90 @@ export default function MakeMoneyPage() {
                     </div>
                 </Modal>
 
-                {/* Staking Histories Section */}
-                <h2 className='text-xl font-bold text-theme-red-100 mb-4'>Thống kê gói staking</h2>
-                <div className='p-6 bg-white rounded-lg border border-gray-200 shadow-md'>
-                    {isLoadingHistories ? (
+                {/* All Packages Table Section */}
+                <h2 className='text-xl font-bold text-theme-red-100 mb-4 mt-8'>Bảng các gói đã và đang tham gia</h2>
+                <div className=' border-none'>
+                    {isLoadingCurrentStaking || isLoadingHistories ? (
                         <div className='space-y-3'>
-                            {[1, 2, 3].map((i) => (
-                                <Skeleton key={i} className="h-24 w-full rounded-lg" />
-                            ))}
+                            <Skeleton className="h-12 w-full rounded-lg" />
+                            <Skeleton className="h-12 w-full rounded-lg" />
+                            <Skeleton className="h-12 w-full rounded-lg" />
                         </div>
-                    ) : stakingHistories.length === 0 ? (
+                    ) : allPackages.length === 0 ? (
                         <div className='text-center py-8 text-gray-500'>
-                            <p>Chưa có lịch sử tham gia</p>
+                            <p>Chưa có gói nào được tham gia</p>
                         </div>
                     ) : (
-                        <div className='space-y-3'>
-                            {stakingHistories.map((history) => (
-                                <div
-                                    key={history.id}
-                                    className='rounded-lg border border-gray-200 hover:shadow-md transition-shadow'
-                                >
-                                    <div className='flex items-center justify-between mb-3'>
-                                        <div className='flex items-center gap-3'>
-                                            <span className='text-sm font-bold bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white px-4 py-1 rounded-full'>
-                                               Staking: {formatNumber(history.amount)} USDT
-                                            </span>
-                                            <span className='px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-sm font-medium'>
-                                                {getTypeLabel(history.type)}
-                                            </span>
-                                            {getStatusBadge(history.status)}
-                                        </div>
-                                        <button className=' text-sm uppercase font-semibold rounded-full border-none bg-theme-red-200/40 text-white px-4 py-1'>Claim</button>
-                                    </div>
+                        <div className="hidden sm:block overflow-hidden rounded-md bg-transparent border border-none">
+                            {/* Fixed Header */}
+                            <div className="overflow-hidden rounded-t-md">
+                                <table className={tableStyles}>
+                                    <thead>
+                                        <tr>
+                                            <th className={`${tableHeaderStyles} w-[5%] text-left rounded-l-lg`}>STT</th>
+                                            <th className={`${tableHeaderStyles} w-[12%]`}>GÓI STAKING</th>
+                                            <th className={`${tableHeaderStyles} w-[10%]`}>LOẠI</th>
+                                            <th className={`${tableHeaderStyles} w-[12%]`}>SỐ TIỀN THAM GIA</th>
+                                            <th className={`${tableHeaderStyles} w-[15%]`}>THỜI GIAN THAM GIA</th>
+                                            <th className={`${tableHeaderStyles} w-[12%]`}>TỔNG PHẦN THƯỞNG</th>
+                                            <th className={`${tableHeaderStyles} w-[12%]`}>TRẠNG THÁI</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
 
-                                    <div className='grid grid-cols-2 md:grid-cols-4 gap-3 text-sm'>
-                                        <div>
-                                            <p className='text-gray-600'>Bắt đầu</p>
-                                            <p className='font-medium text-gray-900'>{formatDate(history.date_start)}</p>
-                                        </div>
-                                        <div>
-                                            <p className='text-gray-600'>Kết thúc</p>
-                                            <p className='font-medium text-gray-900'>{formatDate(history.date_end)}</p>
-                                        </div>
-                                        <div>
-                                            <p className='text-gray-600'>Lượt xem</p>
-                                            <p className='font-medium text-gray-900'>{history.turn_setting}</p>
-                                        </div>
-                                        <div>
-                                            <p className='text-gray-600'>Thiết bị</p>
-                                            <p className='font-medium text-gray-900'>{history.devices_setting}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                            {/* Scrollable Body */}
+                            <div className={tableContainerStyles} ref={tableRef}>
+                                <table className={tableStyles}>
+                                    <tbody>
+                                        {allPackages.map((pkg, index) => (
+                                            <tr key={pkg.id} className="group transition-colors">
+                                                <td className={`${tableCellStyles} w-[5%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
+                                                    {index + 1}
+                                                </td>
+                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                    <span className="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-sm font-medium">
+                                                        {getTypeDurationLabel(pkg.type)}
+                                                    </span>
+                                                </td>
+                                                <td className={`${tableCellStyles} w-[10%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                    <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
+                                                        pkg.amount > 10 
+                                                            ? 'bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white' 
+                                                            : 'bg-gray-200 text-gray-800'
+                                                    }`}>
+                                                        {pkg.amount > 10 ? 'Staking' : 'Base'}
+                                                    </span>
+                                                </td>
+                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid font-semibold text-red-600`}>
+                                                    {formatNumber(pkg.amount)} USDT
+                                                </td>
+                                                <td className={`${tableCellStyles} w-[15%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                    {formatParticipationTime(pkg.date_start)}
+                                                </td>
+                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid font-semibold`}>
+                                                    {pkg.status === 'running' ? (
+                                                        <span className="text-gray-500">--</span>
+                                                    ) : (
+                                                        <span className="text-green-600">{formatNumber(getRewardAmount(pkg))} USDT</span>
+                                                    )}
+                                                </td>
+                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                                        pkg.status === 'running' 
+                                                            ? 'bg-gray-400 text-white' 
+                                                            : pkg.status === 'pending-claim'
+                                                            ? 'bg-yellow-500 text-white'
+                                                            : 'bg-gray-500 text-white'
+                                                    }`}>
+                                                        {getStatusText(pkg.status)}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     )}
                 </div>
