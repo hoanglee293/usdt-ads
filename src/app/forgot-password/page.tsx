@@ -3,11 +3,13 @@ import React, { useState } from 'react'
 import { resetPasswordRequest } from '@/services/AuthService'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
+import { useIsMobile } from '@/ui/use-mobile'
 
 const ForgotPasswordPage = () => {
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
     const router = useRouter()
+    const isMobile = useIsMobile()
 
     // Handle email submission
     const handleEmailSubmit = async (e: React.FormEvent) => {
@@ -44,8 +46,8 @@ const ForgotPasswordPage = () => {
     }
 
     return (
-        <div className='w-full h-svh flex justify-center items-center p-6'>
-            <div className='w-full h-full flex justify-center items-center flex-col flex-1 radial-gradient rounded-3xl p-6'>
+        <div className='w-full h-svh flex justify-center items-center md:p-6'>
+            <div className='w-full h-full hidden md:flex justify-center items-center flex-col flex-1 radial-gradient rounded-3xl p-6'>
                 <div className='flex justify-center items-center flex-col mt-[30%]'>
                     <img src="/logo.png" alt="logo" className='w-24 h-24 object-contain' />
                     <span className='tracking-[-0.02em] leading-[150%] inline-block font-orbitron text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] font-bold text-base'>USDT ADS</span>
@@ -54,10 +56,10 @@ const ForgotPasswordPage = () => {
                     <p className='text-lg text-center text-theme-black-100 font-medium'>Tham gia staking và nhiệm vụ để tăng thu nhập của bạn lên gấp nhiều lần..</p>
                 </div>
             </div>
-            <div className='w-full h-full flex justify-center items-center flex-col flex-1 px-8 bg-theme-white-100'>
+            <div className={`w-full h-full flex justify-center items-center flex-col flex-1 px-8 bg-theme-white-100 ${isMobile ? 'radial-gradient pb-[20vh]' : ''}`}>
                 <div className='w-full max-w-md flex flex-col items-center'>
-                    <img src="/logo.png" alt="logo" className='w-20 h-20 object-contain mb-6' />
-                    <h2 className='text-2xl font-semibold text-gray-800 mb-2'>
+                    <img src="/logo.png" alt="logo" className='w-28 h-28 object-contain mb-6' />
+                    <h2 className='text-3xl font-semibold text-white md:text-gray-800 mb-2'>
                         Quên mật khẩu
                     </h2>
 

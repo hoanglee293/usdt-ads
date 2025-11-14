@@ -1,7 +1,7 @@
 'use client'
 import CustomSelect from '@/components/CustomSelect'
 import React, { useState, useRef, useMemo, useEffect } from 'react'
-import { Copy, ExternalLink, Plus, Loader2 } from 'lucide-react'
+import { Copy, ExternalLink, Plus, Loader2, ChevronDown, ChevronUp, Wallet } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/ui/button'
 import { useRouter } from 'next/navigation'
@@ -33,6 +33,7 @@ import {
     DialogFooter,
 } from '@/ui/dialog'
 import { Skeleton } from '@/ui/skeleton'
+import { useIsMobile } from '@/ui/use-mobile'
 
 // Helper function to map API transaction to UI format
 const mapTransactionToUI = (transaction: TransactionHistoryItem, coinSymbol?: string): {
@@ -72,6 +73,107 @@ const mapTransactionToUI = (transaction: TransactionHistoryItem, coinSymbol?: st
     }
 }
 
+// Transaction Card Component for Mobile
+interface TransactionCardProps {
+    transaction: {
+        id: number
+        time: string
+        type: string
+        amount: string
+        fromAddress: string
+        toAddress: string
+        transactionId: string
+        status: 'Complete' | 'Lỗi'
+    }
+    onCopy: (text: string, type: string) => void
+    formatAddress: (address: string) => string
+}
+
+function TransactionCard({ transaction, onCopy, formatAddress }: TransactionCardProps) {
+    return (
+        <div className="bg-white rounded-lg border border-gray-200 shadow-md p-3 sm:p-4">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-2">
+            <span className="text-sm text-gray-500">#{transaction.id}</span>
+                <div className="flex items-center gap-2 flex-wrap">
+                    <div className={` py-1 rounded-full text-xs min-w-20 flex justify-center font-medium ${
+                        transaction.type === 'Rút' 
+                            ? 'bg-orange-100 text-orange-700' 
+                            : 'bg-blue-100 text-blue-700'
+                    }`}>
+                        {transaction.type}
+                    </div>
+                    <div className={` py-1 rounded-full text-xs min-w-20 flex justify-center font-medium ${
+                        transaction.status === 'Complete'
+                            ? 'bg-green-100 text-green-700'
+                            : 'bg-red-100 text-red-700'
+                    }`}>
+                        {transaction.status}
+                    </div>
+                </div>
+            </div>
+            
+            {/* Amount & Time */}
+            <div className="flex items-center justify-between gap-2">
+                <div className="text-base font-semibold text-red-500">
+                    {transaction.amount}
+                </div>
+                <div className="text-xs text-yellow-600 dark:text-yellow-400 italic mt-0.5">
+                    {transaction.time}
+                </div>
+            </div>
+            
+            {/* Details - Always visible */}
+            <div className="pt-3 flex items-center justify-start gap-2 border-gray-200 ">
+                <AddressRow 
+                    label="To" 
+                    address={transaction.toAddress}
+                    onCopy={onCopy}
+                    formatAddress={formatAddress}
+                />
+                <AddressRow 
+                    label="TX ID" 
+                    address={transaction.transactionId}
+                    onCopy={onCopy}
+                    formatAddress={formatAddress}
+                />
+            </div>
+        </div>
+    )
+}
+
+function AddressRow({ 
+    label, 
+    address, 
+    onCopy, 
+    formatAddress 
+}: { 
+    label: string
+    address: string
+    onCopy: (text: string, type: string) => void
+    formatAddress: (address: string) => string
+}) {
+    return (
+        <div className="flex items-start gap-2">
+            <span className="text-xs font-medium text-gray-600 md:min-w-[60px] min-w-auto">
+                {label}:
+            </span>
+            <div className="flex items-center gap-1.5 flex-1 min-w-0">
+                <span className="text-xs text-yellow-600 dark:text-yellow-400 italic break-all">
+                    {formatAddress(address)}
+                </span>
+                <button
+                    onClick={() => onCopy(address, label.toLowerCase())}
+                    className="text-gray-400 hover:text-gray-600 flex-shrink-0 transition-colors border-none bg-transparent pt-1"
+                    title={`Sao chép ${label.toLowerCase()}`}
+                >
+                    <Copy className="w-3 h-3" />
+                </button>
+            </div>
+        </div>
+    )
+}
+
 export default function WalletPage() {
     const [selectedNetwork, setSelectedNetwork] = useState<string>('')
     const [selectedCoin, setSelectedCoin] = useState<string>('')
@@ -80,6 +182,7 @@ export default function WalletPage() {
     const tableRef = useRef<HTMLDivElement>(null)
     const queryClient = useQueryClient()
     const router = useRouter()
+    const isMobile = useIsMobile()
     console.log("showCreateWalletDialog", showCreateWalletDialog)
 
     // ==================== React Query Hooks ====================
@@ -399,17 +502,17 @@ export default function WalletPage() {
     }
 
     return (
-        <div className='w-full min-h-svh flex pt-24 justify-center items-start p-6 bg-[#FFFCF9] flex-1'>
+        <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-24 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] flex-1'>
             <div className='w-full max-w-7xl'>
                 {/* Balance Section */}
-                <div className='flex flex-col items-center justify-center mb-6'>
-                    <div className='flex items-end justify-center mb-3'>
-                        <img src="/logo.png" alt="logo" className='w-10 h-10 object-cover pt-2' />
-                        <div className='flex flex-col items-center mx-4'>
-                            <div className='flex items-center gap-2 mb-1'>
-                                <span className='text-sm font-medium text-theme-red-100'>Chọn coin:</span>
+                <div className='flex flex-col items-center justify-center mb-4 sm:mb-6'>
+                    {isMobile ? (
+                        // Mobile: Stack vertically, compact
+                        <div className='flex flex-col items-center w-full'>
+                            <div className='flex items-center gap-2 mb-2'>
+                                <span className='text-xs font-medium text-theme-red-100'>Coin:</span>
                                 {isLoadingCoins ? (
-                                    <Skeleton className="h-8 w-24" />
+                                    <Skeleton className="h-7 w-20" />
                                 ) : (
                                     <CustomSelect
                                         id="coin"
@@ -418,36 +521,79 @@ export default function WalletPage() {
                                         options={coinOptions}
                                         placeholder="Chọn coin"
                                         disabled={isLoadingCoins}
-                                        className="w-24 text-sm"
+                                        className="w-20 text-xs"
                                     />
                                 )}
                             </div>
-                            {isLoadingBalance ? (
-                                <Skeleton className="h-8 w-48" />
-                            ) : balanceResponse?.data ? (
-                                <div className='flex flex-col items-center'>
-                                    <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
-                                        Số dư: {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                            <div className='flex items-center gap-2'>
+                                <img src="/logo.png" alt="logo" className='w-8 h-8 object-cover' />
+                                {isLoadingBalance ? (
+                                    <Skeleton className="h-6 w-40" />
+                                ) : balanceResponse?.data ? (
+                                    <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                        {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                     </span>
-                                    {(balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
-                                        <span className='text-sm text-gray-600 mt-1'>
-                                            (Quà: {formatBalance(balanceResponse.data.balance_gift)} | Thưởng: {formatBalance(balanceResponse.data.balance_reward)})
-                                        </span>
-                                    )}
-                                </div>
-                            ) : (
-                                <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
-                                    Số dư: 0.00 {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                ) : (
+                                    <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                        0.00 {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                    </span>
+                                )}
+                                <img src="/logo.png" alt="logo" className='w-8 h-8 object-cover' />
+                            </div>
+                            {balanceResponse?.data && (balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
+                                <span className='text-xs text-gray-600 mt-1'>
+                                    (Quà: {formatBalance(balanceResponse.data.balance_gift)} | Thưởng: {formatBalance(balanceResponse.data.balance_reward)})
                                 </span>
                             )}
                         </div>
-                        <img src="/logo.png" alt="logo" className='w-10 h-10 object-cover pt-2' />
-                    </div>
+                    ) : (
+                        // Desktop: Original layout
+                        <div className='flex items-end justify-center mb-3'>
+                            <img src="/logo.png" alt="logo" className='w-10 h-10 object-cover pt-2' />
+                            <div className='flex flex-col items-center mx-4'>
+                                <div className='flex items-center gap-2 mb-1'>
+                                    <span className='text-sm font-medium text-theme-red-100'>Chọn coin:</span>
+                                    {isLoadingCoins ? (
+                                        <Skeleton className="h-8 w-24" />
+                                    ) : (
+                                        <CustomSelect
+                                            id="coin"
+                                            value={selectedCoin}
+                                            onChange={handleCoinChange}
+                                            options={coinOptions}
+                                            placeholder="Chọn coin"
+                                            disabled={isLoadingCoins}
+                                            className="w-24 text-sm"
+                                        />
+                                    )}
+                                </div>
+                                {isLoadingBalance ? (
+                                    <Skeleton className="h-8 w-48" />
+                                ) : balanceResponse?.data ? (
+                                    <div className='flex flex-col items-center'>
+                                        <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                            Số dư: {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                        </span>
+                                        {(balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
+                                            <span className='text-sm text-gray-600 mt-1'>
+                                                (Quà: {formatBalance(balanceResponse.data.balance_gift)} | Thưởng: {formatBalance(balanceResponse.data.balance_reward)})
+                                            </span>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                        Số dư: 0.00 {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                    </span>
+                                )}
+                            </div>
+                            <img src="/logo.png" alt="logo" className='w-10 h-10 object-cover pt-2' />
+                        </div>
+                    )}
                 </div>
 
                 {/* Network Selection Section */}
-                <div className='mb-6 flex flex-col items-center justify-center'>
-                    <label htmlFor="network" className='block mb-2 text-sm font-medium text-theme-red-100'>
+                <div className='mb-4 sm:mb-6 flex flex-col items-center justify-center'>
+                    <label htmlFor="network" className='block mb-1 sm:mb-2 text-xs sm:text-sm font-medium text-theme-red-100'>
                         Chọn mạng lưới
                     </label>
                     <CustomSelect
@@ -457,44 +603,44 @@ export default function WalletPage() {
                         options={networkOptions}
                         placeholder="Chọn mạng lưới"
                         disabled={isLoadingNetworks}
-                        className="w-full max-w-56"
+                        className="w-full max-w-xs sm:max-w-56 text-sm"
                     />
                 </div>
 
                 {/* Wallet Address Section */}
                 {selectedNetwork && (
-                    <div className='mb-6 flex flex-col items-center justify-center'>
+                    <div className='mb-4 sm:mb-6 flex flex-col items-center justify-center w-full px-3 sm:px-0'>
                         {isLoadingWalletCheck ? (
                             <Skeleton className="h-20 w-full max-w-2xl" />
                         ) : hasWallet ? (
-                            <div className='w-full max-w-2xl p-4 bg-white rounded-lg border border-gray-200 shadow-sm'>
-                                <div className='flex items-center justify-between mb-2'>
-                                    <label className='text-sm font-medium text-theme-red-100'>
+                            <div className='w-full max-w-2xl p-3 sm:p-4 bg-white rounded-lg border border-gray-200 shadow-sm'>
+                                <div className='flex items-center justify-between mb-1.5 sm:mb-2'>
+                                    <label className='text-xs sm:text-sm font-medium text-theme-red-100'>
                                         Địa chỉ ví {selectedNetworkInfo?.net_symbol}:
                                     </label>
                                 </div>
                                 <div className='flex items-center gap-2 p-2 bg-gray-50 rounded border border-gray-200'>
-                                    <span className='text-sm text-yellow-600 dark:text-yellow-400 italic flex-1 break-all'>
+                                    <span className='text-xs sm:text-sm text-yellow-600 dark:text-yellow-400 italic flex-1 break-all'>
                                         {formatAddress(walletAddress || '')}
                                     </span>
                                     <button
                                         onClick={() => handleCopy(walletAddress || '', 'địa chỉ ví')}
-                                        className='text-gray-400 hover:text-gray-600 transition-colors border-none bg-transparent'
+                                        className='text-gray-400 hover:text-gray-600 transition-colors border-none bg-transparent flex-shrink-0'
                                         title='Sao chép địa chỉ'
                                     >
-                                        <Copy className='w-4 h-4' />
+                                        <Copy className='w-3.5 h-3.5 sm:w-4 sm:h-4' />
                                     </button>
                                 </div>
                             </div>
                         ) : (
-                            <div className='w-full max-w-2xl p-4 bg-yellow-50 rounded-lg border border-yellow-200'>
-                                <p className='text-sm text-yellow-800 mb-3 text-center'>
+                            <div className='w-full max-w-2xl p-3 sm:p-4 bg-yellow-50 rounded-lg border border-yellow-200'>
+                                <p className='text-xs sm:text-sm text-yellow-800 mb-2 sm:mb-3 text-center'>
                                     Bạn chưa có ví cho mạng lưới {selectedNetworkInfo?.net_name} ({selectedNetworkInfo?.net_symbol})
                                 </p>
                                 <Button
                                     onClick={confirmCreateWallet}
                                     disabled={createWalletMutation.isPending}
-                                    className='w-full bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none h-10 hover:opacity-90'
+                                    className='w-full bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none h-10 sm:h-12 hover:opacity-90'
                                 >
                                     {createWalletMutation.isPending ? (
                                         <>
@@ -514,132 +660,167 @@ export default function WalletPage() {
                 )}
 
                 {/* Deposit/Withdraw Buttons */}
-                {selectedNetwork && <div className='flex items-center justify-center gap-4 mb-10'>
-                    <Button
-                        onClick={handleDeposit}
-                        disabled={!hasWallet || !selectedNetwork}
-                        className='w-full cursor-pointer font-semibold uppercase max-w-56 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 inline-flex text-white rounded-full border-none h-12 text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
-                    >
-                        Nạp
-                    </Button>
-                    <Button
-                        onClick={handleWithdraw}
-                        disabled={!hasWallet || !selectedNetwork}
-                        className='w-full cursor-pointer font-semibold uppercase max-w-56 bg-theme-pink-100 inline-flex text-pink-500 rounded-full border-pink-500 border-solid border h-12 text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
-                    >
-                        Rút
-                    </Button>
-                </div>}
-
-                <div className="hidden sm:block overflow-hidden rounded-md bg-transparent border border-none">
-                    {/* Fixed Header */}
-                    <div className="overflow-hidden rounded-t-md">
-                        <table className={tableStyles}>
-                            <thead>
-                                <tr>
-                                    <th className={`${tableHeaderStyles} w-[5%] text-left rounded-l-lg`}>STT</th>
-                                    <th className={`${tableHeaderStyles} w-[12%]`}>THỜI GIAN</th>
-                                    <th className={`${tableHeaderStyles} w-[8%]`}>TYPE</th>
-                                    <th className={`${tableHeaderStyles} w-[10%]`}>SỐ TIỀN</th>
-                                    <th className={`${tableHeaderStyles} w-[12%]`}>FROM ADDRESS</th>
-                                    <th className={`${tableHeaderStyles} w-[12%]`}>TO ADDRESS</th>
-                                    <th className={`${tableHeaderStyles} w-[12%]`}>TRANSACTION ID</th>
-                                    <th className={`${tableHeaderStyles} w-[11%] text-center rounded-r-lg`}>STATUS</th>
-                                </tr>
-                            </thead>
-                        </table>
+                {selectedNetwork && (
+                    <div className='flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-10 px-3 sm:px-0'>
+                        <Button
+                            onClick={handleDeposit}
+                            disabled={!hasWallet || !selectedNetwork}
+                            className='w-full cursor-pointer font-semibold uppercase sm:max-w-56 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 inline-flex text-white rounded-full border-none h-11 sm:h-12 text-base sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
+                        >
+                            Nạp
+                        </Button>
+                        <Button
+                            onClick={handleWithdraw}
+                            disabled={!hasWallet || !selectedNetwork}
+                            className='w-full cursor-pointer font-semibold uppercase sm:max-w-56 bg-theme-pink-100 inline-flex text-pink-500 rounded-full border-pink-500 border-solid border h-11 sm:h-12 text-base sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
+                        >
+                            Rút
+                        </Button>
                     </div>
+                )}
 
-                    {/* Scrollable Body */}
-                    <div className={tableContainerStyles} ref={tableRef}>
-                        <table className={tableStyles}>
-                            <tbody>
-                                {isLoadingTransactionHistory ? (
-                                    <tr>
-                                        <td colSpan={8} className="text-center py-8">
-                                            <Skeleton className="h-8 w-full" />
-                                        </td>
-                                    </tr>
-                                ) : transactions.length === 0 ? (
-                                    <tr>
-                                        <td colSpan={8} className="text-center py-8 text-gray-500">
-                                            Không có giao dịch nào
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    transactions.map((transaction) => (
-                                    <tr key={transaction.id} className="group transition-colors">
-                                        <td className={`${tableCellStyles} w-[5%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
-                                            {transaction.id}
-                                        </td>
-                                        <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                            {transaction.time}
-                                        </td>
-                                        <td className={`${tableCellStyles} w-[8%] border-x-0 border-theme-gray-100 border-solid`}>
-                                            {transaction.type}
-                                        </td>
-                                        <td className={`${tableCellStyles} w-[10%] border-x-0 border-theme-gray-100 border-solid`}>
-                                            {transaction.amount}
-                                        </td>
-                                        <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                            <div className='flex items-center gap-2'>
-                                                <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
-                                                    {formatAddress(transaction.fromAddress)}
-                                                </span>
-                                                <button
-                                                    onClick={() => handleCopy(transaction.fromAddress, 'địa chỉ gửi')}
-                                                    className='text-gray-400 hover:text-gray-200 transition-colors border-none bg-transparent mt-1.5'
-                                                    title='Sao chép địa chỉ'
-                                                >
-                                                    <Copy className='w-3.5 h-3.5' />
-                                                </button>
-                                            </div>
-                                        </td>
-                                        <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                            <div className='flex items-center gap-2'>
-                                                <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
-                                                    {formatAddress(transaction.toAddress)}
-                                                </span>
-                                                <button
-                                                    onClick={() => handleCopy(transaction.toAddress, 'địa chỉ nhận')}
-                                                    className='text-gray-400 hover:text-gray-200 transition-colors border-none bg-transparent mt-1.5'
-                                                    title='Sao chép địa chỉ'
-                                                >
-                                                    <Copy className='w-3.5 h-3.5' />
-                                                </button>
-                                            </div>
-                                        </td>
-                                        <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                            <div className='flex items-center gap-2'>
-                                                <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
-                                                    {formatAddress(transaction.transactionId)}
-                                                </span>
-                                                <button
-                                                    onClick={() => handleCopy(transaction.transactionId, 'mã giao dịch')}
-                                                    className='text-gray-400 hover:text-gray-200 transition-colors border-none bg-transparent mt-1.5'
-                                                    title='Sao chép mã giao dịch'
-                                                >
-                                                    <Copy className='w-3.5 h-3.5' />
-                                                </button>
-                                            </div>
-                                        </td>
-                                        <td className={`${tableCellStyles} w-[11%] text-center rounded-r-lg border-l-0 border-theme-gray-100 border-solid`}>
-                                            <span
-                                                className={` px-1 font-medium flex justify-center items-center py-1.5 max-w-24 mx-auto rounded-full text-xs ${transaction.status === 'Complete'
-                                                        ? 'bg-green-500 text-white'
-                                                        : 'bg-red-500 text-white'
-                                                    }`}
-                                            >
-                                                {transaction.status}
-                                            </span>
-                                        </td>
-                                    </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
+                {/* Transaction History */}
+                {isMobile ? (
+                    // Mobile: Card Layout
+                    <div className="w-full space-y-3">
+                        {isLoadingTransactionHistory ? (
+                            <div className="space-y-3">
+                                {[1, 2, 3].map((i) => (
+                                    <Skeleton key={i} className="h-32 w-full rounded-lg" />
+                                ))}
+                            </div>
+                        ) : transactions.length === 0 ? (
+                            <div className="text-center py-12 px-4">
+                                <div className="text-gray-400 mb-2">
+                                    <Wallet className="w-12 h-12 mx-auto" />
+                                </div>
+                                <p className="text-sm text-gray-500">
+                                    Chưa có giao dịch nào
+                                </p>
+                            </div>
+                        ) : (
+                            transactions.map((transaction) => (
+                                <TransactionCard
+                                    key={transaction.id}
+                                    transaction={transaction}
+                                    onCopy={handleCopy}
+                                    formatAddress={formatAddress}
+                                />
+                            ))
+                        )}
                     </div>
-                </div>
+                ) : (
+                    // Desktop: Table Layout
+                    <div className="block overflow-hidden rounded-md bg-transparent border border-none">
+                        {/* Fixed Header */}
+                        <div className="overflow-hidden rounded-t-md">
+                            <table className={tableStyles}>
+                                <thead>
+                                    <tr>
+                                        <th className={`${tableHeaderStyles} w-[5%] text-left rounded-l-lg`}>STT</th>
+                                        <th className={`${tableHeaderStyles} w-[12%]`}>THỜI GIAN</th>
+                                        <th className={`${tableHeaderStyles} w-[8%]`}>TYPE</th>
+                                        <th className={`${tableHeaderStyles} w-[10%]`}>SỐ TIỀN</th>
+                                        <th className={`${tableHeaderStyles} w-[12%]`}>FROM ADDRESS</th>
+                                        <th className={`${tableHeaderStyles} w-[12%]`}>TO ADDRESS</th>
+                                        <th className={`${tableHeaderStyles} w-[12%]`}>TRANSACTION ID</th>
+                                        <th className={`${tableHeaderStyles} w-[11%] text-center rounded-r-lg`}>STATUS</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+
+                        {/* Scrollable Body */}
+                        <div className={tableContainerStyles} ref={tableRef}>
+                            <table className={tableStyles}>
+                                <tbody>
+                                    {isLoadingTransactionHistory ? (
+                                        <tr>
+                                            <td colSpan={8} className="text-center py-8">
+                                                <Skeleton className="h-8 w-full" />
+                                            </td>
+                                        </tr>
+                                    ) : transactions.length === 0 ? (
+                                        <tr>
+                                            <td colSpan={8} className="text-center py-8 text-gray-500">
+                                                Không có giao dịch nào
+                                            </td>
+                                        </tr>
+                                    ) : (
+                                        transactions.map((transaction) => (
+                                        <tr key={transaction.id} className="group transition-colors">
+                                            <td className={`${tableCellStyles} w-[5%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
+                                                {transaction.id}
+                                            </td>
+                                            <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                {transaction.time}
+                                            </td>
+                                            <td className={`${tableCellStyles} w-[8%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                {transaction.type}
+                                            </td>
+                                            <td className={`${tableCellStyles} w-[10%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                {transaction.amount}
+                                            </td>
+                                            <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                <div className='flex items-center gap-2'>
+                                                    <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
+                                                        {formatAddress(transaction.fromAddress)}
+                                                    </span>
+                                                    <button
+                                                        onClick={() => handleCopy(transaction.fromAddress, 'địa chỉ gửi')}
+                                                        className='text-gray-400 hover:text-gray-200 transition-colors border-none bg-transparent mt-1.5'
+                                                        title='Sao chép địa chỉ'
+                                                    >
+                                                        <Copy className='w-3.5 h-3.5' />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                <div className='flex items-center gap-2'>
+                                                    <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
+                                                        {formatAddress(transaction.toAddress)}
+                                                    </span>
+                                                    <button
+                                                        onClick={() => handleCopy(transaction.toAddress, 'địa chỉ nhận')}
+                                                        className='text-gray-400 hover:text-gray-200 transition-colors border-none bg-transparent mt-1.5'
+                                                        title='Sao chép địa chỉ'
+                                                    >
+                                                        <Copy className='w-3.5 h-3.5' />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                <div className='flex items-center gap-2'>
+                                                    <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
+                                                        {formatAddress(transaction.transactionId)}
+                                                    </span>
+                                                    <button
+                                                        onClick={() => handleCopy(transaction.transactionId, 'mã giao dịch')}
+                                                        className='text-gray-400 hover:text-gray-200 transition-colors border-none bg-transparent mt-1.5'
+                                                        title='Sao chép mã giao dịch'
+                                                    >
+                                                        <Copy className='w-3.5 h-3.5' />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                            <td className={`${tableCellStyles} w-[11%] text-center rounded-r-lg border-l-0 border-theme-gray-100 border-solid`}>
+                                                <span
+                                                    className={` px-1 font-medium flex justify-center items-center py-1.5 max-w-24 mx-auto rounded-full text-xs ${transaction.status === 'Complete'
+                                                            ? 'bg-green-500 text-white'
+                                                            : 'bg-red-500 text-white'
+                                                        }`}
+                                                >
+                                                    {transaction.status}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        ))
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                )}
             </div>
         </div>
     )
