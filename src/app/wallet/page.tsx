@@ -94,25 +94,23 @@ function TransactionCard({ transaction, onCopy, formatAddress }: TransactionCard
         <div className="bg-white rounded-lg border border-gray-200 shadow-md p-3 sm:p-4">
             {/* Header */}
             <div className="flex items-center justify-between mb-2">
-            <span className="text-sm text-gray-500">#{transaction.id}</span>
+                <span className="text-sm text-gray-500">#{transaction.id}</span>
                 <div className="flex items-center gap-2 flex-wrap">
-                    <div className={` py-1 rounded-full text-xs min-w-20 flex justify-center font-medium ${
-                        transaction.type === 'Rút' 
-                            ? 'bg-orange-100 text-orange-700' 
+                    <div className={` py-1 rounded-full text-xs min-w-20 flex justify-center font-medium ${transaction.type === 'Rút'
+                            ? 'bg-orange-100 text-orange-700'
                             : 'bg-blue-100 text-blue-700'
-                    }`}>
+                        }`}>
                         {transaction.type}
                     </div>
-                    <div className={` py-1 rounded-full text-xs min-w-20 flex justify-center font-medium ${
-                        transaction.status === 'Complete'
+                    <div className={` py-1 rounded-full text-xs min-w-20 flex justify-center font-medium ${transaction.status === 'Complete'
                             ? 'bg-green-100 text-green-700'
                             : 'bg-red-100 text-red-700'
-                    }`}>
+                        }`}>
                         {transaction.status}
                     </div>
                 </div>
             </div>
-            
+
             {/* Amount & Time */}
             <div className="flex items-center justify-between gap-2">
                 <div className="text-base font-semibold text-red-500">
@@ -122,17 +120,17 @@ function TransactionCard({ transaction, onCopy, formatAddress }: TransactionCard
                     {transaction.time}
                 </div>
             </div>
-            
+
             {/* Details - Always visible */}
             <div className="pt-3 flex items-center justify-start gap-2 border-gray-200 ">
-                <AddressRow 
-                    label="To" 
+                <AddressRow
+                    label="To"
                     address={transaction.toAddress}
                     onCopy={onCopy}
                     formatAddress={formatAddress}
                 />
-                <AddressRow 
-                    label="TX ID" 
+                <AddressRow
+                    label="TX ID"
                     address={transaction.transactionId}
                     onCopy={onCopy}
                     formatAddress={formatAddress}
@@ -142,12 +140,12 @@ function TransactionCard({ transaction, onCopy, formatAddress }: TransactionCard
     )
 }
 
-function AddressRow({ 
-    label, 
-    address, 
-    onCopy, 
-    formatAddress 
-}: { 
+function AddressRow({
+    label,
+    address,
+    onCopy,
+    formatAddress
+}: {
     label: string
     address: string
     onCopy: (text: string, type: string) => void
@@ -411,12 +409,12 @@ export default function WalletPage() {
             toast.error('Vui lòng chọn mạng lưới trước')
             return
         }
-        
+
         // Build query params
         const params = new URLSearchParams({
             networkId: selectedNetwork,
         })
-        
+
         if (selectedNetworkInfo?.net_name) {
             params.append('networkName', selectedNetworkInfo.net_name)
         }
@@ -429,7 +427,7 @@ export default function WalletPage() {
         if (selectedCoin) {
             params.append('coinId', selectedCoin)
         }
-        
+
         // Navigate to deposit page
         router.push(`/wallet/deposit?${params.toString()}`)
     }
@@ -443,12 +441,12 @@ export default function WalletPage() {
             toast.error('Vui lòng chọn mạng lưới trước')
             return
         }
-        
+
         // Build query params
         const params = new URLSearchParams({
             networkId: selectedNetwork,
         })
-        
+
         if (selectedNetworkInfo?.net_name) {
             params.append('networkName', selectedNetworkInfo.net_name)
         }
@@ -461,7 +459,7 @@ export default function WalletPage() {
         if (selectedCoin) {
             params.append('coinId', selectedCoin)
         }
-        
+
         // Navigate to withdraw page
         router.push(`/wallet/withdraw?${params.toString()}`)
     }
@@ -661,166 +659,170 @@ export default function WalletPage() {
 
                 {/* Deposit/Withdraw Buttons */}
                 {selectedNetwork && (
-                    <div className='flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-10 px-3 sm:px-0'>
-                        <Button
-                            onClick={handleDeposit}
-                            disabled={!hasWallet || !selectedNetwork}
-                            className='w-full cursor-pointer font-semibold uppercase sm:max-w-56 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 inline-flex text-white rounded-full border-none h-11 sm:h-12 text-base sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
-                        >
-                            Nạp
-                        </Button>
-                        <Button
-                            onClick={handleWithdraw}
-                            disabled={!hasWallet || !selectedNetwork}
-                            className='w-full cursor-pointer font-semibold uppercase sm:max-w-56 bg-theme-pink-100 inline-flex text-pink-500 rounded-full border-pink-500 border-solid border h-11 sm:h-12 text-base sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
-                        >
-                            Rút
-                        </Button>
-                    </div>
-                )}
-
-                {/* Transaction History */}
-                {isMobile ? (
-                    // Mobile: Card Layout
-                    <div className="w-full space-y-3">
-                        {isLoadingTransactionHistory ? (
-                            <div className="space-y-3">
-                                {[1, 2, 3].map((i) => (
-                                    <Skeleton key={i} className="h-32 w-full rounded-lg" />
-                                ))}
-                            </div>
-                        ) : transactions.length === 0 ? (
-                            <div className="text-center py-12 px-4">
-                                <div className="text-gray-400 mb-2">
-                                    <Wallet className="w-12 h-12 mx-auto" />
-                                </div>
-                                <p className="text-sm text-gray-500">
-                                    Chưa có giao dịch nào
-                                </p>
+                    <>
+                        <div className='flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-10 px-3 sm:px-0'>
+                            <Button
+                                onClick={handleDeposit}
+                                disabled={!hasWallet || !selectedNetwork}
+                                className='w-full cursor-pointer font-semibold uppercase sm:max-w-56 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 inline-flex text-white rounded-full border-none h-11 sm:h-12 text-base sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
+                            >
+                                Nạp
+                            </Button>
+                            <Button
+                                onClick={handleWithdraw}
+                                disabled={!hasWallet || !selectedNetwork}
+                                className='w-full cursor-pointer font-semibold uppercase sm:max-w-56 bg-theme-pink-100 inline-flex text-pink-500 rounded-full border-pink-500 border-solid border h-11 sm:h-12 text-base sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
+                            >
+                                Rút
+                            </Button>
+                        </div>
+                        {/* Transaction History */}
+                        {isMobile ? (
+                            // Mobile: Card Layout
+                            <div className="w-full space-y-3">
+                                {isLoadingTransactionHistory ? (
+                                    <div className="space-y-3">
+                                        {[1, 2, 3].map((i) => (
+                                            <Skeleton key={i} className="h-32 w-full rounded-lg" />
+                                        ))}
+                                    </div>
+                                ) : transactions.length === 0 ? (
+                                    <div className="text-center py-12 px-4">
+                                        <div className="text-gray-400 mb-2">
+                                            <Wallet className="w-12 h-12 mx-auto" />
+                                        </div>
+                                        <p className="text-sm text-gray-500">
+                                            Chưa có giao dịch nào
+                                        </p>
+                                    </div>
+                                ) : (
+                                    transactions.map((transaction) => (
+                                        <TransactionCard
+                                            key={transaction.id}
+                                            transaction={transaction}
+                                            onCopy={handleCopy}
+                                            formatAddress={formatAddress}
+                                        />
+                                    ))
+                                )}
                             </div>
                         ) : (
-                            transactions.map((transaction) => (
-                                <TransactionCard
-                                    key={transaction.id}
-                                    transaction={transaction}
-                                    onCopy={handleCopy}
-                                    formatAddress={formatAddress}
-                                />
-                            ))
-                        )}
-                    </div>
-                ) : (
-                    // Desktop: Table Layout
-                    <div className="block overflow-hidden rounded-md bg-transparent border border-none">
-                        {/* Fixed Header */}
-                        <div className="overflow-hidden rounded-t-md">
-                            <table className={tableStyles}>
-                                <thead>
-                                    <tr>
-                                        <th className={`${tableHeaderStyles} w-[5%] text-left rounded-l-lg`}>STT</th>
-                                        <th className={`${tableHeaderStyles} w-[12%]`}>THỜI GIAN</th>
-                                        <th className={`${tableHeaderStyles} w-[8%]`}>TYPE</th>
-                                        <th className={`${tableHeaderStyles} w-[10%]`}>SỐ TIỀN</th>
-                                        <th className={`${tableHeaderStyles} w-[12%]`}>FROM ADDRESS</th>
-                                        <th className={`${tableHeaderStyles} w-[12%]`}>TO ADDRESS</th>
-                                        <th className={`${tableHeaderStyles} w-[12%]`}>TRANSACTION ID</th>
-                                        <th className={`${tableHeaderStyles} w-[11%] text-center rounded-r-lg`}>STATUS</th>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
+                            // Desktop: Table Layout
+                            <div className="block overflow-hidden rounded-md bg-transparent border border-none">
+                                {/* Fixed Header */}
+                                <div className="overflow-hidden rounded-t-md">
+                                    <table className={tableStyles}>
+                                        <thead>
+                                            <tr>
+                                                <th className={`${tableHeaderStyles} w-[5%] text-left rounded-l-lg`}>STT</th>
+                                                <th className={`${tableHeaderStyles} w-[12%]`}>THỜI GIAN</th>
+                                                <th className={`${tableHeaderStyles} w-[8%]`}>TYPE</th>
+                                                <th className={`${tableHeaderStyles} w-[10%]`}>SỐ TIỀN</th>
+                                                <th className={`${tableHeaderStyles} w-[12%]`}>FROM ADDRESS</th>
+                                                <th className={`${tableHeaderStyles} w-[12%]`}>TO ADDRESS</th>
+                                                <th className={`${tableHeaderStyles} w-[12%]`}>TRANSACTION ID</th>
+                                                <th className={`${tableHeaderStyles} w-[11%] text-center rounded-r-lg`}>STATUS</th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
 
-                        {/* Scrollable Body */}
-                        <div className={tableContainerStyles} ref={tableRef}>
-                            <table className={tableStyles}>
-                                <tbody>
-                                    {isLoadingTransactionHistory ? (
-                                        <tr>
-                                            <td colSpan={8} className="text-center py-8">
-                                                <Skeleton className="h-8 w-full" />
-                                            </td>
-                                        </tr>
-                                    ) : transactions.length === 0 ? (
-                                        <tr>
-                                            <td colSpan={8} className="text-center py-8 text-gray-500">
-                                                Không có giao dịch nào
-                                            </td>
-                                        </tr>
-                                    ) : (
-                                        transactions.map((transaction) => (
-                                        <tr key={transaction.id} className="group transition-colors">
-                                            <td className={`${tableCellStyles} w-[5%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
-                                                {transaction.id}
-                                            </td>
-                                            <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                {transaction.time}
-                                            </td>
-                                            <td className={`${tableCellStyles} w-[8%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                {transaction.type}
-                                            </td>
-                                            <td className={`${tableCellStyles} w-[10%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                {transaction.amount}
-                                            </td>
-                                            <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                <div className='flex items-center gap-2'>
-                                                    <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
-                                                        {formatAddress(transaction.fromAddress)}
-                                                    </span>
-                                                    <button
-                                                        onClick={() => handleCopy(transaction.fromAddress, 'địa chỉ gửi')}
-                                                        className='text-gray-400 hover:text-gray-200 transition-colors border-none bg-transparent mt-1.5'
-                                                        title='Sao chép địa chỉ'
-                                                    >
-                                                        <Copy className='w-3.5 h-3.5' />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                            <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                <div className='flex items-center gap-2'>
-                                                    <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
-                                                        {formatAddress(transaction.toAddress)}
-                                                    </span>
-                                                    <button
-                                                        onClick={() => handleCopy(transaction.toAddress, 'địa chỉ nhận')}
-                                                        className='text-gray-400 hover:text-gray-200 transition-colors border-none bg-transparent mt-1.5'
-                                                        title='Sao chép địa chỉ'
-                                                    >
-                                                        <Copy className='w-3.5 h-3.5' />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                            <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                <div className='flex items-center gap-2'>
-                                                    <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
-                                                        {formatAddress(transaction.transactionId)}
-                                                    </span>
-                                                    <button
-                                                        onClick={() => handleCopy(transaction.transactionId, 'mã giao dịch')}
-                                                        className='text-gray-400 hover:text-gray-200 transition-colors border-none bg-transparent mt-1.5'
-                                                        title='Sao chép mã giao dịch'
-                                                    >
-                                                        <Copy className='w-3.5 h-3.5' />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                            <td className={`${tableCellStyles} w-[11%] text-center rounded-r-lg border-l-0 border-theme-gray-100 border-solid`}>
-                                                <span
-                                                    className={` px-1 font-medium flex justify-center items-center py-1.5 max-w-24 mx-auto rounded-full text-xs ${transaction.status === 'Complete'
-                                                            ? 'bg-green-500 text-white'
-                                                            : 'bg-red-500 text-white'
-                                                        }`}
-                                                >
-                                                    {transaction.status}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                        ))
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                                {/* Scrollable Body */}
+                                <div className={tableContainerStyles} ref={tableRef}>
+                                    <table className={tableStyles}>
+                                        <tbody>
+                                            {isLoadingTransactionHistory ? (
+                                                <tr>
+                                                    <td colSpan={8} className="text-center py-8">
+                                                        <Skeleton className="h-8 w-full" />
+                                                    </td>
+                                                </tr>
+                                            ) : transactions.length === 0 ? (
+                                                <tr>
+                                                    <td colSpan={8} className="text-center py-8 text-gray-500">
+                                                        Không có giao dịch nào
+                                                    </td>
+                                                </tr>
+                                            ) : (
+                                                transactions.map((transaction) => (
+                                                    <tr key={transaction.id} className="group transition-colors">
+                                                        <td className={`${tableCellStyles} w-[5%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
+                                                            {transaction.id}
+                                                        </td>
+                                                        <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                            {transaction.time}
+                                                        </td>
+                                                        <td className={`${tableCellStyles} w-[8%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                            {transaction.type}
+                                                        </td>
+                                                        <td className={`${tableCellStyles} w-[10%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                            {transaction.amount}
+                                                        </td>
+                                                        <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                            <div className='flex items-center gap-2'>
+                                                                <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
+                                                                    {formatAddress(transaction.fromAddress)}
+                                                                </span>
+                                                                <button
+                                                                    onClick={() => handleCopy(transaction.fromAddress, 'địa chỉ gửi')}
+                                                                    className='text-gray-400 hover:text-gray-200 transition-colors border-none bg-transparent mt-1.5'
+                                                                    title='Sao chép địa chỉ'
+                                                                >
+                                                                    <Copy className='w-3.5 h-3.5' />
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                        <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                            <div className='flex items-center gap-2'>
+                                                                <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
+                                                                    {formatAddress(transaction.toAddress)}
+                                                                </span>
+                                                                <button
+                                                                    onClick={() => handleCopy(transaction.toAddress, 'địa chỉ nhận')}
+                                                                    className='text-gray-400 hover:text-gray-200 transition-colors border-none bg-transparent mt-1.5'
+                                                                    title='Sao chép địa chỉ'
+                                                                >
+                                                                    <Copy className='w-3.5 h-3.5' />
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                        <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                            <div className='flex items-center gap-2'>
+                                                                <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
+                                                                    {formatAddress(transaction.transactionId)}
+                                                                </span>
+                                                                <button
+                                                                    onClick={() => handleCopy(transaction.transactionId, 'mã giao dịch')}
+                                                                    className='text-gray-400 hover:text-gray-200 transition-colors border-none bg-transparent mt-1.5'
+                                                                    title='Sao chép mã giao dịch'
+                                                                >
+                                                                    <Copy className='w-3.5 h-3.5' />
+                                                                </button>
+                                                            </div>
+                                                        </td>
+                                                        <td className={`${tableCellStyles} w-[11%] text-center rounded-r-lg border-l-0 border-theme-gray-100 border-solid`}>
+                                                            <span
+                                                                className={` px-1 font-medium flex justify-center items-center py-1.5 max-w-24 mx-auto rounded-full text-xs ${transaction.status === 'Complete'
+                                                                    ? 'bg-green-500 text-white'
+                                                                    : 'bg-red-500 text-white'
+                                                                    }`}
+                                                            >
+                                                                {transaction.status}
+                                                            </span>
+                                                        </td>
+                                                    </tr>
+                                                ))
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        )}
+                    </>
+
                 )}
+
+
             </div>
         </div>
     )

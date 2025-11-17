@@ -8,6 +8,7 @@ import CustomSelect from '@/components/CustomSelect'
 import { Skeleton } from '@/ui/skeleton'
 import { Progress } from '@/ui/progress'
 import Modal from '@/components/Modal'
+import { useIsMobile } from '@/ui/use-mobile'
 import {
     getListCoins,
     getBalance,
@@ -34,6 +35,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 export default function MakeMoneyPage() {
     const queryClient = useQueryClient()
     const tableRef = useRef<HTMLDivElement>(null)
+    const isMobile = useIsMobile()
 
     // Form state
     const [stakingType, setStakingType] = useState<'1d' | '7d' | '30d'>('1d')
@@ -498,109 +500,97 @@ export default function MakeMoneyPage() {
     const tableCellStyles = "px-2 py-3 sm:px-3 text-xs sm:text-sm lg:text-base text-theme-gray-200 bg-white border-y border-black dark:border-gray-700 group-hover:bg-gray-100 dark:group-hover:bg-gray-800 font-light"
 
     return (
-        <div className='w-full min-h-svh flex pt-24 justify-center items-start p-6 bg-[#FFFCF9] flex-1'>
+        <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-24 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] flex-1'>
             <div className='w-full max-w-7xl'>
                 {/* Header Section */}
                 {currentStaking && (
-                    <div className='flex flex-col items-center justify-center mb-2'>
-                        <div className='flex items-end justify-center mb-4'>
-                            <img src="/logo.png" alt="logo" className='w-12 h-12 object-cover pt-2' />
-                            <div className='flex flex-col items-center mx-4'>
-                                <h1 className='text-3xl font-semibold font-orbitron text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]'>{currentStaking && currentStaking?.amount > 10 ? 'Staking' : 'Base'}</h1>
+                    <div className='flex flex-col items-center justify-center'>
+                        <div className='flex items-end justify-center mb-2 sm:mb-4 gap-2 sm:gap-4'>
+                            <img src="/logo.png" alt="logo" className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-cover pt-1 sm:pt-2' />
+                            <div className='flex flex-col items-center mx-2 sm:mx-4'>
+                                <h1 className='text-xl sm:text-2xl md:text-3xl font-semibold font-orbitron text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]'>{currentStaking && currentStaking?.amount > 10 ? 'Staking' : 'Base'}</h1>
                             </div>
-                            <img src="/logo.png" alt="logo" className='w-12 h-12 object-cover pt-2' />
+                            <img src="/logo.png" alt="logo" className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-cover pt-1 sm:pt-2' />
                         </div>
                     </div>
                 )}
 
                 {/* Current Staking Section */}
                 {isLoadingCurrentStaking ? (
-                    <div className='mb-8'>
+                    <div className='mb-6 sm:mb-8'>
                         <Skeleton className="h-64 w-full rounded-lg" />
                     </div>
                 ) : currentStaking ? (
-                    <div className='mb-8 p-6 rounded-lg border border-gray-200'>
-                        <div className='grid grid-cols-1 md:grid-cols-2 max-w-[50vw] mx-auto gap-4 mb-4'>
-                            {/* Left Column */}
-                            <div className='p-3 bg-white rounded-full flex items-center gap-3 justify-start shadow-md'>
-                                <p className='text-sm text-gray-600 pl-1'>Gói staking:</p>
-                                <p className='text-lg font-semibold text-red-600'>{currentStaking?.amount > 10 ? 'Staking' : 'Base'}</p>
-                            </div>
-
+                    <div className='mb-6 sm:mb-8 p-3 sm:p-4 md:p-6 rounded-lg border border-gray-200'>
+                        <div className='grid grid-cols-1 md:grid-cols-2 w-full md:max-w-[50vw] mx-auto gap-3 sm:gap-4 mb-3 sm:mb-4'>
                             {/* Right Column */}
-                            <div className='p-3 bg-white rounded-full flex items-center gap-3 justify-start shadow-md'>
-                                <p className='text-sm text-gray-600 pl-1'>Loại staking:</p>
-                                <p className='text-lg font-semibold text-red-600'>{getTypeDurationLabel(currentStaking.type)}</p>
+                            <div className='p-2 sm:p-3 bg-white rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
+                                <p className='text-xs sm:text-sm text-gray-600 pl-1'>Loại staking:</p>
+                                <p className='text-base sm:text-lg font-semibold text-red-600'>{getTypeDurationLabel(currentStaking.type)}</p>
                             </div>
 
                             {/* Left Column */}
-                            <div className='p-3 bg-white rounded-full flex items-center gap-3 justify-start shadow-md'>
-                                <p className='text-sm text-gray-600 pl-1'>Số tiền tham gia:</p>
-                                <p className='text-lg font-semibold text-red-600'>{formatNumber(currentStaking.amount)} USDT</p>
+                            <div className='p-2 sm:p-3 bg-white rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
+                                <p className='text-xs sm:text-sm text-gray-600 pl-1'>Trạng thái:</p>
+                                <p className='text-xs sm:text-sm font-medium text-gray-900'>{getStatusText(currentStaking.status)}</p>
                             </div>
 
                             {/* Right Column */}
-                            <div className='p-3 bg-white rounded-full flex items-center gap-3 justify-start shadow-md'>
-                                <p className='text-sm text-gray-600 pl-1'>Thời gian bắt đầu:</p>
-                                <p className='text-sm font-medium text-red-600'>{formatDateOnly(currentStaking.date_start)}</p>
+                            <div className='p-2 sm:p-3 bg-white rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
+                                <p className='text-xs sm:text-sm text-gray-600 pl-1'>Thời gian bắt đầu:</p>
+                                <p className='text-xs sm:text-sm font-medium text-red-600'>{formatDateOnly(currentStaking.date_start)}</p>
                             </div>
 
                             {/* Left Column */}
-                            <div className='p-3 bg-white rounded-full flex items-center gap-3 justify-start shadow-md'>
-                                <p className='text-sm text-gray-600 pl-1'>Thời gian kết thúc:</p>
-                                <p className='text-sm font-medium text-red-600'>{formatDateOnly(currentStaking.date_end)}</p>
+                            <div className='p-2 sm:p-3 bg-white rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
+                                <p className='text-xs sm:text-sm text-gray-600 pl-1'>Thời gian kết thúc:</p>
+                                <p className='text-xs sm:text-sm font-medium text-red-600'>{formatDateOnly(currentStaking.date_end)}</p>
+                            </div>
+
+                            {/* Left Column */}
+                            <div className='p-2 sm:p-3 bg-white rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
+                                <p className='text-xs sm:text-sm text-gray-600 pl-1'>Số tiền tham gia:</p>
+                                <p className='text-base sm:text-lg font-semibold text-red-600'>{currentStaking.amount} USDT</p>
                             </div>
 
                             {/* Right Column */}
-                            <div className='p-3 bg-white rounded-full flex items-center gap-3 justify-start shadow-md'>
-                                <p className='text-sm text-gray-600 pl-1'>Tổng phần thưởng:</p>
-                                <div className='flex gap-2 items-center'>
-                                    <p className='text-lg font-semibold text-red-600'>{formatNumber(getRewardAmount(currentStaking))} USDT</p>
-                                    {currentStaking.estimated_reward !== undefined && 
-                                     currentStaking.real_reward !== undefined && 
-                                     currentStaking.estimated_reward !== currentStaking.real_reward && (
-                                        <p className='text-xs text-gray-500'>
-                                            (Ước tính: {formatNumber(currentStaking.estimated_reward)} USDT)
-                                        </p>
-                                    )}
+                            <div className='p-2 sm:p-3 bg-white rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md flex-wrap'>
+                                <p className='text-xs sm:text-sm text-gray-600 pl-1'>Phần thưởng ước tính :</p>
+                                <div className='flex gap-1 sm:gap-2 items-center flex-wrap'>
+                                    <p className='text-base sm:text-lg font-semibold text-red-600'>{currentStaking.estimated_reward} USDT</p>
                                 </div>
                             </div>
 
-                            {/* Left Column */}
-                            <div className='p-3 bg-white rounded-full flex items-center gap-3 justify-start shadow-md'>
-                                <p className='text-sm text-gray-600 pl-1'>Trạng thái:</p>
-                                <p className='text-sm font-medium text-gray-900'>{getStatusText(currentStaking.status)}</p>
-                            </div>
+                            
                         </div>
                         {/* Tasks - Chỉ hiển thị khi có dữ liệu mission-now */}
                         {missionNowResponse?.data ? (
-                            <div className='grid grid-cols-2 gap-4 max-w-[50vw] mx-auto'>
-                                <div className='p-4 bg-blue-50 rounded-lg border border-blue-200'>
-                                    <div className='flex items-center justify-between mb-2'>
-                                        <p className='text-sm text-blue-600 font-medium'>Lượt xem video</p>
+                            <div className='grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full md:max-w-[50vw] mx-auto'>
+                                <div className='p-2 sm:p-3 md:p-4 bg-blue-50 rounded-lg border border-blue-200'>
+                                    <div className='flex items-center justify-between mb-1 sm:mb-2'>
+                                        <p className='text-xs sm:text-sm text-blue-600 font-medium'>Lượt xem video</p>
                                         {missionProgress ? (
-                                            <p className='text-sm font-semibold text-blue-900'>
+                                            <p className='text-xs sm:text-sm font-semibold text-blue-900'>
                                                 {missionProgress.completed}/{missionProgress.total}
                                             </p>
                                         ) : (
-                                            <p className='text-sm font-semibold text-blue-900'>
+                                            <p className='text-xs sm:text-sm font-semibold text-blue-900'>
                                                 {missionNowResponse.data.turn_setting}
                                             </p>
                                         )}
                                     </div>
                                     {missionProgress ? (
                                         <>
-                                            <Progress value={missionProgress.progress} className='h-2 mb-2' />
-                                            <p className='text-xs text-blue-500'>
+                                            <p className='text-[10px] sm:text-xs text-blue-500'>
                                                 {missionProgress.isCompleted ? '✅ Đã hoàn thành' : `Còn lại: ${missionProgress.total - missionProgress.completed} video`}
                                             </p>
                                             {!missionProgress.canWatchNext && missionProgress.timeRemaining > 0 && (
-                                                <p className='text-xs text-orange-600 mt-1'>
+                                                <p className='text-[10px] sm:text-xs text-orange-600 mt-0.5 sm:mt-1'>
                                                     ⏱️ Có thể xem tiếp sau: {formatTimeRemaining(missionProgress.timeRemaining)}
                                                 </p>
                                             )}
                                             {missionProgress.canWatchNext && !missionProgress.isCompleted && (
-                                                <p className='text-xs text-green-600 mt-1'>
+                                                <p className='text-[10px] sm:text-xs text-green-600 mt-0.5 sm:mt-1'>
                                                     ✅ Có thể xem video ngay
                                                 </p>
                                             )}
@@ -609,33 +599,33 @@ export default function MakeMoneyPage() {
                                         <Skeleton className='h-2 w-full' />
                                     )}
                                 </div>
-                                <div className='p-4 bg-green-50 rounded-lg border border-green-200'>
-                                    <div className='flex items-center justify-between mb-2'>
-                                        <p className='text-sm text-green-600 font-medium'>Số thiết bị</p>
-                                        <p className='text-sm font-semibold text-green-900'>
+                                <div className='p-2 sm:p-3 md:p-4 bg-green-50 rounded-lg border border-green-200'>
+                                    <div className='flex items-center justify-between mb-1 sm:mb-2'>
+                                        <p className='text-xs sm:text-sm text-green-600 font-medium'>Số thiết bị</p>
+                                        <p className='text-xs sm:text-sm font-semibold text-green-900'>
                                             {missionNowResponse.data.devices}
                                         </p>
                                     </div>
-                                    <p className='text-xs text-green-500'>
+                                    <p className='text-[10px] sm:text-xs text-green-500'>
                                         Số thiết bị cho phép xem video
                                     </p>
                                 </div>
                             </div>
                         ) : isLoadingMission ? (
-                            <div className='grid grid-cols-2 gap-4 max-w-[50vw] mx-auto'>
-                                <Skeleton className='h-24 w-full rounded-lg' />
-                                <Skeleton className='h-24 w-full rounded-lg' />
+                            <div className='grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full md:max-w-[50vw] mx-auto'>
+                                <Skeleton className='h-20 sm:h-24 w-full rounded-lg' />
+                                <Skeleton className='h-20 sm:h-24 w-full rounded-lg' />
                             </div>
                         ) : null}
-                        <div className='flex flex-col items-center mt-4 gap-2'>
+                        <div className='flex flex-col items-center mt-3 sm:mt-4 gap-2'>
                             <Button
                                 onClick={() => claimMissionMutation.mutate()}
                                 disabled={claimMissionMutation.isPending || !canClaimReward(currentStaking)}
-                                className='w-[200px] text-center bg-theme-red-200 text-white text-lg uppercase font-semibold rounded-full border-none h-10 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
+                                className='w-full sm:w-[200px] text-center bg-theme-red-200 text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-9 sm:h-10 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
                             >
                                 {claimMissionMutation.isPending ? (
                                     <>
-                                        <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+                                        <Loader2 className='w-3 h-3 sm:w-4 sm:h-4 mr-2 animate-spin' />
                                         Đang xử lý...
                                     </>
                                 ) : (
@@ -646,19 +636,19 @@ export default function MakeMoneyPage() {
                     </div>
                 ) : (
                     /* Join Package Section */
-                    <div className='mb-8 p-6 bg-transparent rounded-lg border border-gray-200 shadow-sm flex gap-10 w-[50vw] mx-auto'>
+                    <div className='mb-6 sm:mb-8 p-3 sm:p-4 md:p-6 bg-transparent rounded-lg border border-gray-200 shadow-sm flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-10 w-full md:w-[50vw] mx-auto'>
                         {/* Gói Base - Luôn hiển thị */}
-                        <div className='py-4 px-8 bg-transparent border border-theme-gray-100 border-solid flex flex-col items-center justify-center flex-1 gap-4 min-h-3200] rounded-xl'>
-                            <h3 className='text-4xl font-semibold text-black mb-2 text-center'>Base</h3>
-                            <span className='text-sm text-yellow-800 mb-2'>1 Ngày</span>
+                        <div className='py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-transparent border border-theme-gray-100 border-solid flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 min-h-[180px] sm:min-h-[200px] md:min-h-[230px] rounded-xl'>
+                            <h3 className='text-2xl sm:text-3xl md:text-4xl font-semibold text-black mb-1 sm:mb-2 text-center'>Base</h3>
+                            <span className='text-xs sm:text-sm text-yellow-800 mb-1 sm:mb-2'>1 Ngày</span>
                             <Button
                                 onClick={handleJoinBase}
-                                disabled={joinBaseMutation.isPending || isBaseDisabled}
-                                className='w-full bg-gray-100 text-theme-red-200 text-lg uppercase font-semibold rounded-full border-none h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
+                                disabled={joinBaseMutation.isPending}
+                                className='w-full bg-gray-100 cursor-pointer hover:bg-gray-200 text-theme-red-200 text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
                             >
                                 {joinBaseMutation.isPending ? (
                                     <>
-                                        <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+                                        <Loader2 className='w-3 h-3 sm:w-4 sm:h-4 mr-2 animate-spin' />
                                         Đang xử lý...
                                     </>
                                 ) : (
@@ -668,13 +658,13 @@ export default function MakeMoneyPage() {
                         </div>
 
                         {/* Gói Staking - Luôn hiển thị */}
-                        <div className='py-4 px-8 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 border border-green-200 flex flex-col items-center justify-center flex-1 gap-4 min-h-[230px] rounded-xl'>
-                            <h3 className='text-4xl text-center font-semibold text-white mb-2'> Staking</h3>
-                            <span className='text-sm text-white mb-2'>1 Ngày/ 7 Ngày/ 30 Ngày</span>
+                        <div className='py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 border border-green-200 flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 min-h-[180px] sm:min-h-[200px] md:min-h-[230px] rounded-xl'>
+                            <h3 className='text-2xl sm:text-3xl md:text-4xl text-center font-semibold text-white mb-1 sm:mb-2'> Staking</h3>
+                            <span className='text-xs sm:text-sm text-white mb-1 sm:mb-2'>1 Ngày / 7 Ngày / 30 Ngày</span>
                             <Button
                                 onClick={() => setIsStakingModalOpen(true)}
                                 disabled={isStakingDisabled}
-                                className='w-full bg-white text-theme-red-200 text-lg uppercase font-semibold rounded-full border-none h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
+                                className='w-full bg-white text-theme-red-200 text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
                             >
                                 Tham gia ngay
                             </Button>
@@ -757,19 +747,80 @@ export default function MakeMoneyPage() {
                 </Modal>
 
                 {/* All Packages Table Section */}
-                <h2 className='text-xl font-bold text-theme-red-100 mb-4 mt-8'>Bảng các gói đã và đang tham gia</h2>
+                <h2 className='text-lg sm:text-xl font-bold text-theme-red-100 mb-3 sm:mb-4 mt-6 sm:mt-8'>Bảng các gói đã và đang tham gia</h2>
                 <div className=' border-none'>
                     {isLoadingCurrentStaking || isLoadingHistories ? (
-                        <div className='space-y-3'>
-                            <Skeleton className="h-12 w-full rounded-lg" />
-                            <Skeleton className="h-12 w-full rounded-lg" />
-                            <Skeleton className="h-12 w-full rounded-lg" />
+                        <div className='space-y-2 sm:space-y-3'>
+                            <Skeleton className="h-12 sm:h-16 w-full rounded-lg" />
+                            <Skeleton className="h-12 sm:h-16 w-full rounded-lg" />
+                            <Skeleton className="h-12 sm:h-16 w-full rounded-lg" />
                         </div>
                     ) : allPackages.length === 0 ? (
-                        <div className='text-center py-8 text-gray-500'>
-                            <p>Chưa có gói nào được tham gia</p>
+                        <div className='text-center py-6 sm:py-8 text-gray-500'>
+                            <p className='text-sm sm:text-base'>Chưa có gói nào được tham gia</p>
                         </div>
                     ) : (
+                        <>
+                        {/* Mobile Card Layout */}
+                        <div className="block sm:hidden space-y-3">
+                            {allPackages.map((pkg, index) => (
+                                <div key={pkg.id} className="bg-white rounded-lg border border-gray-200 p-3 shadow-sm">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <span className="text-xs font-semibold text-gray-500">#{index + 1}</span>
+                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                            pkg.status === 'running' 
+                                                ? 'bg-gray-400 text-white' 
+                                                : pkg.status === 'pending-claim'
+                                                ? 'bg-yellow-500 text-white'
+                                                : 'bg-gray-500 text-white'
+                                        }`}>
+                                            {getStatusText(pkg.status)}
+                                        </span>
+                                    </div>
+                                    
+                                    <div className="space-y-2">
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-xs text-gray-600">Gói staking:</span>
+                                            <span className="px-2 py-0.5 bg-pink-100 text-pink-700 rounded-full text-xs font-medium">
+                                                {getTypeDurationLabel(pkg.type)}
+                                            </span>
+                                        </div>
+                                        
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-xs text-gray-600">Loại:</span>
+                                            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                                                pkg.amount > 10 
+                                                    ? 'bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white' 
+                                                    : 'bg-gray-200 text-gray-800'
+                                            }`}>
+                                                {pkg.amount > 10 ? 'Staking' : 'Base'}
+                                            </span>
+                                        </div>
+                                        
+                                        <div className="flex items-center justify-between">
+                                            <span className="text-xs text-gray-600">Số tiền tham gia:</span>
+                                            <span className="text-xs font-semibold text-red-600">{formatNumber(pkg.amount)} USDT</span>
+                                        </div>
+                                        
+                                        <div className="flex items-start justify-between">
+                                            <span className="text-xs text-gray-600">Thời gian tham gia:</span>
+                                            <span className="text-[10px] text-gray-700 text-right flex-1 ml-2">{formatParticipationTime(pkg.date_start)}</span>
+                                        </div>
+                                        
+                                        <div className="flex items-center justify-between pt-1 border-t border-gray-100">
+                                            <span className="text-xs text-gray-600">Tổng phần thưởng:</span>
+                                            {pkg.status === 'running' ? (
+                                                <span className="text-xs text-gray-500">--</span>
+                                            ) : (
+                                                <span className="text-xs font-semibold text-green-600">{formatNumber(getRewardAmount(pkg))} USDT</span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        {/* Desktop Table Layout */}
                         <div className="hidden sm:block overflow-hidden rounded-md bg-transparent border border-none">
                             {/* Fixed Header */}
                             <div className="overflow-hidden rounded-t-md">
@@ -841,6 +892,7 @@ export default function MakeMoneyPage() {
                                 </table>
                             </div>
                         </div>
+                        </>
                     )}
                 </div>
             </div>
