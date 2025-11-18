@@ -58,6 +58,14 @@ const config: Config = {
           '-webkit-background-clip': 'text',
           '-webkit-text-fill-color': 'transparent',
         },
+        '.text-gradient-secondary': {
+          'background': 'linear-gradient(90deg, #EA2EC6 0%, #F63753 49.03%, #7056F2 100%)',
+          'background-clip': 'text',
+          '-webkit-background-clip': 'text',
+          '-webkit-text-fill-color': 'transparent',
+          'padding': '0.25rem 0.25rem',
+          'display': 'inline-block',
+        },
         '.radial-gradient': {
           'background': 'radial-gradient(139.32% 65.26% at 50% 0%, #FE645F 34.83%, #fdb7fe59, rgba(253, 183, 254, 0) 100%)',
           'background-blend-mode': 'multiply',

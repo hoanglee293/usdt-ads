@@ -15,10 +15,6 @@ export default function Header() {
 
   const listMenu = [
     {
-      name: 'Hướng dẫn kiếm tiền',
-      href: '/guide',
-    },
-    {
       name: 'Tham gia kiếm tiền',
       href: '/make-money',
     },
@@ -33,11 +29,7 @@ export default function Header() {
     {
       name: 'Referral',
       href: '/referral',
-    },
-    {
-      name: 'Xem thêm',
-      href: '/referral',
-    },
+    }
   ]
 
   useEffect(() => {

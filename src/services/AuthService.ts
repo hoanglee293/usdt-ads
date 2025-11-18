@@ -114,6 +114,31 @@ export interface UpdateProfileErrorResponse {
   message: string;
 }
 
+// KYC API Types
+export interface KycVerification {
+  id: number;
+  id_card_number: string;
+  front_image: string;
+  backside_image: string;
+  status: "pending" | "pedding" | "approved" | "rejected" | "retry"; // "pedding" is typo from API
+}
+
+export interface KycSubmitRequest {
+  id_card_number: string;
+  images: [File, File]; // [front, back]
+}
+
+export interface KycSubmitResponse {
+  statusCode: 201 | 200;
+  message: string;
+  verification: KycVerification;
+}
+
+export interface KycErrorResponse {
+  statusCode: 400 | 401 | 403 | 409;
+  message: string;
+}
+
 export const loginPassword = async (email: string, password: string): Promise<LoginSuccessResponse> => {
   try {
     const response = await axiosClient.post<LoginSuccessResponse>('/users/login', { 
@@ -222,6 +247,53 @@ export const updateProfile = async (data: UpdateProfileRequest): Promise<UpdateP
     // API returns error response with statusCode and message
     if (error.response?.data) {
       throw error.response.data as UpdateProfileErrorResponse;
+    }
+    console.error(error);
+    throw error;
+  }
+}
+
+// KYC API Functions
+export const submitKyc = async (data: KycSubmitRequest): Promise<KycSubmitResponse> => {
+  try {
+    const formData = new FormData();
+    formData.append('id_card_number', data.id_card_number);
+    
+    // Gửi cùng field name 'images' cho cả 2 files
+    // Multer sẽ tự động tạo array từ các files có cùng field name
+    formData.append('images', data.images[0]);
+    formData.append('images', data.images[1]);
+
+    // Không set Content-Type header - để axios tự động set với boundary
+    const response = await axiosClient.post<KycSubmitResponse>('/users/kyc', formData);
+    return response.data;
+  } catch (error: any) {
+    // API returns error response with statusCode and message
+    if (error.response?.data) {
+      throw error.response.data as KycErrorResponse;
+    }
+    console.error(error);
+    throw error;
+  }
+}
+
+export const retryKyc = async (data: KycSubmitRequest): Promise<KycSubmitResponse> => {
+  try {
+    const formData = new FormData();
+    formData.append('id_card_number', data.id_card_number);
+    
+    // Gửi cùng field name 'images' cho cả 2 files
+    // Multer sẽ tự động tạo array từ các files có cùng field name
+    formData.append('images', data.images[0]);
+    formData.append('images', data.images[1]);
+
+    // Không set Content-Type header - để axios tự động set với boundary
+    const response = await axiosClient.post<KycSubmitResponse>('/users/kyc-retry', formData);
+    return response.data;
+  } catch (error: any) {
+    // API returns error response with statusCode and message
+    if (error.response?.data) {
+      throw error.response.data as KycErrorResponse;
     }
     console.error(error);
     throw error;
