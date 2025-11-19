@@ -51,7 +51,7 @@ export default function Header() {
   return (
     <div className="fixed top-0 md:top-4 md:bg-transparent bg-theme-pink-100/80 left-0 right-0 z-50 flex justify-between items-center h-14 md:h-16 px-3 sm:px-4 md:px-6 2xl:gap-24 gap-4 md:gap-16">
       {/* Logo Section */}
-      <div className='flex items-center gap-1.5 sm:gap-2 md:gap-3'>
+      <Link href="/" className='flex items-center gap-1.5 sm:gap-2 md:gap-3'>
         <img
           src="/logo.png"
           alt="logo"
@@ -60,7 +60,7 @@ export default function Header() {
         <span className='tracking-[-0.02em] leading-[150%] inline-block font-orbitron text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] font-bold text-sm md:text-base'>
           USDT ADS
         </span>
-      </div>
+      </Link>
 
       {/* Desktop Menu */}
       {!isMobile && (
