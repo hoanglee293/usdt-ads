@@ -39,3 +39,42 @@ input[type="date"] {
 select {
   background-image: none;
 }
+
+/* Animation States - Elements start hidden and animate when in view */
+.animate-fade-in-up,
+.animate-fade-in-down,
+.animate-fade-in-left,
+.animate-fade-in-right,
+.animate-fade-in,
+.animate-scale-in {
+  opacity: 0;
+}
+
+.animate-fade-in-up.in-view,
+.animate-fade-in-down.in-view,
+.animate-fade-in-left.in-view,
+.animate-fade-in-right.in-view,
+.animate-fade-in.in-view,
+.animate-scale-in.in-view {
+  opacity: 1;
+  animation-play-state: running;
+}
+
+/* Image animations - can be continuous or scroll-triggered */
+/* Animation chạy mặc định, không cần in-view */
+.animate-float,
+.animate-float-slow,
+.animate-float-fast,
+.animate-bounce-gentle,
+.animate-pulse-glow {
+  animation-play-state: running;
+}
+
+/* Nếu muốn animation chỉ chạy khi in-view, dùng class này */
+.animate-float.in-view,
+.animate-float-slow.in-view,
+.animate-float-fast.in-view,
+.animate-bounce-gentle.in-view,
+.animate-pulse-glow.in-view {
+  animation-play-state: running;
+}

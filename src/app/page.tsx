@@ -2,132 +2,521 @@
 
 import React from 'react'
 import Link from 'next/link'
-import { Network, Box, Users, Smartphone } from 'lucide-react'
+import { Network, Box, Users, Smartphone, Megaphone, Monitor, DollarSign } from 'lucide-react'
+import { useIntersectionObserver } from '@/hooks/useIntersectionObserver'
 
 export default function HomePage() {
-  return (
-    <div className="relative min-h-screen container mx-auto overflow-hidden bg-white">
-      {/* Background Gradient Glow */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full rounded-full "
+  // Hero Section Observers - Giảm threshold và rootMargin cho mobile
+  const { elementRef: logoRef, isIntersecting: logoInView } = useIntersectionObserver<HTMLDivElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
 
-        >
-          <img src="/bg-main.png" alt="bg-main" className='w-full h-full object-contain' />
-        </div>
-        {/* <div
-          className="absolute top-1/4 right-1/4 w-[600px] h-[600px] rounded-full blur-3xl"
-          style={{
-            background: 'radial-gradient(circle, rgba(254, 100, 95, 0.2) 0%, rgba(255, 165, 0, 0.1) 50%, transparent 100%)'
-          }}
-        ></div>
-        <div
-          className="absolute bottom-1/4 left-1/4 w-[500px] h-[500px] rounded-full blur-3xl"
-          style={{
-            background: 'radial-gradient(circle, rgba(255, 165, 0, 0.15) 0%, rgba(255, 182, 193, 0.1) 50%, transparent 100%)'
-          }}
-        ></div> */}
-      </div>
+  const { elementRef: titleRef, isIntersecting: titleInView } = useIntersectionObserver<HTMLHeadingElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
+
+  const { elementRef: subtitleRef, isIntersecting: subtitleInView } = useIntersectionObserver<HTMLParagraphElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
+
+  const { elementRef: ctaRef, isIntersecting: ctaInView } = useIntersectionObserver<HTMLDivElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
+
+  // Features Grid Observers - Giảm threshold cho mobile
+  const { elementRef: feature1Ref, isIntersecting: feature1InView } = useIntersectionObserver<HTMLDivElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
+
+  const { elementRef: feature2Ref, isIntersecting: feature2InView } = useIntersectionObserver<HTMLDivElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
+
+  const { elementRef: centerTitleRef, isIntersecting: centerTitleInView } = useIntersectionObserver<HTMLHeadingElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
+
+  const { elementRef: feature3Ref, isIntersecting: feature3InView } = useIntersectionObserver<HTMLDivElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
+
+  const { elementRef: feature4Ref, isIntersecting: feature4InView } = useIntersectionObserver<HTMLDivElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
+
+  // How USDA Works Section Observers
+  const { elementRef: sectionTitleRef, isIntersecting: sectionTitleInView } = useIntersectionObserver<HTMLHeadingElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
+
+  const { elementRef: panel1Ref, isIntersecting: panel1InView } = useIntersectionObserver<HTMLDivElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
+
+  const { elementRef: panel2Ref, isIntersecting: panel2InView } = useIntersectionObserver<HTMLDivElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
+
+  const { elementRef: panel3Ref, isIntersecting: panel3InView } = useIntersectionObserver<HTMLDivElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
+
+  // Image Observers - Giảm threshold để trigger sớm hơn trên mobile
+  const { elementRef: bgImageRef, isIntersecting: bgImageInView } = useIntersectionObserver<HTMLDivElement>({
+    threshold: 0.05,
+    rootMargin: '0px'
+  });
+
+  const { elementRef: feature1ImageRef, isIntersecting: feature1ImageInView } = useIntersectionObserver<HTMLImageElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
+
+  const { elementRef: feature2ImageRef, isIntersecting: feature2ImageInView } = useIntersectionObserver<HTMLImageElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
+
+  const { elementRef: feature3ImageRef, isIntersecting: feature3ImageInView } = useIntersectionObserver<HTMLImageElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
+
+  const { elementRef: feature4ImageRef, isIntersecting: feature4ImageInView } = useIntersectionObserver<HTMLImageElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
+
+  return (
+    <div className="relative min-h-screen container mx-auto overflow-hidden bg-white py-24 lg:py-32 xl:py-48 px-4 sm:px-6">
+     
+      {/* SVG Gradients Definitions */}
+      <svg className="absolute w-0 h-0">
+        <defs>
+          <linearGradient id="icon-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#FE645F" />
+            <stop offset="100%" stopColor="#C68AFE" />
+          </linearGradient>
+        </defs>
+      </svg>
 
       {/* Main Content */}
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-20 md:py-48">
+      <div className="relative z-10 flex flex-col items-center justify-center">
+        <div
+          ref={bgImageRef}
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] sm:w-full h-full rounded-full opacity-30 sm:opacity-50 md:opacity-100"
+        >
+          <img 
+            src="/bg-main.png" 
+            alt="bg-main" 
+            className={`w-full h-full object-contain animate-float-slow transition-opacity duration-1000 ${bgImageInView ? 'in-view opacity-100' : 'opacity-30 sm:opacity-50'}`}
+          />
+        </div>
+        
         {/* Top Section - Logo, Title, Subtitle, CTA */}
-        <div className="flex flex-col items-center text-center mb-16 md:mb-32 max-w-4xl">
+        <div className="flex flex-col items-center text-center mb-12 sm:mb-16 md:mb-24 lg:mb-32 max-w-4xl w-full px-4">
           {/* Logo */}
-          <div className="mb-6 md:mb-8">
-            <div className="w-20 h-20 md:w-24 md:h-24 relative">
+          <div 
+            ref={logoRef}
+            className={`mb-4 sm:mb-6 md:mb-8 animate-scale-in ${logoInView ? 'in-view' : ''}`}
+          >
+            <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 relative">
               <img
                 src="/logo.png"
                 alt="USDA Logo"
-                className="relative w-full h-full object-contain"
+                className={`relative w-full h-full object-contain transition-all duration-500 animate-bounce-gentle ${logoInView ? 'in-view' : ''}`}
               />
             </div>
           </div>
 
           {/* Main Title */}
-          <h1 className="text-3xl md:text-5xl font-bold mb-4 md:mb-6 text-gradient-secondary leading-tight overflow-visible">
+          <h1 
+            ref={titleRef}
+            className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 md:mb-6 text-gradient-secondary leading-tight overflow-visible animate-fade-in-up px-2 ${titleInView ? 'in-view' : ''}`}
+          >
             Kiếm tiền dễ dàng với USDA
           </h1>
 
           {/* Subtitle */}
-          <p className="text-sm md:text-base lg:text-lg text-theme-black-100 mb-8 md:mb-10 font-medium max-w-2xl">
+          <p 
+            ref={subtitleRef}
+            className={`text-xs sm:text-sm md:text-base lg:text-lg text-theme-black-100 mb-6 sm:mb-8 md:mb-10 font-medium max-w-2xl animate-fade-in-up-delayed px-2 ${subtitleInView ? 'in-view' : ''}`}
+          >
             Xem video quảng cáo – Nhận thưởng tự động – Minh bạch nhờ Blockchain
           </p>
 
           {/* CTA Button */}
-          <Link href="/register">
-            <button className="px-8 md:px-12 border-none outline-none py-2 md:py-3 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white font-bold text-sm md:text-base lg:text-lg rounded-full hover:opacity-90 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 font-orbitron uppercase tracking-wide">
-              THAM GIA NGAY
-            </button>
-          </Link>
+          <div 
+            ref={ctaRef}
+            className={`animate-fade-in-up-more-delayed w-full sm:w-auto ${ctaInView ? 'in-view' : ''}`}
+          >
+            <Link href="/register" className="block w-full sm:w-auto">
+              <button className="w-full sm:w-auto px-6 sm:px-8 md:px-12 border-none outline-none py-2.5 sm:py-2 md:py-3 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white font-bold text-xs sm:text-sm md:text-base lg:text-lg rounded-full hover:opacity-90 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 font-orbitron uppercase tracking-wide">
+                THAM GIA NGAY
+              </button>
+            </Link>
+          </div>
         </div>
 
         {/* Central Section with Features */}
-        <div className="relative w-full">
-          {/* Features Grid - Arranged around center */}
-          <div className="relative grid grid-cols-3 grid-rows-3 gap-6 md:gap-8 lg:gap-10">
-            {/* Feature 1: Công nghệ - Top Right */}
-            <div className="col-start-2 row-start-1 flex flex-col items-center gap-4 md:gap-6 ">
-              <div className="flex-shrink-0 w-24 h-24 md:w-36 md:h-36  ">
-                <div className="relative w-full h-full flex items-center justify-center">
-                  <img src="/block-chain.png" alt="tech" className='w-24 h-24 md:w-36 md:h-36 object-contain' />
+        <div className="relative w-full pb-12 sm:pb-16 md:pb-20 px-2 sm:px-4">
+          {/* Mobile/Tablet: Stack vertically or 2 columns */}
+          {/* Desktop: 3x3 Grid */}
+          <div className="relative">
+            {/* Mobile Layout: Stack vertically */}
+            <div className="block md:hidden space-y-8 sm:space-y-10">
+              {/* Center Title - Mobile */}
+              <div className="text-center w-full mb-6 sm:mb-8">
+                <h2 
+                  ref={centerTitleRef}
+                  className={`text-xl sm:text-2xl font-bold text-gradient-secondary animate-scale-in ${centerTitleInView ? 'in-view' : ''}`}
+                >
+                  Giới thiệu USDA
+                </h2>
+              </div>
+
+              {/* Feature 1: Công nghệ */}
+              <div 
+                ref={feature1Ref}
+                className={`flex flex-col items-center gap-3 sm:gap-4 animate-fade-in-up ${feature1InView ? 'in-view' : ''}`}
+              >
+                <div className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24">
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    <img 
+                      ref={feature1ImageRef}
+                      src="/block-chain.png" 
+                      alt="tech" 
+                      className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-float ${feature1ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
+                    />
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 sm:px-6 py-2 text-white shadow-lg w-full max-w-sm text-center">
+                  <span className="font-bold text-xs sm:text-sm font-orbitron underline underline-offset-4">Công nghệ</span>
+                  <span className="text-xs sm:text-sm font-inter leading-relaxed">
+                    : Ứng dụng AI theo dõi sở thích để hiển thị quảng cáo phù hợp.
+                  </span>
                 </div>
               </div>
-              <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-6 py-2 text-white shadow-lg justify-start items-startmax-w-lg">
-                <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">Công nghệ</span>
-                <span className="text-sm md:text-base font-inter leading-relaxed">
-                  : Ứng dụng AI theo dõi sở thích để hiển thị quảng cáo phù hợp.
-                </span>
+
+              {/* Feature 2: Thiết bị */}
+              <div 
+                ref={feature2Ref}
+                className={`flex flex-col items-center gap-3 sm:gap-4 animate-fade-in-up ${feature2InView ? 'in-view' : ''}`}
+              >
+                <div className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24">
+                  <img 
+                    ref={feature2ImageRef}
+                    src="/phone.png" 
+                    alt="tech" 
+                    className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-float-fast ${feature2ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
+                  />
+                </div>
+                <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 sm:px-6 py-2 text-white shadow-lg w-full max-w-sm text-center">
+                  <span className="font-bold text-xs sm:text-sm font-orbitron underline underline-offset-4">Thiết bị</span>
+                  <span className="text-xs sm:text-sm font-inter leading-relaxed">
+                    : Mỗi người tham gia có thể điều khiển hàng trăm điện thoại xem quảng cáo cùng lúc.
+                  </span>
+                </div>
+              </div>
+
+              {/* Feature 3: Blockchain */}
+              <div 
+                ref={feature3Ref}
+                className={`flex flex-col items-center gap-3 sm:gap-4 animate-fade-in-up ${feature3InView ? 'in-view' : ''}`}
+              >
+                <div className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24">
+                  <div className="relative">
+                    <img 
+                      ref={feature3ImageRef}
+                      src="/ai-block-chain.png" 
+                      alt="tech" 
+                      className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-pulse-glow ${feature3ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
+                    />
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 sm:px-6 py-2 text-white shadow-lg w-full max-w-sm text-center">
+                  <span className="font-bold text-xs sm:text-sm font-orbitron underline underline-offset-4">Blockchain</span>
+                  <span className="text-xs sm:text-sm font-inter leading-relaxed">
+                    : Ghi nhận lịch sử nhiệm vụ và thu nhập minh bạch.
+                  </span>
+                </div>
+              </div>
+
+              {/* Feature 4: Cộng đồng */}
+              <div 
+                ref={feature4Ref}
+                className={`flex flex-col items-center gap-3 sm:gap-4 animate-fade-in-up ${feature4InView ? 'in-view' : ''}`}
+              >
+                <div className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24">
+                  <img 
+                    ref={feature4ImageRef}
+                    src="/socical.png" 
+                    alt="tech" 
+                    className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-bounce-gentle ${feature4ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
+                  />
+                </div>
+                <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 sm:px-6 py-2 text-white shadow-lg w-full max-w-sm text-center">
+                  <span className="font-bold text-xs sm:text-sm font-orbitron underline underline-offset-4">Cộng đồng</span>
+                  <span className="text-xs sm:text-sm font-inter leading-relaxed">
+                    : Mỗi người góp phần vào mạng lưới cùng phát triển thu nhập chung.
+                  </span>
+                </div>
               </div>
             </div>
 
-            {/* Feature 2: Blockchain - Middle Right */}
-            <div className="col-start-1 row-start-2 flex flex-col items-center gap-4 md:gap-6">
-              <div className="flex-shrink-0 w-24 h-24 md:w-36 md:h-36 ">
-                <img src="/phone.png" alt="tech" className='w-24 h-24 md:w-36 md:h-36 object-contain' />
+            {/* Tablet/Desktop Layout: 3x3 Grid */}
+            <div className="hidden md:grid md:grid-cols-3 md:grid-rows-3 gap-6 md:gap-8 lg:gap-10">
+              {/* Feature 1: Công nghệ - Top Right */}
+              <div 
+                ref={feature1Ref}
+                className={`col-start-2 row-start-1 flex flex-col items-center gap-4 md:gap-6 animate-fade-in-down ${feature1InView ? 'in-view' : ''}`}
+              >
+                <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36">
+                  <div className="relative w-full h-full flex items-center justify-center">
+                    <img 
+                      ref={feature1ImageRef}
+                      src="/block-chain.png" 
+                      alt="tech" 
+                      className={`w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 object-contain transition-all duration-500 animate-float ${feature1ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
+                    />
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 md:px-6 py-2 text-white shadow-lg justify-start items-start max-w-lg text-center md:text-left">
+                  <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">Công nghệ</span>
+                  <span className="text-sm md:text-base font-inter leading-relaxed">
+                    : Ứng dụng AI theo dõi sở thích để hiển thị quảng cáo phù hợp.
+                  </span>
+                </div>
               </div>
-              <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-6 py-2 text-white shadow-lg max-w-lg">
-                <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">Thiết bị</span>
-                <span className="text-sm md:text-base font-inter leading-relaxed">
-                  : Mỗi người tham gia có thể điều khiển hàng trăm điện thoại xem quảng cáo cùng lúc.
-                </span>
 
+              {/* Feature 2: Thiết bị - Middle Left */}
+              <div 
+                ref={feature2Ref}
+                className={`col-start-1 row-start-2 flex flex-col items-center gap-4 md:gap-6 animate-fade-in-right ${feature2InView ? 'in-view' : ''}`}
+              >
+                <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36">
+                  <img 
+                    ref={feature2ImageRef}
+                    src="/phone.png" 
+                    alt="tech" 
+                    className={`w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 object-contain transition-all duration-500 animate-float-fast ${feature2ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
+                  />
+                </div>
+                <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 md:px-6 py-2 text-white shadow-lg max-w-lg text-center md:text-left">
+                  <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">Thiết bị</span>
+                  <span className="text-sm md:text-base font-inter leading-relaxed">
+                    : Mỗi người tham gia có thể điều khiển hàng trăm điện thoại xem quảng cáo cùng lúc.
+                  </span>
+                </div>
+              </div>
+
+              {/* Center Title */}
+              <div className="text-center col-start-2 row-start-2 flex justify-center items-center w-full">
+                <h2 
+                  ref={centerTitleRef}
+                  className={`text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gradient-secondary max-w-80 animate-scale-in ${centerTitleInView ? 'in-view' : ''}`}
+                >
+                  Giới thiệu USDA
+                </h2>
+              </div>
+
+              {/* Feature 3: Blockchain - Middle Right */}
+              <div 
+                ref={feature3Ref}
+                className={`col-start-3 row-start-2 flex flex-col items-center gap-4 md:gap-6 justify-center animate-fade-in-left ${feature3InView ? 'in-view' : ''}`}
+              >
+                <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36">
+                  <div className="relative">
+                    <img 
+                      ref={feature3ImageRef}
+                      src="/ai-block-chain.png" 
+                      alt="tech" 
+                      className={`w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 object-contain transition-all duration-500 animate-pulse-glow ${feature3ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
+                    />
+                  </div>
+                </div>
+                <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 md:px-6 py-2 text-white shadow-lg max-w-lg text-center md:text-left">
+                  <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">Blockchain</span>
+                  <span className="text-sm md:text-base font-inter leading-relaxed">
+                    : Ghi nhận lịch sử nhiệm vụ và thu nhập minh bạch.
+                  </span>
+                </div>
+              </div>
+
+              {/* Feature 4: Cộng đồng - Bottom Center */}
+              <div 
+                ref={feature4Ref}
+                className={`col-start-2 row-start-3 flex flex-col items-center gap-4 md:gap-6 animate-fade-in-up ${feature4InView ? 'in-view' : ''}`}
+              >
+                <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36">
+                  <img 
+                    ref={feature4ImageRef}
+                    src="/socical.png" 
+                    alt="tech" 
+                    className={`w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 object-contain transition-all duration-500 animate-bounce-gentle ${feature4ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
+                  />
+                </div>
+                <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 md:px-6 py-2 text-white shadow-lg max-w-lg text-center md:text-left">
+                  <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">Cộng đồng</span>
+                  <span className="text-sm md:text-base font-inter leading-relaxed">
+                    : Mỗi người góp phần vào mạng lưới cùng phát triển thu nhập chung.
+                  </span>
+                </div>
               </div>
             </div>
+          </div>
+        </div>
 
-            <div className="text-center col-start-2 row-start-2 flex justify-center items-center w-full ">
-              <h2 className="text-2xl md:text-4xl lg:text-5xl font-bold text-gradient-secondary max-w-80">
-                Giới thiệu USDA
-              </h2>
-            </div>
+      </div>
+      
+      {/* How USDA Works Section */}
+      <div className="w-full max-w-7xl mx-auto mt-12 sm:mt-16 md:mt-24 lg:mt-32 xl:mt-40 px-4 sm:px-6">
+        {/* Section Title */}
+        <h2 
+          ref={sectionTitleRef}
+          className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gradient-secondary w-full text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16 font-orbitron animate-fade-in-up px-2 ${sectionTitleInView ? 'in-view' : ''}`}
+        >
+          Cách hoạt động của USDA
+        </h2>
 
-            {/* Feature 3: Cộng đồng - Bottom Center */}
-            <div className="col-start-3 row-start-2 flex flex-col items-center gap-4 md:gap-6 justify-center">
-              <div className="flex-shrink-0 w-24 h-24 md:w-36 md:h-36 ">
+        {/* Three Panels Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10">
+          {/* Panel 1: Advertising Revenue */}
+          <div 
+            ref={panel1Ref}
+            className={`bg-white border-2 border-solid border-[#FA4E4D] rounded-xl p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 flex flex-col gap-2 items-center text-center hover:shadow-lg transition-shadow animate-fade-in-up ${panel1InView ? 'in-view' : ''}`}
+          >
+            {/* Icon with Dollar Sign */}
+            <div className="relative mb-4 sm:mb-6">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
                 <div className="relative">
-                  <img src="/ai-block-chain.png" alt="tech" className='w-24 h-24 md:w-36 md:h-36 object-contain' />
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
+                    <Megaphone
+                      className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24"
+                      style={{
+                        stroke: 'url(#icon-gradient)',
+                      }}
+                      strokeWidth={1.5}
+                      fill="none"
+                    />
+                  </div>
+                  {/* Sound waves */}
+                  <div className="absolute -right-1 sm:-right-2 top-1/2 -translate-y-1/2 flex gap-0.5 sm:gap-1">
+                    <div className="w-0.5 sm:w-1 h-3 sm:h-4 bg-gradient-to-b from-[#FE645F] to-[#C68AFE] rounded-full"></div>
+                    <div className="w-0.5 sm:w-1 h-4 sm:h-6 bg-gradient-to-b from-[#FE645F] to-[#C68AFE] rounded-full"></div>
+                    <div className="w-0.5 sm:w-1 h-3 sm:h-4 bg-gradient-to-b from-[#FE645F] to-[#C68AFE] rounded-full"></div>
+                  </div>
+                  {/* Dollar sign badge */}
+                  <div className="absolute -top-1 sm:-top-2 -left-1 sm:-left-2 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE] flex items-center justify-center shadow-md">
+                    <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-white" strokeWidth={3} />
+                  </div>
                 </div>
-              </div>
-              <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-6 py-2 text-white shadow-lg max-w-lg">
-                <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">Blockchain</span>
-                <span className="text-sm md:text-base font-inter leading-relaxed">
-                  : Ghi nhận lịch sử nhiệm vụ và thu nhập minh bạch.
-                </span>
               </div>
             </div>
 
-            {/* Feature 4: Thiết bị - Middle Left */}
-            <div className="col-start-2 row-start-3 flex flex-col items-center gap-4 md:gap-6">
-              <div className="flex-shrink-0 w-24 h-24 md:w-36 md:h-36 ">
-                <img src="/socical.png" alt="tech" className='w-24 h-24 md:w-36 md:h-36 object-contain' />
-              </div>
-              <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-6 py-2 text-white shadow-lg max-w-lg">
-                <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">Cộng đồng</span>
-                <span className="text-sm md:text-base font-inter leading-relaxed">
-                  : Mỗi người góp phần vào mạng lưới cùng phát triển thu nhập chung.
-                </span>
+            {/* Title */}
+            <h3 className="text-base sm:text-lg md:text-xl font-bold text-gradient-secondary mb-3 sm:mb-4">
+              THU NHẬP QUẢNG CÁO
+            </h3>
+
+            {/* Description */}
+            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 leading-relaxed font-medium">
+              Người dùng xem quảng cáo → nhận tiền → chia sẻ doanh thu với đối tác.
+            </p>
+          </div>
+
+          {/* Panel 2: Invest in Device System */}
+          <div 
+            ref={panel2Ref}
+            className={`bg-white border-2 border-solid border-[#FA4E4D] rounded-xl p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 flex flex-col gap-2 items-center text-center hover:shadow-lg transition-shadow animate-fade-in-up-delayed ${panel2InView ? 'in-view' : ''}`}
+          >
+            {/* Icon with Computer and Phone */}
+            <div className="relative mb-4 sm:mb-6">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center relative">
+                <Monitor
+                  className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 absolute"
+                  style={{
+                    stroke: 'url(#icon-gradient)',
+                  }}
+                  strokeWidth={1.5}
+                  fill="none"
+                />
+                <Smartphone
+                  className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 absolute -right-1 sm:-right-2 -bottom-1 sm:-bottom-2"
+                  style={{
+                    stroke: 'url(#icon-gradient)',
+                  }}
+                  strokeWidth={1.5}
+                  fill="none"
+                />
               </div>
             </div>
+
+            {/* Title */}
+            <h3 className="text-base sm:text-lg md:text-xl font-bold text-gradient-secondary mb-3 sm:mb-4">
+              ĐẦU TƯ HỆ THỐNG THIẾT BỊ
+            </h3>
+
+            {/* Description */}
+            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 leading-relaxed font-medium">
+              Tái đầu tư hàng loạt "AI Phone" để tăng hiệu quả xem quảng cáo.
+            </p>
+          </div>
+          
+          {/* Panel 3: Community Development & USDA Coin */}
+          <div 
+            ref={panel3Ref}
+            className={`bg-white border-2 border-solid border-[#FA4E4D] rounded-xl p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 flex flex-col gap-2 items-center text-center hover:shadow-lg transition-shadow animate-fade-in-up-more-delayed sm:col-span-2 md:col-span-1 ${panel3InView ? 'in-view' : ''}`}
+          >
+            {/* Icon with Network/Community */}
+            <div className="relative mb-4 sm:mb-6">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center relative">
+                <div className="relative">
+                  <Users
+                    className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20"
+                    style={{
+                      stroke: 'url(#icon-gradient)',
+                    }}
+                    strokeWidth={1.5}
+                    fill="none"
+                  />
+                  {/* Network dots */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE]"></div>
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE]"></div>
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE]"></div>
+                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE]"></div>
+                  </div>
+                  {/* Dollar sign badge */}
+                  <div className="absolute -bottom-0.5 sm:-bottom-1 left-1/2 -translate-x-1/2 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE] flex items-center justify-center shadow-md">
+                    <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-white" strokeWidth={3} />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Title */}
+            <h3 className="text-base sm:text-lg md:text-xl font-bold text-gradient-secondary mb-3 sm:mb-4">
+              PHÁT TRIỂN CỘNG ĐỒNG & USDA COIN
+            </h3>
+
+            {/* Description */}
+            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 leading-relaxed font-medium">
+              Mở rộng người dùng, Airdrop thưởng coin, thu hút nhà đầu tư để phát triển hệ sinh thái.
+            </p>
           </div>
         </div>
       </div>

@@ -64,7 +64,7 @@ export default function Header() {
 
       {/* Desktop Menu */}
       {!isMobile && (
-        <div className="hidden md:flex items-center 2xl:gap-16 gap-6 bg-theme-pink-100/80 px-4 py-4 flex-1 justify-center rounded-full">
+        <div className="hidden md:flex items-center 2xl:gap-16 gap-6 bg-theme-pink-100/80 px-10 py-4  justify-center rounded-full">
           {listMenu.map((item) => (
             <Link href={item.href} key={item.name}>
               <div className={`text-sm font-inter font-medium rounded-full flex-1 text-center ${pathname === item.href ? 'text-pink-500' : 'text-theme-black-100'}`}>
