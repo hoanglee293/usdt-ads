@@ -509,7 +509,11 @@ export default function HomePage() {
             </div>
 
             {/* Title */}
+<<<<<<< HEAD
             <h3 className="text-base sm:text-lg md:text-xl font-bold text-gradient-secondary mb-3 sm:mb-4">
+=======
+            <h3 className="text-base sm:text-lg md:text-xl font-bold text-gradient-secondary mb-3 sm:mb-0">
+>>>>>>> e59f68273f0878e1adf948a35e0a215e36e58013
               PHÁT TRIỂN CỘNG ĐỒNG & USDA COIN
             </h3>
 
