@@ -1,0 +1,94 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "close": "Close",
+    "copy": "Copy",
+    "copied": "Copied",
+    "logout": "Logout"
+  },
+  "header": {
+    "makeMoney": "Join to Earn",
+    "rewards": "Get Rewards",
+    "wallet": "Deposit/Withdraw",
+    "referral": "Referral"
+  },
+  "user": {
+    "loading": "Loading...",
+    "loadError": "Unable to load user information",
+    "logout": "Logout"
+  },
+  "wallet": {
+    "deposit": "Deposit",
+    "withdraw": "Withdraw",
+    "depositWithdraw": "Deposit/Withdraw",
+    "balance": "Balance",
+    "transactionHistory": "Transaction History",
+    "copyError": "Unable to copy",
+    "createWalletError": "Unable to create wallet",
+    "loadNetworksError": "Unable to load network list",
+    "loadCoinsError": "Unable to load coin list",
+    "loadBalanceError": "Unable to load balance",
+    "withdrawSuccess": "Withdrawal successful!"
+  },
+  "ref": {
+    "title": "Commission Income",
+    "yourReferralLink": "Your Referral Link",
+    "referralStructure": "Referral Structure",
+    "yourReferrals": "Your Referrals",
+    "levelReferral": "Level Referral",
+    "totalReferrals": "Total Referrals",
+    "activeReferrals": "Active Referrals",
+    "referralCount": "Referral Count",
+    "linkCopied": "Link copied successfully",
+    "copyFailed": "Failed to copy link",
+    "withdrawComingSoon": "Withdraw feature coming soon",
+    "totalBranches": "Total Branches",
+    "totalCanWithdraw": "Total Can Withdraw",
+    "totalInvitees": "Total Invitees",
+    "totalRewards": "Total Rewards",
+    "totalWithdrawn": "Total Withdrawn",
+    "hide": "Hide",
+    "show": "Show",
+    "maxLevel": "Max Level",
+    "referredUsers": "Referred Users",
+    "totalTransactions": "Total Transactions",
+    "level": "Level",
+    "noData": "No data available",
+    "all": "All",
+    "user": "User",
+    "joinDate": "Join Date",
+    "transactions": "Transactions",
+    "rewards": "Rewards",
+    "unknown": "Unknown",
+    "noReferredUsers": "No referred users",
+    "withdraw": "Withdraw",
+    "you": "YOU"
+  },
+  "staking": {
+    "joinBaseSuccess": "Successfully joined Base package!",
+    "joinBaseError": "Unable to join Base package",
+    "joinStakingSuccess": "Successfully joined Staking package!",
+    "joinStakingError": "Unable to join Staking package",
+    "claimError": "Unable to claim reward",
+    "joinNow": "Join Now"
+  },
+  "profile": {
+    "loading": "Loading information...",
+    "loadError": "Unable to load profile information",
+    "updateError": "Unable to update information. Please try again.",
+    "referral": "Referral:"
+  },
+  "auth": {
+    "resetPasswordError": "Unable to send password reset request. Please try again later.",
+    "resetPasswordTokenError": "Unable to reset password. Token may have expired. Please request password reset again.",
+    "verifyMailResendError": "Unable to resend code. Please try again later.",
+    "subtitle": "Join staking and missions to multiply your income many times over."
+  }
+}

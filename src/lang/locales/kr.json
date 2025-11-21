@@ -1,0 +1,94 @@
+{
+  "common": {
+    "loading": "로딩 중...",
+    "error": "오류",
+    "success": "성공",
+    "cancel": "취소",
+    "confirm": "확인",
+    "save": "저장",
+    "edit": "편집",
+    "delete": "삭제",
+    "close": "닫기",
+    "copy": "복사",
+    "copied": "복사됨",
+    "logout": "로그아웃"
+  },
+  "header": {
+    "makeMoney": "수익 참여",
+    "rewards": "보상 받기",
+    "wallet": "입금/출금",
+    "referral": "추천"
+  },
+  "user": {
+    "loading": "로딩 중...",
+    "loadError": "사용자 정보를 불러올 수 없습니다",
+    "logout": "로그아웃"
+  },
+  "wallet": {
+    "deposit": "입금",
+    "withdraw": "출금",
+    "depositWithdraw": "입금/출금",
+    "balance": "잔액",
+    "transactionHistory": "거래 내역",
+    "copyError": "복사할 수 없습니다",
+    "createWalletError": "지갑을 생성할 수 없습니다",
+    "loadNetworksError": "네트워크 목록을 불러올 수 없습니다",
+    "loadCoinsError": "코인 목록을 불러올 수 없습니다",
+    "loadBalanceError": "잔액을 불러올 수 없습니다",
+    "withdrawSuccess": "출금 성공!"
+  },
+  "ref": {
+    "title": "수수료 수입",
+    "yourReferralLink": "추천 링크",
+    "referralStructure": "추천 구조",
+    "yourReferrals": "내 추천",
+    "levelReferral": "레벨 추천",
+    "totalReferrals": "총 추천",
+    "activeReferrals": "활성 추천",
+    "referralCount": "추천 수",
+    "linkCopied": "링크가 성공적으로 복사되었습니다",
+    "copyFailed": "링크 복사에 실패했습니다",
+    "withdrawComingSoon": "출금 기능이 곧 제공됩니다",
+    "totalBranches": "총 지점",
+    "totalCanWithdraw": "출금 가능 총액",
+    "totalInvitees": "총 초대자",
+    "totalRewards": "총 보상",
+    "totalWithdrawn": "총 출금액",
+    "hide": "숨기기",
+    "show": "보기",
+    "maxLevel": "최대 레벨",
+    "referredUsers": "추천 사용자",
+    "totalTransactions": "총 거래",
+    "level": "레벨",
+    "noData": "데이터가 없습니다",
+    "all": "전체",
+    "user": "사용자",
+    "joinDate": "가입일",
+    "transactions": "거래",
+    "rewards": "보상",
+    "unknown": "알 수 없음",
+    "noReferredUsers": "추천된 사용자가 없습니다",
+    "withdraw": "출금",
+    "you": "당신"
+  },
+  "staking": {
+    "joinBaseSuccess": "베이스 패키지 가입 성공!",
+    "joinBaseError": "베이스 패키지에 가입할 수 없습니다",
+    "joinStakingSuccess": "스테이킹 패키지 가입 성공!",
+    "joinStakingError": "스테이킹 패키지에 가입할 수 없습니다",
+    "claimError": "보상을 받을 수 없습니다",
+    "joinNow": "지금 참여"
+  },
+  "profile": {
+    "loading": "정보 로딩 중...",
+    "loadError": "프로필 정보를 불러올 수 없습니다",
+    "updateError": "정보를 업데이트할 수 없습니다. 다시 시도해 주세요.",
+    "referral": "추천:"
+  },
+  "auth": {
+    "resetPasswordError": "비밀번호 재설정 요청을 보낼 수 없습니다. 나중에 다시 시도해 주세요.",
+    "resetPasswordTokenError": "비밀번호를 재설정할 수 없습니다. 토큰이 만료되었을 수 있습니다. 비밀번호 재설정을 다시 요청해 주세요.",
+    "verifyMailResendError": "코드를 다시 보낼 수 없습니다. 나중에 다시 시도해 주세요.",
+    "subtitle": "스테이킹과 미션에 참여하여 수입을 여러 배로 늘리세요."
+  }
+}
