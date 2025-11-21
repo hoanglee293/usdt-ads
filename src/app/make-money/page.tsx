@@ -537,7 +537,7 @@ export default function MakeMoneyPage() {
                         <div className='grid grid-cols-1 md:grid-cols-2 w-full md:max-w-[50vw] mx-auto gap-3 sm:gap-4 mb-3 sm:mb-4'>
                             {/* Right Column */}
                             <div className='p-2 sm:p-3 bg-white rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
-                                <p className='text-xs sm:text-sm text-gray-600 pl-1'>Loại:</p>
+                                <p className='text-xs sm:text-sm text-gray-600 pl-1'>Loại staking:</p>
                                 <p className='text-base sm:text-lg font-semibold text-red-600'>{getTypeDurationLabel(currentStaking.type)}</p>
                             </div>
 
