@@ -90,5 +90,141 @@
     "resetPasswordTokenError": "비밀번호를 재설정할 수 없습니다. 토큰이 만료되었을 수 있습니다. 비밀번호 재설정을 다시 요청해 주세요.",
     "verifyMailResendError": "코드를 다시 보낼 수 없습니다. 나중에 다시 시도해 주세요.",
     "subtitle": "스테이킹과 미션에 참여하여 수입을 여러 배로 늘리세요."
+  },
+  "login": {
+    "getStarted": "우리와 함께 시작하세요",
+    "description1": "USDT Ads는 하루 몇 분만 투자하여 온라인으로 수익을 창출할 수 있도록 도와줍니다.",
+    "description2": "스테이킹과 미션에 참여하여 수입을 여러 배로 늘리세요.",
+    "signIn": "로그인",
+    "username": "사용자 이름",
+    "password": "비밀번호",
+    "usernamePlaceholder": "사용자 이름을 입력하세요",
+    "passwordPlaceholder": "비밀번호를 입력하세요",
+    "forgotPassword": "비밀번호를 잊으셨나요?",
+    "register": "회원가입",
+    "loggingIn": "로그인 중...",
+    "login": "로그인",
+    "pleaseEnterAllInfo": "모든 정보를 입력해 주세요",
+    "loginSuccess": "로그인 성공!",
+    "loginFailed": "로그인에 실패했습니다. 로그인 정보를 다시 확인해 주세요.",
+    "required": "*"
+  },
+  "register": {
+    "getStarted": "우리와 함께 시작하세요",
+    "description1": "USDT Ads는 하루 몇 분만 투자하여 온라인으로 수익을 창출할 수 있도록 도와줍니다.",
+    "description2": "스테이킹과 미션에 참여하여 수입을 여러 배로 늘리세요.",
+    "createAccount": "계정 만들기",
+    "username": "사용자 이름",
+    "fullName": "성명",
+    "email": "이메일",
+    "password": "비밀번호",
+    "referralCode": "추천 코드",
+    "usernamePlaceholder": "사용자 이름을 입력하세요",
+    "fullNamePlaceholder": "전체 이름을 입력하세요",
+    "emailPlaceholder": "이메일을 입력하세요",
+    "passwordPlaceholder": "비밀번호를 입력하세요",
+    "referralCodePlaceholder": "추천 코드를 입력하세요",
+    "alreadyHaveAccount": "이미 계정이 있으신가요?",
+    "signIn": "로그인",
+    "registering": "등록 중...",
+    "register": "회원가입",
+    "pleaseEnterAllRequiredInfo": "모든 필수 정보를 입력해 주세요",
+    "passwordMinLength": "비밀번호는 최소 6자 이상이어야 합니다",
+    "invalidEmail": "유효하지 않은 이메일입니다",
+    "registerSuccess": "등록 성공! 계정을 확인하려면 이메일을 확인해 주세요.",
+    "registerFailed": "등록에 실패했습니다. 정보를 다시 확인해 주세요.",
+    "required": "*"
+  },
+  "forgotPassword": {
+    "getStarted": "우리와 함께 시작하세요",
+    "description1": "USDT Ads는 하루 몇 분만 투자하여 온라인으로 수익을 창출할 수 있도록 도와줍니다.",
+    "description2": "스테이킹과 미션에 참여하여 수입을 여러 배로 늘리세요.",
+    "title": "비밀번호 찾기",
+    "email": "이메일",
+    "emailPlaceholder": "이메일을 입력하세요",
+    "required": "*",
+    "pleaseEnterEmail": "이메일을 입력해 주세요",
+    "invalidEmail": "유효하지 않은 이메일입니다",
+    "resetPasswordSuccess": "이메일이 존재하는 경우 비밀번호 재설정 링크를 이메일로 보냈습니다. 받은 편지함을 확인하고 링크를 클릭하여 비밀번호를 재설정하세요.",
+    "backToLogin": "로그인으로 돌아가기",
+    "sending": "전송 중...",
+    "sendResetLink": "재설정 링크 보내기"
+  },
+  "changePassword": {
+    "getStarted": "우리와 함께 시작하세요",
+    "description1": "USDT Ads는 하루 몇 분만 투자하여 온라인으로 수익을 창출할 수 있도록 도와줍니다.",
+    "description2": "스테이킹과 미션에 참여하여 수입을 여러 배로 늘리세요.",
+    "title": "비밀번호 재설정",
+    "newPassword": "새 비밀번호",
+    "newPasswordPlaceholder": "새 비밀번호를 입력하세요 (최소 6자)",
+    "confirmPassword": "비밀번호 확인",
+    "confirmPasswordPlaceholder": "새 비밀번호를 다시 입력하세요",
+    "required": "*",
+    "pleaseEnterNewPassword": "새 비밀번호를 입력해 주세요",
+    "passwordMinLength": "비밀번호는 최소 6자 이상이어야 합니다",
+    "passwordMismatch": "비밀번호 확인이 일치하지 않습니다",
+    "resetPasswordSuccess": "비밀번호 재설정 성공! 로그인 페이지로 이동 중...",
+    "invalidToken": "유효하지 않은 토큰입니다. 비밀번호 재설정을 다시 요청해 주세요.",
+    "invalidTokenError": "유효하지 않거나 만료된 토큰입니다. 비밀번호 재설정을 다시 요청해 주세요.",
+    "backToForgotPassword": "비밀번호 찾기로 돌아가기",
+    "backToLogin": "로그인으로 돌아가기",
+    "resetting": "비밀번호 재설정 중...",
+    "resetPassword": "비밀번호 재설정"
+  },
+  "verifyMail": {
+    "getStarted": "우리와 함께 시작하세요",
+    "description1": "USDT Ads는 하루 몇 분만 투자하여 온라인으로 수익을 창출할 수 있도록 도와줍니다.",
+    "description2": "스테이킹과 미션에 참여하여 수입을 여러 배로 늘리세요.",
+    "title": "이메일 인증",
+    "code": "코드",
+    "pleaseEnterFullCode": "모든 6자를 입력해 주세요",
+    "verifySuccess": "이메일 인증 성공! 로그인 페이지로 이동 중...",
+    "invalidCode": "유효하지 않은 인증 코드입니다. 다시 시도해 주세요.",
+    "resendCode": "코드 다시 보내기",
+    "resendCodeSuccess": "인증 코드가 성공적으로 다시 전송되었습니다!",
+    "resendCodeError": "코드를 다시 보낼 수 없습니다. 나중에 다시 시도해 주세요.",
+    "resendAfter": "{seconds}초 후 다시 보내기",
+    "sending": "전송 중...",
+    "verifying": "인증 중...",
+    "verify": "인증"
+  },
+  "home": {
+    "title": "USDA로 쉽게 수익 창출",
+    "subtitle": "광고 시청 – 자동 보상 받기 – 블록체인으로 투명하게",
+    "joinNow": "지금 참여",
+    "introTitle": "USDA 소개",
+    "features": {
+      "technology": {
+        "title": "기술",
+        "description": "AI 애플리케이션이 선호도를 추적하여 관련 광고를 표시합니다."
+      },
+      "device": {
+        "title": "기기",
+        "description": "각 참가자는 수백 대의 전화기를 동시에 제어하여 광고를 볼 수 있습니다."
+      },
+      "blockchain": {
+        "title": "블록체인",
+        "description": "작업 이력과 투명한 수입을 기록합니다."
+      },
+      "community": {
+        "title": "커뮤니티",
+        "description": "모든 사람이 네트워크에 기여하여 공동 수입을 함께 발전시킵니다."
+      }
+    },
+    "howItWorks": {
+      "title": "USDA 작동 방식",
+      "advertisingRevenue": {
+        "title": "광고 수익",
+        "description": "사용자가 광고를 시청 → 돈을 받음 → 파트너와 수익 공유."
+      },
+      "investDeviceSystem": {
+        "title": "기기 시스템 투자",
+        "description": "\"AI 폰\" 배치를 재투자하여 광고 시청 효율성을 높입니다."
+      },
+      "communityDevelopment": {
+        "title": "커뮤니티 개발 및 USDA 코인",
+        "description": "사용자 확장, 코인 에어드롭 보상, 생태계 발전을 위한 투자자 유치."
+      }
+    }
   }
 }

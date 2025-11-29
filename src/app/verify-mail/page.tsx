@@ -5,6 +5,7 @@ import { verifyEmail, generateCodeVerifyEmail } from '@/services/AuthService'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { useIsMobile } from '@/ui/use-mobile'
+import { useLang } from '@/lang/useLang'
 
 const page = () => {
     const [code, setCode] = useState<string[]>(['', '', '', '', '', ''])
@@ -14,6 +15,7 @@ const page = () => {
     const { login } = useAuth()
     const router = useRouter()
     const isMobile = useIsMobile()
+    const { t } = useLang()
     const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
     const handleChange = (index: number, value: string) => {
@@ -63,12 +65,12 @@ const page = () => {
         try {
             await generateCodeVerifyEmail()
             setResendCountdown(60)
-            toast.success('Mã xác thực đã được gửi lại thành công!')
+            toast.success(t('verifyMail.resendCodeSuccess'))
         } catch (err: any) {
             console.error('Error resending code:', err)
             const errorMessage = err?.message || 
                 err?.response?.data?.message || 
-                'Không thể gửi lại mã. Vui lòng thử lại sau.'
+                t('verifyMail.resendCodeError')
             toast.error(errorMessage)
         } finally {
             setResendLoading(false)
@@ -90,7 +92,7 @@ const page = () => {
 
         const codeString = code.join('')
         if (codeString.length !== 6) {
-            toast.error('Vui lòng nhập đầy đủ 6 ký tự')
+            toast.error(t('verifyMail.pleaseEnterFullCode'))
             setLoading(false)
             return
         }
@@ -98,7 +100,7 @@ const page = () => {
         try {
             const response = await verifyEmail({ code: codeString })
             console.log(response)
-            toast.success('Xác thực email thành công! Đang chuyển đến trang đăng nhập...')
+            toast.success(t('verifyMail.verifySuccess'))
             setLoading(false)
             setTimeout(() => {
                 router.push('/login')
@@ -107,7 +109,7 @@ const page = () => {
             console.log(err)
             const errorMessage = err?.message || 
                 err?.response?.data?.message || 
-                'Mã xác thực không hợp lệ. Vui lòng thử lại.'
+                t('verifyMail.invalidCode')
             toast.error(errorMessage)
             setLoading(false)
         }
@@ -118,26 +120,26 @@ const page = () => {
     }, [])
 
     return (
-        <div className='w-full h-svh flex justify-center items-center md:p-6'>
-            <div className='w-full h-full hidden md:flex justify-center items-center flex-col flex-1 radial-gradient rounded-3xl p-6'>
-                <div className='flex justify-center items-center flex-col mt-[30%]'>
+        <div className='w-full h-svh flex justify-center items-center md:p-6 bg-theme-white-100 dark:bg-black'>
+            <div className='w-full h-full hidden md:flex justify-center items-center flex-col flex-1 radial-gradient rounded-3xl p-6 border-none dark:border dark:border-solid border-transparent dark:border-[#fe645f]'>
+                <div className='flex justify-center items-center flex-col mt-[30%] gap-[1vh]'>
                     <img src="/logo.png" alt="logo" className='w-24 h-24 object-contain' />
                     <span className='tracking-[-0.02em] leading-[150%] inline-block font-orbitron text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] font-bold text-base'>USDT ADS</span>
-                    <h2 className='text-[2rem] font-bold text-center text-black-100 my-4'>Get Started With Us</h2>
-                    <p className='text-lg text-center text-theme-black-100 font-medium'>USDT Ads giúp bạn kiếm tiền online chỉ với vài phút mỗi ngày.</p>
-                    <p className='text-lg text-center text-theme-black-100 font-medium'>Tham gia staking và nhiệm vụ để tăng thu nhập của bạn lên gấp nhiều lần..</p>
+                    <h2 className='text-[2rem] font-bold text-center text-black-100 dark:text-white my-4'>{t('verifyMail.getStarted')}</h2>
+                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium'>{t('verifyMail.description1')}</p>
+                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium'>{t('verifyMail.description2')}</p>
                 </div>
             </div>
-            <div className={`w-full h-full flex justify-center items-center flex-col flex-1 px-8 bg-theme-white-100 ${isMobile ? 'radial-gradient pb-[20vh]' : ''}`}>
+            <div className={`w-full h-full flex justify-center items-center flex-col flex-1 px-8 bg-transparent ${isMobile ? 'radial-gradient pb-[20vh]' : ''}`}>
                 <div className='w-full max-w-md flex flex-col items-center'>
                     <img src="/logo.png" alt="logo" className='w-20 h-20 object-contain mb-6' />
-                    <h2 className='text-2xl font-semibold text-gray-800 mb-2'>Verify Email</h2>
+                    <h2 className='text-2xl font-semibold text-white md:text-gray-800 dark:md:text-white mb-2'>{t('verifyMail.title')}</h2>
                     
                     <form onSubmit={handleSubmit} className='w-full flex flex-col gap-4 mt-6'>
 
                         <div className='space-y-1'>
-                            <label htmlFor="code" className='block text-sm font-semibold text-gray-700'>
-                                Code <span className='text-theme-red'>*</span>
+                            <label htmlFor="code" className='block text-sm font-semibold text-gray-700 dark:text-gray-300'>
+                                {t('verifyMail.code')} <span className='text-theme-red dark:text-theme-red-200'>{t('login.required')}</span>
                             </label>
                             <div className='flex gap-2 justify-center'>
                                 {code.map((char, index) => (
@@ -151,7 +153,7 @@ const page = () => {
                                         onChange={(e) => handleChange(index, e.target.value)}
                                         onKeyDown={(e) => handleKeyDown(index, e)}
                                         onPaste={handlePaste}
-                                        className='w-12 h-12 text-center text-xl font-semibold border border-solid focus:border-purple-500 border-theme-gray-100 rounded-lg outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                                        className='w-12 h-12 text-center text-xl font-semibold border border-solid focus:border-purple-500 dark:focus:border-purple-400 border-theme-gray-100 dark:border-gray-700 rounded-lg outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100'
                                         disabled={loading}
                                         autoComplete="off"
                                     />
@@ -160,26 +162,26 @@ const page = () => {
                         </div>
                         <div className='flex justify-start items-center gap-2'>
                                 {resendCountdown > 0 ? (
-                                    <span className='text-xs text-gray-500 font-medium'>
-                                        Gửi lại mã sau {resendCountdown}s
+                                    <span className='text-xs text-gray-500 dark:text-gray-400 font-medium'>
+                                        {t('verifyMail.resendAfter', { seconds: resendCountdown })}
                                     </span>
                                 ) : (
                                     <span 
                                         className={`text-xs font-medium ${
                                             resendLoading 
-                                                ? 'text-gray-400 cursor-not-allowed' 
-                                                : 'text-theme-black-100 hover:text-purple-600 cursor-pointer'
+                                                ? 'text-gray-400 dark:text-gray-500 cursor-not-allowed' 
+                                                : 'text-theme-black-100 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 cursor-pointer'
                                         } transition-colors`}
                                         onClick={handleResendCode}
                                     >
-                                        {resendLoading ? 'Đang gửi...' : 'Resend code'}
+                                        {resendLoading ? t('verifyMail.sending') : t('verifyMail.resendCode')}
                                     </span>
                                 )}
                             </div>
                         <button
                             type="submit"
                             disabled={loading}
-                            className='w-full outline-none border-none cursor-pointer py-3 px-4 mt-6 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-base uppercase'
+                            className='w-full outline-none border-none cursor-pointer py-3 px-4 mt-6 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-base uppercase'
                         >
                             {loading ? (
                                 <>
@@ -187,10 +189,10 @@ const page = () => {
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
-                                    Đang xác thực...
+                                    {t('verifyMail.verifying')}
                                 </>
                             ) : (
-                                'Xác thực'
+                                t('verifyMail.verify')
                             )}
                         </button>
                     </form>

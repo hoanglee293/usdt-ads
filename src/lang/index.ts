@@ -1,9 +1,10 @@
 import en from './locales/en.json';
 import kr from './locales/kr.json';
+import vi from './locales/vi.json';
 import { useLang } from '@/lang/useLang';
 import { LangProvider } from '@/lang/LangProvider';
 
-export type LangCodes = 'en' | 'kr';
+export type LangCodes = 'en' | 'kr' | 'vi';
 
 // Định nghĩa kiểu dữ liệu có thể chứa object lồng nhau
 type Translations = { [key: string]: string | Translations };
@@ -15,10 +16,12 @@ export const langConfig: {
   listLangs: [
     { id: 1, name: "Korean", code: "kr" },
     { id: 2, name: "English", code: "en" },
+    { id: 3, name: "Tiếng Việt", code: "vi" },
   ],
   langsApp: {
     kr,
     en,
+    vi,
   }
 };
 

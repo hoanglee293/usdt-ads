@@ -118,6 +118,36 @@ export interface GetSmartRefDetailResponse {
   data: SmartRefDetailItem[];
 }
 
+// ==================== Member Ref Interfaces ====================
+
+export interface MemberRefInfoData {
+  total_members: number;
+  current_milestone: number;
+  total_rewards: number;
+  total_withdrawn: number;
+  total_can_withdraw: number;
+}
+
+export interface GetMemberRefInfoResponse {
+  statusCode: number;
+  message: string;
+  data: MemberRefInfoData;
+}
+
+export interface MemberRefWithdrawData {
+  withdraw_history_id: number;
+  total_amount: number;
+  total_amount_usd: number;
+  rewards_count: number;
+  date: string;
+}
+
+export interface CreateMemberRefWithdrawResponse {
+  statusCode: number;
+  message: string;
+  data: MemberRefWithdrawData;
+}
+
 // ==================== API Functions ====================
 
 /**
@@ -218,6 +248,34 @@ export const getSmartRefDetail = async (level?: number): Promise<GetSmartRefDeta
     return response.data;
   } catch (error: any) {
     console.error("Error fetching smart ref detail:", error);
+    throw error;
+  }
+};
+
+/**
+ * Lấy thông tin Member Ref
+ * @returns Promise<GetMemberRefInfoResponse>
+ */
+export const getMemberRefInfo = async (): Promise<GetMemberRefInfoResponse> => {
+  try {
+    const response = await axiosClient.get("/referrals/member-ref-info");
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching member ref info:", error);
+    throw error;
+  }
+};
+
+/**
+ * Rút thưởng Member Ref (tối thiểu 10$)
+ * @returns Promise<CreateMemberRefWithdrawResponse>
+ */
+export const createMemberRefWithdraw = async (): Promise<CreateMemberRefWithdrawResponse> => {
+  try {
+    const response = await axiosClient.post("/referrals/member-ref-withdraw");
+    return response.data;
+  } catch (error: any) {
+    console.error("Error creating member ref withdraw:", error);
     throw error;
   }
 };

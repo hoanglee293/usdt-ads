@@ -90,5 +90,141 @@
     "resetPasswordTokenError": "Unable to reset password. Token may have expired. Please request password reset again.",
     "verifyMailResendError": "Unable to resend code. Please try again later.",
     "subtitle": "Join staking and missions to multiply your income many times over."
+  },
+  "login": {
+    "getStarted": "Get Started With Us",
+    "description1": "USDT Ads helps you earn money online with just a few minutes each day.",
+    "description2": "Join staking and missions to multiply your income many times over.",
+    "signIn": "Sign in",
+    "username": "Username",
+    "password": "Password",
+    "usernamePlaceholder": "Enter your username",
+    "passwordPlaceholder": "Enter your password",
+    "forgotPassword": "Forgot password?",
+    "register": "Register",
+    "loggingIn": "Logging in...",
+    "login": "Login",
+    "pleaseEnterAllInfo": "Please enter all information",
+    "loginSuccess": "Login successful!",
+    "loginFailed": "Login failed. Please check your login information again.",
+    "required": "*"
+  },
+  "register": {
+    "getStarted": "Get Started With Us",
+    "description1": "USDT Ads helps you earn money online with just a few minutes each day.",
+    "description2": "Join staking and missions to multiply your income many times over.",
+    "createAccount": "Create Account",
+    "username": "Username",
+    "fullName": "Full Name",
+    "email": "Email",
+    "password": "Password",
+    "referralCode": "Referral Code",
+    "usernamePlaceholder": "Enter your username",
+    "fullNamePlaceholder": "Enter your full name",
+    "emailPlaceholder": "Enter your email",
+    "passwordPlaceholder": "Enter your password",
+    "referralCodePlaceholder": "Enter referral code",
+    "alreadyHaveAccount": "Already have an account?",
+    "signIn": "Sign in",
+    "registering": "Registering...",
+    "register": "Register",
+    "pleaseEnterAllRequiredInfo": "Please enter all required information",
+    "passwordMinLength": "Password must be at least 6 characters",
+    "invalidEmail": "Invalid email",
+    "registerSuccess": "Registration successful! Please check your email to verify your account.",
+    "registerFailed": "Registration failed. Please check your information again.",
+    "required": "*"
+  },
+  "forgotPassword": {
+    "getStarted": "Get Started With Us",
+    "description1": "USDT Ads helps you earn money online with just a few minutes each day.",
+    "description2": "Join staking and missions to multiply your income many times over.",
+    "title": "Forgot Password",
+    "email": "Email",
+    "emailPlaceholder": "Enter your email",
+    "required": "*",
+    "pleaseEnterEmail": "Please enter email",
+    "invalidEmail": "Invalid email",
+    "resetPasswordSuccess": "If the email exists, we have sent a password reset link to your email. Please check your inbox and click on the link to reset your password.",
+    "backToLogin": "Back to login",
+    "sending": "Sending...",
+    "sendResetLink": "Send reset link"
+  },
+  "changePassword": {
+    "getStarted": "Get Started With Us",
+    "description1": "USDT Ads helps you earn money online with just a few minutes each day.",
+    "description2": "Join staking and missions to multiply your income many times over.",
+    "title": "Reset Password",
+    "newPassword": "New Password",
+    "newPasswordPlaceholder": "Enter new password (at least 6 characters)",
+    "confirmPassword": "Confirm Password",
+    "confirmPasswordPlaceholder": "Re-enter new password",
+    "required": "*",
+    "pleaseEnterNewPassword": "Please enter new password",
+    "passwordMinLength": "Password must be at least 6 characters",
+    "passwordMismatch": "Password confirmation does not match",
+    "resetPasswordSuccess": "Password reset successful! Redirecting to login page...",
+    "invalidToken": "Invalid token. Please request password reset again.",
+    "invalidTokenError": "Invalid or expired token. Please request password reset again.",
+    "backToForgotPassword": "Back to forgot password",
+    "backToLogin": "Back to login",
+    "resetting": "Resetting password...",
+    "resetPassword": "Reset Password"
+  },
+  "verifyMail": {
+    "getStarted": "Get Started With Us",
+    "description1": "USDT Ads helps you earn money online with just a few minutes each day.",
+    "description2": "Join staking and missions to multiply your income many times over.",
+    "title": "Verify Email",
+    "code": "Code",
+    "pleaseEnterFullCode": "Please enter all 6 characters",
+    "verifySuccess": "Email verification successful! Redirecting to login page...",
+    "invalidCode": "Invalid verification code. Please try again.",
+    "resendCode": "Resend code",
+    "resendCodeSuccess": "Verification code has been resent successfully!",
+    "resendCodeError": "Unable to resend code. Please try again later.",
+    "resendAfter": "Resend code after {seconds}s",
+    "sending": "Sending...",
+    "verifying": "Verifying...",
+    "verify": "Verify"
+  },
+  "home": {
+    "title": "Earn Money Easily with USDA",
+    "subtitle": "Watch ads – Get automatic rewards – Transparent with Blockchain",
+    "joinNow": "JOIN NOW",
+    "introTitle": "About USDA",
+    "features": {
+      "technology": {
+        "title": "Technology",
+        "description": "AI application tracks preferences to display relevant ads."
+      },
+      "device": {
+        "title": "Device",
+        "description": "Each participant can control hundreds of phones to watch ads simultaneously."
+      },
+      "blockchain": {
+        "title": "Blockchain",
+        "description": "Records task history and transparent income."
+      },
+      "community": {
+        "title": "Community",
+        "description": "Everyone contributes to the network to develop shared income together."
+      }
+    },
+    "howItWorks": {
+      "title": "How USDA Works",
+      "advertisingRevenue": {
+        "title": "ADVERTISING REVENUE",
+        "description": "Users watch ads → receive money → share revenue with partners."
+      },
+      "investDeviceSystem": {
+        "title": "INVEST IN DEVICE SYSTEM",
+        "description": "Reinvest in batches of \"AI Phones\" to increase ad viewing efficiency."
+      },
+      "communityDevelopment": {
+        "title": "COMMUNITY DEVELOPMENT & USDA COIN",
+        "description": "Expand users, Airdrop coin rewards, attract investors to develop the ecosystem."
+      }
+    }
   }
 }

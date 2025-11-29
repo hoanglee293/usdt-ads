@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { Eye, EyeOff } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useIsMobile } from '@/ui/use-mobile'
+import { useLang } from '@/lang/useLang'
 
 const ChangePasswordContent = () => {
     const router = useRouter()
@@ -17,11 +18,12 @@ const ChangePasswordContent = () => {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [loading, setLoading] = useState(false)
     const isMobile = useIsMobile()
+    const { t } = useLang()
 
     // Check if token exists
     useEffect(() => {
         if (!token) {
-            toast.error('Token không hợp lệ hoặc đã hết hạn. Vui lòng yêu cầu reset mật khẩu lại.')
+            toast.error(t('changePassword.invalidTokenError'))
         }
     }, [token])
 
@@ -30,7 +32,7 @@ const ChangePasswordContent = () => {
         e.preventDefault()
         
         if (!token) {
-            toast.error('Token không hợp lệ. Vui lòng yêu cầu reset mật khẩu lại.')
+            toast.error(t('changePassword.invalidToken'))
             return
         }
 
@@ -38,19 +40,19 @@ const ChangePasswordContent = () => {
 
         // Validation
         if (!password.trim()) {
-            toast.error('Vui lòng nhập mật khẩu mới')
+            toast.error(t('changePassword.pleaseEnterNewPassword'))
             setLoading(false)
             return
         }
 
         if (password.length < 6) {
-            toast.error('Mật khẩu phải có ít nhất 6 ký tự')
+            toast.error(t('changePassword.passwordMinLength'))
             setLoading(false)
             return
         }
 
         if (password !== confirmPassword) {
-            toast.error('Mật khẩu xác nhận không khớp')
+            toast.error(t('changePassword.passwordMismatch'))
             setLoading(false)
             return
         }
@@ -59,7 +61,7 @@ const ChangePasswordContent = () => {
             // Sử dụng token như code trong API
             const response = await setNewPassword(token, password)
             if (response && response.statusCode === 200) {
-                toast.success('Đặt lại mật khẩu thành công! Đang chuyển đến trang đăng nhập...')
+                toast.success(t('changePassword.resetPasswordSuccess'))
                 setTimeout(() => {
                     router.push('/login')
                 }, 2000)
@@ -67,7 +69,7 @@ const ChangePasswordContent = () => {
         } catch (err: any) {
             const errorMessage = err?.message || 
                 err?.response?.data?.message || 
-                'Không thể đặt lại mật khẩu. Token có thể đã hết hạn. Vui lòng yêu cầu reset mật khẩu lại.'
+                t('auth.resetPasswordTokenError')
             toast.error(errorMessage)
         } finally {
             setLoading(false)
@@ -75,40 +77,40 @@ const ChangePasswordContent = () => {
     }
 
     return (
-        <div className='w-full h-svh flex justify-center items-center md:p-6'>
-            <div className='w-full h-full hidden md:flex justify-center items-center flex-col flex-1 radial-gradient rounded-3xl p-6'>
-                <div className='flex justify-center items-center flex-col mt-[30%]'>
+        <div className='w-full h-svh flex justify-center items-center md:p-6 bg-theme-white-100 dark:bg-black'>
+            <div className='w-full h-full hidden md:flex justify-center items-center flex-col flex-1 radial-gradient rounded-3xl p-6 border-none dark:border dark:border-solid border-transparent dark:border-[#fe645f]'>
+                <div className='flex justify-center items-center flex-col mt-[30%] gap-[1vh]'>
                     <img src="/logo.png" alt="logo" className='w-24 h-24 object-contain' />
                     <span className='tracking-[-0.02em] leading-[150%] inline-block font-orbitron text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] font-bold text-base'>USDT ADS</span>
-                    <h2 className='text-[2rem] font-bold text-center text-black-100 my-4'>Get Started With Us</h2>
-                    <p className='text-lg text-center text-theme-black-100 font-medium'>USDT Ads giúp bạn kiếm tiền online chỉ với vài phút mỗi ngày.</p>
-                    <p className='text-lg text-center text-theme-black-100 font-medium'>Tham gia staking và nhiệm vụ để tăng thu nhập của bạn lên gấp nhiều lần..</p>
+                    <h2 className='text-[2rem] font-bold text-center text-black-100 dark:text-white my-4'>{t('changePassword.getStarted')}</h2>
+                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium'>{t('changePassword.description1')}</p>
+                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium'>{t('changePassword.description2')}</p>
                 </div>
             </div>
-            <div className={`w-full h-full flex justify-center items-center flex-col flex-1 px-8 bg-theme-white-100 ${isMobile ? 'radial-gradient pb-[20vh]' : ''}`}>
+            <div className={`w-full h-full flex justify-center items-center flex-col flex-1 px-8 bg-transparent ${isMobile ? 'radial-gradient pb-[20vh]' : ''}`}>
                 <div className='w-full max-w-md flex flex-col items-center'>
                     <img src="/logo.png" alt="logo" className='w-28 h-28 object-contain mb-6' />
-                    <h2 className='text-3xl font-semibold text-white md:text-gray-800 mb-2'>
-                        Đặt lại mật khẩu
+                    <h2 className='text-3xl font-semibold text-white md:text-gray-800 dark:md:text-white mb-2'>
+                        {t('changePassword.title')}
                     </h2>
 
                     {!token ? (
                         <div className='w-full mt-6'>
-                            <div className='w-full p-4 bg-yellow-50 border border-yellow-200 text-yellow-700 rounded-lg text-sm mb-4'>
-                                Token không hợp lệ hoặc đã hết hạn. Vui lòng yêu cầu reset mật khẩu lại.
+                            <div className='w-full p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-300 rounded-lg text-sm mb-4'>
+                                {t('changePassword.invalidTokenError')}
                             </div>
                             <button
                                 onClick={() => router.push('/forgot-password')}
-                                className='w-full outline-none border-none cursor-pointer py-3 px-4 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all'
+                                className='w-full outline-none border-none cursor-pointer py-3 px-4 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all'
                             >
-                                Quay lại quên mật khẩu
+                                {t('changePassword.backToForgotPassword')}
                             </button>
                         </div>
                     ) : (
                         <form onSubmit={handlePasswordSubmit} className='w-full flex flex-col gap-4 mt-6'>
                             <div className='space-y-1'>
-                                <label htmlFor="password" className='block text-sm font-semibold text-gray-700'>
-                                    Mật khẩu mới <span className='text-theme-red'>*</span>
+                                <label htmlFor="password" className='block text-sm font-semibold text-gray-700 dark:text-gray-300'>
+                                    {t('changePassword.newPassword')} <span className='text-theme-red dark:text-theme-red-200'>{t('changePassword.required')}</span>
                                 </label>
                                 <div className='relative'>
                                     <input
@@ -116,24 +118,24 @@ const ChangePasswordContent = () => {
                                         type={showPassword ? 'text' : 'password'}
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        placeholder='Nhập mật khẩu mới (ít nhất 6 ký tự)'
-                                        className='w-full px-4 py-3 border border-solid focus:border-gray-300 border-theme-gray-100 rounded-full outline-none transition-all pr-12'
+                                        placeholder={t('changePassword.newPasswordPlaceholder')}
+                                        className='w-full px-4 py-3 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all pr-12 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
                                         disabled={loading}
                                     />
                                     {password.length > 0 && (
                                         <div
                                             onClick={() => setShowPassword(!showPassword)}
-                                            className='absolute !bg-white right-3 top-[51%] transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none cursor-pointer'
+                                            className='absolute !bg-white dark:!bg-gray-800 right-3 top-[51%] transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none cursor-pointer'
                                         >
-                                            {showPassword ? <EyeOff size={16} className='text-gray-500' /> : <Eye size={16} className='text-gray-500' />}
+                                            {showPassword ? <EyeOff size={16} className='text-gray-500 dark:text-gray-400' /> : <Eye size={16} className='text-gray-500 dark:text-gray-400' />}
                                         </div>
                                     )}
                                 </div>
                             </div>
 
                             <div className='space-y-1'>
-                                <label htmlFor="confirmPassword" className='block text-sm font-semibold text-gray-700'>
-                                    Xác nhận mật khẩu <span className='text-theme-red'>*</span>
+                                <label htmlFor="confirmPassword" className='block text-sm font-semibold text-gray-700 dark:text-gray-300'>
+                                    {t('changePassword.confirmPassword')} <span className='text-theme-red dark:text-theme-red-200'>{t('changePassword.required')}</span>
                                 </label>
                                 <div className='relative'>
                                     <input
@@ -141,16 +143,16 @@ const ChangePasswordContent = () => {
                                         type={showConfirmPassword ? 'text' : 'password'}
                                         value={confirmPassword}
                                         onChange={(e) => setConfirmPassword(e.target.value)}
-                                        placeholder='Nhập lại mật khẩu mới'
-                                        className='w-full px-4 py-3 border border-solid focus:border-gray-300 border-theme-gray-100 rounded-full outline-none transition-all pr-12'
+                                        placeholder={t('changePassword.confirmPasswordPlaceholder')}
+                                        className='w-full px-4 py-3 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all pr-12 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
                                         disabled={loading}
                                     />
                                     {confirmPassword.length > 0 && (
                                         <div
                                             onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                            className='absolute !bg-white right-3 top-[51%] transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none cursor-pointer'
+                                            className='absolute !bg-white dark:!bg-gray-800 right-3 top-[51%] transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none cursor-pointer'
                                         >
-                                            {showConfirmPassword ? <EyeOff size={16} className='text-gray-500' /> : <Eye size={16} className='text-gray-500' />}
+                                            {showConfirmPassword ? <EyeOff size={16} className='text-gray-500 dark:text-gray-400' /> : <Eye size={16} className='text-gray-500 dark:text-gray-400' />}
                                         </div>
                                     )}
                                 </div>
@@ -158,17 +160,17 @@ const ChangePasswordContent = () => {
 
                             <div className='flex justify-start items-center gap-2'>
                                 <span 
-                                    className='text-sm text-theme-black-100 hover:text-purple-600 font-medium cursor-pointer'
+                                    className='text-sm text-theme-black-100 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium cursor-pointer'
                                     onClick={() => router.push('/login')}
                                 >
-                                    Quay lại đăng nhập
+                                    {t('changePassword.backToLogin')}
                                 </span>
                             </div>
 
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className='w-full outline-none border-none cursor-pointer py-3 px-4 mt-6 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-base uppercase'
+                                className='w-full outline-none border-none cursor-pointer py-3 px-4 mt-6 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-base uppercase'
                             >
                                 {loading ? (
                                     <>
@@ -176,10 +178,10 @@ const ChangePasswordContent = () => {
                                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
-                                        Đang đặt lại mật khẩu...
+                                        {t('changePassword.resetting')}
                                     </>
                                 ) : (
-                                    'Đặt lại mật khẩu'
+                                    t('changePassword.resetPassword')
                                 )}
                             </button>
                         </form>
@@ -191,12 +193,13 @@ const ChangePasswordContent = () => {
 }
 
 const ChangePasswordPage = () => {
+    const { t } = useLang()
     return (
         <Suspense fallback={
             <div className='w-full h-svh flex justify-center items-center'>
                 <div className='text-center'>
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
-                    <p className='mt-4 text-gray-600'>Đang tải...</p>
+                    <p className='mt-4 text-gray-600'>{t('common.loading')}</p>
                 </div>
             </div>
         }>

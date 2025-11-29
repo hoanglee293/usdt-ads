@@ -512,7 +512,7 @@ export default function MakeMoneyPage() {
     const tableCellStyles = "px-2 py-3 sm:px-3 text-xs sm:text-sm lg:text-base text-theme-gray-200 bg-white border-y border-black dark:border-gray-700 group-hover:bg-gray-100 dark:group-hover:bg-gray-800 font-light"
 
     return (
-        <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-24 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] flex-1'>
+        <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] flex-1'>
             <div className='w-full max-w-7xl'>
                 {/* Header Section */}
                 {currentStaking && (

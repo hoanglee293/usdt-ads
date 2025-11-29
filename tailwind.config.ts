@@ -184,6 +184,8 @@ const config: Config = {
           'background-clip': 'text',
           '-webkit-background-clip': 'text',
           '-webkit-text-fill-color': 'transparent',
+          'padding': '0.25rem 0.25rem',
+          'display': 'inline-block',
         },
         '.text-gradient-secondary': {
           'background': 'linear-gradient(90deg, #EA2EC6 0%, #F63753 49.03%, #7056F2 100%)',

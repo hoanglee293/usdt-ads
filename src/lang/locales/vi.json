@@ -1,0 +1,231 @@
+{
+  "common": {
+    "loading": "Đang tải...",
+    "error": "Lỗi",
+    "success": "Thành công",
+    "cancel": "Hủy",
+    "confirm": "Xác nhận",
+    "save": "Lưu",
+    "edit": "Chỉnh sửa",
+    "delete": "Xóa",
+    "close": "Đóng",
+    "copy": "Sao chép",
+    "copied": "Đã sao chép",
+    "logout": "Đăng xuất"
+  },
+  "header": {
+    "makeMoney": "Tham gia kiếm tiền",
+    "rewards": "Nhận phần thưởng",
+    "wallet": "Nạp/Rút tiền",
+    "referral": "Giới thiệu"
+  },
+  "user": {
+    "loading": "Đang tải...",
+    "loadError": "Không thể tải thông tin người dùng",
+    "logout": "Đăng xuất"
+  },
+  "wallet": {
+    "deposit": "Nạp tiền",
+    "withdraw": "Rút tiền",
+    "depositWithdraw": "Nạp/Rút tiền",
+    "balance": "Số dư",
+    "transactionHistory": "Lịch sử giao dịch",
+    "copyError": "Không thể sao chép",
+    "createWalletError": "Không thể tạo ví",
+    "loadNetworksError": "Không thể tải danh sách mạng",
+    "loadCoinsError": "Không thể tải danh sách coin",
+    "loadBalanceError": "Không thể tải số dư",
+    "withdrawSuccess": "Rút tiền thành công!"
+  },
+  "ref": {
+    "title": "Thu nhập hoa hồng",
+    "yourReferralLink": "Liên kết giới thiệu của bạn",
+    "referralStructure": "Cấu trúc giới thiệu",
+    "yourReferrals": "Người được bạn giới thiệu",
+    "levelReferral": "Giới thiệu theo cấp",
+    "totalReferrals": "Tổng số người giới thiệu",
+    "activeReferrals": "Người giới thiệu đang hoạt động",
+    "referralCount": "Số lượng giới thiệu",
+    "linkCopied": "Đã sao chép liên kết thành công",
+    "copyFailed": "Sao chép liên kết thất bại",
+    "withdrawComingSoon": "Tính năng rút tiền sắp ra mắt",
+    "totalBranches": "Tổng số nhánh",
+    "totalCanWithdraw": "Tổng số có thể rút",
+    "totalInvitees": "Tổng số người được mời",
+    "totalRewards": "Tổng phần thưởng",
+    "totalWithdrawn": "Tổng số đã rút",
+    "hide": "Ẩn",
+    "show": "Hiển thị",
+    "maxLevel": "Cấp tối đa",
+    "referredUsers": "Người dùng được giới thiệu",
+    "totalTransactions": "Tổng số giao dịch",
+    "level": "Cấp",
+    "noData": "Không có dữ liệu",
+    "all": "Tất cả",
+    "user": "Người dùng",
+    "joinDate": "Ngày tham gia",
+    "transactions": "Giao dịch",
+    "rewards": "Phần thưởng",
+    "unknown": "Không xác định",
+    "noReferredUsers": "Không có người dùng được giới thiệu",
+    "withdraw": "Rút tiền",
+    "you": "BẠN"
+  },
+  "staking": {
+    "joinBaseSuccess": "Tham gia gói Base thành công!",
+    "joinBaseError": "Không thể tham gia gói Base",
+    "joinStakingSuccess": "Tham gia gói Staking thành công!",
+    "joinStakingError": "Không thể tham gia gói Staking",
+    "claimError": "Không thể nhận phần thưởng",
+    "joinNow": "Tham gia ngay"
+  },
+  "profile": {
+    "loading": "Đang tải thông tin...",
+    "loadError": "Không thể tải thông tin hồ sơ",
+    "updateError": "Không thể cập nhật thông tin. Vui lòng thử lại.",
+    "referral": "Giới thiệu:"
+  },
+  "auth": {
+    "resetPasswordError": "Không thể gửi yêu cầu đặt lại mật khẩu. Vui lòng thử lại sau.",
+    "resetPasswordTokenError": "Không thể đặt lại mật khẩu. Token có thể đã hết hạn. Vui lòng yêu cầu đặt lại mật khẩu lại.",
+    "verifyMailResendError": "Không thể gửi lại mã. Vui lòng thử lại sau.",
+    "subtitle": "Tham gia staking và nhiệm vụ để nhân thu nhập của bạn lên nhiều lần."
+  },
+  "login": {
+    "getStarted": "Bắt đầu với chúng tôi",
+    "description1": "USDT Ads giúp bạn kiếm tiền online chỉ với vài phút mỗi ngày.",
+    "description2": "Tham gia staking và nhiệm vụ để tăng thu nhập của bạn lên gấp nhiều lần.",
+    "signIn": "Đăng nhập",
+    "username": "Tên đăng nhập",
+    "password": "Mật khẩu",
+    "usernamePlaceholder": "Nhập username của bạn",
+    "passwordPlaceholder": "Nhập mật khẩu của bạn",
+    "forgotPassword": "Quên mật khẩu?",
+    "register": "Đăng ký",
+    "loggingIn": "Đang đăng nhập...",
+    "login": "Đăng nhập",
+    "pleaseEnterAllInfo": "Vui lòng nhập đầy đủ thông tin",
+    "loginSuccess": "Đăng nhập thành công!",
+    "loginFailed": "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập.",
+    "required": "*"
+  },
+  "register": {
+    "getStarted": "Bắt đầu với chúng tôi",
+    "description1": "USDT Ads giúp bạn kiếm tiền online chỉ với vài phút mỗi ngày.",
+    "description2": "Tham gia staking và nhiệm vụ để tăng thu nhập của bạn lên gấp nhiều lần.",
+    "createAccount": "Tạo tài khoản",
+    "username": "Tên đăng nhập",
+    "fullName": "Họ và tên",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "referralCode": "Mã giới thiệu",
+    "usernamePlaceholder": "Nhập username của bạn",
+    "fullNamePlaceholder": "Nhập họ và tên đầy đủ của bạn",
+    "emailPlaceholder": "Nhập email của bạn",
+    "passwordPlaceholder": "Nhập mật khẩu của bạn",
+    "referralCodePlaceholder": "Nhập mã giới thiệu",
+    "alreadyHaveAccount": "Đã có tài khoản?",
+    "signIn": "Đăng nhập",
+    "registering": "Đang đăng ký...",
+    "register": "Đăng ký",
+    "pleaseEnterAllRequiredInfo": "Vui lòng nhập đầy đủ thông tin bắt buộc",
+    "passwordMinLength": "Mật khẩu phải có ít nhất 6 ký tự",
+    "invalidEmail": "Email không hợp lệ",
+    "registerSuccess": "Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.",
+    "registerFailed": "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.",
+    "required": "*"
+  },
+  "forgotPassword": {
+    "getStarted": "Bắt đầu với chúng tôi",
+    "description1": "USDT Ads giúp bạn kiếm tiền online chỉ với vài phút mỗi ngày.",
+    "description2": "Tham gia staking và nhiệm vụ để tăng thu nhập của bạn lên gấp nhiều lần.",
+    "title": "Quên mật khẩu",
+    "email": "Email",
+    "emailPlaceholder": "Nhập email của bạn",
+    "required": "*",
+    "pleaseEnterEmail": "Vui lòng nhập email",
+    "invalidEmail": "Email không hợp lệ",
+    "resetPasswordSuccess": "Nếu email tồn tại, chúng tôi đã gửi link reset mật khẩu đến email của bạn. Vui lòng kiểm tra hộp thư và click vào link để đặt lại mật khẩu.",
+    "backToLogin": "Quay lại đăng nhập",
+    "sending": "Đang gửi...",
+    "sendResetLink": "Gửi link reset"
+  },
+  "changePassword": {
+    "getStarted": "Bắt đầu với chúng tôi",
+    "description1": "USDT Ads giúp bạn kiếm tiền online chỉ với vài phút mỗi ngày.",
+    "description2": "Tham gia staking và nhiệm vụ để tăng thu nhập của bạn lên gấp nhiều lần.",
+    "title": "Đặt lại mật khẩu",
+    "newPassword": "Mật khẩu mới",
+    "newPasswordPlaceholder": "Nhập mật khẩu mới (ít nhất 6 ký tự)",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "confirmPasswordPlaceholder": "Nhập lại mật khẩu mới",
+    "required": "*",
+    "pleaseEnterNewPassword": "Vui lòng nhập mật khẩu mới",
+    "passwordMinLength": "Mật khẩu phải có ít nhất 6 ký tự",
+    "passwordMismatch": "Mật khẩu xác nhận không khớp",
+    "resetPasswordSuccess": "Đặt lại mật khẩu thành công! Đang chuyển đến trang đăng nhập...",
+    "invalidToken": "Token không hợp lệ. Vui lòng yêu cầu reset mật khẩu lại.",
+    "invalidTokenError": "Token không hợp lệ hoặc đã hết hạn. Vui lòng yêu cầu reset mật khẩu lại.",
+    "backToForgotPassword": "Quay lại quên mật khẩu",
+    "backToLogin": "Quay lại đăng nhập",
+    "resetting": "Đang đặt lại mật khẩu...",
+    "resetPassword": "Đặt lại mật khẩu"
+  },
+  "verifyMail": {
+    "getStarted": "Bắt đầu với chúng tôi",
+    "description1": "USDT Ads giúp bạn kiếm tiền online chỉ với vài phút mỗi ngày.",
+    "description2": "Tham gia staking và nhiệm vụ để tăng thu nhập của bạn lên gấp nhiều lần.",
+    "title": "Xác thực Email",
+    "code": "Mã xác thực",
+    "pleaseEnterFullCode": "Vui lòng nhập đầy đủ 6 ký tự",
+    "verifySuccess": "Xác thực email thành công! Đang chuyển đến trang đăng nhập...",
+    "invalidCode": "Mã xác thực không hợp lệ. Vui lòng thử lại.",
+    "resendCode": "Gửi lại mã",
+    "resendCodeSuccess": "Mã xác thực đã được gửi lại thành công!",
+    "resendCodeError": "Không thể gửi lại mã. Vui lòng thử lại sau.",
+    "resendAfter": "Gửi lại mã sau {seconds}s",
+    "sending": "Đang gửi...",
+    "verifying": "Đang xác thực...",
+    "verify": "Xác thực"
+  },
+  "home": {
+    "title": "Kiếm tiền dễ dàng với USDA",
+    "subtitle": "Xem video quảng cáo – Nhận thưởng tự động – Minh bạch nhờ Blockchain",
+    "joinNow": "THAM GIA NGAY",
+    "introTitle": "Giới thiệu USDA",
+    "features": {
+      "technology": {
+        "title": "Công nghệ",
+        "description": "Ứng dụng AI theo dõi sở thích để hiển thị quảng cáo phù hợp."
+      },
+      "device": {
+        "title": "Thiết bị",
+        "description": "Mỗi người tham gia có thể điều khiển hàng trăm điện thoại xem quảng cáo cùng lúc."
+      },
+      "blockchain": {
+        "title": "Blockchain",
+        "description": "Ghi nhận lịch sử nhiệm vụ và thu nhập minh bạch."
+      },
+      "community": {
+        "title": "Cộng đồng",
+        "description": "Mỗi người góp phần vào mạng lưới cùng phát triển thu nhập chung."
+      }
+    },
+    "howItWorks": {
+      "title": "Cách hoạt động của USDA",
+      "advertisingRevenue": {
+        "title": "THU NHẬP QUẢNG CÁO",
+        "description": "Người dùng xem quảng cáo → nhận tiền → chia sẻ doanh thu với đối tác."
+      },
+      "investDeviceSystem": {
+        "title": "ĐẦU TƯ HỆ THỐNG THIẾT BỊ",
+        "description": "Tái đầu tư hàng loạt \"AI Phone\" để tăng hiệu quả xem quảng cáo."
+      },
+      "communityDevelopment": {
+        "title": "PHÁT TRIỂN CỘNG ĐỒNG & USDA COIN",
+        "description": "Mở rộng người dùng, Airdrop thưởng coin, thu hút nhà đầu tư để phát triển hệ sinh thái."
+      }
+    }
+  }
+}
+

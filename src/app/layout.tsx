@@ -23,12 +23,28 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="kr" >
+    <html lang="kr" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/logo.png" type="image/png" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('appTheme');
+                  if (theme === 'dark' || theme === 'light') {
+                    document.documentElement.classList.toggle('dark', theme === 'dark');
+                  } else {
+                    document.documentElement.classList.remove('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
       </head>
-      <body className={`${inter.variable} ${orbitron.variable}`} suppressHydrationWarning={true}>
+      <body className={`${inter.variable} ${orbitron.variable}`} suppressHydrationWarning>
         <ClientLayout>
           {children}
         </ClientLayout>

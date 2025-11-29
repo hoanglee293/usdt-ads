@@ -4,12 +4,14 @@ import { resetPasswordRequest } from '@/services/AuthService'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { useIsMobile } from '@/ui/use-mobile'
+import { useLang } from '@/lang/useLang'
 
 const ForgotPasswordPage = () => {
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
     const router = useRouter()
     const isMobile = useIsMobile()
+    const { t } = useLang()
 
     // Handle email submission
     const handleEmailSubmit = async (e: React.FormEvent) => {
@@ -17,7 +19,7 @@ const ForgotPasswordPage = () => {
         setLoading(true)
 
         if (!email.trim()) {
-            toast.error('Vui lòng nhập email')
+            toast.error(t('forgotPassword.pleaseEnterEmail'))
             setLoading(false)
             return
         }
@@ -25,7 +27,7 @@ const ForgotPasswordPage = () => {
         // Validate email format
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
         if (!emailRegex.test(email.trim())) {
-            toast.error('Email không hợp lệ')
+            toast.error(t('forgotPassword.invalidEmail'))
             setLoading(false)
             return
         }
@@ -33,12 +35,12 @@ const ForgotPasswordPage = () => {
         try {
             const response = await resetPasswordRequest(email.trim())
             if (response && response.statusCode === 200) {
-                toast.success('Nếu email tồn tại, chúng tôi đã gửi link reset mật khẩu đến email của bạn. Vui lòng kiểm tra hộp thư và click vào link để đặt lại mật khẩu.')
+                toast.success(t('forgotPassword.resetPasswordSuccess'))
             }
         } catch (err: any) {
             const errorMessage = err?.message || 
                 err?.response?.data?.message || 
-                'Không thể gửi yêu cầu reset mật khẩu. Vui lòng thử lại sau.'
+                t('auth.resetPasswordError')
             toast.error(errorMessage)
         } finally {
             setLoading(false)
@@ -46,52 +48,52 @@ const ForgotPasswordPage = () => {
     }
 
     return (
-        <div className='w-full h-svh flex justify-center items-center md:p-6'>
-            <div className='w-full h-full hidden md:flex justify-center items-center flex-col flex-1 radial-gradient rounded-3xl p-6'>
-                <div className='flex justify-center items-center flex-col mt-[30%]'>
+        <div className='w-full h-svh flex justify-center items-center md:p-6 bg-theme-white-100 dark:bg-black'>
+            <div className='w-full h-full hidden md:flex justify-center items-center flex-col flex-1 radial-gradient rounded-3xl p-6 border-none dark:border dark:border-solid border-transparent dark:border-[#fe645f]'>
+                <div className='flex justify-center items-center flex-col mt-[30%] gap-[1vh]'>
                     <img src="/logo.png" alt="logo" className='w-24 h-24 object-contain' />
                     <span className='tracking-[-0.02em] leading-[150%] inline-block font-orbitron text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] font-bold text-base'>USDT ADS</span>
-                    <h2 className='text-[2rem] font-bold text-center text-black-100 my-4'>Get Started With Us</h2>
-                    <p className='text-lg text-center text-theme-black-100 font-medium'>USDT Ads giúp bạn kiếm tiền online chỉ với vài phút mỗi ngày.</p>
-                    <p className='text-lg text-center text-theme-black-100 font-medium'>Tham gia staking và nhiệm vụ để tăng thu nhập của bạn lên gấp nhiều lần..</p>
+                    <h2 className='text-[2rem] font-bold text-center text-black-100 dark:text-white my-4'>{t('forgotPassword.getStarted')}</h2>
+                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium'>{t('forgotPassword.description1')}</p>
+                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium'>{t('forgotPassword.description2')}</p>
                 </div>
             </div>
-            <div className={`w-full h-full flex justify-center items-center flex-col flex-1 px-8 bg-theme-white-100 ${isMobile ? 'radial-gradient pb-[20vh]' : ''}`}>
+            <div className={`w-full h-full flex justify-center items-center flex-col flex-1 px-8 bg-transparent ${isMobile ? 'radial-gradient pb-[20vh]' : ''}`}>
                 <div className='w-full max-w-md flex flex-col items-center'>
                     <img src="/logo.png" alt="logo" className='w-28 h-28 object-contain mb-6' />
-                    <h2 className='text-3xl font-semibold text-white md:text-gray-800 mb-2'>
-                        Quên mật khẩu
+                    <h2 className='text-3xl font-semibold text-white md:text-gray-800 dark:md:text-white mb-2'>
+                        {t('forgotPassword.title')}
                     </h2>
 
                     <form onSubmit={handleEmailSubmit} className='w-full flex flex-col gap-4 mt-6'>
                         <div className='space-y-1'>
-                            <label htmlFor="email" className='block text-sm font-semibold text-gray-700'>
-                                Email <span className='text-theme-red'>*</span>
+                            <label htmlFor="email" className='block text-sm font-semibold text-gray-700 dark:text-gray-300'>
+                                {t('forgotPassword.email')} <span className='text-theme-red dark:text-theme-red-200'>{t('forgotPassword.required')}</span>
                             </label>
                             <input
                                 id="email"
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                placeholder='Nhập email của bạn'
-                                className='w-full px-4 py-3 border border-solid focus:border-gray-300 border-theme-gray-100 rounded-full outline-none transition-all'
+                                placeholder={t('forgotPassword.emailPlaceholder')}
+                                className='w-full px-4 py-3 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
                                 disabled={loading}
                             />
                         </div>
 
                         <div className='flex justify-start items-center gap-2'>
                             <span 
-                                className='text-sm text-theme-black-100 hover:text-purple-600 font-medium cursor-pointer'
+                                className='text-sm text-theme-black-100 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium cursor-pointer'
                                 onClick={() => router.push('/login')}
                             >
-                                Quay lại đăng nhập
+                                {t('forgotPassword.backToLogin')}
                             </span>
                         </div>
 
                         <button
                             type="submit"
                             disabled={loading}
-                            className='w-full outline-none border-none cursor-pointer py-3 px-4 mt-6 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-base uppercase'
+                            className='w-full outline-none border-none cursor-pointer py-3 px-4 mt-6 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-base uppercase'
                         >
                             {loading ? (
                                 <>
@@ -99,10 +101,10 @@ const ForgotPasswordPage = () => {
                                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                     </svg>
-                                    Đang gửi...
+                                    {t('forgotPassword.sending')}
                                 </>
                             ) : (
-                                'Gửi link reset'
+                                t('forgotPassword.sendResetLink')
                             )}
                         </button>
                     </form>

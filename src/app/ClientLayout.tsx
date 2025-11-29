@@ -6,12 +6,46 @@ import { useState } from "react";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
 import { LangProvider } from "@/lang/LangProvider";
+import { ThemeProvider } from "@/theme/ThemeProvider";
+import { useTheme } from "@/theme/useTheme";
 import Header from "@/components/Header";
 import { getProfile, UserProfile } from "@/services/AuthService";
 import { Toaster } from "react-hot-toast";
 
 interface ClientLayoutProps {
   children: React.ReactNode;
+}
+
+function ThemeAwareToaster() {
+  const { theme } = useTheme();
+  
+  return (
+    <Toaster 
+      position="top-right"
+      toastOptions={{
+        duration: 4000,
+        style: {
+          background: theme === 'dark' ? '#1E1E1E' : '#fff',
+          color: theme === 'dark' ? '#E0E0E0' : '#333',
+          borderRadius: '8px',
+          padding: '16px 12px',
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+        },
+        success: {
+          iconTheme: {
+            primary: '#10b981',
+            secondary: '#fff',
+          },
+        },
+        error: {
+          iconTheme: {
+            primary: '#ef4444',
+            secondary: '#fff',
+          },
+        },
+      }}
+    />
+  );
 }
 
 function ClientLayoutContent({ children }: ClientLayoutProps) {
@@ -59,7 +93,7 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
   return (
     <>
       {!isLoginPage && <Header />}
-      <main className="flex-1 min-h-screen font-inter">{children}</main>
+      <main className="flex-1 min-h-screen font-inter bg-theme-white-100 dark:bg-black">{children}</main>
     </>
   );
 }
@@ -78,34 +112,12 @@ export function ClientLayout({ children }: ClientLayoutProps) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <LangProvider>
-        <ClientLayoutContent>{children}</ClientLayoutContent>
-        <Toaster 
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: '#fff',
-              color: '#333',
-              borderRadius: '8px',
-              padding: '16px 12px',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            },
-            success: {
-              iconTheme: {
-                primary: '#10b981',
-                secondary: '#fff',
-              },
-            },
-            error: {
-              iconTheme: {
-                primary: '#ef4444',
-                secondary: '#fff',
-              },
-            },
-          }}
-        />
-      </LangProvider>
+      <ThemeProvider>
+        <LangProvider>
+          <ClientLayoutContent>{children}</ClientLayoutContent>
+          <ThemeAwareToaster />
+        </LangProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

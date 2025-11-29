@@ -1,15 +1,71 @@
 'use client'
-import React, { useState } from 'react'
-import { Copy, Play, Wallet, ChevronUp, User } from 'lucide-react'
+import React, { useMemo } from 'react'
+import { Copy, Play, Link2 } from 'lucide-react'
 import { Button } from '@/ui/button'
-import { Input } from '@/ui/input'
-import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/ui/tabs'
 import { toast } from 'sonner'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { getMemberRefInfo, createMemberRefWithdraw } from '@/services/RefService'
+import { useProfile } from '@/hooks/useProfile'
 
 export default function SmartRefPage() {
-    const [referralLink] = useState('https://memepump.vip/ref')
-    const [showReferralStructure, setShowReferralStructure] = useState(true)
-    const [activeTab, setActiveTab] = useState('level-referral')
+    const queryClient = useQueryClient()
+    const { profile } = useProfile()
+
+    // Milestone definitions
+    const milestoneDefinitions = [
+        { count: 5, reward: 10 },
+        { count: 10, reward: 15 },
+        { count: 20, reward: 30, showLink: true },
+        { count: 35, reward: 50 },
+        { count: 50, reward: 75 },
+        { count: 75, reward: 100 },
+        { count: 100, reward: 150 },
+    ]
+
+    // Fetch Member Ref Info
+    const { data: memberRefInfo = {} as any, isLoading: isLoadingInfo } = useQuery({
+        queryKey: ['memberRefInfo'],
+        queryFn: getMemberRefInfo,
+    })
+
+    const memberRefData = memberRefInfo?.data || {}
+    const currentReferrals = memberRefData.total_members || 0
+    const currentMilestone = memberRefData.current_milestone || 0
+    const totalRewards = memberRefData.total_rewards || 0
+    const totalCanWithdraw = memberRefData.total_can_withdraw || 0
+
+    // Calculate milestones based on current milestone
+    const milestones = useMemo(() => {
+        return milestoneDefinitions.map((milestone) => ({
+            ...milestone,
+            achieved: currentReferrals >= milestone.count,
+        }))
+    }, [currentReferrals])
+
+    // Find next milestone for progress bar
+    const nextMilestone = useMemo(() => {
+        return milestoneDefinitions.find((m) => m.count > currentReferrals) || milestoneDefinitions[milestoneDefinitions.length - 1]
+    }, [currentReferrals])
+
+    const progressPercentage = nextMilestone
+        ? (currentReferrals / nextMilestone.count) * 100
+        : 100
+
+    // Generate referral link
+    const referralLink = `${process.env.NEXT_PUBLIC_API_URL || window.location.origin}/?ref=${profile?.ref || ''}`
+
+    // Withdraw mutation
+    const withdrawMutation = useMutation({
+        mutationFn: createMemberRefWithdraw,
+        onSuccess: (data) => {
+            toast.success('Rút thưởng thành công!')
+            queryClient.invalidateQueries({ queryKey: ['memberRefInfo'] })
+        },
+        onError: (error: any) => {
+            const message = error?.response?.data?.message || 'Không thể rút thưởng'
+            toast.error(message)
+        },
+    })
 
     const handleCopyLink = async () => {
         try {
@@ -20,217 +76,186 @@ export default function SmartRefPage() {
         }
     }
 
-    const handleWithdraw = () => {
-        // TODO: Implement withdraw functionality
-        toast.info('Tính năng rút tiền đang được phát triển')
+    const handleClaimReward = () => {
+        if (totalCanWithdraw < 10) {
+            toast.error('Số tiền tối thiểu để rút là $10. Số tiền hiện tại: $' + totalCanWithdraw.toFixed(2))
+            return
+        }
+
+        if (withdrawMutation.isPending) {
+            return
+        }
+
+        withdrawMutation.mutate()
     }
 
     return (
-        <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-24 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] flex-1'>
+        <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] flex-1'>
             <div className='w-full max-w-7xl space-y-6'>
                 {/* Title Section */}
                 <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6'>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center'>
-                        <Play className='w-4 h-4 sm:w-5 sm:h-5 text-white ml-0.5' fill='white' />
-                    </div>
-                    <h1 className='text-xl sm:text-2xl md:text-3xl font-bold text-center'>
-                        HOA HỒNG THU NHẬP
+                    <img src="/logo.png" alt="logo" className="w-8 h-8 sm:w-10 sm:h-10 object-cover" />
+                    <h1 className='text-xl sm:text-2xl md:text-3xl font-bold text-center text-gradient-primary '>
+                        HOA HỒNG GIỚI THIỆU
                     </h1>
-                    <div className='w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 flex items-center justify-center'>
-                        <Play className='w-4 h-4 sm:w-5 sm:h-5 text-white ml-0.5' fill='white' />
-                    </div>
+                    <img src="/logo.png" alt="logo" className="w-8 h-8 sm:w-10 sm:h-10 object-cover" />
                 </div>
 
-                {/* Your Referral Link Section */}
-                <div className='bg-white rounded-lg border border-gray-200 shadow-sm p-4 sm:p-6'>
-                    <label className='block text-sm sm:text-base font-medium text-gray-700 mb-2'>
-                        Your Referral Link
-                    </label>
-                    <div className='flex items-center gap-2'>
-                        <Input
-                            type='text'
-                            value={referralLink}
-                            readOnly
-                            className='flex-1 bg-gray-50 text-sm sm:text-base'
-                        />
-                        <Button
-                            onClick={handleCopyLink}
-                            className='bg-gray-100 hover:bg-gray-200 text-gray-700 border-none'
-                            size='icon'
-                        >
-                            <Copy className='w-4 h-4' />
-                        </Button>
-                    </div>
-                </div>
-
-                {/* Stats Cards */}
-                <div className='grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6'>
-                    {/* Total Referrals Card */}
-                    <div className='bg-gradient-to-br from-pink-500 to-purple-500 rounded-lg p-4 sm:p-6 text-white shadow-lg'>
-                        <h3 className='text-sm sm:text-base font-medium mb-2 opacity-90'>
-                            Total Referrals
-                        </h3>
-                        <p className='text-2xl sm:text-3xl md:text-4xl font-bold'>32</p>
-                    </div>
-
-                    {/* Total Earnings Card */}
-                    <div className='bg-gradient-to-br from-pink-500 to-purple-500 rounded-lg p-4 sm:p-6 text-white shadow-lg'>
-                        <h3 className='text-sm sm:text-base font-medium mb-2 opacity-90'>
-                            Total Earnings
-                        </h3>
-                        <p className='text-2xl sm:text-3xl md:text-4xl font-bold mb-3'>$0.00000</p>
-                        <Button
-                            onClick={handleWithdraw}
-                            className='w-full bg-white text-pink-600 hover:bg-gray-100 border-none font-medium'
-                            size='sm'
-                        >
-                            <Wallet className='w-4 h-4 mr-2' />
-                            Withdraw
-                        </Button>
-                    </div>
-
-                    {/* Active Referrals Card */}
-                    <div className='bg-gradient-to-br from-pink-500 to-purple-500 rounded-lg p-4 sm:p-6 text-white shadow-lg'>
-                        <h3 className='text-sm sm:text-base font-medium mb-2 opacity-90'>
-                            Active Referrals
-                        </h3>
-                        <p className='text-2xl sm:text-3xl md:text-4xl font-bold'>0</p>
-                    </div>
-                </div>
-
-                {/* Referral Structure Section */}
-                <div className='bg-white rounded-lg border border-gray-200 shadow-sm p-4 sm:p-6'>
-                    <div className='flex items-center justify-between mb-4'>
-                        <h2 className='text-lg sm:text-xl font-bold text-gray-800'>
-                            Referral Structure
-                        </h2>
-                        <Button
-                            onClick={() => setShowReferralStructure(!showReferralStructure)}
-                            variant='ghost'
-                            size='sm'
-                            className='text-gray-600 hover:text-gray-800'
-                        >
-                            {showReferralStructure ? (
-                                <>
-                                    Hide <ChevronUp className='w-4 h-4 ml-1' />
-                                </>
-                            ) : (
-                                'Show'
-                            )}
-                        </Button>
-                    </div>
-                    {showReferralStructure && (
-                        <div className='flex flex-col items-center space-y-4 py-6'>
-                            {/* Top Level */}
-                            <div className='flex flex-col items-center'>
-                                <div className='w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center shadow-lg'>
-                                    <User className='w-8 h-8 sm:w-10 sm:h-10 text-white' />
-                                </div>
-                                <p className='mt-2 text-sm sm:text-base font-semibold text-gray-700'>10%</p>
-                            </div>
-
-                            {/* Connection Lines */}
-                            <div className='flex items-center justify-center space-x-8 sm:space-x-16'>
-                                <div className='w-12 sm:w-16 h-0.5 bg-gradient-to-r from-pink-400 to-purple-400'></div>
-                                <div className='w-12 sm:w-16 h-0.5 bg-gradient-to-l from-pink-400 to-purple-400'></div>
-                            </div>
-
-                            {/* Bottom Level */}
-                            <div className='flex items-center justify-center space-x-8 sm:space-x-16'>
-                                <div className='flex flex-col items-center'>
-                                    <div className='w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center shadow-lg'>
-                                        <User className='w-7 h-7 sm:w-8 sm:h-8 text-white' />
-                                    </div>
-                                    <p className='mt-2 text-sm font-semibold text-gray-700'>5%</p>
-                                </div>
-                                <div className='flex flex-col items-center'>
-                                    <div className='w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center shadow-lg'>
-                                        <User className='w-7 h-7 sm:w-8 sm:h-8 text-white' />
-                                    </div>
-                                    <p className='mt-2 text-sm font-semibold text-gray-700'>5%</p>
-                                </div>
+                {/* Progress Bar */}
+                <div className='bg-transparent rounded-lg border border-gray-200 p-4 sm:p-6'>
+                    {isLoadingInfo ? (
+                        <div className='w-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE] rounded-full h-8 sm:h-10 animate-pulse' />
+                    ) : (
+                        <div className='w-[20vw] mx-auto bg-gradient-to-br from-[#FE645F] to-[#C68AFE] rounded-full h-8 sm:h-10 overflow-hidden relative'>
+                            
+                            <div className='absolute inset-0 flex items-center justify-center'>
+                                <span className='text-xs sm:text-sm font-semibold px-2 whitespace-nowrap z-10'>
+                                    <span className='text-white drop-shadow-md'>
+                                        Đã giới thiệu: {currentReferrals}/ {nextMilestone?.count || 100} người
+                                    </span>
+                                </span>
                             </div>
                         </div>
                     )}
                 </div>
 
-                {/* Your Referrals Section */}
-                <div className='bg-white rounded-lg border border-gray-200 shadow-sm p-4 sm:p-6'>
-                    <h2 className='text-lg sm:text-xl font-bold text-gray-800 mb-4'>
-                        Your Referrals
-                    </h2>
-                    <Tabs value={activeTab} onValueChange={setActiveTab} className='w-full'>
-                        <TabsList className='grid w-full grid-cols-2 mb-4'>
-                            <TabsTrigger value='referred-users' className='text-sm sm:text-base'>
-                                Referred Users
-                            </TabsTrigger>
-                            <TabsTrigger value='level-referral' className='text-sm sm:text-base'>
-                                Level Referral
-                            </TabsTrigger>
-                        </TabsList>
+                {/* SVG Gradient Definition for custom icon */}
+                <svg width='0' height='0' className='absolute'>
+                    <defs>
+                        <linearGradient id='paint0_linear_245_326' x1='49.9999' y1='-0.000366211' x2='49.9999' y2='100' gradientUnits='userSpaceOnUse'>
+                            <stop stopColor='#EB2FBB' />
+                            <stop offset='0.504808' stopColor='#E73A64' />
+                            <stop offset='1' stopColor='#8252DD' />
+                        </linearGradient>
+                        <clipPath id='clip0_245_326'>
+                            <rect width='100' height='100' fill='white' />
+                        </clipPath>
+                    </defs>
+                </svg>
 
-                        <TabsContent value='referred-users' className='mt-4'>
-                            <div className='text-center py-8 text-gray-500'>
-                                <p>No referred users yet</p>
-                            </div>
-                        </TabsContent>
-
-                        <TabsContent value='level-referral' className='mt-4'>
-                            {/* Table Header */}
-                            <div className='grid grid-cols-3 gap-2 sm:gap-4 mb-4'>
-                                <div className='bg-gradient-to-r from-orange-400 to-red-500 rounded-lg p-2 sm:p-3 text-center'>
-                                    <p className='text-xs sm:text-sm font-semibold text-white'>
-                                        Referral Count
-                                    </p>
-                                </div>
-                                <div className='bg-gradient-to-r from-orange-400 to-red-500 rounded-lg p-2 sm:p-3 text-center'>
-                                    <p className='text-xs sm:text-sm font-semibold text-white'>
-                                        Claimable Volume
-                                    </p>
-                                </div>
-                                <div className='bg-gradient-to-r from-orange-400 to-red-500 rounded-lg p-2 sm:p-3 text-center'>
-                                    <p className='text-xs sm:text-sm font-semibold text-white'>
-                                        Lifetime Volume
-                                    </p>
-                                </div>
+                {/* Milestone Columns */}
+                <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 '>
+                    {milestones.map((milestone, index) => (
+                        <div
+                            key={index}
+                            className='flex flex-col items-center space-y-2 sm:space-y-3 hover:bg-white rounded-lg border border-gray-200 hover:shadow-md p-3 sm:p-4'
+                        >
+                            {/* Milestone Label */}
+                            <div className='text-center'>
+                                <p className='text-xs sm:text-sm text-gray-600 mb-1'>Mốc giới thiệu</p>
+                                <p className='text-sm sm:text-base font-semibold text-gray-800'>
+                                    {milestone.count} người
+                                </p>
                             </div>
 
-                            {/* Level Referral Rows */}
-                            <div className='space-y-4'>
-                                {/* Level Referral 1 */}
-                                <div className='grid grid-cols-4 gap-2 sm:gap-4 items-center'>
-                                    <Button className='bg-gradient-to-r from-purple-500 to-pink-500 text-white border-none hover:opacity-90 text-xs sm:text-sm font-medium'>
-                                        Level Referral 1
-                                    </Button>
-                                    <div className='bg-white border border-gray-200 rounded-lg p-2 sm:p-3 text-center'>
-                                        <p className='text-xs sm:text-sm text-gray-700'>0</p>
-                                    </div>
-                                    <div className='bg-white border border-gray-200 rounded-lg p-2 sm:p-3 text-center'>
-                                        <p className='text-xs sm:text-sm text-gray-700'>$0.00000</p>
-                                    </div>
-                                    <div className='bg-white border border-gray-200 rounded-lg p-2 sm:p-3 text-center'>
-                                        <p className='text-xs sm:text-sm text-gray-700'>$0.00000</p>
-                                    </div>
-                                </div>
-
-                                {/* Level Referral 2 */}
-                                <div className='grid grid-cols-4 gap-2 sm:gap-4 items-center'>
-                                    <Button className='bg-gradient-to-r from-purple-500 to-pink-500 text-white border-none hover:opacity-90 text-xs sm:text-sm font-medium'>
-                                        Level Referral 2
-                                    </Button>
-                                    <div className='bg-white border border-gray-200 rounded-lg p-2 sm:p-3 text-center'>
-                                        <p className='text-xs sm:text-sm text-gray-700'>0</p>
-                                    </div>
-                                    <div className='bg-white border border-gray-200 rounded-lg p-2 sm:p-3 text-center'>
-                                        <p className='text-xs sm:text-sm text-gray-700'>$0.00000</p>
-                                    </div>
-                                    <div className='bg-white border border-gray-200 rounded-lg p-2 sm:p-3 text-center'>
-                                        <p className='text-xs sm:text-sm text-gray-700'>$0.00000</p>
-                                    </div>
-                                </div>
+                            {/* Custom Icon */}
+                            <div className='flex items-center justify-center'>
+                                {milestone.achieved ? (
+                                    <svg
+                                        xmlns='http://www.w3.org/2000/svg'
+                                        className='w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20'
+                                        viewBox='0 0 100 100'
+                                        fill='none'
+                                    >
+                                        <g clipPath='url(#clip0_245_326)'>
+                                            <path
+                                                d='M77.4646 37.9541C77.1949 37.6162 76.868 37.6826 76.6967 37.7516C76.5531 37.8098 76.2242 37.9957 76.2697 38.4617C76.3244 39.0213 76.3551 39.5918 76.3609 40.1576C76.3853 42.5049 75.4437 44.8045 73.7777 46.4668C72.1223 48.1184 69.9449 49.0082 67.6266 48.9824C64.4598 48.942 61.8332 47.2903 60.0307 44.2057C58.5402 41.6551 59.1953 38.3655 59.8889 34.8824C60.2947 32.8438 60.7145 30.7356 60.7145 28.7291C60.7145 13.1063 50.2117 4.09299 43.9512 0.110767C43.8217 0.02854 43.6984 -0.000366211 43.5893 -0.000366211C43.4117 -0.000366211 43.2711 0.0761963 43.2018 0.123071C43.0674 0.214087 42.8523 0.421509 42.9215 0.788696C45.3145 13.4961 38.177 21.1389 30.6203 29.2303C22.8313 37.5707 14.0029 47.024 14.0029 64.0733C14.0029 83.8834 30.1195 100 49.9297 100C66.2406 100 80.6217 88.6282 84.9014 72.3457C87.8197 61.2436 84.7615 47.1014 77.4646 37.9541ZM50.826 92.3315C45.8654 92.5576 41.1479 90.7785 37.5445 87.3332C33.9799 83.9246 31.9354 79.1678 31.9354 74.2823C31.9354 65.1141 35.4408 58.3836 44.8693 49.4485C45.0236 49.3022 45.1816 49.2559 45.3193 49.2559C45.4441 49.2559 45.5523 49.294 45.6268 49.3297C45.7836 49.4053 46.0414 49.5924 46.0066 49.9971C45.6695 53.9199 45.6754 57.176 46.0238 59.6752C46.9145 66.059 51.5877 70.3483 57.6531 70.3483C60.6269 70.3483 63.4596 69.2291 65.6293 67.1969C65.8811 66.961 66.1623 66.991 66.2701 67.0139C66.4129 67.0448 66.6041 67.1323 66.7043 67.3739C67.6039 69.5459 68.0637 71.8516 68.0707 74.2264C68.0994 83.7821 60.3635 91.9041 50.826 92.3315Z'
+                                                fill='url(#paint0_linear_245_326)'
+                                            />
+                                        </g>
+                                        <defs>
+                                            <linearGradient
+                                                id='paint0_linear_245_326'
+                                                x1='49.9999'
+                                                y1='-0.000366211'
+                                                x2='49.9999'
+                                                y2='100'
+                                                gradientUnits='userSpaceOnUse'
+                                            >
+                                                <stop stopColor='#EB2FBB' />
+                                                <stop offset='0.504808' stopColor='#E73A64' />
+                                                <stop offset='1' stopColor='#8252DD' />
+                                            </linearGradient>
+                                            <clipPath id='clip0_245_326'>
+                                                <rect width='100' height='100' fill='white' />
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
+                                ) : (
+                                    <svg
+                                        xmlns='http://www.w3.org/2000/svg'
+                                        className='w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 opacity-40'
+                                        viewBox='0 0 100 100'
+                                        fill='none'
+                                    >
+                                        <g clipPath='url(#clip0_245_326_inactive)'>
+                                            <path
+                                                d='M77.4646 37.9541C77.1949 37.6162 76.868 37.6826 76.6967 37.7516C76.5531 37.8098 76.2242 37.9957 76.2697 38.4617C76.3244 39.0213 76.3551 39.5918 76.3609 40.1576C76.3853 42.5049 75.4437 44.8045 73.7777 46.4668C72.1223 48.1184 69.9449 49.0082 67.6266 48.9824C64.4598 48.942 61.8332 47.2903 60.0307 44.2057C58.5402 41.6551 59.1953 38.3655 59.8889 34.8824C60.2947 32.8438 60.7145 30.7356 60.7145 28.7291C60.7145 13.1063 50.2117 4.09299 43.9512 0.110767C43.8217 0.02854 43.6984 -0.000366211 43.5893 -0.000366211C43.4117 -0.000366211 43.2711 0.0761963 43.2018 0.123071C43.0674 0.214087 42.8523 0.421509 42.9215 0.788696C45.3145 13.4961 38.177 21.1389 30.6203 29.2303C22.8313 37.5707 14.0029 47.024 14.0029 64.0733C14.0029 83.8834 30.1195 100 49.9297 100C66.2406 100 80.6217 88.6282 84.9014 72.3457C87.8197 61.2436 84.7615 47.1014 77.4646 37.9541ZM50.826 92.3315C45.8654 92.5576 41.1479 90.7785 37.5445 87.3332C33.9799 83.9246 31.9354 79.1678 31.9354 74.2823C31.9354 65.1141 35.4408 58.3836 44.8693 49.4485C45.0236 49.3022 45.1816 49.2559 45.3193 49.2559C45.4441 49.2559 45.5523 49.294 45.6268 49.3297C45.7836 49.4053 46.0414 49.5924 46.0066 49.9971C45.6695 53.9199 45.6754 57.176 46.0238 59.6752C46.9145 66.059 51.5877 70.3483 57.6531 70.3483C60.6269 70.3483 63.4596 69.2291 65.6293 67.1969C65.8811 66.961 66.1623 66.991 66.2701 67.0139C66.4129 67.0448 66.6041 67.1323 66.7043 67.3739C67.6039 69.5459 68.0637 71.8516 68.0707 74.2264C68.0994 83.7821 60.3635 91.9041 50.826 92.3315Z'
+                                                fill='#9CA3AF'
+                                            />
+                                        </g>
+                                        <defs>
+                                            <clipPath id='clip0_245_326_inactive'>
+                                                <rect width='100' height='100' fill='white' />
+                                            </clipPath>
+                                        </defs>
+                                    </svg>
+                                )}
                             </div>
-                        </TabsContent>
-                    </Tabs>
+
+                            {/* Reward Amount */}
+                            <p className='text-base sm:text-lg md:text-xl font-bold text-gray-800'>
+                                {milestone.reward} $
+                            </p>
+
+                            {/* Reward Label */}
+                            <p className='text-xs sm:text-sm font-medium text-gray-600'>Thưởng</p>
+
+                            {/* Referral Link Button (only for 20 people milestone) */}
+                            {milestone.showLink && (
+                                <Button
+                                    onClick={handleCopyLink}
+                                    className='mt-2 w-full bg-gradient-to-r from-pink-500 to-red-500 text-white border-none hover:opacity-90 text-xs sm:text-sm font-medium rounded-lg'
+                                    size='sm'
+                                >
+                                    <Link2 className='w-3 h-3 sm:w-4 sm:h-4 mr-1' />
+                                    Link giới thiệu
+                                </Button>
+                            )}
+                        </div>
+                    ))}
+                </div>
+
+                {/* Claim Reward Button */}
+                <div className='flex flex-col items-center gap-4'>
+                    {totalCanWithdraw > 0 && (
+                        <div className='text-center'>
+                            <p className='text-sm sm:text-base text-gray-600 mb-1'>
+                                Số tiền có thể rút: <span className='font-bold text-pink-600'>${totalCanWithdraw.toFixed(2)}</span>
+                            </p>
+                            {totalCanWithdraw < 10 && (
+                                <p className='text-xs text-orange-600'>
+                                    (Tối thiểu $10 để rút thưởng)
+                                </p>
+                            )}
+                        </div>
+                    )}
+                    <Button
+                        onClick={handleClaimReward}
+                        disabled={withdrawMutation.isPending || totalCanWithdraw < 10}
+                        className='bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white border-none hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-base sm:text-lg font-bold px-8 sm:px-12 py-3 sm:py-4 rounded-full shadow-lg cursor-pointer'
+                        size='lg'
+                    >
+                        {withdrawMutation.isPending ? 'Đang xử lý...' : 'NHẬN THƯỞNG'}
+                    </Button>
+                </div>
+
+                {/* Disclaimer */}
+                <div className='bg-white rounded-lg border border-gray-200 shadow-sm p-4 sm:p-6 max-w-2xl mx-auto'>
+                    <p className='text-xs sm:text-sm text-gray-600 text-center leading-relaxed italic'>
+                        *Hệ thống trả thưởng giới thiệu theo mốc nếu User giới thiệu trực tiếp được được người
+                        tham gia khác KYC; tham gia và hoàn gói Staking ít nhất 1 lần
+                    </p>
                 </div>
             </div>
         </div>

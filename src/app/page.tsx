@@ -4,8 +4,10 @@ import React from 'react'
 import Link from 'next/link'
 import { Network, Box, Users, Smartphone, Megaphone, Monitor, DollarSign } from 'lucide-react'
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver'
+import { useLang } from '@/lang/useLang'
 
 export default function HomePage() {
+  const { t } = useLang()
   // Hero Section Observers - Giảm threshold và rootMargin cho mobile
   const { elementRef: logoRef, isIntersecting: logoInView } = useIntersectionObserver<HTMLDivElement>({
     threshold: 0.1,
@@ -101,7 +103,7 @@ export default function HomePage() {
   });
 
   return (
-    <div className="relative min-h-screen container mx-auto overflow-hidden bg-white py-24 lg:py-32 xl:py-48 px-4 sm:px-6">
+    <div className="relative min-h-screen container mx-auto overflow-hidden bg-white dark:bg-black py-24 lg:py-32 xl:py-48 px-4 sm:px-6">
      
       {/* SVG Gradients Definitions */}
       <svg className="absolute w-0 h-0">
@@ -117,12 +119,12 @@ export default function HomePage() {
       <div className="relative z-10 flex flex-col items-center justify-center">
         <div
           ref={bgImageRef}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] sm:w-full h-full rounded-full opacity-30 sm:opacity-50 md:opacity-100"
+          className="absolute top-1/2 left-1/2 mt-[-14vh] -translate-x-1/2 -translate-y-1/2 w-[120%] sm:w-full h-full rounded-full opacity-30 sm:opacity-50 md:opacity-100"
         >
-          <img 
+            <img 
             src="/bg-main.png" 
             alt="bg-main" 
-            className={`w-full h-full object-contain animate-float-slow transition-opacity duration-1000 ${bgImageInView ? 'in-view opacity-100' : 'opacity-30 sm:opacity-50'}`}
+            className={`w-full h-full object-contain animate-float-slow transition-opacity duration-1000 ${bgImageInView ? 'in-view opacity-100' : 'opacity-30 sm:opacity-50 dark:opacity-10'}`}
           />
         </div>
         
@@ -147,15 +149,15 @@ export default function HomePage() {
             ref={titleRef}
             className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 md:mb-6 text-gradient-secondary leading-tight overflow-visible animate-fade-in-up px-2 ${titleInView ? 'in-view' : ''}`}
           >
-            Kiếm tiền dễ dàng với USDA
+            {t('home.title')}
           </h1>
 
           {/* Subtitle */}
           <p 
             ref={subtitleRef}
-            className={`text-xs sm:text-sm md:text-base lg:text-lg text-theme-black-100 mb-6 sm:mb-8 md:mb-10 font-medium max-w-2xl animate-fade-in-up-delayed px-2 ${subtitleInView ? 'in-view' : ''}`}
+            className={`text-xs sm:text-sm md:text-base lg:text-lg text-theme-black-100 dark:text-gray-300 mb-6 sm:mb-8 md:mb-10 font-medium max-w-2xl animate-fade-in-up-delayed px-2 ${subtitleInView ? 'in-view' : ''}`}
           >
-            Xem video quảng cáo – Nhận thưởng tự động – Minh bạch nhờ Blockchain
+            {t('home.subtitle')}
           </p>
 
           {/* CTA Button */}
@@ -165,7 +167,7 @@ export default function HomePage() {
           >
             <Link href="/register" className="block w-full sm:w-auto">
               <button className="w-full sm:w-auto px-6 sm:px-8 md:px-12 border-none outline-none py-2.5 sm:py-2 md:py-3 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white font-bold text-xs sm:text-sm md:text-base lg:text-lg rounded-full hover:opacity-90 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 font-orbitron uppercase tracking-wide">
-                THAM GIA NGAY
+                {t('home.joinNow')}
               </button>
             </Link>
           </div>
@@ -184,7 +186,7 @@ export default function HomePage() {
                   ref={centerTitleRef}
                   className={`text-xl sm:text-2xl font-bold text-gradient-secondary animate-scale-in ${centerTitleInView ? 'in-view' : ''}`}
                 >
-                  Giới thiệu USDA
+                  {t('home.introTitle')}
                 </h2>
               </div>
 
@@ -204,9 +206,9 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 sm:px-6 py-2 text-white shadow-lg w-full max-w-sm text-center">
-                  <span className="font-bold text-xs sm:text-sm font-orbitron underline underline-offset-4">Công nghệ</span>
+                  <span className="font-bold text-xs sm:text-sm font-orbitron underline underline-offset-4">{t('home.features.technology.title')}</span>
                   <span className="text-xs sm:text-sm font-inter leading-relaxed">
-                    : Ứng dụng AI theo dõi sở thích để hiển thị quảng cáo phù hợp.
+                    : {t('home.features.technology.description')}
                   </span>
                 </div>
               </div>
@@ -225,9 +227,9 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 sm:px-6 py-2 text-white shadow-lg w-full max-w-sm text-center">
-                  <span className="font-bold text-xs sm:text-sm font-orbitron underline underline-offset-4">Thiết bị</span>
+                  <span className="font-bold text-xs sm:text-sm font-orbitron underline underline-offset-4">{t('home.features.device.title')}</span>
                   <span className="text-xs sm:text-sm font-inter leading-relaxed">
-                    : Mỗi người tham gia có thể điều khiển hàng trăm điện thoại xem quảng cáo cùng lúc.
+                    : {t('home.features.device.description')}
                   </span>
                 </div>
               </div>
@@ -248,9 +250,9 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 sm:px-6 py-2 text-white shadow-lg w-full max-w-sm text-center">
-                  <span className="font-bold text-xs sm:text-sm font-orbitron underline underline-offset-4">Blockchain</span>
+                  <span className="font-bold text-xs sm:text-sm font-orbitron underline underline-offset-4">{t('home.features.blockchain.title')}</span>
                   <span className="text-xs sm:text-sm font-inter leading-relaxed">
-                    : Ghi nhận lịch sử nhiệm vụ và thu nhập minh bạch.
+                    : {t('home.features.blockchain.description')}
                   </span>
                 </div>
               </div>
@@ -269,9 +271,9 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 sm:px-6 py-2 text-white shadow-lg w-full max-w-sm text-center">
-                  <span className="font-bold text-xs sm:text-sm font-orbitron underline underline-offset-4">Cộng đồng</span>
+                  <span className="font-bold text-xs sm:text-sm font-orbitron underline underline-offset-4">{t('home.features.community.title')}</span>
                   <span className="text-xs sm:text-sm font-inter leading-relaxed">
-                    : Mỗi người góp phần vào mạng lưới cùng phát triển thu nhập chung.
+                    : {t('home.features.community.description')}
                   </span>
                 </div>
               </div>
@@ -295,9 +297,9 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 md:px-6 py-2 text-white shadow-lg justify-start items-start max-w-lg text-center md:text-left">
-                  <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">Công nghệ</span>
+                  <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">{t('home.features.technology.title')}</span>
                   <span className="text-sm md:text-base font-inter leading-relaxed">
-                    : Ứng dụng AI theo dõi sở thích để hiển thị quảng cáo phù hợp.
+                    : {t('home.features.technology.description')}
                   </span>
                 </div>
               </div>
@@ -316,9 +318,9 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 md:px-6 py-2 text-white shadow-lg max-w-lg text-center md:text-left">
-                  <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">Thiết bị</span>
+                  <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">{t('home.features.device.title')}</span>
                   <span className="text-sm md:text-base font-inter leading-relaxed">
-                    : Mỗi người tham gia có thể điều khiển hàng trăm điện thoại xem quảng cáo cùng lúc.
+                    : {t('home.features.device.description')}
                   </span>
                 </div>
               </div>
@@ -329,7 +331,7 @@ export default function HomePage() {
                   ref={centerTitleRef}
                   className={`text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gradient-secondary max-w-80 animate-scale-in ${centerTitleInView ? 'in-view' : ''}`}
                 >
-                  Giới thiệu USDA
+                  {t('home.introTitle')}
                 </h2>
               </div>
 
@@ -349,9 +351,9 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 md:px-6 py-2 text-white shadow-lg max-w-lg text-center md:text-left">
-                  <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">Blockchain</span>
+                  <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">{t('home.features.blockchain.title')}</span>
                   <span className="text-sm md:text-base font-inter leading-relaxed">
-                    : Ghi nhận lịch sử nhiệm vụ và thu nhập minh bạch.
+                    : {t('home.features.blockchain.description')}
                   </span>
                 </div>
               </div>
@@ -370,9 +372,9 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 md:px-6 py-2 text-white shadow-lg max-w-lg text-center md:text-left">
-                  <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">Cộng đồng</span>
+                  <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">{t('home.features.community.title')}</span>
                   <span className="text-sm md:text-base font-inter leading-relaxed">
-                    : Mỗi người góp phần vào mạng lưới cùng phát triển thu nhập chung.
+                    : {t('home.features.community.description')}
                   </span>
                 </div>
               </div>
@@ -389,7 +391,7 @@ export default function HomePage() {
           ref={sectionTitleRef}
           className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gradient-secondary w-full text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16 font-orbitron animate-fade-in-up px-2 ${sectionTitleInView ? 'in-view' : ''}`}
         >
-          Cách hoạt động của USDA
+          {t('home.howItWorks.title')}
         </h2>
 
         {/* Three Panels Grid */}
@@ -397,7 +399,7 @@ export default function HomePage() {
           {/* Panel 1: Advertising Revenue */}
           <div 
             ref={panel1Ref}
-            className={`bg-white border-2 border-solid border-[#FA4E4D] rounded-xl p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 flex flex-col gap-2 items-center text-center hover:shadow-lg transition-shadow animate-fade-in-up ${panel1InView ? 'in-view' : ''}`}
+            className={`bg-white dark:bg-gray-800 border-2 dark:border border-solid border-[#FA4E4D] dark:border-[#FE645F] rounded-xl p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 flex flex-col gap-2 items-center text-center hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-purple-500/20 transition-shadow animate-fade-in-up ${panel1InView ? 'in-view' : ''}`}
           >
             {/* Icon with Dollar Sign */}
             <div className="relative mb-4 sm:mb-6">
@@ -429,19 +431,19 @@ export default function HomePage() {
 
             {/* Title */}
             <h3 className="text-base sm:text-lg md:text-xl font-bold text-gradient-secondary mb-3 sm:mb-4">
-              THU NHẬP QUẢNG CÁO
+              {t('home.howItWorks.advertisingRevenue.title')}
             </h3>
 
             {/* Description */}
-            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 leading-relaxed font-medium">
-              Người dùng xem quảng cáo → nhận tiền → chia sẻ doanh thu với đối tác.
+            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 dark:text-gray-300 leading-relaxed font-medium">
+              {t('home.howItWorks.advertisingRevenue.description')}
             </p>
           </div>
 
           {/* Panel 2: Invest in Device System */}
           <div 
             ref={panel2Ref}
-            className={`bg-white border-2 border-solid border-[#FA4E4D] rounded-xl p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 flex flex-col gap-2 items-center text-center hover:shadow-lg transition-shadow animate-fade-in-up-delayed ${panel2InView ? 'in-view' : ''}`}
+            className={`bg-white dark:bg-gray-800 border-2 dark:border border-solid border-[#FA4E4D] dark:border-[#FE645F] rounded-xl p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 flex flex-col gap-2 items-center text-center hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-purple-500/20 transition-shadow animate-fade-in-up-delayed ${panel2InView ? 'in-view' : ''}`}
           >
             {/* Icon with Computer and Phone */}
             <div className="relative mb-4 sm:mb-6">
@@ -467,19 +469,19 @@ export default function HomePage() {
 
             {/* Title */}
             <h3 className="text-base sm:text-lg md:text-xl font-bold text-gradient-secondary mb-3 sm:mb-4">
-              ĐẦU TƯ HỆ THỐNG THIẾT BỊ
+              {t('home.howItWorks.investDeviceSystem.title')}
             </h3>
 
             {/* Description */}
-            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 leading-relaxed font-medium">
-              Tái đầu tư hàng loạt "AI Phone" để tăng hiệu quả xem quảng cáo.
+            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 dark:text-gray-300 leading-relaxed font-medium">
+              {t('home.howItWorks.investDeviceSystem.description')}
             </p>
           </div>
           
           {/* Panel 3: Community Development & USDA Coin */}
           <div 
             ref={panel3Ref}
-            className={`bg-white border-2 border-solid border-[#FA4E4D] rounded-xl p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 flex flex-col gap-2 items-center text-center hover:shadow-lg transition-shadow animate-fade-in-up-more-delayed sm:col-span-2 md:col-span-1 ${panel3InView ? 'in-view' : ''}`}
+            className={`bg-white dark:bg-gray-800 border-2 dark:border border-solid border-[#FA4E4D] dark:border-[#FE645F] rounded-xl p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 flex flex-col gap-2 items-center text-center hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-purple-500/20 transition-shadow animate-fade-in-up-more-delayed sm:col-span-2 md:col-span-1 ${panel3InView ? 'in-view' : ''}`}
           >
             {/* Icon with Network/Community */}
             <div className="relative mb-4 sm:mb-6">
@@ -510,12 +512,12 @@ export default function HomePage() {
 
             {/* Title */}
             <h3 className="text-base sm:text-lg md:text-xl font-bold text-gradient-secondary mb-3 sm:mb-4">
-              PHÁT TRIỂN CỘNG ĐỒNG & USDA COIN
+              {t('home.howItWorks.communityDevelopment.title')}
             </h3>
 
             {/* Description */}
-            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 leading-relaxed font-medium">
-              Mở rộng người dùng, Airdrop thưởng coin, thu hút nhà đầu tư để phát triển hệ sinh thái.
+            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 dark:text-gray-300 leading-relaxed font-medium">
+              {t('home.howItWorks.communityDevelopment.description')}
             </p>
           </div>
         </div>
