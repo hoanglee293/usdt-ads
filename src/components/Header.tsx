@@ -25,16 +25,16 @@ export default function Header() {
       href: '/make-money',
     },
     {
-      name: t('header.rewards'),
-      href: '/reward',
-    },
-    {
       name: t('header.wallet'),
       href: '/wallet',
     },
     {
       name: t('header.referral'),
       href: '/referral/direct',
+    },
+    {
+      name: 'Influencer Rewards',
+      href: '/referral/smart',
     }
   ]
 

@@ -6,10 +6,12 @@ import { toast } from 'sonner'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getMemberRefInfo, createMemberRefWithdraw } from '@/services/RefService'
 import { useProfile } from '@/hooks/useProfile'
+import { useLang } from '@/lang/useLang'
 
 export default function SmartRefPage() {
     const queryClient = useQueryClient()
     const { profile } = useProfile()
+    const { t } = useLang()
 
     // Milestone definitions
     const milestoneDefinitions = [
@@ -58,11 +60,11 @@ export default function SmartRefPage() {
     const withdrawMutation = useMutation({
         mutationFn: createMemberRefWithdraw,
         onSuccess: (data) => {
-            toast.success('Rút thưởng thành công!')
+            toast.success(t('smartRef.withdrawSuccess'))
             queryClient.invalidateQueries({ queryKey: ['memberRefInfo'] })
         },
         onError: (error: any) => {
-            const message = error?.response?.data?.message || 'Không thể rút thưởng'
+            const message = error?.response?.data?.message || t('smartRef.withdrawError')
             toast.error(message)
         },
     })
@@ -70,15 +72,15 @@ export default function SmartRefPage() {
     const handleCopyLink = async () => {
         try {
             await navigator.clipboard.writeText(referralLink)
-            toast.success('Đã sao chép link giới thiệu')
+            toast.success(t('smartRef.linkCopied'))
         } catch (err) {
-            toast.error('Không thể sao chép')
+            toast.error(t('smartRef.copyFailed'))
         }
     }
 
     const handleClaimReward = () => {
         if (totalCanWithdraw < 10) {
-            toast.error('Số tiền tối thiểu để rút là $10. Số tiền hiện tại: $' + totalCanWithdraw.toFixed(2))
+            toast.error(t('smartRef.minimumWithdrawError', { amount: totalCanWithdraw.toFixed(2) }))
             return
         }
 
@@ -90,19 +92,19 @@ export default function SmartRefPage() {
     }
 
     return (
-        <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] flex-1'>
+        <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
             <div className='w-full max-w-7xl space-y-6'>
                 {/* Title Section */}
                 <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6'>
                     <img src="/logo.png" alt="logo" className="w-8 h-8 sm:w-10 sm:h-10 object-cover" />
                     <h1 className='text-xl sm:text-2xl md:text-3xl font-bold text-center text-gradient-primary '>
-                        HOA HỒNG GIỚI THIỆU
+                        {t('smartRef.title')}
                     </h1>
                     <img src="/logo.png" alt="logo" className="w-8 h-8 sm:w-10 sm:h-10 object-cover" />
                 </div>
 
                 {/* Progress Bar */}
-                <div className='bg-transparent rounded-lg border border-gray-200 p-4 sm:p-6'>
+                <div className='bg-transparent rounded-lg border border-gray-200 dark:border-[#FE645F] p-4 sm:p-6'>
                     {isLoadingInfo ? (
                         <div className='w-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE] rounded-full h-8 sm:h-10 animate-pulse' />
                     ) : (
@@ -111,7 +113,7 @@ export default function SmartRefPage() {
                             <div className='absolute inset-0 flex items-center justify-center'>
                                 <span className='text-xs sm:text-sm font-semibold px-2 whitespace-nowrap z-10'>
                                     <span className='text-white drop-shadow-md'>
-                                        Đã giới thiệu: {currentReferrals}/ {nextMilestone?.count || 100} người
+                                        {t('smartRef.progressText', { current: currentReferrals, total: nextMilestone?.count || 100 })}
                                     </span>
                                 </span>
                             </div>
@@ -138,13 +140,13 @@ export default function SmartRefPage() {
                     {milestones.map((milestone, index) => (
                         <div
                             key={index}
-                            className='flex flex-col items-center space-y-2 sm:space-y-3 hover:bg-white rounded-lg border border-gray-200 hover:shadow-md p-3 sm:p-4'
+                            className='flex flex-col items-center space-y-2 sm:space-y-3 hover:bg-white dark:hover:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] hover:shadow-md p-3 sm:p-4'
                         >
                             {/* Milestone Label */}
                             <div className='text-center'>
-                                <p className='text-xs sm:text-sm text-gray-600 mb-1'>Mốc giới thiệu</p>
-                                <p className='text-sm sm:text-base font-semibold text-gray-800'>
-                                    {milestone.count} người
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1'>{t('smartRef.milestoneLabel')}</p>
+                                <p className='text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200'>
+                                    {t('smartRef.peopleCount', { count: milestone.count })}
                                 </p>
                             </div>
 
@@ -204,12 +206,12 @@ export default function SmartRefPage() {
                             </div>
 
                             {/* Reward Amount */}
-                            <p className='text-base sm:text-lg md:text-xl font-bold text-gray-800'>
+                            <p className='text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200'>
                                 {milestone.reward} $
                             </p>
 
                             {/* Reward Label */}
-                            <p className='text-xs sm:text-sm font-medium text-gray-600'>Thưởng</p>
+                            <p className='text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400'>{t('smartRef.rewardLabel')}</p>
 
                             {/* Referral Link Button (only for 20 people milestone) */}
                             {milestone.showLink && (
@@ -219,7 +221,7 @@ export default function SmartRefPage() {
                                     size='sm'
                                 >
                                     <Link2 className='w-3 h-3 sm:w-4 sm:h-4 mr-1' />
-                                    Link giới thiệu
+                                    {t('smartRef.referralLinkButton')}
                                 </Button>
                             )}
                         </div>
@@ -227,15 +229,15 @@ export default function SmartRefPage() {
                 </div>
 
                 {/* Claim Reward Button */}
-                <div className='flex flex-col items-center gap-4'>
+                <div className='flex flex-col items-center gap-4 mt-4'>
                     {totalCanWithdraw > 0 && (
                         <div className='text-center'>
-                            <p className='text-sm sm:text-base text-gray-600 mb-1'>
-                                Số tiền có thể rút: <span className='font-bold text-pink-600'>${totalCanWithdraw.toFixed(2)}</span>
+                            <p className='text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-1'>
+                                {t('smartRef.withdrawableAmount', { amount: totalCanWithdraw.toFixed(2) })}
                             </p>
                             {totalCanWithdraw < 10 && (
-                                <p className='text-xs text-orange-600'>
-                                    (Tối thiểu $10 để rút thưởng)
+                                <p className='text-xs text-orange-600 dark:text-orange-400'>
+                                    {t('smartRef.minimumWithdrawNotice')}
                                 </p>
                             )}
                         </div>
@@ -246,15 +248,14 @@ export default function SmartRefPage() {
                         className='bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white border-none hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-base sm:text-lg font-bold px-8 sm:px-12 py-3 sm:py-4 rounded-full shadow-lg cursor-pointer'
                         size='lg'
                     >
-                        {withdrawMutation.isPending ? 'Đang xử lý...' : 'NHẬN THƯỞNG'}
+                        {withdrawMutation.isPending ? t('smartRef.processing') : t('smartRef.claimReward')}
                     </Button>
                 </div>
 
                 {/* Disclaimer */}
-                <div className='bg-white rounded-lg border border-gray-200 shadow-sm p-4 sm:p-6 max-w-2xl mx-auto'>
-                    <p className='text-xs sm:text-sm text-gray-600 text-center leading-relaxed italic'>
-                        *Hệ thống trả thưởng giới thiệu theo mốc nếu User giới thiệu trực tiếp được được người
-                        tham gia khác KYC; tham gia và hoàn gói Staking ít nhất 1 lần
+                <div className='bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-sm p-4 sm:p-6 max-w-2xl mx-auto'>
+                    <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 text-center leading-relaxed italic'>
+                        {t('smartRef.disclaimer')}
                     </p>
                 </div>
             </div>

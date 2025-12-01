@@ -5,6 +5,7 @@ import { Copy, ExternalLink, Plus, Loader2, ChevronDown, ChevronUp, Wallet } fro
 import { toast } from 'sonner'
 import { Button } from '@/ui/button'
 import { useRouter } from 'next/navigation'
+import { useLang } from '@/lang/useLang'
 import {
     getListNetworks,
     getListCoins,
@@ -36,7 +37,7 @@ import { Skeleton } from '@/ui/skeleton'
 import { useIsMobile } from '@/ui/use-mobile'
 
 // Helper function to map API transaction to UI format
-const mapTransactionToUI = (transaction: TransactionHistoryItem, coinSymbol?: string): {
+const mapTransactionToUI = (transaction: TransactionHistoryItem, coinSymbol?: string, t?: (key: string, params?: Record<string, any>) => string, lang?: 'en' | 'kr' | 'vi'): {
     id: number
     time: string
     type: string
@@ -44,22 +45,27 @@ const mapTransactionToUI = (transaction: TransactionHistoryItem, coinSymbol?: st
     fromAddress: string
     toAddress: string
     transactionId: string
-    status: 'Complete' | 'Lỗi'
+    status: string
 } => {
-    // Format date
+    // Format date - use locale based on language
     const date = new Date(transaction.created_at)
-    const time = date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
-    const dateStr = date.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit', year: 'numeric' })
+    const locale = lang === 'kr' ? 'ko-KR' : lang === 'en' ? 'en-US' : 'vi-VN'
+    const time = date.toLocaleTimeString(locale, { hour: '2-digit', minute: '2-digit', second: '2-digit' })
+    const dateStr = date.toLocaleDateString(locale, { day: '2-digit', month: '2-digit', year: 'numeric' })
     const formattedTime = `${time} ${dateStr}`
 
     // Map option to type
-    const type = transaction.option === 'withdraw' ? 'Rút' : 'Nạp'
+    const type = transaction.option === 'withdraw' 
+        ? (t ? t('wallet.transactionTypes.withdraw') : 'Rút')
+        : (t ? t('wallet.transactionTypes.deposit') : 'Nạp')
 
     // Format amount
     const amount = `${transaction.amount} ${coinSymbol || 'USDT'}`
 
     // Map status
-    const status = transaction.status === 'success' ? 'Complete' : 'Lỗi'
+    const status = transaction.status === 'success' 
+        ? (t ? t('wallet.transactionStatus.complete') : 'Complete')
+        : (t ? t('wallet.transactionStatus.error') : 'Lỗi')
 
     return {
         id: transaction.id,
@@ -83,28 +89,32 @@ interface TransactionCardProps {
         fromAddress: string
         toAddress: string
         transactionId: string
-        status: 'Complete' | 'Lỗi'
+        status: string
     }
     onCopy: (text: string, type: string) => void
     formatAddress: (address: string) => string
+    t: (key: string, params?: Record<string, any>) => string
 }
 
-function TransactionCard({ transaction, onCopy, formatAddress }: TransactionCardProps) {
+function TransactionCard({ transaction, onCopy, formatAddress, t }: TransactionCardProps) {
+    const isWithdraw = transaction.type === t('wallet.transactionTypes.withdraw')
+    const isComplete = transaction.status === t('wallet.transactionStatus.complete')
+    
     return (
-        <div className="bg-white rounded-lg border border-gray-200 shadow-md p-3 sm:p-4">
+        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-md p-3 sm:p-4">
             {/* Header */}
             <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-gray-500">#{transaction.id}</span>
+                <span className="text-sm text-gray-500 dark:text-gray-400">#{transaction.id}</span>
                 <div className="flex items-center gap-2 flex-wrap">
-                    <div className={` py-1 rounded-full text-xs min-w-20 flex justify-center font-medium ${transaction.type === 'Rút'
-                        ? 'bg-orange-100 text-orange-700'
-                        : 'bg-blue-100 text-blue-700'
+                    <div className={` py-1 rounded-full text-xs min-w-20 flex justify-center font-medium ${isWithdraw
+                        ? 'bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400'
+                        : 'bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400'
                         }`}>
                         {transaction.type}
                     </div>
-                    <div className={` py-1 rounded-full text-xs min-w-20 flex justify-center font-medium ${transaction.status === 'Complete'
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-red-100 text-red-700'
+                    <div className={` py-1 rounded-full text-xs min-w-20 flex justify-center font-medium ${isComplete
+                        ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                        : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
                         }`}>
                         {transaction.status}
                     </div>
@@ -113,7 +123,7 @@ function TransactionCard({ transaction, onCopy, formatAddress }: TransactionCard
 
             {/* Amount & Time */}
             <div className="flex items-center justify-between gap-2">
-                <div className="text-base font-semibold text-red-500">
+                <div className="text-base font-semibold text-red-500 dark:text-[#FE645F]">
                     {transaction.amount}
                 </div>
                 <div className="text-xs text-yellow-600 dark:text-yellow-400 italic mt-0.5">
@@ -122,18 +132,22 @@ function TransactionCard({ transaction, onCopy, formatAddress }: TransactionCard
             </div>
 
             {/* Details - Always visible */}
-            <div className="pt-3 flex items-center justify-start gap-2 border-gray-200 ">
+            <div className="pt-3 flex items-center justify-start gap-2 border-gray-200 dark:border-gray-700">
                 <AddressRow
-                    label="To"
+                    label={t('wallet.addressLabels.to')}
+                    labelKey="to"
                     address={transaction.toAddress}
                     onCopy={onCopy}
                     formatAddress={formatAddress}
+                    t={t}
                 />
                 <AddressRow
-                    label="TX ID"
+                    label={t('wallet.addressLabels.txId')}
+                    labelKey="txId"
                     address={transaction.transactionId}
                     onCopy={onCopy}
                     formatAddress={formatAddress}
+                    t={t}
                 />
             </div>
         </div>
@@ -142,18 +156,31 @@ function TransactionCard({ transaction, onCopy, formatAddress }: TransactionCard
 
 function AddressRow({
     label,
+    labelKey,
     address,
     onCopy,
-    formatAddress
+    formatAddress,
+    t
 }: {
     label: string
+    labelKey: 'to' | 'txId'
     address: string
     onCopy: (text: string, type: string) => void
     formatAddress: (address: string) => string
+    t: (key: string, params?: Record<string, any>) => string
 }) {
+    const getCopyLabel = () => {
+        if (labelKey === 'to') {
+            return t('wallet.copyLabels.toAddress')
+        }
+        return t('wallet.copyLabels.transactionId')
+    }
+    
+    const copyLabel = getCopyLabel()
+    
     return (
         <div className="flex items-start gap-2">
-            <span className="text-xs font-medium text-gray-600 md:min-w-[60px] min-w-auto">
+            <span className="text-xs font-medium text-gray-600 dark:text-gray-300 md:min-w-[60px] min-w-auto">
                 {label}:
             </span>
             <div className="flex items-center gap-1.5 flex-1 min-w-0">
@@ -161,9 +188,9 @@ function AddressRow({
                     {formatAddress(address)}
                 </span>
                 <button
-                    onClick={() => onCopy(address, label.toLowerCase())}
-                    className="text-gray-400 hover:text-gray-600 flex-shrink-0 transition-colors border-none bg-transparent pt-1"
-                    title={`Sao chép ${label.toLowerCase()}`}
+                    onClick={() => onCopy(address, copyLabel)}
+                    className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 flex-shrink-0 transition-colors border-none bg-transparent pt-1"
+                    title={t('common.copy') + ' ' + copyLabel}
                 >
                     <Copy className="w-3 h-3" />
                 </button>
@@ -173,6 +200,7 @@ function AddressRow({
 }
 
 export default function WalletPage() {
+    const { t, lang } = useLang()
     const [selectedNetwork, setSelectedNetwork] = useState<string>('')
     const [selectedCoin, setSelectedCoin] = useState<string>('')
     const [selectedNetworkSymbol, setSelectedNetworkSymbol] = useState<string>('')
@@ -239,7 +267,7 @@ export default function WalletPage() {
     const createWalletMutation = useMutation({
         mutationFn: (network_id: number) => createWallet(network_id),
         onSuccess: (data) => {
-            toast.success('Tạo ví thành công!')
+            toast.success(t('wallet.createWalletSuccess'))
             setShowCreateWalletDialog(false)
             // Refetch related queries
             queryClient.invalidateQueries({ queryKey: ['my-wallets'] })
@@ -248,7 +276,7 @@ export default function WalletPage() {
             refetchWalletCheck()
         },
         onError: (error: any) => {
-            const message = error?.response?.data?.message || 'Không thể tạo ví'
+            const message = error?.response?.data?.message || t('wallet.createWalletError')
             toast.error(message)
         }
     })
@@ -259,26 +287,26 @@ export default function WalletPage() {
     useEffect(() => {
         if (networksError) {
             console.error('Error fetching networks:', networksError)
-            toast.error('Không thể tải danh sách mạng lưới')
+            toast.error(t('wallet.loadNetworksError'))
         }
-    }, [networksError])
+    }, [networksError, t])
 
     useEffect(() => {
         if (coinsError) {
             console.error('Error fetching coins:', coinsError)
-            toast.error('Không thể tải danh sách coin')
+            toast.error(t('wallet.loadCoinsError'))
         }
-    }, [coinsError])
+    }, [coinsError, t])
 
     useEffect(() => {
         if (balanceError) {
             console.error('Error fetching balance:', balanceError)
             // Don't show toast for balance error if coin is not selected
             if (selectedCoin) {
-                toast.error('Không thể tải số dư')
+                toast.error(t('wallet.loadBalanceError'))
             }
         }
-    }, [balanceError, selectedCoin])
+    }, [balanceError, selectedCoin, t])
 
     // ==================== Initialize Default Coin ====================
     useEffect(() => {
@@ -369,8 +397,8 @@ export default function WalletPage() {
     // Map transactions to UI format
     const transactions = useMemo(() => {
         if (!transactionHistoryResponse?.data) return []
-        return transactionHistoryResponse.data.map(t => mapTransactionToUI(t, selectedCoinInfo?.coin_symbol))
-    }, [transactionHistoryResponse, selectedCoinInfo])
+        return transactionHistoryResponse.data.map(trans => mapTransactionToUI(trans, selectedCoinInfo?.coin_symbol, t, lang as 'en' | 'kr' | 'vi' | undefined))
+    }, [transactionHistoryResponse, selectedCoinInfo, t, lang])
 
     // ==================== Event Handlers ====================
 
@@ -393,7 +421,7 @@ export default function WalletPage() {
 
     const handleCreateWallet = () => {
         if (!selectedNetwork) {
-            toast.error('Vui lòng chọn mạng lưới trước')
+            toast.error(t('wallet.pleaseSelectNetwork'))
             return
         }
         setShowCreateWalletDialog(true)
@@ -406,11 +434,11 @@ export default function WalletPage() {
 
     const handleDeposit = () => {
         if (!hasWallet) {
-            toast.error('Vui lòng tạo ví trước khi nạp tiền')
+            toast.error(t('wallet.pleaseCreateWalletBeforeDeposit'))
             return
         }
         if (!selectedNetwork) {
-            toast.error('Vui lòng chọn mạng lưới trước')
+            toast.error(t('wallet.pleaseSelectNetwork'))
             return
         }
 
@@ -438,11 +466,11 @@ export default function WalletPage() {
 
     const handleWithdraw = () => {
         if (!hasWallet) {
-            toast.error('Vui lòng tạo ví trước khi rút tiền')
+            toast.error(t('wallet.pleaseCreateWalletBeforeWithdraw'))
             return
         }
         if (!selectedNetwork) {
-            toast.error('Vui lòng chọn mạng lưới trước')
+            toast.error(t('wallet.pleaseSelectNetwork'))
             return
         }
 
@@ -482,15 +510,15 @@ export default function WalletPage() {
     const handleCopy = async (text: string, type: string) => {
         try {
             await navigator.clipboard.writeText(text)
-            toast.success(`Đã sao chép ${type}`)
+            toast.success(t('wallet.copied', { type }))
         } catch (err) {
-            toast.error('Không thể sao chép')
+            toast.error(t('wallet.copyError'))
         }
     }
 
     const handleTransactionClick = (transaction: { type: string; id: number }) => {
         if (!selectedNetwork || !hasWallet) {
-            toast.error('Vui lòng chọn mạng lưới và có ví trước')
+            toast.error(t('wallet.pleaseSelectNetworkAndWallet'))
             return
         }
 
@@ -513,9 +541,9 @@ export default function WalletPage() {
         }
 
         // Navigate based on transaction type
-        if (transaction.type === 'Nạp') {
+        if (transaction.type === t('wallet.transactionTypes.deposit')) {
             router.push(`/wallet/deposit?${params.toString()}`)
-        } else if (transaction.type === 'Rút') {
+        } else if (transaction.type === t('wallet.transactionTypes.withdraw')) {
             router.push(`/wallet/withdraw?${params.toString()}`)
         }
     }
@@ -523,8 +551,8 @@ export default function WalletPage() {
     // Table styles from Untitled-2
     const tableContainerStyles = "max-h-[60vh] sm:max-h-[65.5vh] overflow-y-auto overflow-x-auto -mx-3 sm:mx-0"
     const tableStyles = "w-full table-fixed border-separate border-spacing-y-1"
-    const tableHeaderStyles = "px-2 py-2 sm:px-3 text-left text-xs sm:text-sm lg:text-base font-semibold text-theme-red-100 uppercase "
-    const tableCellStyles = "px-2 py-3 sm:px-3 text-xs sm:text-sm lg:text-base text-theme-gray-200 bg-white border-y border-black dark:border-gray-700 group-hover:bg-gray-100 dark:group-hover:bg-gray-800 font-light"
+    const tableHeaderStyles = "px-2 py-2 sm:px-3 text-left text-xs sm:text-sm lg:text-base font-semibold text-theme-red-100 dark:text-[#FE645F] uppercase bg-transparent"
+    const tableCellStyles = "px-2 py-3 sm:px-3 text-xs sm:text-sm lg:text-base text-theme-gray-200 dark:text-gray-300 bg-transparent border-y border-black dark:border-gray-700 group-hover:bg-gray-100 dark:group-hover:bg-gray-800 font-light"
 
     // Format balance number
     const formatBalance = (balance: number) => {
@@ -536,7 +564,7 @@ export default function WalletPage() {
     }
 
     return (
-        <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] flex-1'>
+        <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
             <div className='w-full max-w-7xl'>
                 {/* Balance Section */}
                 <div className='flex flex-col items-center justify-center mb-4 sm:mb-6'>
@@ -544,7 +572,7 @@ export default function WalletPage() {
                         // Mobile: Stack vertically, compact
                         <div className='flex flex-col items-center w-full'>
                             <div className='flex items-center gap-2 mb-2'>
-                                <span className='text-xs font-medium text-theme-red-100'>Coin:</span>
+                                <span className='text-xs font-medium text-theme-red-100 dark:text-[#FE645F]'>{t('wallet.coin')}:</span>
                                 {isLoadingCoins ? (
                                     <Skeleton className="h-7 w-20" />
                                 ) : (
@@ -553,7 +581,7 @@ export default function WalletPage() {
                                         value={selectedCoin}
                                         onChange={handleCoinChange}
                                         options={coinOptions}
-                                        placeholder="Chọn coin"
+                                        placeholder={t('wallet.selectCoinPlaceholder')}
                                         disabled={isLoadingCoins}
                                         className="w-20 text-xs"
                                     />
@@ -575,8 +603,8 @@ export default function WalletPage() {
                                 <img src="/logo.png" alt="logo" className='w-8 h-8 object-cover' />
                             </div>
                             {balanceResponse?.data && (balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
-                                <span className='text-xs text-gray-600 mt-1'>
-                                    (Quà: {formatBalance(balanceResponse.data.balance_gift)} | Thưởng: {formatBalance(balanceResponse.data.balance_reward)})
+                                <span className='text-xs text-gray-600 dark:text-gray-300 mt-1'>
+                                    ({t('wallet.gift')}: {formatBalance(balanceResponse.data.balance_gift)} | {t('wallet.reward')}: {formatBalance(balanceResponse.data.balance_reward)})
                                 </span>
                             )}
                         </div>
@@ -586,7 +614,7 @@ export default function WalletPage() {
                             <img src="/logo.png" alt="logo" className='w-10 h-10 object-cover pt-2' />
                             <div className='flex flex-col items-center mx-4'>
                                 <div className='flex items-center gap-2 mb-1'>
-                                    <span className='text-sm font-medium text-theme-red-100'>Chọn coin:</span>
+                                    <span className='text-sm font-medium text-theme-red-100 dark:text-[#FE645F]'>{t('wallet.selectCoin')}:</span>
                                     {isLoadingCoins ? (
                                         <Skeleton className="h-8 w-24" />
                                     ) : (
@@ -595,7 +623,7 @@ export default function WalletPage() {
                                             value={selectedCoin}
                                             onChange={handleCoinChange}
                                             options={coinOptions}
-                                            placeholder="Chọn coin"
+                                            placeholder={t('wallet.selectCoinPlaceholder')}
                                             disabled={isLoadingCoins}
                                             className="w-24 text-sm"
                                         />
@@ -606,17 +634,17 @@ export default function WalletPage() {
                                 ) : balanceResponse?.data ? (
                                     <div className='flex flex-col items-center'>
                                         <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
-                                            Số dư: {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                            {t('wallet.balanceLabel')}: {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                         </span>
                                         {(balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
-                                            <span className='text-sm text-gray-600 mt-1'>
-                                                (Quà: {formatBalance(balanceResponse.data.balance_gift)} | Thưởng: {formatBalance(balanceResponse.data.balance_reward)})
+                                            <span className='text-sm text-gray-600 dark:text-gray-300 mt-1'>
+                                                ({t('wallet.gift')}: {formatBalance(balanceResponse.data.balance_gift)} | {t('wallet.reward')}: {formatBalance(balanceResponse.data.balance_reward)})
                                             </span>
                                         )}
                                     </div>
                                 ) : (
                                     <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
-                                        Số dư: 0.00 {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                        {t('wallet.balanceLabel')}: 0.00 {selectedCoinInfo?.coin_symbol || 'USDT'}
                                     </span>
                                 )}
                             </div>
@@ -627,15 +655,15 @@ export default function WalletPage() {
 
                 {/* Network Selection Section */}
                 <div className='mb-4 sm:mb-6 flex flex-col items-center justify-center'>
-                    <label htmlFor="network" className='block mb-1 sm:mb-2 text-xs sm:text-sm font-medium text-theme-red-100'>
-                        Chọn mạng lưới
+                    <label htmlFor="network" className='block mb-1 sm:mb-2 text-xs sm:text-sm font-medium text-theme-red-100 dark:text-[#FE645F]'>
+                        {t('wallet.selectNetwork')}
                     </label>
                     <CustomSelect
                         id="network"
                         value={selectedNetwork}
                         onChange={handleNetworkChange}
                         options={networkOptions}
-                        placeholder="Chọn mạng lưới"
+                        placeholder={t('wallet.selectNetworkPlaceholder')}
                         disabled={isLoadingNetworks}
                         className="w-full max-w-xs sm:max-w-56 text-sm"
                     />
@@ -647,29 +675,29 @@ export default function WalletPage() {
                         {isLoadingWalletCheck ? (
                             <Skeleton className="h-20 w-full max-w-2xl" />
                         ) : hasWallet ? (
-                            <div className='w-full max-w-2xl p-3 sm:p-4 bg-white rounded-lg border border-gray-200 shadow-sm'>
+                            <div className='w-full max-w-2xl p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-sm'>
                                 <div className='flex items-center justify-between mb-1.5 sm:mb-2'>
-                                    <label className='text-xs sm:text-sm font-medium text-theme-red-100'>
-                                        Địa chỉ ví {selectedNetworkInfo?.net_symbol}:
+                                    <label className='text-xs sm:text-sm font-medium text-theme-red-100 dark:text-[#FE645F]'>
+                                        {t('wallet.walletAddress', { symbol: selectedNetworkInfo?.net_symbol })}:
                                     </label>
                                 </div>
-                                <div className='flex items-center gap-2 p-2 bg-gray-50 rounded border border-gray-200'>
+                                <div className='flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-900/50 rounded border border-gray-200 dark:border-gray-700'>
                                     <span className='text-xs sm:text-sm text-yellow-600 dark:text-yellow-400 italic flex-1 break-all'>
                                         {formatAddress(walletAddress || '')}
                                     </span>
                                     <button
-                                        onClick={() => handleCopy(walletAddress || '', 'địa chỉ ví')}
-                                        className='text-gray-400 hover:text-gray-600 transition-colors border-none bg-transparent flex-shrink-0'
-                                        title='Sao chép địa chỉ'
+                                        onClick={() => handleCopy(walletAddress || '', t('wallet.copyLabels.walletAddress'))}
+                                        className='text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent flex-shrink-0'
+                                        title={t('wallet.copyAddress')}
                                     >
                                         <Copy className='w-3.5 h-3.5 sm:w-4 sm:h-4' />
                                     </button>
                                 </div>
                             </div>
                         ) : (
-                            <div className='w-full max-w-2xl p-3 sm:p-4 bg-yellow-50 rounded-lg border border-yellow-200'>
-                                <p className='text-xs sm:text-sm text-yellow-800 mb-2 sm:mb-3 text-center'>
-                                    Bạn chưa có ví cho mạng lưới {selectedNetworkInfo?.net_name} ({selectedNetworkInfo?.net_symbol})
+                            <div className='w-full max-w-2xl p-3 sm:p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700'>
+                                <p className='text-xs sm:text-sm text-yellow-800 dark:text-yellow-300 mb-2 sm:mb-3 text-center'>
+                                    {t('wallet.noWalletForNetwork', { name: selectedNetworkInfo?.net_name, symbol: selectedNetworkInfo?.net_symbol })}
                                 </p>
                                 <Button
                                     onClick={confirmCreateWallet}
@@ -679,12 +707,12 @@ export default function WalletPage() {
                                     {createWalletMutation.isPending ? (
                                         <>
                                             <Loader2 className='w-4 h-4 mr-2 animate-spin' />
-                                            Đang tạo ví...
+                                            {t('wallet.creatingWallet')}
                                         </>
                                     ) : (
                                         <>
                                             <Plus className='w-4 h-4 mr-2' />
-                                            Tạo ví cho {selectedNetworkInfo?.net_symbol}
+                                            {t('wallet.createWalletFor', { symbol: selectedNetworkInfo?.net_symbol })}
                                         </>
                                     )}
                                 </Button>
@@ -702,14 +730,14 @@ export default function WalletPage() {
                                 disabled={!hasWallet || !selectedNetwork}
                                 className='w-full cursor-pointer font-semibold uppercase sm:max-w-56 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 inline-flex text-white rounded-full border-none h-11 sm:h-12 text-base sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
                             >
-                                Nạp
+                                {t('wallet.depositButton')}
                             </Button>
                             <Button
                                 onClick={handleWithdraw}
                                 disabled={!hasWallet || !selectedNetwork}
                                 className='w-full cursor-pointer font-semibold uppercase sm:max-w-56 bg-theme-pink-100 inline-flex text-pink-500 rounded-full border-pink-500 border-solid border h-11 sm:h-12 text-base sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
                             >
-                                Rút
+                                {t('wallet.withdrawButton')}
                             </Button>
                         </div>
                         {/* Transaction History */}
@@ -724,11 +752,11 @@ export default function WalletPage() {
                                     </div>
                                 ) : transactions.length === 0 ? (
                                     <div className="text-center py-12 px-4">
-                                        <div className="text-gray-400 mb-2">
+                                        <div className="text-gray-400 dark:text-gray-500 mb-2">
                                             <Wallet className="w-12 h-12 mx-auto" />
                                         </div>
-                                        <p className="text-sm text-gray-500">
-                                            Chưa có giao dịch nào
+                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                            {t('wallet.noTransactions')}
                                         </p>
                                     </div>
                                 ) : (
@@ -742,6 +770,7 @@ export default function WalletPage() {
                                                 transaction={transaction}
                                                 onCopy={handleCopy}
                                                 formatAddress={formatAddress}
+                                                t={t}
                                             />
                                         </div>
                                     ))
@@ -755,14 +784,14 @@ export default function WalletPage() {
                                     <table className={tableStyles}>
                                         <thead>
                                             <tr>
-                                                <th className={`${tableHeaderStyles} w-[5%] text-left rounded-l-lg`}>STT</th>
-                                                <th className={`${tableHeaderStyles} w-[12%]`}>THỜI GIAN</th>
-                                                <th className={`${tableHeaderStyles} w-[8%]`}>TYPE</th>
-                                                <th className={`${tableHeaderStyles} w-[10%]`}>SỐ TIỀN</th>
-                                                <th className={`${tableHeaderStyles} w-[12%]`}>FROM ADDRESS</th>
-                                                <th className={`${tableHeaderStyles} w-[12%]`}>TO ADDRESS</th>
-                                                <th className={`${tableHeaderStyles} w-[12%]`}>TRANSACTION ID</th>
-                                                <th className={`${tableHeaderStyles} w-[11%] text-center rounded-r-lg`}>STATUS</th>
+                                                <th className={`${tableHeaderStyles} w-[5%] text-left rounded-l-lg`}>{t('wallet.tableHeaders.stt')}</th>
+                                                <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.time')}</th>
+                                                <th className={`${tableHeaderStyles} w-[8%]`}>{t('wallet.tableHeaders.type')}</th>
+                                                <th className={`${tableHeaderStyles} w-[10%]`}>{t('wallet.tableHeaders.amount')}</th>
+                                                <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.fromAddress')}</th>
+                                                <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.toAddress')}</th>
+                                                <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.transactionId')}</th>
+                                                <th className={`${tableHeaderStyles} w-[11%] text-center rounded-r-lg`}>{t('wallet.tableHeaders.status')}</th>
                                             </tr>
                                         </thead>
                                     </table>
@@ -780,8 +809,8 @@ export default function WalletPage() {
                                                 </tr>
                                             ) : transactions.length === 0 ? (
                                                 <tr>
-                                                    <td colSpan={8} className="text-center py-8 text-gray-500 bg-white shadow-lg border border-gray-200 rounded-lg border-solid">
-                                                        Chưa có giao dịch rút tiền nào
+                                                    <td colSpan={8} className="text-center py-8 text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-lg border-solid">
+                                                        {t('wallet.noWithdrawTransactions')}
                                                     </td>
                                                 </tr>
                                             ) : (
@@ -809,9 +838,9 @@ export default function WalletPage() {
                                                                     {formatAddress(transaction.fromAddress)}
                                                                 </span>
                                                                 <button
-                                                                    onClick={() => handleCopy(transaction.fromAddress, 'địa chỉ gửi')}
-                                                                    className='text-gray-400 hover:text-gray-200 transition-colors border-none bg-transparent mt-1.5'
-                                                                    title='Sao chép địa chỉ'
+                                                                    onClick={() => handleCopy(transaction.fromAddress, t('wallet.copyLabels.fromAddress'))}
+                                                                    className='text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent mt-1.5'
+                                                                    title={t('wallet.copyAddress')}
                                                                 >
                                                                     <Copy className='w-3.5 h-3.5' />
                                                                 </button>
@@ -823,9 +852,9 @@ export default function WalletPage() {
                                                                     {formatAddress(transaction.toAddress)}
                                                                 </span>
                                                                 <button
-                                                                    onClick={() => handleCopy(transaction.toAddress, 'địa chỉ nhận')}
-                                                                    className='text-gray-400 hover:text-gray-200 transition-colors border-none bg-transparent mt-1.5'
-                                                                    title='Sao chép địa chỉ'
+                                                                    onClick={() => handleCopy(transaction.toAddress, t('wallet.copyLabels.toAddress'))}
+                                                                    className='text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent mt-1.5'
+                                                                    title={t('wallet.copyAddress')}
                                                                 >
                                                                     <Copy className='w-3.5 h-3.5' />
                                                                 </button>
@@ -837,9 +866,9 @@ export default function WalletPage() {
                                                                     {formatAddress(transaction.transactionId)}
                                                                 </span>
                                                                 <button
-                                                                    onClick={() => handleCopy(transaction.transactionId, 'mã giao dịch')}
-                                                                    className='text-gray-400 hover:text-gray-200 transition-colors border-none bg-transparent mt-1.5'
-                                                                    title='Sao chép mã giao dịch'
+                                                                    onClick={() => handleCopy(transaction.transactionId, t('wallet.copyLabels.transactionId'))}
+                                                                    className='text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent mt-1.5'
+                                                                    title={t('wallet.copyAddress')}
                                                                 >
                                                                     <Copy className='w-3.5 h-3.5' />
                                                                 </button>
@@ -847,7 +876,7 @@ export default function WalletPage() {
                                                         </td>
                                                         <td className={`${tableCellStyles} w-[11%] text-center rounded-r-lg border-l-0 border-theme-gray-100 border-solid`}>
                                                             <span
-                                                                className={` px-1 font-medium flex justify-center items-center py-1.5 max-w-24 mx-auto rounded-full text-xs ${transaction.status === 'Complete'
+                                                                className={` px-1 font-medium flex justify-center items-center py-1.5 max-w-24 mx-auto rounded-full text-xs ${transaction.status === t('wallet.transactionStatus.complete')
                                                                     ? 'bg-green-500 text-white'
                                                                     : 'bg-red-500 text-white'
                                                                     }`}

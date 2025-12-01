@@ -1,18 +1,7 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/change-password/page": "app/change-password/page.js",
-  "/login/page": "app/login/page.js",
-  "/forgot-password/page": "app/forgot-password/page.js",
-  "/make-money/page": "app/make-money/page.js",
-  "/page": "app/page.js",
-  "/register/page": "app/register/page.js",
-  "/referral/direct/page": "app/referral/direct/page.js",
   "/wallet/page": "app/wallet/page.js",
-  "/verify-mail/page": "app/verify-mail/page.js",
   "/referral/smart/page": "app/referral/smart/page.js",
-  "/wallet/withdraw/page": "app/wallet/withdraw/page.js",
+  "/make-money/page": "app/make-money/page.js",
   "/wallet/deposit/page": "app/wallet/deposit/page.js",
-  "/my-profile/profile/page": "app/my-profile/profile/page.js",
-  "/my-profile/page": "app/my-profile/page.js",
-  "/my-profile/kyc/page": "app/my-profile/kyc/page.js"
+  "/referral/direct/page": "app/referral/direct/page.js"
 }

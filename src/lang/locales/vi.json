@@ -35,7 +35,58 @@
     "loadNetworksError": "Không thể tải danh sách mạng",
     "loadCoinsError": "Không thể tải danh sách coin",
     "loadBalanceError": "Không thể tải số dư",
-    "withdrawSuccess": "Rút tiền thành công!"
+    "withdrawSuccess": "Rút tiền thành công!",
+    "createWalletSuccess": "Tạo ví thành công!",
+    "pleaseSelectNetwork": "Vui lòng chọn mạng lưới trước",
+    "pleaseCreateWalletBeforeDeposit": "Vui lòng tạo ví trước khi nạp tiền",
+    "pleaseCreateWalletBeforeWithdraw": "Vui lòng tạo ví trước khi rút tiền",
+    "copied": "Đã sao chép {type}",
+    "pleaseSelectNetworkAndWallet": "Vui lòng chọn mạng lưới và có ví trước",
+    "coin": "Coin",
+    "selectCoin": "Chọn coin",
+    "selectCoinPlaceholder": "Chọn coin",
+    "balanceLabel": "Số dư",
+    "gift": "Quà",
+    "reward": "Thưởng",
+    "selectNetwork": "Chọn mạng lưới",
+    "selectNetworkPlaceholder": "Chọn mạng lưới",
+    "walletAddress": "Địa chỉ ví {symbol}",
+    "copyAddress": "Sao chép địa chỉ",
+    "noWalletForNetwork": "Bạn chưa có ví cho mạng lưới {name} ({symbol})",
+    "creatingWallet": "Đang tạo ví...",
+    "createWalletFor": "Tạo ví cho {symbol}",
+    "depositButton": "Nạp",
+    "withdrawButton": "Rút",
+    "noTransactions": "Chưa có giao dịch nào",
+    "noWithdrawTransactions": "Chưa có giao dịch rút tiền nào",
+    "tableHeaders": {
+      "stt": "STT",
+      "time": "THỜI GIAN",
+      "type": "TYPE",
+      "amount": "SỐ TIỀN",
+      "fromAddress": "FROM ADDRESS",
+      "toAddress": "TO ADDRESS",
+      "transactionId": "TRANSACTION ID",
+      "status": "STATUS"
+    },
+    "transactionTypes": {
+      "deposit": "Nạp",
+      "withdraw": "Rút"
+    },
+    "transactionStatus": {
+      "complete": "Complete",
+      "error": "Lỗi"
+    },
+    "addressLabels": {
+      "to": "To",
+      "txId": "TX ID"
+    },
+    "copyLabels": {
+      "walletAddress": "địa chỉ ví",
+      "fromAddress": "địa chỉ gửi",
+      "toAddress": "địa chỉ nhận",
+      "transactionId": "mã giao dịch"
+    }
   },
   "ref": {
     "title": "Thu nhập hoa hồng",
@@ -70,6 +121,24 @@
     "noReferredUsers": "Không có người dùng được giới thiệu",
     "withdraw": "Rút tiền",
     "you": "BẠN"
+  },
+  "smartRef": {
+    "title": "HOA HỒNG GIỚI THIỆU",
+    "progressText": "Đã giới thiệu: {current}/{total} người",
+    "milestoneLabel": "Mốc giới thiệu",
+    "peopleCount": "{count} người",
+    "rewardLabel": "Thưởng",
+    "referralLinkButton": "Link giới thiệu",
+    "withdrawableAmount": "Số tiền có thể rút: ${amount}",
+    "minimumWithdrawNotice": "(Tối thiểu $10 để rút thưởng)",
+    "processing": "Đang xử lý...",
+    "claimReward": "NHẬN THƯỞNG",
+    "withdrawSuccess": "Rút thưởng thành công!",
+    "withdrawError": "Không thể rút thưởng",
+    "linkCopied": "Đã sao chép link giới thiệu",
+    "copyFailed": "Không thể sao chép",
+    "minimumWithdrawError": "Số tiền tối thiểu để rút là $10. Số tiền hiện tại: ${amount}",
+    "disclaimer": "*Hệ thống trả thưởng giới thiệu theo mốc nếu User giới thiệu trực tiếp được được người tham gia khác KYC; tham gia và hoàn gói Staking ít nhất 1 lần"
   },
   "staking": {
     "joinBaseSuccess": "Tham gia gói Base thành công!",

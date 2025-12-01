@@ -78,7 +78,7 @@ export default function DirectReferralPage() {
         : (smartRefDetail.data || []);
 
     return (
-        <div className="w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] flex-1">
+        <div className="w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1">
             <div className="w-full max-w-7xl space-y-6">
                 {/* Title Section */}
                 <div className="flex items-center justify-center gap-3 sm:gap-4 mb-6">
@@ -90,8 +90,8 @@ export default function DirectReferralPage() {
                 </div>
 
                 {/* Your Referral Link Section */}
-                <div className="bg-white rounded-lg border border-solid border-gray-200 shadow-sm p-4 sm:p-6">
-                    <label className="block text-sm sm:text-base font-medium text-gray-700 mb-2">
+                <div className="bg-white dark:bg-gray-800 rounded-lg border border-solid border-gray-200 dark:border-[#FE645F] shadow-sm p-4 sm:p-6">
+                    <label className="block text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300 mb-2">
                         {t('ref.yourReferralLink') || 'Your Referral Link'}
                     </label>
                     <div className="flex items-center gap-2 relative">
@@ -99,11 +99,11 @@ export default function DirectReferralPage() {
                             type="text"
                             value={`${process.env.NEXT_PUBLIC_API_URL}/?ref=${profile?.ref || ''}`}
                             readOnly
-                            className="flex-1 bg-gray-50 text-sm sm:text-base px-3 py-2 rounded-md border border-theme-gray-100 border-solid text-gray-500"
+                            className="flex-1 bg-gray-50 dark:bg-gray-900/50 text-sm sm:text-base px-3 py-2 rounded-md border border-theme-gray-100 dark:border-gray-700 border-solid text-gray-500 dark:text-gray-400"
                         />
                         <button
                             onClick={handleCopyLink}
-                            className="bg-transparent hover:bg-gray-200 text-gray-700 border-none absolute right-2 top-1/2 transform -translate-y-1/2 rounded-md p-2 transition-colors"
+                            className="bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border-none absolute right-2 top-1/2 transform -translate-y-1/2 rounded-md p-2 transition-colors"
                         >
                             <Copy className="w-4 h-4" />
                         </button>
@@ -133,7 +133,7 @@ export default function DirectReferralPage() {
                             </p>
                             <button
                                 onClick={handleWithdraw}
-                                className="px-3 bg-white text-pink-600 hover:bg-gray-100 border-none font-medium rounded-full py-2 transition-colors flex items-center justify-center gap-2"
+                                className="px-3 bg-white dark:bg-gray-700 text-pink-600 dark:text-pink-400 hover:bg-gray-100 dark:hover:bg-gray-600 border-none font-medium rounded-full py-2 transition-colors flex items-center justify-center gap-2"
                             >
                                 <Wallet className="w-4 h-4" />
                                 {t('ref.withdraw') || 'Withdraw'}
@@ -156,14 +156,14 @@ export default function DirectReferralPage() {
 
 
                 {/* Referral Structure Section */}
-                <div className="bg-white rounded-lg border border-solid border-theme-gray-100 shadow-sm p-4 sm:p-6">
+                <div className="bg-white dark:bg-gray-800 rounded-lg border border-solid border-theme-gray-100 dark:border-[#FE645F] shadow-sm p-4 sm:p-6">
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-lg sm:text-xl font-bold text-gray-800">
+                        <h2 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200">
                             {t('ref.referralStructure') || 'Referral Structure'}
                         </h2>
                         <button
                             onClick={() => setShowReferralStructure(!showReferralStructure)}
-                            className="text-gray-600 hover:text-gray-800 px-3 py-0.5 border-none rounded-full transition-colors flex items-center gap-1 text-sm"
+                            className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 px-3 py-0.5 border-none rounded-full transition-colors flex items-center gap-1 text-sm"
                         >
                             {showReferralStructure ? (
                                 <>
@@ -180,7 +180,7 @@ export default function DirectReferralPage() {
                         <div className="flex flex-col items-center ">
                             {/* Top Level */}
                             <div className="flex flex-col items-center gap-2 relative">
-                                <div className="text-sm font-semibold text-gray-700">10%</div>
+                                <div className="text-sm font-semibold text-gray-700 dark:text-gray-300">10%</div>
                                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center shadow-lg">
                                     <User className="w-8 h-8 text-white" />
                                 </div>
@@ -199,14 +199,14 @@ export default function DirectReferralPage() {
                                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center shadow-lg">
                                         <User className="w-8 h-8 text-white" />
                                     </div>
-                                    <p className="mt-2 text-sm font-semibold text-gray-700">5%</p>
+                                    <p className="mt-2 text-sm font-semibold text-gray-700 dark:text-gray-300">5%</p>
                                 </div>
                                 <div className="flex flex-col items-center relative">
                                     <div className="absolute bottom-[103%] left-1/2 transform w-[2px] h-8 bg-gradient-to-b from-pink-400 to-purple-400"></div>
                                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center shadow-lg">
                                         <User className="w-8 h-8 text-white" />
                                     </div>
-                                    <p className="mt-2 text-sm font-semibold text-gray-700">5%</p>
+                                    <p className="mt-2 text-sm font-semibold text-gray-700 dark:text-gray-300">5%</p>
                                 </div>
                             </div>
                         </div>
@@ -214,16 +214,16 @@ export default function DirectReferralPage() {
                 </div>
 
                 {/* Your Referrals Section */}
-                <div className="bg-white rounded-lg border border-solid border-theme-gray-100 shadow-sm p-4 sm:p-6">
-                    <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-4">
+                <div className="bg-white dark:bg-gray-800 rounded-lg border border-solid border-theme-gray-100 dark:border-[#FE645F] shadow-sm p-4 sm:p-6">
+                    <h2 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200 mb-4">
                         {t('ref.yourReferrals') || 'Your Referrals'}
                     </h2>
-                    <div className="flex gap-6 border-b border-gray-300 mb-4">
+                    <div className="flex gap-6 border-b border-gray-300 dark:border-gray-700 mb-4">
                         <button
                             onClick={() => setActiveTab("level-referral")}
                             className={`py-2 text-sm border-0 bg-transparent font-medium border-b-2 cursor-pointer transition-colors ${activeTab === "level-referral"
-                                ? "border-purple-500 text-purple-600"
-                                : "border-transparent text-gray-500 hover:text-gray-700"
+                                ? "border-purple-500 dark:border-purple-400 text-purple-600 dark:text-purple-400"
+                                : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                                 }`}
                         >
                             {t('ref.levelReferral') || 'Level Referral'}
@@ -231,8 +231,8 @@ export default function DirectReferralPage() {
                         <button
                             onClick={() => setActiveTab("referred-users")}
                             className={`py-2 text-sm border-0 font-medium bg-transparent border-b-2 cursor-pointer transition-colors ${activeTab === "referred-users"
-                                ? "border-purple-500 text-purple-600"
-                                : "border-transparent text-gray-500 hover:text-gray-700"
+                                ? "border-purple-500 dark:border-purple-400 text-purple-600 dark:text-purple-400"
+                                : "border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
                                 }`}
                         >
                             {t('ref.referredUsers') || 'Referred Users'}
@@ -268,8 +268,8 @@ export default function DirectReferralPage() {
                             <div className="space-y-4">
                                 {isLoadingTree ? (
                                     <div className="text-center py-8">
-                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto"></div>
-                                        <p className="text-gray-500 text-sm mt-2">{t('common.loading')}</p>
+                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 dark:border-purple-400 mx-auto"></div>
+                                        <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">{t('common.loading')}</p>
                                     </div>
                                 ) : smartRefTree.data && smartRefTree.data.length > 0 ? (
                                     smartRefTree.data.map((item: any) => (
@@ -277,25 +277,25 @@ export default function DirectReferralPage() {
                                             <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg p-2 sm:p-3 text-center text-xs sm:text-sm font-medium">
                                                 {t('ref.level') || 'Level'} {item.level}
                                             </div>
-                                            <div className="bg-white border-solid border border-gray-200 rounded-lg p-2 sm:p-3 text-center">
-                                                <p className="text-xs sm:text-sm text-gray-700 font-medium">
+                                            <div className="bg-white dark:bg-gray-800 border-solid border border-gray-200 dark:border-gray-700 rounded-lg p-2 sm:p-3 text-center">
+                                                <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 font-medium">
                                                     {item.total_transactions || 0}
                                                 </p>
                                             </div>
-                                            <div className="bg-white border-solid border border-gray-200 rounded-lg p-2 sm:p-3 text-center">
-                                                <p className="text-xs sm:text-sm text-green-600 font-bold">
+                                            <div className="bg-white dark:bg-gray-800 border-solid border border-gray-200 dark:border-gray-700 rounded-lg p-2 sm:p-3 text-center">
+                                                <p className="text-xs sm:text-sm text-green-600 dark:text-green-400 font-bold">
                                                     ${typeof item.total_rewards === 'number' ? item.total_rewards.toFixed(2) : '0.00'}
                                                 </p>
                                             </div>
-                                            <div className="bg-white border-solid border border-gray-200 rounded-lg p-2 sm:p-3 text-center">
-                                                <p className="text-xs sm:text-sm text-blue-600 font-bold">
+                                            <div className="bg-white dark:bg-gray-800 border-solid border border-gray-200 dark:border-gray-700 rounded-lg p-2 sm:p-3 text-center">
+                                                <p className="text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-bold">
                                                     ${typeof item.total_withdrawn === 'number' ? item.total_withdrawn.toFixed(2) : '0.00'}
                                                 </p>
                                             </div>
                                         </div>
                                     ))
                                 ) : (
-                                    <div className="text-center py-8 text-gray-500">
+                                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                                         <p>{t('ref.noData') || 'No data available'}</p>
                                     </div>
                                 )}
@@ -311,8 +311,8 @@ export default function DirectReferralPage() {
                                 <button
                                     onClick={() => setSelectedLevel(undefined)}
                                     className={`px-3 py-1 text-xs border-none font-medium rounded-md transition-colors ${selectedLevel === undefined
-                                        ? "bg-purple-600 text-white"
-                                        : "bg-gray-300 hover:bg-gray-400 text-gray-700"
+                                        ? "bg-purple-600 dark:bg-purple-500 text-white"
+                                        : "bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
                                         }`}
                                 >
                                     {t('ref.all') || 'All'}
@@ -323,8 +323,8 @@ export default function DirectReferralPage() {
                                             key={level}
                                             onClick={() => setSelectedLevel(level)}
                                             className={`px-3 py-1 text-xs border-none font-medium rounded-md transition-colors ${selectedLevel === level
-                                                ? "bg-purple-600 text-white"
-                                                : "bg-gray-300 hover:bg-gray-400 text-gray-700"
+                                                ? "bg-purple-600 dark:bg-purple-500 text-white"
+                                                : "bg-gray-300 dark:bg-gray-700 hover:bg-gray-400 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
                                                 }`}
                                         >
                                             {t('ref.level') || 'Level'} {level}
@@ -334,9 +334,9 @@ export default function DirectReferralPage() {
                             </div>
 
                             {/* Users Table */}
-                            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+                            <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
                                 {/* Table Headers */}
-                                <div className="grid grid-cols-5 gap-2 p-3 text-xs font-medium text-purple-600 bg-transparent border-b border-gray-200">
+                                <div className="grid grid-cols-5 gap-2 p-3 text-xs font-medium text-purple-600 dark:text-purple-400 bg-transparent border-b border-gray-200 dark:border-gray-700">
                                     <div className="px-2 py-1">{t('ref.user') || 'User'}</div>
                                     <div className="px-2 py-1 text-center">
                                         <Calendar className="w-3 h-3 inline mr-1" />
@@ -354,44 +354,44 @@ export default function DirectReferralPage() {
                                 <div className="max-h-[400px] overflow-y-auto flex flex-col gap-2">
                                     {isLoadingDetail ? (
                                         <div className="text-center py-8">
-                                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto"></div>
-                                            <p className="text-gray-500 text-sm mt-2">{t('common.loading')}</p>
+                                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 dark:border-purple-400 mx-auto"></div>
+                                            <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">{t('common.loading')}</p>
                                         </div>
                                     ) : filteredUsers.length > 0 ? (
                                         filteredUsers.map((user: any) => (
                                             <div
                                                 key={user.uid}
-                                                className="grid grid-cols-5 gap-2 items-center border-solid border border-gray-200 bg-gray-50 hover:bg-gray-100 transition-colors p-3 rounded-md overflow-hidden"
+                                                className="grid grid-cols-5 gap-2 items-center border-solid border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors p-3 rounded-md overflow-hidden"
                                             >
                                                 <div className="flex items-center gap-2">
                                                     <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
                                                         <User className="w-4 h-4 text-white" />
                                                     </div>
                                                     <div>
-                                                        <p className="text-xs sm:text-sm font-medium text-gray-900">
+                                                        <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-gray-200">
                                                             {user.display_name || t('ref.unknown') || 'Unknown'}
                                                         </p>
-                                                        <p className="text-[10px] text-gray-500">ID: {user.uid}</p>
+                                                        <p className="text-[10px] text-gray-500 dark:text-gray-400">ID: {user.uid}</p>
                                                     </div>
                                                 </div>
-                                                <div className="text-center text-xs text-gray-700">
+                                                <div className="text-center text-xs text-gray-700 dark:text-gray-300">
                                                     {user.join_date ? formatDate(user.join_date) : '-'}
                                                 </div>
                                                 <div className="text-center">
-                                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">
                                                         {t('ref.level') || 'Level'} {user.level}
                                                     </span>
                                                 </div>
-                                                <div className="text-center text-xs font-medium text-gray-700">
+                                                <div className="text-center text-xs font-medium text-gray-700 dark:text-gray-300">
                                                     {user.total_transactions || 0}
                                                 </div>
-                                                <div className="text-center text-xs font-bold text-green-600">
+                                                <div className="text-center text-xs font-bold text-green-600 dark:text-green-400">
                                                     ${typeof user.total_rewards === 'number' ? user.total_rewards.toFixed(2) : '0.00'}
                                                 </div>
                                             </div>
                                         ))
                                     ) : (
-                                        <div className="text-center py-8 text-gray-500">
+                                        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                                             <p>{t('ref.noReferredUsers') || 'No referred users'}</p>
                                         </div>
                                     )}

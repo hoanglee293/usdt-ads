@@ -35,7 +35,58 @@
     "loadNetworksError": "네트워크 목록을 불러올 수 없습니다",
     "loadCoinsError": "코인 목록을 불러올 수 없습니다",
     "loadBalanceError": "잔액을 불러올 수 없습니다",
-    "withdrawSuccess": "출금 성공!"
+    "withdrawSuccess": "출금 성공!",
+    "createWalletSuccess": "지갑 생성 성공!",
+    "pleaseSelectNetwork": "먼저 네트워크를 선택해 주세요",
+    "pleaseCreateWalletBeforeDeposit": "입금하기 전에 지갑을 생성해 주세요",
+    "pleaseCreateWalletBeforeWithdraw": "출금하기 전에 지갑을 생성해 주세요",
+    "copied": "{type} 복사됨",
+    "pleaseSelectNetworkAndWallet": "먼저 네트워크를 선택하고 지갑이 있어야 합니다",
+    "coin": "코인",
+    "selectCoin": "코인 선택",
+    "selectCoinPlaceholder": "코인 선택",
+    "balanceLabel": "잔액",
+    "gift": "선물",
+    "reward": "보상",
+    "selectNetwork": "네트워크 선택",
+    "selectNetworkPlaceholder": "네트워크 선택",
+    "walletAddress": "지갑 주소 {symbol}",
+    "copyAddress": "주소 복사",
+    "noWalletForNetwork": "네트워크 {name} ({symbol})에 대한 지갑이 없습니다",
+    "creatingWallet": "지갑 생성 중...",
+    "createWalletFor": "{symbol} 지갑 생성",
+    "depositButton": "입금",
+    "withdrawButton": "출금",
+    "noTransactions": "거래 내역이 없습니다",
+    "noWithdrawTransactions": "출금 거래 내역이 없습니다",
+    "tableHeaders": {
+      "stt": "번호",
+      "time": "시간",
+      "type": "유형",
+      "amount": "금액",
+      "fromAddress": "보낸 주소",
+      "toAddress": "받은 주소",
+      "transactionId": "거래 ID",
+      "status": "상태"
+    },
+    "transactionTypes": {
+      "deposit": "입금",
+      "withdraw": "출금"
+    },
+    "transactionStatus": {
+      "complete": "완료",
+      "error": "오류"
+    },
+    "addressLabels": {
+      "to": "받는 주소",
+      "txId": "거래 ID"
+    },
+    "copyLabels": {
+      "walletAddress": "지갑 주소",
+      "fromAddress": "보낸 주소",
+      "toAddress": "받은 주소",
+      "transactionId": "거래 ID"
+    }
   },
   "ref": {
     "title": "수수료 수입",
@@ -70,6 +121,24 @@
     "noReferredUsers": "추천된 사용자가 없습니다",
     "withdraw": "출금",
     "you": "당신"
+  },
+  "smartRef": {
+    "title": "추천 수수료",
+    "progressText": "추천 완료: {current}/{total}명",
+    "milestoneLabel": "추천 마일스톤",
+    "peopleCount": "{count}명",
+    "rewardLabel": "보상",
+    "referralLinkButton": "추천 링크",
+    "withdrawableAmount": "출금 가능 금액: ${amount}",
+    "minimumWithdrawNotice": "(보상 출금 최소 $10)",
+    "processing": "처리 중...",
+    "claimReward": "보상 받기",
+    "withdrawSuccess": "출금 성공!",
+    "withdrawError": "보상을 출금할 수 없습니다",
+    "linkCopied": "추천 링크가 복사되었습니다",
+    "copyFailed": "복사할 수 없습니다",
+    "minimumWithdrawError": "최소 출금 금액은 $10입니다. 현재 금액: ${amount}",
+    "disclaimer": "*시스템은 사용자가 직접 추천한 사람이 KYC를 완료하고 최소 1회 이상 스테이킹 패키지를 참여하고 완료한 경우 마일스톤별로 추천 보상을 지급합니다"
   },
   "staking": {
     "joinBaseSuccess": "베이스 패키지 가입 성공!",

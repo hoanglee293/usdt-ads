@@ -508,11 +508,11 @@ export default function MakeMoneyPage() {
     // Table styles (matching wallet page)
     const tableContainerStyles = "max-h-[60vh] sm:max-h-[65.5vh] overflow-y-auto overflow-x-auto -mx-3 sm:mx-0"
     const tableStyles = "w-full table-fixed border-separate border-spacing-y-1"
-    const tableHeaderStyles = "px-2 py-2 sm:px-3 text-left text-xs sm:text-sm lg:text-base font-semibold text-theme-red-100 uppercase bg-white"
-    const tableCellStyles = "px-2 py-3 sm:px-3 text-xs sm:text-sm lg:text-base text-theme-gray-200 bg-white border-y border-black dark:border-gray-700 group-hover:bg-gray-100 dark:group-hover:bg-gray-800 font-light"
+    const tableHeaderStyles = "px-2 py-2 sm:px-3 text-left text-xs sm:text-sm lg:text-base font-semibold text-theme-red-100 uppercase bg-transparent "
+    const tableCellStyles = "px-2 py-3 sm:px-3 text-xs sm:text-sm lg:text-base text-theme-gray-200 dark:text-gray-300 bg-transparent border-y border-black dark:border-gray-700 group-hover:bg-gray-100 dark:group-hover:bg-gray-800 font-light"
 
     return (
-        <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] flex-1'>
+        <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
             <div className='w-full max-w-7xl'>
                 {/* Header Section */}
                 {currentStaking && (
@@ -533,44 +533,44 @@ export default function MakeMoneyPage() {
                         <Skeleton className="h-64 w-full rounded-lg" />
                     </div>
                 ) : currentStaking ? (
-                    <div className='mb-6 sm:mb-8 p-3 sm:p-4 md:p-6 rounded-lg border border-gray-200'>
+                    <div className='mb-6 sm:mb-8 p-3 sm:p-4 md:p-6 rounded-lg border border-gray-200 dark:border-[#FE645F] bg-transparent'>
                         <div className='grid grid-cols-1 md:grid-cols-2 w-full md:max-w-[50vw] mx-auto gap-3 sm:gap-4 mb-3 sm:mb-4'>
                             {/* Right Column */}
-                            <div className='p-2 sm:p-3 bg-white rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
-                                <p className='text-xs sm:text-sm text-gray-600 pl-1'>Loại staking:</p>
-                                <p className='text-base sm:text-lg font-semibold text-red-600'>{getTypeDurationLabel(currentStaking.type)}</p>
+                            <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>Loại staking:</p>
+                                <p className='text-base sm:text-lg font-semibold text-red-600 dark:text-[#FE645F]'>{getTypeDurationLabel(currentStaking.type)}</p>
                             </div>
 
                             {/* Left Column */}
-                            <div className='p-2 sm:p-3 bg-white rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
-                                <p className='text-xs sm:text-sm text-gray-600 pl-1'>Trạng thái:</p>
-                                <p className='text-xs sm:text-sm font-medium text-gray-900'>{getStatusText(currentStaking.status)}</p>
+                            <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>Trạng thái:</p>
+                                <p className='text-xs sm:text-sm font-medium text-gray-900 dark:text-gray-300'>{getStatusText(currentStaking.status)}</p>
                             </div>
 
                             {/* Right Column */}
-                            <div className='p-2 sm:p-3 bg-white rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
-                                <p className='text-xs sm:text-sm text-gray-600 pl-1'>Thời gian:</p>
-                                <p className='text-xs sm:text-sm font-medium text-red-600'>{formatDateOnly(currentStaking.date_start)} - {formatDateOnly(currentStaking.date_end)}</p>
+                            <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>Thời gian:</p>
+                                <p className='text-xs sm:text-sm font-medium text-red-600 dark:text-[#FE645F]'>{formatDateOnly(currentStaking.date_start)} - {formatDateOnly(currentStaking.date_end)}</p>
                             </div>
 
                             {/* Left Column */}
-                            <div className='p-2 sm:p-3 bg-white rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
-                                <p className='text-xs sm:text-sm text-gray-600 pl-1'>Số tiền tham gia:</p>
-                                <p className='text-base sm:text-lg font-semibold text-red-600'>{currentStaking.amount} USDT</p>
+                            <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>Số tiền tham gia:</p>
+                                <p className='text-base sm:text-lg font-semibold text-red-600 dark:text-[#FE645F]'>{currentStaking.amount} USDT</p>
                             </div>
 
                             {/* Right Column */}
-                            <div className='p-2 sm:p-3 bg-white rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md flex-wrap'>
-                                <p className='text-xs sm:text-sm text-gray-600 pl-1'>Phần thưởng ước tính :</p>
+                            <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md flex-wrap'>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>Phần thưởng ước tính :</p>
                                 <div className='flex gap-1 sm:gap-2 items-center flex-wrap'>
-                                    <p className='text-base sm:text-lg font-semibold text-red-600'>{currentStaking.estimated_reward} USDT</p>
+                                    <p className='text-base sm:text-lg font-semibold text-red-600 dark:text-[#FE645F]'>{currentStaking.estimated_reward} USDT</p>
                                 </div>
                             </div>
 
-                            <div className='p-2 sm:p-3 bg-white rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md flex-wrap'>
-                                <p className='text-xs sm:text-sm text-gray-600 pl-1'>Số tiền đã kiếm được:</p>
+                            <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md flex-wrap'>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>Số tiền đã kiếm được:</p>
                                 <div className='flex gap-1 sm:gap-2 items-center flex-wrap'>
-                                    <p className='text-base sm:text-lg font-semibold text-red-600'>{currentStaking.real_reward} USDT</p>
+                                    <p className='text-base sm:text-lg font-semibold text-red-600 dark:text-[#FE645F]'>{(currentStaking.real_reward || 0).toFixed(3)} USDT</p>
                                 </div>
                             </div>
 
@@ -579,31 +579,31 @@ export default function MakeMoneyPage() {
                         {/* Tasks - Chỉ hiển thị khi có dữ liệu mission-now */}
                         {missionNowResponse?.data ? (
                             <div className='grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full md:max-w-[50vw] mx-auto'>
-                                <div className='p-2 sm:p-3 md:p-4 bg-blue-50 rounded-lg border border-blue-200'>
+                                <div className='p-2 sm:p-3 md:p-4 bg-blue-50 dark:bg-blue-900/55 rounded-lg border border-blue-200 dark:border-blue-700'>
                                     <div className='flex items-center justify-between mb-1 sm:mb-2'>
-                                        <p className='text-xs sm:text-sm text-blue-600 font-medium'>Lượt xem video</p>
+                                        <p className='text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium'>Lượt xem video</p>
                                         {missionProgress ? (
-                                            <p className='text-xs sm:text-sm font-semibold text-blue-900'>
+                                            <p className='text-xs sm:text-sm font-semibold text-blue-900 dark:text-blue-300'>
                                                 {missionProgress.completed}/{missionProgress.total}
                                             </p>
                                         ) : (
-                                            <p className='text-xs sm:text-sm font-semibold text-blue-900'>
+                                            <p className='text-xs sm:text-sm font-semibold text-blue-900 dark:text-blue-300'>
                                                 {missionNowResponse.data.turn_setting}
                                             </p>
                                         )}
                                     </div>
                                     {missionProgress ? (
                                         <>
-                                            <p className='text-[10px] sm:text-xs text-blue-500'>
+                                            <p className='text-[10px] sm:text-xs text-blue-500 dark:text-blue-400'>
                                                 {missionProgress.isCompleted ? '✅ Đã hoàn thành' : `Còn lại: ${missionProgress.total - missionProgress.completed} video`}
                                             </p>
                                             {!missionProgress.canWatchNext && missionProgress.timeRemaining > 0 && (
-                                                <p className='text-[10px] sm:text-xs text-orange-600 mt-0.5 sm:mt-1'>
+                                                <p className='text-[10px] sm:text-xs text-orange-600 dark:text-orange-400 mt-0.5 sm:mt-1'>
                                                     ⏱️ Có thể xem tiếp sau: {formatTimeRemaining(missionProgress.timeRemaining)}
                                                 </p>
                                             )}
                                             {missionProgress.canWatchNext && !missionProgress.isCompleted && (
-                                                <p className='text-[10px] sm:text-xs text-green-600 mt-0.5 sm:mt-1'>
+                                                <p className='text-[10px] sm:text-xs text-green-600 dark:text-green-400 mt-0.5 sm:mt-1'>
                                                     ✅ Có thể xem video ngay
                                                 </p>
                                             )}
@@ -612,14 +612,14 @@ export default function MakeMoneyPage() {
                                         <Skeleton className='h-2 w-full' />
                                     )}
                                 </div>
-                                <div className='p-2 sm:p-3 md:p-4 bg-green-50 rounded-lg border border-green-200'>
+                                <div className='p-2 sm:p-3 md:p-4 bg-green-50 dark:bg-green-900/65 rounded-lg border border-green-200 dark:border-green-700'>
                                     <div className='flex items-center justify-between mb-1 sm:mb-2'>
-                                        <p className='text-xs sm:text-sm text-green-600 font-medium'>Số thiết bị</p>
-                                        <p className='text-xs sm:text-sm font-semibold text-green-900'>
+                                        <p className='text-xs sm:text-sm text-green-600 dark:text-green-400 font-medium'>Số thiết bị</p>
+                                        <p className='text-xs sm:text-sm font-semibold text-green-900 dark:text-green-300'>
                                             {missionNowResponse.data.devices}
                                         </p>
                                     </div>
-                                    <p className='text-[10px] sm:text-xs text-green-500'>
+                                    <p className='text-[10px] sm:text-xs text-green-500 dark:text-green-400'>
                                         Số thiết bị cho phép xem video
                                     </p>
                                 </div>
@@ -649,15 +649,15 @@ export default function MakeMoneyPage() {
                     </div>
                 ) : (
                     /* Join Package Section */
-                    <div className='mb-6 sm:mb-8 p-3 sm:p-4 md:p-6 bg-transparent rounded-lg border border-gray-200 shadow-sm flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-10 w-full md:w-[50vw] mx-auto'>
+                    <div className='mb-6 sm:mb-8 p-3 sm:p-4 md:p-6 bg-transparent rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-sm flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-10 w-full md:w-[50vw] mx-auto'>
                         {/* Gói Base - Luôn hiển thị */}
-                        <div className='py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-transparent border border-theme-gray-100 border-solid flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 min-h-[180px] sm:min-h-[200px] md:min-h-[230px] rounded-xl'>
-                            <h3 className='text-2xl sm:text-3xl md:text-4xl font-semibold text-black mb-1 sm:mb-2 text-center'>Base</h3>
-                            <span className='text-xs sm:text-sm text-yellow-800 mb-1 sm:mb-2'>1 Ngày</span>
+                        <div className='py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-transparent border border-theme-gray-100 dark:border-[#FE645F] border-solid flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 min-h-[180px] sm:min-h-[200px] md:min-h-[230px] rounded-xl'>
+                            <h3 className='text-2xl sm:text-3xl md:text-4xl font-semibold text-black dark:text-white mb-1 sm:mb-2 text-center'>Base</h3>
+                            <span className='text-xs sm:text-sm text-yellow-800 dark:text-yellow-300 mb-1 sm:mb-2'>1 Ngày</span>
                             <Button
                                 onClick={handleJoinBase}
                                 disabled={joinBaseMutation.isPending}
-                                className='w-full bg-gray-100 cursor-pointer hover:bg-gray-200 text-theme-red-200 text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
+                                className='w-full bg-gray-100 dark:bg-gray-700 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 text-theme-red-200 dark:text-[#FE645F] text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
                             >
                                 {joinBaseMutation.isPending ? (
                                     <>
@@ -677,7 +677,7 @@ export default function MakeMoneyPage() {
                             <Button
                                 onClick={() => setIsStakingConfirmModalOpen(true)}
                                 disabled={isStakingDisabled}
-                                className='w-full bg-white cursor-pointer hover:bg-gray-100 text-theme-red-200 text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
+                                className='w-full bg-white dark:bg-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-theme-red-200 dark:text-[#FE645F] text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
                             >
                                 Tham gia ngay
                             </Button>
@@ -697,7 +697,7 @@ export default function MakeMoneyPage() {
                 >
                     <div className='space-y-4'>
                         <div>
-                            <label className='block text-sm font-medium text-theme-red-200 mb-2'>
+                            <label className='block text-sm font-medium text-theme-red-200 dark:text-[#FE645F] mb-2'>
                                 Loại gói
                             </label>
                             <CustomSelect
@@ -711,7 +711,7 @@ export default function MakeMoneyPage() {
                         </div>
 
                         <div>
-                            <label className='block text-sm font-medium text-theme-red-200 mb-2'>
+                            <label className='block text-sm font-medium text-theme-red-200 dark:text-[#FE645F] mb-2'>
                                 Số tiền tham gia (USDT)
                             </label>
                             <Input
@@ -724,12 +724,12 @@ export default function MakeMoneyPage() {
                                 step="0.01"
                                 className="w-full rounded-full"
                             />
-                            <p className='text-xs text-gray-500 mt-1'>
-                                Số dư khả dụng: <span className='font-bold text-theme-red-200'>{formatNumber(usdtBalance)} </span> USDT
+                            <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
+                                Số dư khả dụng: <span className='font-bold text-theme-red-200 dark:text-[#FE645F]'>{formatNumber(usdtBalance)} </span> USDT
                             </p>
                         </div>
 
-                        <div className='flex gap-3 pt-4 border-t border-gray-200'>
+                        <div className='flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700'>
                             <Button
                                 variant="outline"
                                 onClick={() => {
@@ -737,7 +737,7 @@ export default function MakeMoneyPage() {
                                     setStakingAmount('')
                                 }}
                                 disabled={joinStakingMutation.isPending}
-                                className='flex-1 bg-transparent border border-solid border-gray-300 text-gray-700 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
+                                className='flex-1 bg-transparent border border-solid border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
                             >
                                 Hủy
                             </Button>
@@ -768,26 +768,26 @@ export default function MakeMoneyPage() {
                 >
                     <div className='space-y-4'>
                         <div className='text-center'>
-                            <p className='text-base text-gray-700 mb-2'>
-                                Bạn có chắc chắn muốn tham gia gói <span className='font-semibold text-theme-red-200'>Base</span>?
+                            <p className='text-base text-gray-700 dark:text-gray-300 mb-2'>
+                                Bạn có chắc chắn muốn tham gia gói <span className='font-semibold text-theme-red-200 dark:text-[#FE645F]'>Base</span>?
                             </p>
-                            <p className='text-sm text-gray-500'>
+                            <p className='text-sm text-gray-500 dark:text-gray-400'>
                                 Gói Base có thời hạn <span className='font-medium'>1 ngày</span> và yêu cầu số dư nhỏ hơn $10.
                             </p>
                         </div>
-                        <div className='flex gap-3 pt-4 border-t border-gray-200'>
+                        <div className='flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700'>
                             <Button
                                 variant="outline"
                                 onClick={() => setIsBaseConfirmModalOpen(false)}
                                 disabled={joinBaseMutation.isPending}
-                                className='flex-1 bg-transparent border border-solid border-gray-300 text-gray-700 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
+                                className='flex-1 bg-transparent border border-solid border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
                             >
                                 Hủy
                             </Button>
                             <Button
                                 onClick={handleConfirmJoinBase}
                                 disabled={joinBaseMutation.isPending}
-                                className='flex-1 bg-gray-100 text-theme-red-200 cursor-pointer hover:bg-pink-100 rounded-full border-none hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
+                                className='flex-1 bg-gray-100 dark:bg-gray-700 text-theme-red-200 dark:text-[#FE645F] cursor-pointer hover:bg-pink-100 dark:hover:bg-pink-900/30 rounded-full border-none hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
                             >
                                 {joinBaseMutation.isPending ? (
                                     <>
@@ -811,18 +811,18 @@ export default function MakeMoneyPage() {
                 >
                     <div className='space-y-4'>
                         <div className='text-center'>
-                            <p className='text-base text-gray-700 mb-2'>
-                                Bạn có chắc chắn muốn tham gia gói <span className='font-semibold text-theme-red-200'>Staking</span>?
+                            <p className='text-base text-gray-700 dark:text-gray-300 mb-2'>
+                                Bạn có chắc chắn muốn tham gia gói <span className='font-semibold text-theme-red-200 dark:text-[#FE645F]'>Staking</span>?
                             </p>
-                            <p className='text-sm text-gray-500'>
+                            <p className='text-sm text-gray-500 dark:text-gray-400'>
                                 Gói Staking có các tùy chọn: <span className='font-medium'>1 ngày, 7 ngày, hoặc 30 ngày</span> và yêu cầu số dư tối thiểu $10.
                             </p>
                         </div>
-                        <div className='flex gap-3 pt-4 border-t border-gray-200'>
+                        <div className='flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700'>
                             <Button
                                 variant="outline"
                                 onClick={() => setIsStakingConfirmModalOpen(false)}
-                                className='flex-1 bg-transparent border border-solid border-gray-300 text-gray-700 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
+                                className='flex-1 bg-transparent border border-solid border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
                             >
                                 Hủy
                             </Button>
@@ -840,7 +840,7 @@ export default function MakeMoneyPage() {
                 </Modal>
 
                 {/* All Packages Table Section */}
-                <h2 className='text-lg sm:text-xl font-bold text-theme-red-100 mb-3 sm:mb-4 mt-6 sm:mt-8'>Bảng các gói đã và đang tham gia</h2>
+                <h2 className='text-lg sm:text-xl font-bold text-theme-red-100 dark:text-[#FE645F] mb-3 sm:mb-4 mt-6 sm:mt-8'>Bảng các gói đã và đang tham gia</h2>
                 <div className=' border-none'>
                     {isLoadingCurrentStaking || isLoadingHistories ? (
                         <div className='space-y-2 sm:space-y-3'>
@@ -849,7 +849,7 @@ export default function MakeMoneyPage() {
                             <Skeleton className="h-12 sm:h-16 w-full rounded-lg" />
                         </div>
                     ) : allPackages.length === 0 ? (
-                        <div className='text-center py-6 sm:py-8 text-gray-500'>
+                        <div className='text-center py-6 sm:py-8 text-gray-500 dark:text-gray-400'>
                             <p className='text-sm sm:text-base'>Chưa có gói nào được tham gia</p>
                         </div>
                     ) : (
@@ -857,9 +857,9 @@ export default function MakeMoneyPage() {
                         {/* Mobile Card Layout */}
                         <div className="block sm:hidden space-y-3">
                             {allPackages.map((pkg, index) => (
-                                <div key={pkg.id} className="bg-white rounded-lg border border-gray-200 p-3 shadow-sm">
+                                <div key={pkg.id} className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] p-3 shadow-sm">
                                     <div className="flex items-center justify-between mb-2">
-                                        <span className="text-xs font-semibold text-gray-500">#{index + 1}</span>
+                                        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">#{index + 1}</span>
                                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                                             pkg.status === 'running' 
                                                 ? 'bg-gray-400 text-white' 
@@ -873,39 +873,39 @@ export default function MakeMoneyPage() {
                                     
                                     <div className="space-y-2">
                                         <div className="flex items-center justify-between">
-                                            <span className="text-xs text-gray-600">Gói staking:</span>
-                                            <span className="px-2 py-0.5 bg-pink-100 text-pink-700 rounded-full text-xs font-medium">
+                                            <span className="text-xs text-gray-600 dark:text-gray-300">Gói staking:</span>
+                                            <span className="px-2 py-0.5 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-full text-xs font-medium">
                                                 {getTypeDurationLabel(pkg.type)}
                                             </span>
                                         </div>
                                         
                                         <div className="flex items-center justify-between">
-                                            <span className="text-xs text-gray-600">Loại:</span>
+                                            <span className="text-xs text-gray-600 dark:text-gray-300">Loại:</span>
                                             <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
                                                 pkg.amount > 10 
                                                     ? 'bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white' 
-                                                    : 'bg-gray-200 text-gray-800'
+                                                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
                                             }`}>
                                                 {pkg.amount > 10 ? 'Staking' : 'Base'}
                                             </span>
                                         </div>
                                         
                                         <div className="flex items-center justify-between">
-                                            <span className="text-xs text-gray-600">Số tiền tham gia:</span>
-                                            <span className="text-xs font-semibold text-red-600">{formatNumber(pkg.amount)} USDT</span>
+                                            <span className="text-xs text-gray-600 dark:text-gray-300">Số tiền tham gia:</span>
+                                            <span className="text-xs font-semibold text-red-600 dark:text-[#FE645F]">{formatNumber(pkg.amount)} USDT</span>
                                         </div>
                                         
                                         <div className="flex items-start justify-between">
-                                            <span className="text-xs text-gray-600">Thời gian tham gia:</span>
-                                            <span className="text-[10px] text-gray-700 text-right flex-1 ml-2">{formatParticipationTime(pkg.date_start)}</span>
+                                            <span className="text-xs text-gray-600 dark:text-gray-300">Thời gian tham gia:</span>
+                                            <span className="text-[10px] text-gray-700 dark:text-gray-300 text-right flex-1 ml-2">{formatParticipationTime(pkg.date_start)}</span>
                                         </div>
                                         
-                                        <div className="flex items-center justify-between pt-1 border-t border-gray-100">
-                                            <span className="text-xs text-gray-600">Tổng phần thưởng:</span>
+                                        <div className="flex items-center justify-between pt-1 border-t border-gray-100 dark:border-gray-700">
+                                            <span className="text-xs text-gray-600 dark:text-gray-300">Tổng phần thưởng:</span>
                                             {pkg.status === 'running' ? (
-                                                <span className="text-xs text-gray-500">--</span>
+                                                <span className="text-xs text-gray-500 dark:text-gray-400">--</span>
                                             ) : (
-                                                <span className="text-xs font-semibold text-green-600">{formatNumber(getRewardAmount(pkg))} USDT</span>
+                                                <span className="text-xs font-semibold text-green-600 dark:text-green-400">{formatNumber(getRewardAmount(pkg))} USDT</span>
                                             )}
                                         </div>
                                     </div>
@@ -942,7 +942,7 @@ export default function MakeMoneyPage() {
                                                     {index + 1}
                                                 </td>
                                                 <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                    <span className="px-3 py-1 bg-pink-100 text-pink-700 rounded-full text-sm font-medium">
+                                                    <span className="px-3 py-1 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-full text-sm font-medium">
                                                         {getTypeDurationLabel(pkg.type)}
                                                     </span>
                                                 </td>
@@ -950,12 +950,12 @@ export default function MakeMoneyPage() {
                                                     <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
                                                         pkg.amount > 10 
                                                             ? 'bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white' 
-                                                            : 'bg-gray-200 text-gray-800'
+                                                            : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
                                                     }`}>
                                                         {pkg.amount > 10 ? 'Staking' : 'Base'}
                                                     </span>
                                                 </td>
-                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid font-semibold text-red-600`}>
+                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid font-semibold text-red-600 dark:text-[#FE645F]`}>
                                                     {formatNumber(pkg.amount)} USDT
                                                 </td>
                                                 <td className={`${tableCellStyles} w-[15%] border-x-0 border-theme-gray-100 border-solid`}>
@@ -963,12 +963,12 @@ export default function MakeMoneyPage() {
                                                 </td>
                                                 <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid font-semibold`}>
                                                     {pkg.status === 'running' ? (
-                                                        <span className="text-gray-500">--</span>
+                                                        <span className="text-gray-500 dark:text-gray-400">--</span>
                                                     ) : (
-                                                        <span className="text-green-600">{formatNumber(getRewardAmount(pkg))} USDT</span>
+                                                        <span className="text-green-600 dark:text-green-400">{formatNumber(getRewardAmount(pkg))} USDT</span>
                                                     )}
                                                 </td>
-                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-r rounded-r-lg border-theme-gray-100 border-solid`}>
                                                     <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                                                         pkg.status === 'running' 
                                                             ? 'bg-gray-400 text-white' 

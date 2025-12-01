@@ -35,7 +35,58 @@
     "loadNetworksError": "Unable to load network list",
     "loadCoinsError": "Unable to load coin list",
     "loadBalanceError": "Unable to load balance",
-    "withdrawSuccess": "Withdrawal successful!"
+    "withdrawSuccess": "Withdrawal successful!",
+    "createWalletSuccess": "Wallet created successfully!",
+    "pleaseSelectNetwork": "Please select a network first",
+    "pleaseCreateWalletBeforeDeposit": "Please create a wallet before depositing",
+    "pleaseCreateWalletBeforeWithdraw": "Please create a wallet before withdrawing",
+    "copied": "Copied {type}",
+    "pleaseSelectNetworkAndWallet": "Please select a network and have a wallet first",
+    "coin": "Coin",
+    "selectCoin": "Select coin",
+    "selectCoinPlaceholder": "Select coin",
+    "balanceLabel": "Balance",
+    "gift": "Gift",
+    "reward": "Reward",
+    "selectNetwork": "Select network",
+    "selectNetworkPlaceholder": "Select network",
+    "walletAddress": "Wallet address {symbol}",
+    "copyAddress": "Copy address",
+    "noWalletForNetwork": "You don't have a wallet for network {name} ({symbol})",
+    "creatingWallet": "Creating wallet...",
+    "createWalletFor": "Create wallet for {symbol}",
+    "depositButton": "Deposit",
+    "withdrawButton": "Withdraw",
+    "noTransactions": "No transactions yet",
+    "noWithdrawTransactions": "No withdrawal transactions yet",
+    "tableHeaders": {
+      "stt": "NO",
+      "time": "TIME",
+      "type": "TYPE",
+      "amount": "AMOUNT",
+      "fromAddress": "FROM ADDRESS",
+      "toAddress": "TO ADDRESS",
+      "transactionId": "TRANSACTION ID",
+      "status": "STATUS"
+    },
+    "transactionTypes": {
+      "deposit": "Deposit",
+      "withdraw": "Withdraw"
+    },
+    "transactionStatus": {
+      "complete": "Complete",
+      "error": "Error"
+    },
+    "addressLabels": {
+      "to": "To",
+      "txId": "TX ID"
+    },
+    "copyLabels": {
+      "walletAddress": "wallet address",
+      "fromAddress": "from address",
+      "toAddress": "to address",
+      "transactionId": "transaction ID"
+    }
   },
   "ref": {
     "title": "Commission Income",
@@ -70,6 +121,24 @@
     "noReferredUsers": "No referred users",
     "withdraw": "Withdraw",
     "you": "YOU"
+  },
+  "smartRef": {
+    "title": "REFERRAL COMMISSION",
+    "progressText": "Referred: {current}/{total} people",
+    "milestoneLabel": "Referral Milestone",
+    "peopleCount": "{count} people",
+    "rewardLabel": "Reward",
+    "referralLinkButton": "Referral Link",
+    "withdrawableAmount": "Withdrawable amount: ${amount}",
+    "minimumWithdrawNotice": "(Minimum $10 to withdraw reward)",
+    "processing": "Processing...",
+    "claimReward": "CLAIM REWARD",
+    "withdrawSuccess": "Withdrawal successful!",
+    "withdrawError": "Unable to withdraw reward",
+    "linkCopied": "Referral link copied",
+    "copyFailed": "Unable to copy",
+    "minimumWithdrawError": "Minimum withdrawal amount is $10. Current amount: ${amount}",
+    "disclaimer": "*The system rewards referrals by milestone if the User directly refers someone who has completed KYC; participated and completed at least 1 Staking package"
   },
   "staking": {
     "joinBaseSuccess": "Successfully joined Base package!",
