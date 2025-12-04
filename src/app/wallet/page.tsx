@@ -1,7 +1,9 @@
 'use client'
 import CustomSelect from '@/components/CustomSelect'
+import DepositContent from '@/components/DepositContent'
+import WithdrawContent from '@/components/WithdrawContent'
 import React, { useState, useRef, useMemo, useEffect } from 'react'
-import { Copy, ExternalLink, Plus, Loader2, ChevronDown, ChevronUp, Wallet } from 'lucide-react'
+import { Copy, ExternalLink, Plus, Loader2, ChevronDown, ChevronUp, Wallet, ArrowLeft } from 'lucide-react'
 import { toast } from 'sonner'
 import { Button } from '@/ui/button'
 import { useRouter } from 'next/navigation'
@@ -55,7 +57,7 @@ const mapTransactionToUI = (transaction: TransactionHistoryItem, coinSymbol?: st
     const formattedTime = `${time} ${dateStr}`
 
     // Map option to type
-    const type = transaction.option === 'withdraw' 
+    const type = transaction.option === 'withdraw'
         ? (t ? t('wallet.transactionTypes.withdraw') : 'Rút')
         : (t ? t('wallet.transactionTypes.deposit') : 'Nạp')
 
@@ -63,7 +65,7 @@ const mapTransactionToUI = (transaction: TransactionHistoryItem, coinSymbol?: st
     const amount = `${transaction.amount} ${coinSymbol || 'USDT'}`
 
     // Map status
-    const status = transaction.status === 'success' 
+    const status = transaction.status === 'success'
         ? (t ? t('wallet.transactionStatus.complete') : 'Complete')
         : (t ? t('wallet.transactionStatus.error') : 'Lỗi')
 
@@ -99,7 +101,7 @@ interface TransactionCardProps {
 function TransactionCard({ transaction, onCopy, formatAddress, t }: TransactionCardProps) {
     const isWithdraw = transaction.type === t('wallet.transactionTypes.withdraw')
     const isComplete = transaction.status === t('wallet.transactionStatus.complete')
-    
+
     return (
         <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-md p-3 sm:p-4">
             {/* Header */}
@@ -175,9 +177,9 @@ function AddressRow({
         }
         return t('wallet.copyLabels.transactionId')
     }
-    
+
     const copyLabel = getCopyLabel()
-    
+
     return (
         <div className="flex items-start gap-2">
             <span className="text-xs font-medium text-gray-600 dark:text-gray-300 md:min-w-[60px] min-w-auto">
@@ -206,6 +208,7 @@ export default function WalletPage() {
     const [selectedNetworkSymbol, setSelectedNetworkSymbol] = useState<string>('')
     const [showCreateWalletDialog, setShowCreateWalletDialog] = useState(false)
     const [transactionTypeFilter, setTransactionTypeFilter] = useState<'all' | 'deposit' | 'withdraw'>('all')
+    const [activeView, setActiveView] = useState<'main' | 'deposit' | 'withdraw'>('main')
     const tableRef = useRef<HTMLDivElement>(null)
     const queryClient = useQueryClient()
     const router = useRouter()
@@ -441,27 +444,7 @@ export default function WalletPage() {
             toast.error(t('wallet.pleaseSelectNetwork'))
             return
         }
-
-        // Build query params
-        const params = new URLSearchParams({
-            networkId: selectedNetwork,
-        })
-
-        if (selectedNetworkInfo?.net_name) {
-            params.append('networkName', selectedNetworkInfo.net_name)
-        }
-        if (selectedNetworkInfo?.net_symbol) {
-            params.append('networkSymbol', selectedNetworkInfo.net_symbol)
-        }
-        if (selectedCoinInfo?.coin_symbol) {
-            params.append('coinSymbol', selectedCoinInfo.coin_symbol)
-        }
-        if (selectedCoin) {
-            params.append('coinId', selectedCoin)
-        }
-
-        // Navigate to deposit page
-        router.push(`/wallet/deposit?${params.toString()}`)
+        setActiveView('deposit')
     }
 
     const handleWithdraw = () => {
@@ -473,27 +456,11 @@ export default function WalletPage() {
             toast.error(t('wallet.pleaseSelectNetwork'))
             return
         }
+        setActiveView('withdraw')
+    }
 
-        // Build query params
-        const params = new URLSearchParams({
-            networkId: selectedNetwork,
-        })
-
-        if (selectedNetworkInfo?.net_name) {
-            params.append('networkName', selectedNetworkInfo.net_name)
-        }
-        if (selectedNetworkInfo?.net_symbol) {
-            params.append('networkSymbol', selectedNetworkInfo.net_symbol)
-        }
-        if (selectedCoinInfo?.coin_symbol) {
-            params.append('coinSymbol', selectedCoinInfo.coin_symbol)
-        }
-        if (selectedCoin) {
-            params.append('coinId', selectedCoin)
-        }
-
-        // Navigate to withdraw page
-        router.push(`/wallet/withdraw?${params.toString()}`)
+    const handleBackToMain = () => {
+        setActiveView('main')
     }
 
     const formatAddress = (address: string | null | undefined) => {
@@ -522,29 +489,11 @@ export default function WalletPage() {
             return
         }
 
-        // Build query params
-        const params = new URLSearchParams({
-            networkId: selectedNetwork,
-        })
-
-        if (selectedNetworkInfo?.net_name) {
-            params.append('networkName', selectedNetworkInfo.net_name)
-        }
-        if (selectedNetworkInfo?.net_symbol) {
-            params.append('networkSymbol', selectedNetworkInfo.net_symbol)
-        }
-        if (selectedCoinInfo?.coin_symbol) {
-            params.append('coinSymbol', selectedCoinInfo.coin_symbol)
-        }
-        if (selectedCoin) {
-            params.append('coinId', selectedCoin)
-        }
-
-        // Navigate based on transaction type
+        // Show deposit or withdraw view based on transaction type
         if (transaction.type === t('wallet.transactionTypes.deposit')) {
-            router.push(`/wallet/deposit?${params.toString()}`)
+            setActiveView('deposit')
         } else if (transaction.type === t('wallet.transactionTypes.withdraw')) {
-            router.push(`/wallet/withdraw?${params.toString()}`)
+            setActiveView('withdraw')
         }
     }
 
@@ -613,7 +562,7 @@ export default function WalletPage() {
                         <div className='flex items-end justify-center mb-3'>
                             <img src="/logo.png" alt="logo" className='w-10 h-10 object-cover pt-2' />
                             <div className='flex flex-col items-center mx-4'>
-                                <div className='flex items-center gap-2 mb-1'>
+                                <div className='flex items-center gap-2 mb-4'>
                                     <span className='text-sm font-medium text-theme-red-100 dark:text-[#FE645F]'>{t('wallet.selectCoin')}:</span>
                                     {isLoadingCoins ? (
                                         <Skeleton className="h-8 w-24" />
@@ -669,58 +618,6 @@ export default function WalletPage() {
                     />
                 </div>
 
-                {/* Wallet Address Section */}
-                {selectedNetwork && (
-                    <div className='mb-4 sm:mb-6 flex flex-col items-center justify-center w-full px-3 sm:px-0'>
-                        {isLoadingWalletCheck ? (
-                            <Skeleton className="h-20 w-full max-w-2xl" />
-                        ) : hasWallet ? (
-                            <div className='w-full max-w-2xl p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-sm'>
-                                <div className='flex items-center justify-between mb-1.5 sm:mb-2'>
-                                    <label className='text-xs sm:text-sm font-medium text-theme-red-100 dark:text-[#FE645F]'>
-                                        {t('wallet.walletAddress', { symbol: selectedNetworkInfo?.net_symbol })}:
-                                    </label>
-                                </div>
-                                <div className='flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-900/50 rounded border border-gray-200 dark:border-gray-700'>
-                                    <span className='text-xs sm:text-sm text-yellow-600 dark:text-yellow-400 italic flex-1 break-all'>
-                                        {formatAddress(walletAddress || '')}
-                                    </span>
-                                    <button
-                                        onClick={() => handleCopy(walletAddress || '', t('wallet.copyLabels.walletAddress'))}
-                                        className='text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent flex-shrink-0'
-                                        title={t('wallet.copyAddress')}
-                                    >
-                                        <Copy className='w-3.5 h-3.5 sm:w-4 sm:h-4' />
-                                    </button>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className='w-full max-w-2xl p-3 sm:p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700'>
-                                <p className='text-xs sm:text-sm text-yellow-800 dark:text-yellow-300 mb-2 sm:mb-3 text-center'>
-                                    {t('wallet.noWalletForNetwork', { name: selectedNetworkInfo?.net_name, symbol: selectedNetworkInfo?.net_symbol })}
-                                </p>
-                                <Button
-                                    onClick={confirmCreateWallet}
-                                    disabled={createWalletMutation.isPending}
-                                    className='w-full bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none h-10 sm:h-12 hover:opacity-90'
-                                >
-                                    {createWalletMutation.isPending ? (
-                                        <>
-                                            <Loader2 className='w-4 h-4 mr-2 animate-spin' />
-                                            {t('wallet.creatingWallet')}
-                                        </>
-                                    ) : (
-                                        <>
-                                            <Plus className='w-4 h-4 mr-2' />
-                                            {t('wallet.createWalletFor', { symbol: selectedNetworkInfo?.net_symbol })}
-                                        </>
-                                    )}
-                                </Button>
-                            </div>
-                        )}
-                    </div>
-                )}
-
                 {/* Deposit/Withdraw Buttons */}
                 {selectedNetwork && (
                     <>
@@ -740,160 +637,237 @@ export default function WalletPage() {
                                 {t('wallet.withdrawButton')}
                             </Button>
                         </div>
-                        {/* Transaction History */}
-                        {isMobile ? (
-                            // Mobile: Card Layout
-                            <div className="w-full space-y-3">
-                                {isLoadingTransactionHistory ? (
-                                    <div className="space-y-3">
-                                        {[1, 2, 3].map((i) => (
-                                            <Skeleton key={i} className="h-32 w-full rounded-lg" />
-                                        ))}
+
+                        {activeView === 'main' && <div className='mb-4 sm:mb-6 flex flex-col items-center justify-center w-full px-3 sm:px-0'>
+                            {isLoadingWalletCheck ? (
+                                <Skeleton className="h-20 w-full max-w-2xl" />
+                            ) : hasWallet ? (
+                                <div className='w-full max-w-2xl p-3 sm:p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-sm'>
+                                    <div className='flex items-center justify-between mb-1.5 sm:mb-2'>
+                                        <label className='text-xs sm:text-sm font-medium text-theme-red-100 dark:text-[#FE645F]'>
+                                            {t('wallet.walletAddress', { symbol: selectedNetworkInfo?.net_symbol })}:
+                                        </label>
                                     </div>
-                                ) : transactions.length === 0 ? (
-                                    <div className="text-center py-12 px-4">
-                                        <div className="text-gray-400 dark:text-gray-500 mb-2">
-                                            <Wallet className="w-12 h-12 mx-auto" />
-                                        </div>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400">
-                                            {t('wallet.noTransactions')}
-                                        </p>
+                                    <div className='flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-900/50 rounded border border-gray-200 dark:border-gray-700'>
+                                        <span className='text-xs sm:text-sm text-yellow-600 dark:text-yellow-400 italic flex-1 break-all'>
+                                            {formatAddress(walletAddress || '')}
+                                        </span>
+                                        <button
+                                            onClick={() => handleCopy(walletAddress || '', t('wallet.copyLabels.walletAddress'))}
+                                            className='text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent flex-shrink-0'
+                                            title={t('wallet.copyAddress')}
+                                        >
+                                            <Copy className='w-3.5 h-3.5 sm:w-4 sm:h-4' />
+                                        </button>
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className='w-full max-w-2xl p-3 sm:p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700'>
+                                    <p className='text-xs sm:text-sm text-yellow-800 dark:text-yellow-300 mb-2 sm:mb-3 text-center'>
+                                        {t('wallet.noWalletForNetwork', { name: selectedNetworkInfo?.net_name, symbol: selectedNetworkInfo?.net_symbol })}
+                                    </p>
+                                    <Button
+                                        onClick={confirmCreateWallet}
+                                        disabled={createWalletMutation.isPending}
+                                        className='w-full bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none h-10 sm:h-12 hover:opacity-90'
+                                    >
+                                        {createWalletMutation.isPending ? (
+                                            <>
+                                                <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+                                                {t('wallet.creatingWallet')}
+                                            </>
+                                        ) : (
+                                            <>
+                                                <Plus className='w-4 h-4 mr-2' />
+                                                {t('wallet.createWalletFor', { symbol: selectedNetworkInfo?.net_symbol })}
+                                            </>
+                                        )}
+                                    </Button>
+                                </div>
+                            )}
+                        </div>}
+
+                        {/* Deposit/Withdraw Content - Show below buttons */}
+                        {activeView === 'deposit' && selectedNetwork && (
+                            <DepositContent
+                                networkId={selectedNetwork}
+                                networkName={selectedNetworkInfo?.net_name}
+                                networkSymbol={selectedNetworkInfo?.net_symbol}
+                                coinSymbol={selectedCoinInfo?.coin_symbol}
+                            />
+                        )}
+
+                        {activeView === 'withdraw' && selectedNetwork && (
+                            <WithdrawContent
+                                networkId={selectedNetwork}
+                                networkName={selectedNetworkInfo?.net_name}
+                                networkSymbol={selectedNetworkInfo?.net_symbol}
+                                coinSymbol={selectedCoinInfo?.coin_symbol}
+                                coinId={selectedCoin}
+                                onSuccess={() => {
+                                    // Optionally refresh balance or other data
+                                    queryClient.invalidateQueries({ queryKey: ['balance', selectedCoin] })
+                                }}
+                            />
+                        )}
+
+                        {/* Transaction History - Only show when in main view */}
+                        {activeView === 'main' && (
+                            <>
+                                {isMobile ? (
+                                    // Mobile: Card Layout
+                                    <div className="w-full space-y-3">
+                                        {isLoadingTransactionHistory ? (
+                                            <div className="space-y-3">
+                                                {[1, 2, 3].map((i) => (
+                                                    <Skeleton key={i} className="h-32 w-full rounded-lg" />
+                                                ))}
+                                            </div>
+                                        ) : transactions.length === 0 ? (
+                                            <div className="text-center py-12 px-4">
+                                                <div className="text-gray-400 dark:text-gray-500 mb-2">
+                                                    <Wallet className="w-12 h-12 mx-auto" />
+                                                </div>
+                                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                                    {t('wallet.noTransactions')}
+                                                </p>
+                                            </div>
+                                        ) : (
+                                            transactions.map((transaction) => (
+                                                <div
+                                                    key={transaction.id}
+                                                    onClick={() => handleTransactionClick(transaction)}
+                                                    className="cursor-pointer transition-transform hover:scale-[1.02]"
+                                                >
+                                                    <TransactionCard
+                                                        transaction={transaction}
+                                                        onCopy={handleCopy}
+                                                        formatAddress={formatAddress}
+                                                        t={t}
+                                                    />
+                                                </div>
+                                            ))
+                                        )}
                                     </div>
                                 ) : (
-                                    transactions.map((transaction) => (
-                                        <div
-                                            key={transaction.id}
-                                            onClick={() => handleTransactionClick(transaction)}
-                                            className="cursor-pointer transition-transform hover:scale-[1.02]"
-                                        >
-                                            <TransactionCard
-                                                transaction={transaction}
-                                                onCopy={handleCopy}
-                                                formatAddress={formatAddress}
-                                                t={t}
-                                            />
-                                        </div>
-                                    ))
-                                )}
-                            </div>
-                        ) : (
-                            // Desktop: Table Layout
-                            <div className="block overflow-hidden rounded-md bg-transparent border border-none">
-                                {/* Fixed Header */}
-                                <div className="overflow-hidden rounded-t-md">
-                                    <table className={tableStyles}>
-                                        <thead>
-                                            <tr>
-                                                <th className={`${tableHeaderStyles} w-[5%] text-left rounded-l-lg`}>{t('wallet.tableHeaders.stt')}</th>
-                                                <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.time')}</th>
-                                                <th className={`${tableHeaderStyles} w-[8%]`}>{t('wallet.tableHeaders.type')}</th>
-                                                <th className={`${tableHeaderStyles} w-[10%]`}>{t('wallet.tableHeaders.amount')}</th>
-                                                <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.fromAddress')}</th>
-                                                <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.toAddress')}</th>
-                                                <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.transactionId')}</th>
-                                                <th className={`${tableHeaderStyles} w-[11%] text-center rounded-r-lg`}>{t('wallet.tableHeaders.status')}</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
-
-                                {/* Scrollable Body */}
-                                <div className={tableContainerStyles} ref={tableRef}>
-                                    <table className={tableStyles}>
-                                        <tbody>
-                                            {isLoadingTransactionHistory ? (
-                                                <tr>
-                                                    <td colSpan={8} className="text-center py-8">
-                                                        <Skeleton className="h-8 w-full" />
-                                                    </td>
-                                                </tr>
-                                            ) : transactions.length === 0 ? (
-                                                <tr>
-                                                    <td colSpan={8} className="text-center py-8 text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-lg border-solid">
-                                                        {t('wallet.noWithdrawTransactions')}
-                                                    </td>
-                                                </tr>
-                                            ) : (
-                                                transactions.map((transaction) => (
-                                                    <tr
-                                                        key={transaction.id}
-                                                        className="group transition-colors cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
-                                                        onClick={() => handleTransactionClick(transaction)}
-                                                    >
-                                                        <td className={`${tableCellStyles} w-[5%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
-                                                            {transaction.id}
-                                                        </td>
-                                                        <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                            {transaction.time}
-                                                        </td>
-                                                        <td className={`${tableCellStyles} w-[8%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                            {transaction.type}
-                                                        </td>
-                                                        <td className={`${tableCellStyles} w-[10%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                            {transaction.amount}
-                                                        </td>
-                                                        <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                            <div className='flex items-center gap-2'>
-                                                                <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
-                                                                    {formatAddress(transaction.fromAddress)}
-                                                                </span>
-                                                                <button
-                                                                    onClick={() => handleCopy(transaction.fromAddress, t('wallet.copyLabels.fromAddress'))}
-                                                                    className='text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent mt-1.5'
-                                                                    title={t('wallet.copyAddress')}
-                                                                >
-                                                                    <Copy className='w-3.5 h-3.5' />
-                                                                </button>
-                                                            </div>
-                                                        </td>
-                                                        <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                            <div className='flex items-center gap-2'>
-                                                                <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
-                                                                    {formatAddress(transaction.toAddress)}
-                                                                </span>
-                                                                <button
-                                                                    onClick={() => handleCopy(transaction.toAddress, t('wallet.copyLabels.toAddress'))}
-                                                                    className='text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent mt-1.5'
-                                                                    title={t('wallet.copyAddress')}
-                                                                >
-                                                                    <Copy className='w-3.5 h-3.5' />
-                                                                </button>
-                                                            </div>
-                                                        </td>
-                                                        <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                            <div className='flex items-center gap-2'>
-                                                                <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
-                                                                    {formatAddress(transaction.transactionId)}
-                                                                </span>
-                                                                <button
-                                                                    onClick={() => handleCopy(transaction.transactionId, t('wallet.copyLabels.transactionId'))}
-                                                                    className='text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent mt-1.5'
-                                                                    title={t('wallet.copyAddress')}
-                                                                >
-                                                                    <Copy className='w-3.5 h-3.5' />
-                                                                </button>
-                                                            </div>
-                                                        </td>
-                                                        <td className={`${tableCellStyles} w-[11%] text-center rounded-r-lg border-l-0 border-theme-gray-100 border-solid`}>
-                                                            <span
-                                                                className={` px-1 font-medium flex justify-center items-center py-1.5 max-w-24 mx-auto rounded-full text-xs ${transaction.status === t('wallet.transactionStatus.complete')
-                                                                    ? 'bg-green-500 text-white'
-                                                                    : 'bg-red-500 text-white'
-                                                                    }`}
-                                                            >
-                                                                {transaction.status}
-                                                            </span>
-                                                        </td>
+                                    // Desktop: Table Layout
+                                    <div className="block overflow-hidden rounded-md bg-transparent border border-none">
+                                        {/* Fixed Header */}
+                                        <div className="overflow-hidden rounded-t-md">
+                                            <table className={tableStyles}>
+                                                <thead>
+                                                    <tr>
+                                                        <th className={`${tableHeaderStyles} w-[5%] text-left rounded-l-lg`}>{t('wallet.tableHeaders.stt')}</th>
+                                                        <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.time')}</th>
+                                                        <th className={`${tableHeaderStyles} w-[8%]`}>{t('wallet.tableHeaders.type')}</th>
+                                                        <th className={`${tableHeaderStyles} w-[10%]`}>{t('wallet.tableHeaders.amount')}</th>
+                                                        <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.fromAddress')}</th>
+                                                        <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.toAddress')}</th>
+                                                        <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.transactionId')}</th>
+                                                        <th className={`${tableHeaderStyles} w-[11%] text-center rounded-r-lg`}>{t('wallet.tableHeaders.status')}</th>
                                                     </tr>
-                                                ))
-                                            )}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                                                </thead>
+                                            </table>
+                                        </div>
+
+                                        {/* Scrollable Body */}
+                                        <div className={tableContainerStyles} ref={tableRef}>
+                                            <table className={tableStyles}>
+                                                <tbody>
+                                                    {isLoadingTransactionHistory ? (
+                                                        <tr>
+                                                            <td colSpan={8} className="text-center py-8">
+                                                                <Skeleton className="h-8 w-full" />
+                                                            </td>
+                                                        </tr>
+                                                    ) : transactions.length === 0 ? (
+                                                        <tr>
+                                                            <td colSpan={8} className="text-center py-8 text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 rounded-lg border-solid">
+                                                                {t('wallet.noWithdrawTransactions')}
+                                                            </td>
+                                                        </tr>
+                                                    ) : (
+                                                        transactions.map((transaction) => (
+                                                            <tr
+                                                                key={transaction.id}
+                                                                className="group transition-colors cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
+                                                                onClick={() => handleTransactionClick(transaction)}
+                                                            >
+                                                                <td className={`${tableCellStyles} w-[5%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
+                                                                    {transaction.id}
+                                                                </td>
+                                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                                    {transaction.time}
+                                                                </td>
+                                                                <td className={`${tableCellStyles} w-[8%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                                    {transaction.type}
+                                                                </td>
+                                                                <td className={`${tableCellStyles} w-[10%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                                    {transaction.amount}
+                                                                </td>
+                                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                                    <div className='flex items-center gap-2'>
+                                                                        <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
+                                                                            {formatAddress(transaction.fromAddress)}
+                                                                        </span>
+                                                                        <button
+                                                                            onClick={() => handleCopy(transaction.fromAddress, t('wallet.copyLabels.fromAddress'))}
+                                                                            className='text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent mt-1.5'
+                                                                            title={t('wallet.copyAddress')}
+                                                                        >
+                                                                            <Copy className='w-3.5 h-3.5' />
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                                    <div className='flex items-center gap-2'>
+                                                                        <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
+                                                                            {formatAddress(transaction.toAddress)}
+                                                                        </span>
+                                                                        <button
+                                                                            onClick={() => handleCopy(transaction.toAddress, t('wallet.copyLabels.toAddress'))}
+                                                                            className='text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent mt-1.5'
+                                                                            title={t('wallet.copyAddress')}
+                                                                        >
+                                                                            <Copy className='w-3.5 h-3.5' />
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                                    <div className='flex items-center gap-2'>
+                                                                        <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
+                                                                            {formatAddress(transaction.transactionId)}
+                                                                        </span>
+                                                                        <button
+                                                                            onClick={() => handleCopy(transaction.transactionId, t('wallet.copyLabels.transactionId'))}
+                                                                            className='text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent mt-1.5'
+                                                                            title={t('wallet.copyAddress')}
+                                                                        >
+                                                                            <Copy className='w-3.5 h-3.5' />
+                                                                        </button>
+                                                                    </div>
+                                                                </td>
+                                                                <td className={`${tableCellStyles} w-[11%] text-center rounded-r-lg border-l-0 border-theme-gray-100 border-solid`}>
+                                                                    <span
+                                                                        className={` px-1 font-medium flex justify-center items-center py-1.5 max-w-24 mx-auto rounded-full text-xs ${transaction.status === t('wallet.transactionStatus.complete')
+                                                                            ? 'bg-green-500 text-white'
+                                                                            : 'bg-red-500 text-white'
+                                                                            }`}
+                                                                    >
+                                                                        {transaction.status}
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        ))
+                                                    )}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                )}
+                            </>
                         )}
                     </>
-
                 )}
 
 

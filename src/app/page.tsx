@@ -103,7 +103,7 @@ export default function HomePage() {
   });
 
   return (
-    <div className="relative min-h-screen container mx-auto overflow-hidden bg-white dark:bg-black py-24 lg:py-32 xl:py-48 px-4 sm:px-6">
+    <div className="relative min-h-screen container mx-auto overflow-hidden bg-transparent dark:bg-black py-24 lg:py-32 xl:py-48 px-4 sm:px-6">
      
       {/* SVG Gradients Definitions */}
       <svg className="absolute w-0 h-0">
@@ -166,7 +166,7 @@ export default function HomePage() {
             className={`animate-fade-in-up-more-delayed w-full sm:w-auto ${ctaInView ? 'in-view' : ''}`}
           >
             <Link href="/register" className="block w-full sm:w-auto">
-              <button className="w-full sm:w-auto px-6 sm:px-8 md:px-12 border-none outline-none py-2.5 sm:py-2 md:py-3 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white font-bold text-xs sm:text-sm md:text-base lg:text-lg rounded-full hover:opacity-90 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 font-orbitron uppercase tracking-wide">
+              <button className="w-full sm:w-auto px-8 sm:px-12 md:px-20 border-none outline-none py-2.5 sm:py-2 md:py-3 bg-gradient-secondary text-white font-bold text-xs sm:text-sm md:text-base lg:text-lg rounded-full hover:opacity-90 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 font-orbitron uppercase tracking-wide">
                 {t('home.joinNow')}
               </button>
             </Link>

@@ -152,7 +152,52 @@
     "loading": "Loading information...",
     "loadError": "Unable to load profile information",
     "updateError": "Unable to update information. Please try again.",
-    "referral": "Referral:"
+    "referral": "Referral:",
+    "myProfile": "My Profile",
+    "kyc": "KYC"
+  },
+  "kyc": {
+    "title": "KYC Verification",
+    "subtitle": "Please provide your ID card information to verify your identity",
+    "idCardNumber": "ID Card Number",
+    "idCardNumberPlaceholder": "Enter ID card number",
+    "idCardNumberRequired": "Please enter ID card number",
+    "frontImage": "Front of ID Card",
+    "backImage": "Back of ID Card",
+    "clickToUploadFront": "Click to upload front image",
+    "clickToUploadBack": "Click to upload back image",
+    "fileFormat": "JPG, PNG (max 5MB)",
+    "pleaseSelectImage": "Please select an image file",
+    "fileSizeExceeded": "File size cannot exceed 5MB",
+    "pleaseUploadBothImages": "Please upload both front and back images",
+    "submitKyc": "Submit KYC Request",
+    "retryKyc": "Resubmit KYC Request",
+    "processing": "Processing...",
+    "submitSuccess": "KYC request submitted successfully!",
+    "retrySuccess": "KYC request resubmitted successfully!",
+    "submitError": "Unable to submit KYC request. Please try again.",
+    "loadingKycInfo": "Loading KYC information...",
+    "status": {
+      "pending": "Pending Approval",
+      "approved": "Verified",
+      "rejected": "Rejected - Please resubmit",
+      "none": "Not Verified"
+    },
+    "approved": {
+      "title": "KYC Verified",
+      "message": "Your account has been successfully verified."
+    },
+    "pending": {
+      "title": "KYC Pending Approval",
+      "message": "Your KYC request is being processed. Please wait for system response."
+    },
+    "info": {
+      "title": "Important Information",
+      "item1": "Image must be clear and contain complete information",
+      "item2": "Ensure image is not blurry or obscured",
+      "item3": "File size must not exceed 5MB"
+    },
+    "required": "*"
   },
   "auth": {
     "resetPasswordError": "Unable to send password reset request. Please try again later.",

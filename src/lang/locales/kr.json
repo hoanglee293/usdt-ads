@@ -152,7 +152,52 @@
     "loading": "정보 로딩 중...",
     "loadError": "프로필 정보를 불러올 수 없습니다",
     "updateError": "정보를 업데이트할 수 없습니다. 다시 시도해 주세요.",
-    "referral": "추천:"
+    "referral": "추천:",
+    "myProfile": "My Profile",
+    "kyc": "KYC"
+  },
+  "kyc": {
+    "title": "KYC 인증",
+    "subtitle": "신원 확인을 위해 신분증 정보를 제공해 주세요",
+    "idCardNumber": "신분증 번호",
+    "idCardNumberPlaceholder": "신분증 번호를 입력하세요",
+    "idCardNumberRequired": "신분증 번호를 입력해 주세요",
+    "frontImage": "신분증 앞면",
+    "backImage": "신분증 뒷면",
+    "clickToUploadFront": "앞면 이미지 업로드",
+    "clickToUploadBack": "뒷면 이미지 업로드",
+    "fileFormat": "JPG, PNG (최대 5MB)",
+    "pleaseSelectImage": "이미지 파일을 선택해 주세요",
+    "fileSizeExceeded": "파일 크기는 5MB를 초과할 수 없습니다",
+    "pleaseUploadBothImages": "앞면과 뒷면 이미지를 모두 업로드해 주세요",
+    "submitKyc": "KYC 요청 제출",
+    "retryKyc": "KYC 요청 재제출",
+    "processing": "처리 중...",
+    "submitSuccess": "KYC 요청이 성공적으로 제출되었습니다!",
+    "retrySuccess": "KYC 요청이 성공적으로 재제출되었습니다!",
+    "submitError": "KYC 요청을 제출할 수 없습니다. 다시 시도해 주세요.",
+    "loadingKycInfo": "KYC 정보 로딩 중...",
+    "status": {
+      "pending": "승인 대기 중",
+      "approved": "승인됨",
+      "rejected": "거부됨 - 다시 제출해 주세요",
+      "none": "인증되지 않음"
+    },
+    "approved": {
+      "title": "KYC 인증 완료",
+      "message": "계정이 성공적으로 인증되었습니다."
+    },
+    "pending": {
+      "title": "KYC 승인 대기 중",
+      "message": "KYC 요청이 처리 중입니다. 시스템 응답을 기다려 주세요."
+    },
+    "info": {
+      "title": "중요 정보",
+      "item1": "이미지는 선명하고 완전한 정보를 포함해야 합니다",
+      "item2": "이미지가 흐리거나 가려지지 않았는지 확인하세요",
+      "item3": "파일 크기는 5MB를 초과할 수 없습니다"
+    },
+    "required": "*"
   },
   "auth": {
     "resetPasswordError": "비밀번호 재설정 요청을 보낼 수 없습니다. 나중에 다시 시도해 주세요.",

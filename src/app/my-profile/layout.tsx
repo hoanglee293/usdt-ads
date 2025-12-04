@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { useProfile } from '@/hooks/useProfile'
+import { useLang } from '@/lang/useLang'
 import { Tabs, TabsList, TabsTrigger } from '@/ui/tabs'
 import toast from 'react-hot-toast'
 
@@ -10,6 +11,7 @@ export default function MyProfileLayout({
 }: {
   children: React.ReactNode
 }) {
+  const { t } = useLang()
   const pathname = usePathname()
   const router = useRouter()
   const { profile, loading: profileLoading, error: profileError } = useProfile()
@@ -27,9 +29,9 @@ export default function MyProfileLayout({
   // Show error toast when profile error occurs
   useEffect(() => {
     if (profileError) {
-      toast.error(profileError.message || 'Không thể tải thông tin profile')
+      toast.error(profileError.message || t('profile.loadError'))
     }
-  }, [profileError])
+  }, [profileError, t])
 
   // Handle tab change and navigate
   const handleTabChange = (value: string) => {
@@ -45,10 +47,10 @@ export default function MyProfileLayout({
 
   if (profileLoading) {
     return (
-      <div className='w-full min-h-screen flex justify-center items-center p-6'>
+      <div className='w-full min-h-screen flex justify-center items-center px-3 sm:px-4 md:px-6 py-4 sm:py-6'>
         <div className='text-center'>
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
-          <p className='mt-4 text-gray-600'>Đang tải thông tin...</p>
+          <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-purple-600 dark:border-purple-400 mx-auto"></div>
+          <p className='mt-3 sm:mt-4 text-sm sm:text-base text-gray-600 dark:text-gray-400'>{t('profile.loading')}</p>
         </div>
       </div>
     )
@@ -56,10 +58,10 @@ export default function MyProfileLayout({
 
   if (profileError || !profile) {
     return (
-      <div className='w-full min-h-screen flex justify-center items-center p-6'>
+      <div className='w-full min-h-screen flex justify-center items-center px-3 sm:px-4 md:px-6 py-4 sm:py-6'>
         <div className='text-center'>
-          <p className='text-red-600 text-lg'>
-            {profileError?.message || 'Không thể tải thông tin profile'}
+          <p className='text-sm sm:text-base md:text-lg text-red-600 dark:text-red-400'>
+            {profileError?.message || t('profile.loadError')}
           </p>
         </div>
       </div>
@@ -67,29 +69,28 @@ export default function MyProfileLayout({
   }
 
   return (
-    <div className='w-full min-h-svh flex justify-center items-center p-6 bg-[#FFFCF9] flex-1 '>
-      
-        <Tabs value={activeTab} onValueChange={handleTabChange} className='decoration-theme-black'>
-          <TabsList className='grid grid-cols-2 mb-6 bg-transparent p-0 gap-0 w-fit mx-auto'>
-            <TabsTrigger 
-              value='my-profile' 
-              className='bg-transparent w-fit decoration-theme-black border-0 border-b-2 border-gray-300 data-[state=active]:border-gray-800 data-[state=active]:text-gray-900 data-[state=active]:font-semibold text-gray-500 rounded-none pb-3'
-            >
-              My Profile
-            </TabsTrigger>
-            <TabsTrigger 
-              value='kyc' 
-              className='bg-transparent w-fit decoration-theme-black border-0 border-b-2 border-gray-300 data-[state=active]:border-gray-800 data-[state=active]:text-gray-900 data-[state=active]:font-semibold text-gray-500 rounded-none pb-3'
-            >
-              KYC
-            </TabsTrigger>
-          </TabsList>
-          <div className='w-full max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8 min-h-[470px]'>
-            <div className='mt-0 w-full'>
+    <div className='w-full min-h-svh flex justify-center items-center px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
+      <Tabs value={activeTab} onValueChange={handleTabChange} className='decoration-theme-black shadow-md rounded-lg p-4 sm:p-6 md:p-8 bg-transparent border border-gray-200 dark:border-[#FE645F] border-solid w-full'>
+        <TabsList className='grid grid-cols-2 mb-6 sm:mb-8 md:mb-10 bg-transparent p-0 gap-4 sm:gap-6 md:gap-10 w-full sm:w-fit mx-auto'>
+          <TabsTrigger 
+            value='my-profile' 
+            className='bg-transparent w-full sm:w-fit text-base sm:text-lg md:text-xl decoration-theme-black border-0 border-b-2 border-gray-300 dark:border-gray-700 data-[state=active]:border-gray-800 dark:data-[state=active]:border-gray-200 data-[state=active]:text-gray-900 dark:data-[state=active]:text-gray-100 data-[state=active]:font-semibold text-gray-500 dark:text-gray-400 rounded-none pb-2 sm:pb-3 cursor-pointer hover:text-gray-900 dark:hover:text-gray-100'
+          >
+            {t('profile.myProfile')}
+          </TabsTrigger>
+          <TabsTrigger 
+            value='kyc' 
+            className='bg-transparent w-full sm:w-fit text-base sm:text-lg md:text-xl decoration-theme-black border-0 border-b-2 border-gray-300 dark:border-gray-700 data-[state=active]:border-gray-800 dark:data-[state=active]:border-gray-200 data-[state=active]:text-gray-900 dark:data-[state=active]:text-gray-100 data-[state=active]:font-semibold text-gray-500 dark:text-gray-400 rounded-none pb-2 sm:pb-3 cursor-pointer hover:text-gray-900 dark:hover:text-gray-100'
+          >
+            {t('profile.kyc')}
+          </TabsTrigger>
+        </TabsList>
+        <div className='w-full max-w-4xl min-w-0 sm:min-w-[500px] md:min-w-[684.52px] min-h-[400px] sm:min-h-[500px] md:min-h-[615.5px] mx-auto bg-transparent rounded-lg border border-gray-200 dark:border-[#FE645F] flex items-center justify-center'>
+          <div className='mt-0 w-full px-2 sm:px-0'>
             {children}
-           </div>
           </div>
-        </Tabs>
+        </div>
+      </Tabs>
     </div>
   )
 }

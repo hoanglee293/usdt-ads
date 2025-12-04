@@ -152,7 +152,52 @@
     "loading": "Đang tải thông tin...",
     "loadError": "Không thể tải thông tin hồ sơ",
     "updateError": "Không thể cập nhật thông tin. Vui lòng thử lại.",
-    "referral": "Giới thiệu:"
+    "referral": "Giới thiệu:",
+    "myProfile": "My Profile",
+    "kyc": "KYC"
+  },
+  "kyc": {
+    "title": "Xác thực KYC",
+    "subtitle": "Vui lòng cung cấp thông tin CMND/CCCD để xác thực danh tính",
+    "idCardNumber": "Số CMND/CCCD",
+    "idCardNumberPlaceholder": "Nhập số CMND/CCCD",
+    "idCardNumberRequired": "Vui lòng nhập số CMND/CCCD",
+    "frontImage": "Ảnh mặt trước CMND/CCCD",
+    "backImage": "Ảnh mặt sau CMND/CCCD",
+    "clickToUploadFront": "Click để upload ảnh mặt trước",
+    "clickToUploadBack": "Click để upload ảnh mặt sau",
+    "fileFormat": "JPG, PNG (tối đa 5MB)",
+    "pleaseSelectImage": "Vui lòng chọn file ảnh",
+    "fileSizeExceeded": "Kích thước file không được vượt quá 5MB",
+    "pleaseUploadBothImages": "Vui lòng upload đầy đủ ảnh mặt trước và mặt sau",
+    "submitKyc": "Gửi Yêu Cầu KYC",
+    "retryKyc": "Gửi Lại Yêu Cầu KYC",
+    "processing": "Đang xử lý...",
+    "submitSuccess": "Gửi yêu cầu KYC thành công!",
+    "retrySuccess": "Gửi lại yêu cầu KYC thành công!",
+    "submitError": "Không thể gửi yêu cầu KYC. Vui lòng thử lại.",
+    "loadingKycInfo": "Đang tải thông tin KYC...",
+    "status": {
+      "pending": "Đang chờ duyệt",
+      "approved": "Đã được duyệt",
+      "rejected": "Bị từ chối - Vui lòng gửi lại",
+      "none": "Chưa xác thực"
+    },
+    "approved": {
+      "title": "KYC Đã Được Xác Thực",
+      "message": "Tài khoản của bạn đã được xác thực thành công."
+    },
+    "pending": {
+      "title": "Đang Chờ Duyệt KYC",
+      "message": "Yêu cầu KYC của bạn đang được xử lý. Vui lòng chờ phản hồi từ hệ thống."
+    },
+    "info": {
+      "title": "Thông tin quan trọng",
+      "item1": "Ảnh phải rõ ràng, đầy đủ thông tin",
+      "item2": "Đảm bảo ảnh không bị mờ, không bị che khuất",
+      "item3": "Kích thước file không quá 5MB"
+    },
+    "required": "*"
   },
   "auth": {
     "resetPasswordError": "Không thể gửi yêu cầu đặt lại mật khẩu. Vui lòng thử lại sau.",

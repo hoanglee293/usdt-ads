@@ -31,12 +31,13 @@ const CustomDateInput: React.FC<CustomDateInputProps> = ({
                 className={`
                     w-full px-4 py-3 pr-10
                     border border-solid 
-                    focus:border-gray-300 
-                    border-theme-gray-100 
+                    focus:border-gray-300 dark:focus:border-gray-600
+                    border-theme-gray-100 dark:border-gray-700
                     rounded-full 
                     outline-none 
                     transition-all
-                    bg-gray-50
+                    bg-gray-50 dark:bg-gray-800
+                    text-gray-900 dark:text-gray-200
                     disabled:cursor-not-allowed
                     ${className}
                 `}
@@ -44,7 +45,7 @@ const CustomDateInput: React.FC<CustomDateInputProps> = ({
             <div className='absolute right-4 top-1/2 transform -translate-y-1/2 pointer-events-none'>
                 <Calendar 
                     size={18} 
-                    className={`text-gray-400 ${disabled ? 'opacity-50' : ''}`}
+                    className={`text-gray-400 dark:text-gray-500 ${disabled ? 'opacity-50' : ''}`}
                 />
             </div>
         </div>

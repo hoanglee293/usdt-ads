@@ -1,15 +1,33 @@
 'use client'
-import React, { useState, useRef } from 'react'
-import { User2, Upload, X, CheckCircle, Clock, XCircle, AlertCircle } from 'lucide-react'
-import { useSubmitKyc, useRetryKyc } from '@/hooks/useKyc'
+import React, { useState, useRef, useEffect } from 'react'
+import { Upload, X, CheckCircle, Clock, XCircle, AlertCircle } from 'lucide-react'
+import { useSubmitKyc, useRetryKyc, useKycStatus } from '@/hooks/useKyc'
+import { useLang } from '@/lang/useLang'
 import toast from 'react-hot-toast'
 
-// Mock KYC status - In production, this should come from API
-// For now, we'll assume user can submit KYC
+// UI status type (mapped from API status)
 type KycStatus = 'none' | 'pending' | 'approved' | 'rejected' | 'retry'
 
+// Map API status to UI status
+const mapApiStatusToUiStatus = (apiStatus: "verify" | "retry" | "pending" | "not-verified" | null): KycStatus => {
+    switch (apiStatus) {
+        case 'verify':
+            return 'approved'
+        case 'retry':
+            return 'retry'
+        case 'pending':
+            return 'pending'
+        case 'not-verified':
+            return 'none'
+        default:
+            return 'none'
+    }
+}
+
 export default function KycPage() {
-    const [kycStatus, setKycStatus] = useState<KycStatus>('none') // In production, fetch from API
+    const { t } = useLang()
+    const { status: apiStatus, isLoading: isLoadingStatus, refetch: refetchKycStatus } = useKycStatus()
+    const [kycStatus, setKycStatus] = useState<KycStatus>('none')
     const [idCardNumber, setIdCardNumber] = useState('')
     const [frontImage, setFrontImage] = useState<File | null>(null)
     const [backImage, setBackImage] = useState<File | null>(null)
@@ -22,7 +40,14 @@ export default function KycPage() {
     const { submitKyc, isLoading: isSubmitting } = useSubmitKyc()
     const { retryKyc, isLoading: isRetrying } = useRetryKyc()
 
-    const isLoading = isSubmitting || isRetrying
+    const isLoading = isSubmitting || isRetrying || isLoadingStatus
+
+    // Update UI status when API status changes
+    useEffect(() => {
+        if (apiStatus !== null) {
+            setKycStatus(mapApiStatusToUiStatus(apiStatus))
+        }
+    }, [apiStatus])
 
     // Handle front image upload
     const handleFrontImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -30,12 +55,12 @@ export default function KycPage() {
         if (file) {
             // Validate file type
             if (!file.type.startsWith('image/')) {
-                toast.error('Vui lòng chọn file ảnh')
+                toast.error(t('kyc.pleaseSelectImage'))
                 return
             }
             // Validate file size (max 5MB)
             if (file.size > 5 * 1024 * 1024) {
-                toast.error('Kích thước file không được vượt quá 5MB')
+                toast.error(t('kyc.fileSizeExceeded'))
                 return
             }
             setFrontImage(file)
@@ -53,12 +78,12 @@ export default function KycPage() {
         if (file) {
             // Validate file type
             if (!file.type.startsWith('image/')) {
-                toast.error('Vui lòng chọn file ảnh')
+                toast.error(t('kyc.pleaseSelectImage'))
                 return
             }
             // Validate file size (max 5MB)
             if (file.size > 5 * 1024 * 1024) {
-                toast.error('Kích thước file không được vượt quá 5MB')
+                toast.error(t('kyc.fileSizeExceeded'))
                 return
             }
             setBackImage(file)
@@ -94,12 +119,12 @@ export default function KycPage() {
 
         // Validation
         if (!idCardNumber.trim()) {
-            toast.error('Vui lòng nhập số CMND/CCCD')
+            toast.error(t('kyc.idCardNumberRequired'))
             return
         }
 
         if (!frontImage || !backImage) {
-            toast.error('Vui lòng upload đầy đủ ảnh mặt trước và mặt sau')
+            toast.error(t('kyc.pleaseUploadBothImages'))
             return
         }
 
@@ -110,17 +135,18 @@ export default function KycPage() {
                     id_card_number: idCardNumber.trim(),
                     images: [frontImage, backImage],
                 })
-                toast.success('Gửi lại yêu cầu KYC thành công!')
-                setKycStatus('pending')
+                toast.success(t('kyc.retrySuccess'))
             } else {
                 // Submit new KYC
                 await submitKyc({
                     id_card_number: idCardNumber.trim(),
                     images: [frontImage, backImage],
                 })
-                toast.success('Gửi yêu cầu KYC thành công!')
-                setKycStatus('pending')
+                toast.success(t('kyc.submitSuccess'))
             }
+
+            // Refetch KYC status to update UI
+            await refetchKycStatus()
 
             // Reset form
             setIdCardNumber('')
@@ -134,7 +160,7 @@ export default function KycPage() {
             const errorMessage =
                 error?.message ||
                 error?.response?.data?.message ||
-                'Không thể gửi yêu cầu KYC. Vui lòng thử lại.'
+                t('kyc.submitError')
             toast.error(errorMessage)
         }
     }
@@ -144,24 +170,24 @@ export default function KycPage() {
         switch (kycStatus) {
             case 'pending':
                 return (
-                    <div className='flex items-center gap-2 text-yellow-600 bg-yellow-50 px-4 py-2 rounded-full'>
-                        <Clock size={20} />
-                        <span className='font-semibold'>Đang chờ duyệt</span>
+                    <div className='flex items-center gap-1.5 sm:gap-2 text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/30 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full'>
+                        <Clock size={18} className='sm:w-5 sm:h-5' />
+                        <span className='font-semibold text-sm sm:text-base'>{t('kyc.status.pending')}</span>
                     </div>
                 )
             case 'approved':
                 return (
-                    <div className='flex items-center gap-2 text-green-600 bg-green-50 px-4 py-2 rounded-full'>
-                        <CheckCircle size={20} />
-                        <span className='font-semibold'>Đã được duyệt</span>
+                    <div className='flex items-center gap-1.5 sm:gap-2 text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/30 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full'>
+                        <CheckCircle size={18} className='sm:w-5 sm:h-5' />
+                        <span className='font-semibold text-sm sm:text-base'>{t('kyc.status.approved')}</span>
                     </div>
                 )
             case 'rejected':
             case 'retry':
                 return (
-                    <div className='flex items-center gap-2 text-red-600 bg-red-50 px-4 py-2 rounded-full'>
-                        <XCircle size={20} />
-                        <span className='font-semibold'>Bị từ chối - Vui lòng gửi lại</span>
+                    <div className='flex items-center gap-1.5 sm:gap-2 text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/30 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full'>
+                        <XCircle size={18} className='sm:w-5 sm:h-5' />
+                        <span className='font-semibold text-sm sm:text-base'>{t('kyc.status.rejected')}</span>
                     </div>
                 )
             default:
@@ -172,13 +198,14 @@ export default function KycPage() {
     // If KYC is approved, show success message
     if (kycStatus === 'approved') {
         return (
-            <div className='w-full max-w-2xl mx-auto p-8'>
-                <div className='flex flex-col items-center justify-center text-center space-y-4'>
-                    <div className='flex justify-center items-center bg-green-100 rounded-full p-4 w-20 h-20'>
-                        <CheckCircle size={40} className='text-green-600' />
+            <div className='w-full max-w-2xl mx-auto p-4 sm:p-6 md:p-8'>
+                <div className='flex flex-col items-center justify-center text-center space-y-3 sm:space-y-4 pb-4'>
+                    <div className='flex justify-center items-center bg-green-100 dark:bg-green-900/30 rounded-full p-3 sm:p-4 w-16 h-16 sm:w-20 sm:h-20'>
+                        <CheckCircle size={32} className='sm:w-10 sm:h-10 text-green-600 dark:text-green-400' />
                     </div>
-                    <h1 className='text-2xl font-semibold text-gray-800'>KYC Đã Được Xác Thực</h1>
-                    <p className='text-gray-600'>Tài khoản của bạn đã được xác thực thành công.</p>
+                    <h1 className='text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-200'>{t('kyc.approved.title')}</h1>
+                    <img src='/kyc.png' alt='KYC Pending' className='w-full h-auto max-w-[280px] sm:max-w-[320px] md:max-w-96 mx-auto' />
+                    <p className='text-sm sm:text-base text-gray-600 dark:text-gray-400'>{t('kyc.approved.message')}</p>
                 </div>
             </div>
         )
@@ -187,14 +214,27 @@ export default function KycPage() {
     // If KYC is pending, show pending message
     if (kycStatus === 'pending') {
         return (
-            <div className='w-full max-w-2xl mx-auto p-8'>
-                <div className='flex flex-col items-center justify-center text-center space-y-4'>
-                    <div className='flex justify-center items-center bg-yellow-100 rounded-full p-4 w-20 h-20'>
-                        <Clock size={40} className='text-yellow-600' />
+            <div className='w-full max-w-2xl mx-auto p-4 sm:p-6 md:p-8'>
+                <div className='flex flex-col items-center justify-center text-center space-y-3 sm:space-y-4 pb-4'>
+                    <div className='flex justify-center items-center bg-yellow-100 dark:bg-yellow-900/30 rounded-full p-3 sm:p-4 w-16 h-16 sm:w-20 sm:h-20'>
+                        <Clock size={32} className='sm:w-10 sm:h-10 text-yellow-600 dark:text-yellow-400' />
                     </div>
-                    <h1 className='text-2xl font-semibold text-gray-800'>Đang Chờ Duyệt KYC</h1>
-                    <p className='text-gray-600'>Yêu cầu KYC của bạn đang được xử lý. Vui lòng chờ phản hồi từ hệ thống.</p>
+                    <h1 className='text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-200'>{t('kyc.pending.title')}</h1>
+                    <img src='/kyc.png' alt='KYC Pending' className='w-full h-auto max-w-[280px] sm:max-w-[320px] md:max-w-96 mx-auto' />
+                    <p className='text-sm sm:text-base text-gray-600 dark:text-gray-400'>{t('kyc.pending.message')}</p>
                     {renderStatusBadge()}
+                </div>
+            </div>
+        )
+    }
+
+    // Show loading state while fetching KYC status
+    if (isLoadingStatus) {
+        return (
+            <div className='w-full max-w-2xl mx-auto p-4 sm:p-6 md:p-8'>
+                <div className='flex flex-col items-center justify-center text-center space-y-3 sm:space-y-4'>
+                    <div className='animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-purple-600 dark:border-purple-400'></div>
+                    <p className='text-sm sm:text-base text-gray-600 dark:text-gray-400'>{t('kyc.loadingKycInfo')}</p>
                 </div>
             </div>
         )
@@ -203,58 +243,58 @@ export default function KycPage() {
     return (
         <div className='w-full'>
             <div className='text-center'>
-                <p className='text-gray-600 mb-4'>Vui lòng cung cấp thông tin CMND/CCCD để xác thực danh tính</p>
+                <p className='text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-400 mb-3 sm:mb-4'>{t('kyc.subtitle')}</p>
                 {renderStatusBadge()}
             </div>
 
-            <form onSubmit={handleSubmit} className='space-y-6'>
+            <form onSubmit={handleSubmit} className='space-y-4 sm:space-y-6'>
                 {/* ID Card Number */}
                 <div className='space-y-2'>
-                    <label htmlFor='id_card_number' className='block text-sm font-semibold text-gray-700'>
-                        Số CMND/CCCD <span className='text-red-500'>*</span>
+                    <label htmlFor='id_card_number' className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
+                        {t('kyc.idCardNumber')} <span className='text-red-500 dark:text-red-400'>{t('kyc.required')}</span>
                     </label>
                     <input
                         id='id_card_number'
                         type='text'
                         value={idCardNumber}
                         onChange={(e) => setIdCardNumber(e.target.value)}
-                        placeholder='Nhập số CMND/CCCD'
+                        placeholder={t('kyc.idCardNumberPlaceholder')}
                         disabled={isLoading}
-                        className='w-full px-4 py-3 border border-solid focus:border-gray-300 border-theme-gray-100 rounded-full outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                        className='w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-sm sm:text-base text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500'
                         required
                     />
                 </div>
 
-        <div className='flex gap-4'>
+        <div className='flex flex-col sm:flex-row gap-4'>
                     {/* Front Image Upload */}
-                    <div className='space-y-2'>
-                        <label className='block text-sm font-semibold text-gray-700'>
-                            Ảnh mặt trước CMND/CCCD <span className='text-red-500'>*</span>
+                    <div className='space-y-2 flex-1'>
+                        <label className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
+                            {t('kyc.frontImage')} <span className='text-red-500 dark:text-red-400'>{t('kyc.required')}</span>
                         </label>
                         {frontImagePreview ? (
                             <div className='relative'>
                                 <img
                                     src={frontImagePreview}
                                     alt='Front ID Card'
-                                    className='w-full h-52 object-contain border border-theme-gray-100 rounded-lg'
+                                    className='w-full h-40 sm:h-48 md:h-52 object-contain border border-theme-gray-100 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800'
                                 />
                                 <button
                                     type='button'
                                     onClick={removeFrontImage}
                                     disabled={isLoading}
-                                    className='absolute border-none outline-none top-[-5px] right-[-5px] bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-all disabled:opacity-50 w-7 h-7 flex items-center justify-center'
+                                    className='absolute border-none outline-none top-[-5px] right-[-5px] bg-red-500 dark:bg-red-600 text-white rounded-full p-1.5 sm:p-2 hover:bg-red-600 dark:hover:bg-red-700 transition-all disabled:opacity-50 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center'
                                 >
-                                    <X size={16} className='w-4 h-4' />
+                                    <X size={14} className='sm:w-4 sm:h-4' />
                                 </button>
                             </div>
                         ) : (
                             <div
                                 onClick={() => frontImageInputRef.current?.click()}
-                                className='border-2 border-dashed min-h-52  flex flex-col justify-center items-center  border-theme-gray-100 rounded-lg p-8 text-center cursor-pointer hover:border-purple-400 transition-all'
+                                className='border-2 border-dashed min-h-40 sm:min-h-48 md:min-h-52 flex flex-col justify-center items-center border-theme-gray-100 dark:border-gray-700 rounded-lg p-4 sm:p-6 md:p-8 text-center cursor-pointer hover:border-purple-400 dark:hover:border-purple-500 transition-all bg-white dark:bg-gray-800'
                             >
-                                <Upload size={32} className='mx-auto text-gray-400 mb-2' />
-                                <p className='text-gray-600'>Click để upload ảnh mặt trước</p>
-                                <p className='text-sm text-gray-400 mt-1'>JPG, PNG (tối đa 5MB)</p>
+                                <Upload size={24} className='sm:w-8 sm:h-8 mx-auto text-gray-400 dark:text-gray-500 mb-2' />
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-400'>{t('kyc.clickToUploadFront')}</p>
+                                <p className='text-xs sm:text-sm text-gray-400 dark:text-gray-500 mt-1'>{t('kyc.fileFormat')}</p>
                             </div>
                         )}
                         <input
@@ -268,34 +308,34 @@ export default function KycPage() {
                     </div>
 
                     {/* Back Image Upload */}
-                    <div className='space-y-2'>
-                        <label className='block text-sm font-semibold text-gray-700'>
-                            Ảnh mặt sau CMND/CCCD <span className='text-red-500'>*</span>
+                    <div className='space-y-2 flex-1'>
+                        <label className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
+                            {t('kyc.backImage')} <span className='text-red-500 dark:text-red-400'>{t('kyc.required')}</span>
                         </label>
                         {backImagePreview ? (
                             <div className='relative'>
                                 <img
                                     src={backImagePreview}
                                     alt='Back ID Card'
-                                    className='w-full h-52 object-contain border border-theme-gray-100 rounded-lg'
+                                    className='w-full h-40 sm:h-48 md:h-52 object-contain border border-theme-gray-100 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800'
                                 />
                                 <button
                                     type='button'
                                     onClick={removeBackImage}
                                     disabled={isLoading}
-                                    className='absolute top-[-5px] right-[-5px] border-none outline-none bg-red-500 text-white rounded-full p-2 hover:bg-red-600 transition-all disabled:opacity-50 w-7 h-7 flex items-center justify-center'
+                                    className='absolute top-[-5px] right-[-5px] border-none outline-none bg-red-500 dark:bg-red-600 text-white rounded-full p-1.5 sm:p-2 hover:bg-red-600 dark:hover:bg-red-700 transition-all disabled:opacity-50 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center'
                                 >
-                                    <X size={16} className='w-4 h-4' />
+                                    <X size={14} className='sm:w-4 sm:h-4' />
                                 </button>
                             </div>
                         ) : (
                             <div
                                 onClick={() => backImageInputRef.current?.click()}
-                                className='border-2 border-dashed min-h-52 flex flex-col justify-center items-center border-theme-gray-100 rounded-lg p-8 text-center cursor-pointer hover:border-purple-400 transition-all'
+                                className='border-2 border-dashed min-h-40 sm:min-h-48 md:min-h-52 flex flex-col justify-center items-center border-theme-gray-100 dark:border-gray-700 rounded-lg p-4 sm:p-6 md:p-8 text-center cursor-pointer hover:border-purple-400 dark:hover:border-purple-500 transition-all bg-white dark:bg-gray-800'
                             >
-                                <Upload size={32} className='mx-auto text-gray-400 mb-2' />
-                                <p className='text-gray-600'>Click để upload ảnh mặt sau</p>
-                                <p className='text-sm text-gray-400 mt-1'>JPG, PNG (tối đa 5MB)</p>
+                                <Upload size={24} className='sm:w-8 sm:h-8 mx-auto text-gray-400 dark:text-gray-500 mb-2' />
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-400'>{t('kyc.clickToUploadBack')}</p>
+                                <p className='text-xs sm:text-sm text-gray-400 dark:text-gray-500 mt-1'>{t('kyc.fileFormat')}</p>
                             </div>
                         )}
                         <input
@@ -310,13 +350,13 @@ export default function KycPage() {
                 </div>
 
                 {/* Info Alert */}
-                <div className='bg-blue-50 border border-blue-200 rounded-lg p-4 flex gap-3'>
-                    <AlertCircle className='text-blue-600 flex-shrink-0 mt-0.5' size={20} />
-                    <div className='text-sm text-blue-800'>
+                <div className='bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-lg p-3 sm:p-4 flex flex-col sm:flex-row gap-2 sm:gap-3'>
+                    <AlertCircle className='text-blue-600 dark:text-blue-400 flex-shrink-0 self-start sm:mt-0.5' size={18} />
+                    <div className='text-xs sm:text-sm text-blue-800 dark:text-blue-300'>
                         <ul className='list-disc list-inside space-y-1'>
-                            <li>Ảnh phải rõ ràng, đầy đủ thông tin</li>
-                            <li>Đảm bảo ảnh không bị mờ, không bị che khuất</li>
-                            <li>Kích thước file không quá 5MB</li>
+                            <li>{t('kyc.info.item1')}</li>
+                            <li>{t('kyc.info.item2')}</li>
+                            <li>{t('kyc.info.item3')}</li>
                         </ul>
                     </div>
                 </div>
@@ -325,17 +365,17 @@ export default function KycPage() {
                 <button
                     type='submit'
                     disabled={isLoading || !idCardNumber.trim() || !frontImage || !backImage}
-                    className='w-full bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 border-none outline-none text-white py-3 px-6 rounded-full font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
+                    className='w-full bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 dark:from-fuchsia-500 dark:via-rose-400 dark:to-indigo-400 border-none outline-none text-white py-3 sm:py-3 px-6 rounded-full text-sm sm:text-base font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2'
                 >
                     {isLoading ? (
                         <>
                             <div className='animate-spin rounded-full h-5 w-5 border-b-2 border-white'></div>
-                            <span>Đang xử lý...</span>
+                            <span>{t('kyc.processing')}</span>
                         </>
                     ) : kycStatus === 'retry' || kycStatus === 'rejected' ? (
-                        'Gửi Lại Yêu Cầu KYC'
+                        t('kyc.retryKyc')
                     ) : (
-                        'Gửi Yêu Cầu KYC'
+                        t('kyc.submitKyc')
                     )}
                 </button>
             </form>

@@ -44,6 +44,10 @@ const config: Config = {
           pink: {
             DEFAULT: '#ffeaea',
             100: '#ffeaea',
+          },
+          orange: {
+            DEFAULT: '#FFA500',
+            100: '#FE635D',
           }
         }
       },
@@ -199,6 +203,9 @@ const config: Config = {
           'background': 'radial-gradient(139.32% 65.26% at 50% 0%, #FE645F 34.83%, #fdb7fe59, rgba(253, 183, 254, 0) 100%)',
           'background-blend-mode': 'multiply',
           'flex-shrink': '0',
+        },
+        '.bg-gradient-secondary': {
+          'background': 'linear-gradient(90deg, #EA2EC6 0%, #F63753 49.03%, #7056F2 100%)',
         },
       });
     }),

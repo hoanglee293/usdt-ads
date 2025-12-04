@@ -139,6 +139,17 @@ export interface KycErrorResponse {
   message: string;
 }
 
+// KYC Status API Types
+export interface KycStatusResponse {
+  statusCode: 200;
+  status: "verify" | "retry" | "pending" | "not-verified";
+}
+
+export interface KycStatusErrorResponse {
+  statusCode: 401 | 403;
+  message: string;
+}
+
 export const loginPassword = async (email: string, password: string): Promise<LoginSuccessResponse> => {
   try {
     const response = await axiosClient.post<LoginSuccessResponse>('/users/login', { 
@@ -294,6 +305,20 @@ export const retryKyc = async (data: KycSubmitRequest): Promise<KycSubmitRespons
     // API returns error response with statusCode and message
     if (error.response?.data) {
       throw error.response.data as KycErrorResponse;
+    }
+    console.error(error);
+    throw error;
+  }
+}
+
+export const getKycStatus = async (): Promise<KycStatusResponse> => {
+  try {
+    const response = await axiosClient.get<KycStatusResponse>('/users/kyc-status');
+    return response.data;
+  } catch (error: any) {
+    // API returns error response with statusCode and message
+    if (error.response?.data) {
+      throw error.response.data as KycStatusErrorResponse;
     }
     console.error(error);
     throw error;

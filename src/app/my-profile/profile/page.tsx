@@ -115,10 +115,10 @@ const ProfilePage = () => {
 
   if (profileLoading) {
     return (
-      <div className='w-full flex justify-center items-center p-6'>
+      <div className='w-full flex justify-center items-center p-4 sm:p-6'>
         <div className='text-center'>
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600 mx-auto"></div>
-          <p className='mt-4 text-gray-600'>Đang tải thông tin...</p>
+          <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-purple-600 dark:border-purple-400 mx-auto"></div>
+          <p className='mt-3 sm:mt-4 text-sm sm:text-base text-gray-600 dark:text-gray-400'>Đang tải thông tin...</p>
         </div>
       </div>
     )
@@ -126,9 +126,9 @@ const ProfilePage = () => {
 
   if (profileError || !profile) {
     return (
-      <div className='w-full flex justify-center items-center p-6'>
+      <div className='w-full flex justify-center items-center p-4 sm:p-6'>
         <div className='text-center'>
-          <p className='text-red-600 text-lg'>
+          <p className='text-sm sm:text-base md:text-lg text-red-600 dark:text-red-400'>
             {profileError?.message || 'Không thể tải thông tin profile'}
           </p>
         </div>
@@ -137,14 +137,14 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className='space-y-6'>
-      <div className='flex justify-center items-center bg-theme-gray-100 rounded-full p-2 w-20 h-20 mx-auto'>
-        <User2 size={32} />
+    <div className='space-y-4 sm:space-y-6'>
+      <div className='flex justify-center items-center bg-theme-gray-100 dark:bg-gray-800 rounded-full p-1.5 sm:p-2 w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-6 sm:mb-8 md:mb-[10%]'>
+        <User2 size={24} className='sm:w-8 sm:h-8 text-gray-700 dark:text-gray-300' />
       </div>
       {/* Display Name */}
       <div className='space-y-2'>
-        <label htmlFor="display_name" className='block text-sm font-semibold text-gray-700'>
-          Tên hiển thị <span className='text-red-500'>*</span>
+        <label htmlFor="display_name" className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
+          Tên hiển thị <span className='text-red-500 dark:text-red-400'>*</span>
         </label>
         <div className='relative'>
           {editingField === 'displayName' ? (
@@ -156,27 +156,27 @@ const ProfilePage = () => {
                 onChange={(e) => setTempDisplayName(e.target.value)}
                 placeholder='Nhập tên hiển thị'
                 disabled={updateLoading}
-                className='w-full px-4 py-3 pr-24 border border-solid focus:border-gray-300 border-theme-gray-100 rounded-full outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                className='w-full px-3 sm:px-4 py-2.5 sm:py-3 pr-20 sm:pr-24 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-sm sm:text-base text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500'
                 autoFocus
               />
-              <div className='absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-2'>
+              <div className='absolute right-1.5 sm:right-2 top-1/2 transform -translate-y-1/2 flex gap-1.5 sm:gap-2'>
                 <button
                   type="button"
                   onClick={() => handleSaveField('displayName')}
                   disabled={updateLoading}
-                  className='h-9 w-9 flex items-center justify-center bg-green-500 text-white rounded-full border-none hover:bg-green-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                  className='h-10 w-10 sm:h-9 sm:w-9 flex items-center justify-center bg-green-500 dark:bg-green-600 text-white rounded-full border-none hover:bg-green-600 dark:hover:bg-green-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
                   title='Lưu'
                 >
-                  <Check size={20} />
+                  <Check size={18} className='sm:w-5 sm:h-5' />
                 </button>
                 <button
                   type="button"
                   onClick={handleCancelEdit}
                   disabled={updateLoading}
-                  className='h-9 w-9 flex items-center justify-center bg-red-500 text-white rounded-full border-none hover:bg-red-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                  className='h-10 w-10 sm:h-9 sm:w-9 flex items-center justify-center bg-red-500 dark:bg-red-600 text-white rounded-full border-none hover:bg-red-600 dark:hover:bg-red-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
                   title='Hủy'
                 >
-                  <X size={20} />
+                  <X size={18} className='sm:w-5 sm:h-5' />
                 </button>
               </div>
             </>
@@ -187,58 +187,58 @@ const ProfilePage = () => {
                 type="text"
                 value={displayName}
                 disabled
-                className='w-full px-4 py-3 pr-12 border border-solid border-theme-gray-100 rounded-full outline-none bg-gray-50 text-gray-900 cursor-not-allowed'
+                className='w-full px-3 sm:px-4 py-2.5 sm:py-3 pr-10 sm:pr-12 border border-solid border-theme-gray-100 dark:border-gray-700 rounded-full outline-none bg-gray-50 dark:bg-gray-800 text-sm sm:text-base text-gray-900 dark:text-gray-300 cursor-not-allowed'
               />
               <button
                 type="button"
                 onClick={() => handleEditField('displayName')}
                 disabled={updateLoading}
-                className='absolute right-3 top-1/2 transform -translate-y-1/2 p-1.5 text-gray-500 hover:text-purple-600 hover:bg-purple-50 bg-transparent border-none rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                className='absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 p-1.5 text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/30 bg-transparent border-none rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed'
                 title='Chỉnh sửa'
               >
-                <Pencil size={20} />
+                <Pencil size={18} className='sm:w-5 sm:h-5' />
               </button>
             </>
           )}
         </div>
       </div>
-      <div className='flex justify-between items-center gap-6'>
+      <div className='flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 sm:gap-6'>
         {/* Read-only fields */}
         <div className='space-y-2 flex-1'>
-          <label className='block text-sm font-semibold text-gray-700'>
+          <label className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
             Email
           </label>
           <input
             type="email"
             value={profile.email || ''}
             disabled
-            className='w-full px-4 py-3 border border-solid border-theme-gray-100 rounded-full outline-none bg-white text-gray-600 cursor-not-allowed'
+            className='w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-solid border-theme-gray-100 dark:border-gray-700 rounded-full outline-none bg-white dark:bg-gray-800 text-sm sm:text-base text-gray-600 dark:text-gray-400 cursor-not-allowed'
           />
         </div>
 
         <div className='space-y-2 flex-1'>
-          <label className='block text-sm font-semibold text-gray-700'>
+          <label className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
             Tên đăng nhập
           </label>
           <input
             type="text"
             value={profile.name || ''}
             disabled
-            className='w-full px-4 py-3 border border-solid border-theme-gray-100 rounded-full outline-none bg-white text-gray-600 cursor-not-allowed'
+            className='w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-solid border-theme-gray-100 dark:border-gray-700 rounded-full outline-none bg-white dark:bg-gray-800 text-sm sm:text-base text-gray-600 dark:text-gray-400 cursor-not-allowed'
           />
         </div>
       </div>
 
-      <div className='flex justify-between items-center gap-6'>
+      <div className='flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 sm:gap-6'>
         {/* Birthday */}
         <div className='space-y-2 flex-1'>
-          <label htmlFor="birthday" className='block text-sm font-semibold text-gray-700'>
+          <label htmlFor="birthday" className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
             Ngày sinh
           </label>
           <div className='relative'>
             {editingField === 'birthday' ? (
               <>
-                <div className='pr-24'>
+                <div className='pr-20 sm:pr-24'>
                   <CustomDateInput
                     id="birthday"
                     value={tempBirthday}
@@ -247,30 +247,30 @@ const ProfilePage = () => {
                     placeholder='Chọn ngày sinh'
                   />
                 </div>
-                <div className='absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-2'>
+                <div className='absolute right-1.5 sm:right-2 top-1/2 transform -translate-y-1/2 flex gap-1.5 sm:gap-2'>
                   <button
                     type="button"
                     onClick={() => handleSaveField('birthday')}
                     disabled={updateLoading}
-                    className='h-9 w-9 flex items-center justify-center border-none bg-green-500 text-white rounded-full hover:bg-green-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                    className='h-10 w-10 sm:h-9 sm:w-9 flex items-center justify-center border-none bg-green-500 dark:bg-green-600 text-white rounded-full hover:bg-green-600 dark:hover:bg-green-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
                     title='Lưu'
                   >
-                    <Check size={16} />
+                    <Check size={16} className='sm:w-4 sm:h-4' />
                   </button>
                   <button
                     type="button"
                     onClick={handleCancelEdit}
                     disabled={updateLoading}
-                    className='h-9 w-9 flex items-center justify-center border-none bg-red-500 text-white rounded-full hover:bg-red-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                    className='h-10 w-10 sm:h-9 sm:w-9 flex items-center justify-center border-none bg-red-500 dark:bg-red-600 text-white rounded-full hover:bg-red-600 dark:hover:bg-red-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
                     title='Hủy'
                   >
-                    <X size={16} />
+                    <X size={16} className='sm:w-4 sm:h-4' />
                   </button>
                 </div>
               </>
             ) : (
               <>
-                <div className='pr-12'>
+                <div className='pr-10 sm:pr-12'>
                   <CustomDateInput
                     id="birthday"
                     value={birthday}
@@ -283,10 +283,10 @@ const ProfilePage = () => {
                   type="button"
                   onClick={() => handleEditField('birthday')}
                   disabled={updateLoading}
-                  className='absolute right-3 top-1/2 transform -translate-y-1/2 p-1.5 text-gray-500 hover:text-purple-600 hover:bg-purple-50 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed z-10 border-none bg-transparent'
+                  className='absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 p-1.5 text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/30 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed z-10 border-none bg-transparent'
                   title='Chỉnh sửa'
                 >
-                  <Pencil size={20} />
+                  <Pencil size={18} className='sm:w-5 sm:h-5' />
                 </button>
               </>
             )}
@@ -295,13 +295,13 @@ const ProfilePage = () => {
 
         {/* Sex */}
         <div className='space-y-2 flex-1'>
-          <label htmlFor="sex" className='block text-sm font-semibold text-gray-700'>
+          <label htmlFor="sex" className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
             Giới tính
           </label>
           <div className='relative'>
             {editingField === 'sex' ? (
               <>
-                <div className='pr-24'>
+                <div className='pr-20 sm:pr-24'>
                   <CustomSelect
                     id="sex"
                     value={tempSex}
@@ -310,30 +310,30 @@ const ProfilePage = () => {
                     disabled={updateLoading}
                   />
                 </div>
-                <div className='absolute right-2 top-1/2 transform -translate-y-1/2 flex gap-2'>
+                <div className='absolute right-1.5 sm:right-2 top-1/2 transform -translate-y-1/2 flex gap-1.5 sm:gap-2'>
                   <button
                     type="button"
                     onClick={() => handleSaveField('sex')}
                     disabled={updateLoading}
-                    className='h-9 w-9 flex items-center justify-center bg-green-500 text-white rounded-full border-none hover:bg-green-600 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                    className='h-10 w-10 sm:h-9 sm:w-9 flex items-center justify-center bg-green-500 dark:bg-green-600 text-white rounded-full border-none hover:bg-green-600 dark:hover:bg-green-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
                     title='Lưu'
                   >
-                    <Check size={20} />
+                    <Check size={18} className='sm:w-5 sm:h-5' />
                   </button>
                   <button
                     type="button"
                     onClick={handleCancelEdit}
                     disabled={updateLoading}
-                    className='h-9 w-9 flex items-center justify-center bg-red-500 text-white rounded-full hover:bg-red-600 border-none transition-all disabled:opacity-50 disabled:cursor-not-allowed'
+                    className='h-10 w-10 sm:h-9 sm:w-9 flex items-center justify-center bg-red-500 dark:bg-red-600 text-white rounded-full hover:bg-red-600 dark:hover:bg-red-700 border-none transition-all disabled:opacity-50 disabled:cursor-not-allowed'
                     title='Hủy'
                   >
-                    <X size={20} />
+                    <X size={18} className='sm:w-5 sm:h-5' />
                   </button>
                 </div>
               </>
             ) : (
               <>
-                <div className='pr-12'>
+                <div className='pr-10 sm:pr-12'>
                   <CustomSelect
                     id="sex"
                     value={sex}
@@ -346,10 +346,10 @@ const ProfilePage = () => {
                   type="button"
                   onClick={() => handleEditField('sex')}
                   disabled={updateLoading}
-                  className='absolute right-3 top-1/2 transform -translate-y-1/2 p-1.5 text-gray-500 hover:text-purple-600 hover:bg-purple-50 bg-transparent border-none rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed z-10'
+                  className='absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 p-1.5 text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/30 bg-transparent border-none rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed z-10'
                   title='Chỉnh sửa'
                 >
-                  <Pencil size={20} />
+                  <Pencil size={18} className='sm:w-5 sm:h-5' />
                 </button>
               </>
             )}
@@ -359,25 +359,25 @@ const ProfilePage = () => {
 
       {profile.phone && (
         <div className='space-y-2'>
-          <label className='block text-sm font-semibold text-gray-700'>
+          <label className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
             Số điện thoại
           </label>
           <input
             type="tel"
             value={profile.phone}
             disabled
-            className='w-full px-4 py-3 border border-solid border-theme-gray-100 rounded-full outline-none bg-gray-50 text-gray-600 cursor-not-allowed'
+            className='w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-solid border-theme-gray-100 dark:border-gray-700 rounded-full outline-none bg-gray-50 dark:bg-gray-800 text-sm sm:text-base text-gray-600 dark:text-gray-400 cursor-not-allowed'
           />
         </div>
       )}
 
       {/* Referral */}
-      <div className='flex items-center gap-6'>
-        <label htmlFor="sex" className='block text-sm font-semibold text-gray-700'>
+      <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-6'>
+        <label htmlFor="sex" className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
           Referral:
         </label>
-        <div className='relative text-sm'>
-          <span>{profile.ref}</span>
+        <div className='relative text-sm sm:text-base'>
+          <span className='text-gray-900 dark:text-gray-200 break-all'>{profile.ref}</span>
         </div>
       </div>
     </div>
