@@ -585,7 +585,7 @@ export default function WalletPage() {
                                         <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
                                             {t('wallet.balanceLabel')}: {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                         </span>
-                                        {(balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
+                                        {(balanceResponse.data.balance_gift || balanceResponse.data.balance) && (
                                             <span className='text-sm text-gray-600 dark:text-gray-300 mt-1'>
                                                 ({t('wallet.gift')}: {formatBalance(balanceResponse.data.balance_gift)} | {t('wallet.reward')}: {formatBalance(balanceResponse.data.balance_reward)})
                                             </span>
@@ -621,18 +621,18 @@ export default function WalletPage() {
                 {/* Deposit/Withdraw Buttons */}
                 {selectedNetwork && (
                     <>
-                        <div className='flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 mb-6 sm:mb-10 px-3 sm:px-0'>
+                        <div className='flex flex-col sm:flex-row items-stretch sm:items-center justify-between max-w-xl mx-auto gap-3 sm:gap-10 mb-6 sm:mb-10 px-3 sm:px-0'>
                             <Button
                                 onClick={handleDeposit}
                                 disabled={!hasWallet || !selectedNetwork}
-                                className='w-full cursor-pointer font-semibold uppercase sm:max-w-56 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 inline-flex text-white rounded-full border-none h-11 sm:h-12 text-base sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
+                                className='w-full cursor-pointer font-semibold uppercase sm:max-w-80 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 inline-flex text-white rounded-full border-none h-11 sm:h-12 text-base sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
                             >
                                 {t('wallet.depositButton')}
                             </Button>
                             <Button
                                 onClick={handleWithdraw}
                                 disabled={!hasWallet || !selectedNetwork}
-                                className='w-full cursor-pointer font-semibold uppercase sm:max-w-56 bg-theme-pink-100 inline-flex text-pink-500 rounded-full border-pink-500 border-solid border h-11 sm:h-12 text-base sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
+                                className='w-full cursor-pointer font-semibold uppercase sm:max-w-80 bg-theme-pink-100 inline-flex text-pink-500 rounded-full border-pink-500 border-solid border h-11 sm:h-12 text-base sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
                             >
                                 {t('wallet.withdrawButton')}
                             </Button>
@@ -761,9 +761,7 @@ export default function WalletPage() {
                                                         <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.time')}</th>
                                                         <th className={`${tableHeaderStyles} w-[8%]`}>{t('wallet.tableHeaders.type')}</th>
                                                         <th className={`${tableHeaderStyles} w-[10%]`}>{t('wallet.tableHeaders.amount')}</th>
-                                                        <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.fromAddress')}</th>
-                                                        <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.toAddress')}</th>
-                                                        <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.transactionId')}</th>
+                                                        <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.hash')}</th>
                                                         <th className={`${tableHeaderStyles} w-[11%] text-center rounded-r-lg`}>{t('wallet.tableHeaders.status')}</th>
                                                     </tr>
                                                 </thead>
@@ -804,34 +802,6 @@ export default function WalletPage() {
                                                                 </td>
                                                                 <td className={`${tableCellStyles} w-[10%] border-x-0 border-theme-gray-100 border-solid`}>
                                                                     {transaction.amount}
-                                                                </td>
-                                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                                    <div className='flex items-center gap-2'>
-                                                                        <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
-                                                                            {formatAddress(transaction.fromAddress)}
-                                                                        </span>
-                                                                        <button
-                                                                            onClick={() => handleCopy(transaction.fromAddress, t('wallet.copyLabels.fromAddress'))}
-                                                                            className='text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent mt-1.5'
-                                                                            title={t('wallet.copyAddress')}
-                                                                        >
-                                                                            <Copy className='w-3.5 h-3.5' />
-                                                                        </button>
-                                                                    </div>
-                                                                </td>
-                                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                                    <div className='flex items-center gap-2'>
-                                                                        <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
-                                                                            {formatAddress(transaction.toAddress)}
-                                                                        </span>
-                                                                        <button
-                                                                            onClick={() => handleCopy(transaction.toAddress, t('wallet.copyLabels.toAddress'))}
-                                                                            className='text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent mt-1.5'
-                                                                            title={t('wallet.copyAddress')}
-                                                                        >
-                                                                            <Copy className='w-3.5 h-3.5' />
-                                                                        </button>
-                                                                    </div>
                                                                 </td>
                                                                 <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
                                                                     <div className='flex items-center gap-2'>

@@ -138,7 +138,7 @@ const ProfilePage = () => {
 
   return (
     <div className='space-y-4 sm:space-y-6'>
-      <div className='flex justify-center items-center bg-theme-gray-100 dark:bg-gray-800 rounded-full p-1.5 sm:p-2 w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-6 sm:mb-8 md:mb-[10%]'>
+      <div className='flex justify-center items-center bg-theme-gray-100 dark:bg-gray-800 rounded-full p-1.5 sm:p-2 w-16 h-16 sm:w-20 sm:h-20 mx-auto'>
         <User2 size={24} className='sm:w-8 sm:h-8 text-gray-700 dark:text-gray-300' />
       </div>
       {/* Display Name */}

@@ -9,6 +9,7 @@ import { Skeleton } from '@/ui/skeleton'
 import { Progress } from '@/ui/progress'
 import Modal from '@/components/Modal'
 import { useIsMobile } from '@/ui/use-mobile'
+import { useLang } from '@/lang/useLang'
 import {
     getListCoins,
     getBalance,
@@ -36,11 +37,13 @@ export default function MakeMoneyPage() {
     const queryClient = useQueryClient()
     const tableRef = useRef<HTMLDivElement>(null)
     const isMobile = useIsMobile()
+    const { t } = useLang()
 
     // Form state
     const [stakingType, setStakingType] = useState<'1d' | '7d' | '30d'>('1d')
     const [stakingAmount, setStakingAmount] = useState<string>('')
     const [usdtCoinId, setUsdtCoinId] = useState<string>('')
+    const [selectedCoin, setSelectedCoin] = useState<string>('')
     const [isStakingModalOpen, setIsStakingModalOpen] = useState<boolean>(false)
     const [isBaseConfirmModalOpen, setIsBaseConfirmModalOpen] = useState<boolean>(false)
     const [isStakingConfirmModalOpen, setIsStakingConfirmModalOpen] = useState<boolean>(false)
@@ -49,7 +52,7 @@ export default function MakeMoneyPage() {
     // ==================== React Query Hooks ====================
 
     // 1. Get Coins to find USDT
-    const { data: coinsResponse, isLoading: isLoadingCoins } = useQuery<ListCoinsResponse>({
+    const { data: coinsResponse, isLoading: isLoadingCoins, error: coinsError, isError: isCoinsError } = useQuery<ListCoinsResponse>({
         queryKey: ['coins'],
         queryFn: async () => {
             const response = await getListCoins()
@@ -59,21 +62,21 @@ export default function MakeMoneyPage() {
         staleTime: 5 * 60 * 1000, // Coins ít thay đổi, cache 5 phút
     })
 
-    // 2. Get USDT Balance
-    const { data: balanceResponse, isLoading: isLoadingBalance, refetch: refetchBalance } = useQuery<BalanceResponse>({
-        queryKey: ['balance', usdtCoinId],
+    // 2. Get Balance
+    const { data: balanceResponse, isLoading: isLoadingBalance, refetch: refetchBalance, error: balanceError, isError: isBalanceError } = useQuery<BalanceResponse>({
+        queryKey: ['balance', selectedCoin],
         queryFn: async () => {
-            if (!usdtCoinId) return null as any
-            const response = await getBalance(Number(usdtCoinId))
+            if (!selectedCoin) return null as any
+            const response = await getBalance(Number(selectedCoin))
             return response
         },
-        enabled: !!usdtCoinId && usdtCoinId !== '',
+        enabled: !!selectedCoin && selectedCoin !== '',
         refetchOnWindowFocus: false, // Tắt auto refetch khi focus, chỉ refetch khi cần (sau mutation)
         staleTime: 30 * 1000, // Cache 30 giây
     })
 
     // 3. Get Current Staking
-    const { data: currentStakingResponse, isLoading: isLoadingCurrentStaking, refetch: refetchCurrentStaking } = useQuery<CurrentStakingResponse>({
+    const { data: currentStakingResponse, isLoading: isLoadingCurrentStaking, refetch: refetchCurrentStaking, error: currentStakingError, isError: isCurrentStakingError } = useQuery<CurrentStakingResponse>({
         queryKey: ['current-staking'],
         queryFn: getCurrentStaking,
         retry: false, // Don't retry on 404
@@ -82,7 +85,7 @@ export default function MakeMoneyPage() {
     })
 
     // 4. Get Staking Histories
-    const { data: historiesResponse, isLoading: isLoadingHistories, refetch: refetchHistories } = useQuery<StakingHistoriesResponse>({
+    const { data: historiesResponse, isLoading: isLoadingHistories, refetch: refetchHistories, error: historiesError, isError: isHistoriesError } = useQuery<StakingHistoriesResponse>({
         queryKey: ['staking-histories'],
         queryFn: getStakingHistories,
         refetchOnWindowFocus: false, // Không cần refetch khi chuyển tab
@@ -94,7 +97,7 @@ export default function MakeMoneyPage() {
         return currentStakingResponse?.data || null
     }, [currentStakingResponse])
 
-    const { data: missionNowResponse, isLoading: isLoadingMission, refetch: refetchMissionNow } = useQuery<MissionNowResponse>({
+    const { data: missionNowResponse, isLoading: isLoadingMission, refetch: refetchMissionNow, error: missionError, isError: isMissionError } = useQuery<MissionNowResponse>({
         queryKey: ['mission-now'],
         queryFn: getMissionNow,
         enabled: !!currentStaking && currentStaking.status === 'running', // Chỉ query khi có staking running
@@ -106,8 +109,9 @@ export default function MakeMoneyPage() {
     // 6. Join Base Mutation
     const joinBaseMutation = useMutation({
         mutationFn: joinBasePackage,
-        onSuccess: () => {
-            toast.success('Tham gia gói Base thành công!')
+        onSuccess: (data) => {
+            const message = data?.message || t('staking.joinBaseSuccess')
+            toast.success(message)
             queryClient.invalidateQueries({ queryKey: ['current-staking'] })
             queryClient.invalidateQueries({ queryKey: ['staking-histories'] })
             queryClient.invalidateQueries({ queryKey: ['mission-now'] })
@@ -115,7 +119,7 @@ export default function MakeMoneyPage() {
             refetchCurrentStaking()
         },
         onError: (error: any) => {
-            const message = error?.response?.data?.message || 'Không thể tham gia gói Base'
+            const message = error?.response?.data?.message || t('staking.joinBaseError')
             toast.error(message)
         }
     })
@@ -123,8 +127,9 @@ export default function MakeMoneyPage() {
     // 7. Join Staking Mutation
     const joinStakingMutation = useMutation({
         mutationFn: (data: JoinStakingRequest) => joinStakingPackage(data),
-        onSuccess: () => {
-            toast.success('Tham gia gói Staking thành công!')
+        onSuccess: (response) => {
+            const message = response?.message || t('staking.joinStakingSuccess')
+            toast.success(message)
             setStakingAmount('')
             setIsStakingModalOpen(false)
             queryClient.invalidateQueries({ queryKey: ['current-staking'] })
@@ -134,7 +139,7 @@ export default function MakeMoneyPage() {
             refetchCurrentStaking()
         },
         onError: (error: any) => {
-            const message = error?.response?.data?.message || 'Không thể tham gia gói Staking'
+            const message = error?.response?.data?.message || t('staking.joinStakingError')
             toast.error(message)
         }
     })
@@ -143,20 +148,25 @@ export default function MakeMoneyPage() {
     const claimMissionMutation = useMutation({
         mutationFn: claimMissionReward,
         onSuccess: async (data: MissionClaimResponse) => {
-            toast.success(`Claim thành công! Nhận được ${formatNumber(data.data.total_reward)} USDT`)
+            const apiMessage = data?.message
+            const rewardAmount = formatNumber(data.data.total_reward)
+            const successMessage = apiMessage 
+                ? `${apiMessage} ${t('makeMoney.reward')}: ${rewardAmount} USDT`
+                : `${t('makeMoney.claim')} ${t('common.success')}! ${t('makeMoney.reward')}: ${rewardAmount} USDT`
+            toast.success(successMessage)
             // Invalidate tất cả các queries liên quan
             queryClient.invalidateQueries({ queryKey: ['current-staking'] })
             queryClient.invalidateQueries({ queryKey: ['staking-histories'] })
             queryClient.invalidateQueries({ queryKey: ['mission-now'] })
-            queryClient.invalidateQueries({ queryKey: ['balance', usdtCoinId] })
-            
+            queryClient.invalidateQueries({ queryKey: ['balance', selectedCoin] })
+
             // Refetch trực tiếp tất cả các queries để đảm bảo dữ liệu được cập nhật ngay lập tức
             await Promise.all([
                 refetchBalance(),
                 refetchCurrentStaking(),
                 refetchHistories(),
             ])
-            
+
             // Refetch mission-now nếu staking vẫn đang running (sử dụng dữ liệu từ response)
             const updatedStaking = data.data.staking_lock
             if (updatedStaking && updatedStaking.status === 'running') {
@@ -164,24 +174,26 @@ export default function MakeMoneyPage() {
             }
         },
         onError: (error: any) => {
-            const message = error?.response?.data?.message || 'Không thể claim phần thưởng'
+            const message = error?.response?.data?.message || t('staking.claimError')
             toast.error(message)
         }
     })
 
-    // ==================== Initialize USDT Coin ====================
+    // ==================== Initialize Coin ====================
     useEffect(() => {
-        if (coinsResponse?.data && coinsResponse.data.length > 0 && !usdtCoinId) {
+        if (coinsResponse?.data && coinsResponse.data.length > 0 && !selectedCoin) {
             // Find USDT coin
             const usdtCoin = coinsResponse.data.find(
                 (coin: Coin) => coin.coin_symbol?.toUpperCase() === 'USDT'
             ) || coinsResponse.data[0] // Fallback to first coin if USDT not found
 
             if (usdtCoin?.coin_id) {
-                setUsdtCoinId(usdtCoin.coin_id.toString())
+                const coinId = usdtCoin.coin_id.toString()
+                setSelectedCoin(coinId)
+                setUsdtCoinId(coinId) // Keep for backward compatibility
             }
         }
-    }, [coinsResponse, usdtCoinId])
+    }, [coinsResponse, selectedCoin])
 
     // Update current time every second to check claim availability
     useEffect(() => {
@@ -192,10 +204,83 @@ export default function MakeMoneyPage() {
         return () => clearInterval(interval)
     }, [])
 
+    // Handle errors from queries and show notifications
+    useEffect(() => {
+        if (isCoinsError && coinsError) {
+            const error: any = coinsError
+            const message = error?.response?.data?.message || t('makeMoney.errors.loadCoinsError')
+            toast.error(message)
+        }
+    }, [isCoinsError, coinsError, t])
+
+    useEffect(() => {
+        if (isBalanceError && balanceError) {
+            const error: any = balanceError
+            const message = error?.response?.data?.message || t('makeMoney.errors.loadBalanceError')
+            toast.error(message)
+        }
+    }, [isBalanceError, balanceError, t])
+
+    useEffect(() => {
+        if (isCurrentStakingError && currentStakingError) {
+            const error: any = currentStakingError
+            // 404 is expected when no active staking exists, don't show error
+            if (error?.response?.status === 404) {
+                return
+            }
+            const message = error?.response?.data?.message || t('makeMoney.errors.loadStakingError')
+            toast.error(message)
+        }
+    }, [isCurrentStakingError, currentStakingError, t])
+
+    useEffect(() => {
+        if (isHistoriesError && historiesError) {
+            const error: any = historiesError
+            const message = error?.response?.data?.message || t('makeMoney.errors.loadHistoriesError')
+            toast.error(message)
+        }
+    }, [isHistoriesError, historiesError, t])
+
+    useEffect(() => {
+        if (isMissionError && missionError) {
+            const error: any = missionError
+            // 400 is expected when no active staking exists, don't show error
+            if (error?.response?.status === 400) {
+                return
+            }
+            const message = error?.response?.data?.message || t('makeMoney.errors.loadMissionError')
+            toast.error(message)
+        }
+    }, [isMissionError, missionError, t])
+
     // ==================== Computed Values ====================
+
+    const coinOptions = useMemo(() => {
+        if (!coinsResponse?.data || !Array.isArray(coinsResponse.data)) {
+            return []
+        }
+
+        return coinsResponse.data.map((coin: Coin) => ({
+            value: coin.coin_id?.toString() || '',
+            label: coin.coin_symbol || coin.coin_name || 'Unknown'
+        }))
+    }, [coinsResponse])
+
+    // Get selected coin info
+    const selectedCoinInfo = useMemo(() => {
+        if (!selectedCoin || !coinsResponse?.data) return null
+        return coinsResponse.data.find((c: Coin) => c.coin_id?.toString() === selectedCoin)
+    }, [selectedCoin, coinsResponse])
 
     const usdtBalance = useMemo(() => {
         return balanceResponse?.data?.balance || 0
+    }, [balanceResponse])
+
+    // Calculate total balance for base package (balance + balance_gift)
+    const totalBaseBalance = useMemo(() => {
+        const balance = balanceResponse?.data?.balance || 0
+        const balanceGift = balanceResponse?.data?.balance_gift || 0
+        return balance + balanceGift
     }, [balanceResponse])
 
     // Disable conditions for buttons
@@ -216,14 +301,14 @@ export default function MakeMoneyPage() {
     // Mission progress computed values
     const missionProgress = useMemo(() => {
         if (!missionNowResponse?.data) return null;
-        
+
         const { turn_setting, turn_day, time_watch_new, time_gap } = missionNowResponse.data;
-        
+
         // Calculate next watch time
         let canWatchNext = true;
         let nextWatchTime: Date | null = null;
         let timeRemaining: number = 0;
-        
+
         if (time_watch_new) {
             const lastWatchTime = new Date(time_watch_new);
             nextWatchTime = new Date(lastWatchTime.getTime() + time_gap * 60 * 1000);
@@ -231,7 +316,7 @@ export default function MakeMoneyPage() {
             timeRemaining = Math.max(0, nextWatchTime.getTime() - now);
             canWatchNext = timeRemaining === 0;
         }
-        
+
         return {
             completed: turn_day,
             total: turn_setting,
@@ -247,13 +332,13 @@ export default function MakeMoneyPage() {
     const allPackages = useMemo(() => {
         const packages: StakingPackage[] = []
         const packageIds = new Set<number>()
-        
+
         // Add current staking if exists
         if (currentStaking) {
             packages.push(currentStaking)
             packageIds.add(currentStaking.id)
         }
-        
+
         // Add all histories (excluding duplicates)
         if (stakingHistories.length > 0) {
             stakingHistories.forEach((history) => {
@@ -263,7 +348,7 @@ export default function MakeMoneyPage() {
                 }
             })
         }
-        
+
         // Sort by date_start (newest first)
         return packages.sort((a, b) => {
             return new Date(b.date_start).getTime() - new Date(a.date_start).getTime()
@@ -317,16 +402,19 @@ export default function MakeMoneyPage() {
         }).format(rounded)
     }
 
+    // Format balance number
+    const formatBalance = (balance: number) => {
+        const balanceFormatted = parseFloat(balance.toFixed(2))
+        return new Intl.NumberFormat('en-US', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 6
+        }).format(balanceFormatted)
+    }
+
     // Get reward amount - ưu tiên real_reward, fallback về estimated_reward hoặc tính toán
     const getRewardAmount = (staking: StakingPackage): number => {
-        if (staking.real_reward !== undefined && staking.real_reward !== null) {
-            return staking.real_reward
-        }
-        if (staking.estimated_reward !== undefined && staking.estimated_reward !== null) {
-            return staking.estimated_reward
-        }
         // Fallback: tính toán 30% của amount
-        return staking.amount * 0.3
+        return staking.amount + (staking.total_reward || 0)
     }
 
     // Get status badge
@@ -335,19 +423,19 @@ export default function MakeMoneyPage() {
             case 'running':
                 return (
                     <span className="px-3 py-1 bg-blue-500 text-white rounded-full text-xs font-medium">
-                        Đang chạy
+                        {t('makeMoney.statusRunning')}
                     </span>
                 )
             case 'pending-claim':
                 return (
                     <span className="px-3 py-1 bg-yellow-500 text-white rounded-full text-xs font-medium">
-                        Chờ nhận thưởng
+                        {t('makeMoney.statusPendingClaim')}
                     </span>
                 )
             case 'ended':
                 return (
                     <span className="px-3 py-1 bg-gray-500 text-white rounded-full text-xs font-medium">
-                        Đã kết thúc
+                        {t('makeMoney.statusEnded')}
                     </span>
                 )
             default:
@@ -363,13 +451,13 @@ export default function MakeMoneyPage() {
     const getTypeLabel = (type: string): string => {
         switch (type) {
             case 'base':
-                return 'Gói Base'
+                return t('makeMoney.basePackage')
             case '1d':
-                return '1 Ngày'
+                return t('makeMoney.oneDay')
             case '7d':
-                return '7 Ngày'
+                return t('makeMoney.sevenDays')
             case '30d':
-                return '30 Ngày'
+                return t('makeMoney.thirtyDays')
             default:
                 return type
         }
@@ -379,13 +467,13 @@ export default function MakeMoneyPage() {
     const getTypeDurationLabel = (type: string): string => {
         switch (type) {
             case 'base':
-                return '1 ngày'
+                return t('makeMoney.oneDay')
             case '1d':
-                return '1 ngày'
+                return t('makeMoney.oneDay')
             case '7d':
-                return '7 ngày'
+                return t('makeMoney.sevenDays')
             case '30d':
-                return '1 tháng'
+                return t('makeMoney.oneMonth')
             default:
                 return type
         }
@@ -395,11 +483,11 @@ export default function MakeMoneyPage() {
     const getStatusText = (status: string): string => {
         switch (status) {
             case 'running':
-                return 'Chưa hoàn thành'
+                return t('makeMoney.statusNotCompleted')
             case 'pending-claim':
-                return 'Chờ nhận thưởng'
+                return t('makeMoney.statusPendingClaim')
             case 'ended':
-                return 'Hoàn thành'
+                return t('makeMoney.statusCompleted')
             default:
                 return status
         }
@@ -422,12 +510,12 @@ export default function MakeMoneyPage() {
 
     // Format time remaining for countdown
     const formatTimeRemaining = (milliseconds: number): string => {
-        if (milliseconds <= 0) return 'Có thể xem ngay'
-        
+        if (milliseconds <= 0) return t('makeMoney.canWatchNow')
+
         const totalSeconds = Math.floor(milliseconds / 1000)
         const minutes = Math.floor(totalSeconds / 60)
         const seconds = totalSeconds % 60
-        
+
         if (minutes > 0) {
             return `${minutes} phút ${seconds} giây`
         }
@@ -442,19 +530,19 @@ export default function MakeMoneyPage() {
         }
 
         const endDate = new Date(staking.date_end)
-        
+
         // Get UTC date components of end date
         const endYear = endDate.getUTCFullYear()
         const endMonth = endDate.getUTCMonth()
         const endDay = endDate.getUTCDate()
-        
+
         // Create the claim available date: next day at 00:05:00 UTC
         const claimAvailableDate = new Date(Date.UTC(endYear, endMonth, endDay + 1, 0, 5, 0, 0))
 
         // Compare with current time (both in UTC)
         const now = currentTime.getTime()
         const claimTime = claimAvailableDate.getTime()
-        
+
         return now >= claimTime
     }
 
@@ -471,38 +559,52 @@ export default function MakeMoneyPage() {
 
     const handleJoinStaking = () => {
         if (usdtBalance < 10) {
-            toast.error('Số dư phải >= $10 để tham gia gói Staking')
+            toast.error(t('makeMoney.errors.insufficientBalance'))
             return
         }
         if (currentStaking) {
-            toast.error('Bạn đang có gói staking đang chạy')
+            toast.error(t('makeMoney.errors.stakingRunning'))
             return
         }
 
         const amount = parseFloat(stakingAmount)
         if (!amount || amount <= 0) {
-            toast.error('Vui lòng nhập số tiền hợp lệ')
+            toast.error(t('makeMoney.errors.invalidAmount'))
             return
         }
         if (amount > 3500) {
-            toast.error('Số tiền không được vượt quá $3,500')
+            toast.error(t('makeMoney.errors.amountExceeded'))
             return
         }
         if (amount > usdtBalance) {
-            toast.error('Số dư không đủ')
+            toast.error(t('makeMoney.errors.balanceInsufficient'))
             return
         }
 
+        // Mở modal xác nhận thay vì submit trực tiếp
+        setIsStakingConfirmModalOpen(true)
+    }
+
+    const handleConfirmJoinStaking = () => {
+        const amount = parseFloat(stakingAmount)
+        setIsStakingConfirmModalOpen(false)
+        setIsStakingModalOpen(false)
         joinStakingMutation.mutate({
             type: stakingType,
             amount: amount
         })
     }
 
+    const handleCoinChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const coinId = e.target.value
+        setSelectedCoin(coinId)
+        setUsdtCoinId(coinId) // Sync with usdtCoinId for balance query
+    }
+
     const stakingTypeOptions = [
-        { value: '1d', label: '1 Ngày' },
-        { value: '7d', label: '7 Ngày' },
-        { value: '30d', label: '30 Ngày' },
+        { value: '1d', label: t('makeMoney.oneDay') },
+        { value: '7d', label: t('makeMoney.sevenDays') },
+        { value: '30d', label: t('makeMoney.thirtyDays') },
     ]
 
     // Table styles (matching wallet page)
@@ -520,7 +622,7 @@ export default function MakeMoneyPage() {
                         <div className='flex items-end justify-center mb-2 sm:mb-4 gap-2 sm:gap-4'>
                             <img src="/logo.png" alt="logo" className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-cover pt-1 sm:pt-2' />
                             <div className='flex flex-col items-center mx-2 sm:mx-4'>
-                                <h1 className='text-xl sm:text-2xl md:text-3xl font-semibold font-orbitron text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]'>{currentStaking && currentStaking?.amount > 10 ? 'Staking' : 'Base'}</h1>
+                                <h1 className='text-xl sm:text-2xl md:text-3xl font-semibold font-orbitron text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]'>{currentStaking && currentStaking?.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}</h1>
                             </div>
                             <img src="/logo.png" alt="logo" className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-cover pt-1 sm:pt-2' />
                         </div>
@@ -534,54 +636,54 @@ export default function MakeMoneyPage() {
                     </div>
                 ) : currentStaking ? (
                     <div className='mb-6 sm:mb-8 p-3 sm:p-4 md:p-6 rounded-lg border border-gray-200 dark:border-[#FE645F] bg-transparent'>
-                        <div className='grid grid-cols-1 md:grid-cols-2 w-full md:max-w-[50vw] mx-auto gap-3 sm:gap-4 mb-3 sm:mb-4'>
+                        <div className='grid grid-cols-1 md:grid-cols-2 w-full md:max-w-3xl mx-auto gap-3 sm:gap-4 mb-3 sm:mb-4'>
                             {/* Right Column */}
                             <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>Loại staking:</p>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.stakingType')}:</p>
                                 <p className='text-base sm:text-lg font-semibold text-red-600 dark:text-[#FE645F]'>{getTypeDurationLabel(currentStaking.type)}</p>
                             </div>
 
                             {/* Left Column */}
                             <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>Trạng thái:</p>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.status')}:</p>
                                 <p className='text-xs sm:text-sm font-medium text-gray-900 dark:text-gray-300'>{getStatusText(currentStaking.status)}</p>
                             </div>
 
                             {/* Right Column */}
                             <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>Thời gian:</p>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.time')}:</p>
                                 <p className='text-xs sm:text-sm font-medium text-red-600 dark:text-[#FE645F]'>{formatDateOnly(currentStaking.date_start)} - {formatDateOnly(currentStaking.date_end)}</p>
                             </div>
 
                             {/* Left Column */}
                             <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>Số tiền tham gia:</p>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.amount')}:</p>
                                 <p className='text-base sm:text-lg font-semibold text-red-600 dark:text-[#FE645F]'>{currentStaking.amount} USDT</p>
                             </div>
 
                             {/* Right Column */}
                             <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md flex-wrap'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>Phần thưởng ước tính :</p>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.estimatedReward')}:</p>
                                 <div className='flex gap-1 sm:gap-2 items-center flex-wrap'>
                                     <p className='text-base sm:text-lg font-semibold text-red-600 dark:text-[#FE645F]'>{currentStaking.estimated_reward} USDT</p>
                                 </div>
                             </div>
 
                             <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md flex-wrap'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>Số tiền đã kiếm được:</p>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.earnedAmount')}:</p>
                                 <div className='flex gap-1 sm:gap-2 items-center flex-wrap'>
                                     <p className='text-base sm:text-lg font-semibold text-red-600 dark:text-[#FE645F]'>{(currentStaking.real_reward || 0).toFixed(3)} USDT</p>
                                 </div>
                             </div>
 
-                            
+
                         </div>
                         {/* Tasks - Chỉ hiển thị khi có dữ liệu mission-now */}
                         {missionNowResponse?.data ? (
-                            <div className='grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full md:max-w-[50vw] mx-auto'>
+                            <div className='grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full md:max-w-3xl mx-auto'>
                                 <div className='p-2 sm:p-3 md:p-4 bg-blue-50 dark:bg-blue-900/55 rounded-lg border border-blue-200 dark:border-blue-700'>
                                     <div className='flex items-center justify-between mb-1 sm:mb-2'>
-                                        <p className='text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium'>Lượt xem video</p>
+                                        <p className='text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium'>{t('makeMoney.videoViews')}</p>
                                         {missionProgress ? (
                                             <p className='text-xs sm:text-sm font-semibold text-blue-900 dark:text-blue-300'>
                                                 {missionProgress.completed}/{missionProgress.total}
@@ -595,16 +697,16 @@ export default function MakeMoneyPage() {
                                     {missionProgress ? (
                                         <>
                                             <p className='text-[10px] sm:text-xs text-blue-500 dark:text-blue-400'>
-                                                {missionProgress.isCompleted ? '✅ Đã hoàn thành' : `Còn lại: ${missionProgress.total - missionProgress.completed} video`}
+                                                {missionProgress.isCompleted ? `✅ ${t('makeMoney.completed')}` : `${t('makeMoney.remaining')}: ${missionProgress.total - missionProgress.completed} video`}
                                             </p>
                                             {!missionProgress.canWatchNext && missionProgress.timeRemaining > 0 && (
                                                 <p className='text-[10px] sm:text-xs text-orange-600 dark:text-orange-400 mt-0.5 sm:mt-1'>
-                                                    ⏱️ Có thể xem tiếp sau: {formatTimeRemaining(missionProgress.timeRemaining)}
+                                                    ⏱️ {t('makeMoney.canWatchNext')}: {formatTimeRemaining(missionProgress.timeRemaining)}
                                                 </p>
                                             )}
                                             {missionProgress.canWatchNext && !missionProgress.isCompleted && (
                                                 <p className='text-[10px] sm:text-xs text-green-600 dark:text-green-400 mt-0.5 sm:mt-1'>
-                                                    ✅ Có thể xem video ngay
+                                                    ✅ {t('makeMoney.canWatchNow')}
                                                 </p>
                                             )}
                                         </>
@@ -614,13 +716,13 @@ export default function MakeMoneyPage() {
                                 </div>
                                 <div className='p-2 sm:p-3 md:p-4 bg-green-50 dark:bg-green-900/65 rounded-lg border border-green-200 dark:border-green-700'>
                                     <div className='flex items-center justify-between mb-1 sm:mb-2'>
-                                        <p className='text-xs sm:text-sm text-green-600 dark:text-green-400 font-medium'>Số thiết bị</p>
+                                        <p className='text-xs sm:text-sm text-green-600 dark:text-green-400 font-medium'>{t('makeMoney.devices')}</p>
                                         <p className='text-xs sm:text-sm font-semibold text-green-900 dark:text-green-300'>
                                             {missionNowResponse.data.devices}
                                         </p>
                                     </div>
                                     <p className='text-[10px] sm:text-xs text-green-500 dark:text-green-400'>
-                                        Số thiết bị cho phép xem video
+                                        {t('makeMoney.devicesDescription')}
                                     </p>
                                 </div>
                             </div>
@@ -634,55 +736,143 @@ export default function MakeMoneyPage() {
                             <Button
                                 onClick={() => claimMissionMutation.mutate()}
                                 disabled={claimMissionMutation.isPending || !canClaimReward(currentStaking)}
-                                className='w-full sm:w-[200px] text-center bg-theme-red-200 text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-9 sm:h-10 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
+                                className='w-full sm:w-[200px] text-center bg-theme-red-200 text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-9 sm:h-10 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer'
                             >
                                 {claimMissionMutation.isPending ? (
                                     <>
                                         <Loader2 className='w-3 h-3 sm:w-4 sm:h-4 mr-2 animate-spin' />
-                                        Đang xử lý...
+                                        {t('makeMoney.processing')}
                                     </>
                                 ) : (
-                                    'Claim'
+                                    t('makeMoney.claim')
                                 )}
                             </Button>
                         </div>
                     </div>
                 ) : (
                     /* Join Package Section */
-                    <div className='mb-6 sm:mb-8 p-3 sm:p-4 md:p-6 bg-transparent rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-sm flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-10 w-full md:w-[50vw] mx-auto'>
-                        {/* Gói Base - Luôn hiển thị */}
-                        <div className='py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-transparent border border-theme-gray-100 dark:border-[#FE645F] border-solid flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 min-h-[180px] sm:min-h-[200px] md:min-h-[230px] rounded-xl'>
-                            <h3 className='text-2xl sm:text-3xl md:text-4xl font-semibold text-black dark:text-white mb-1 sm:mb-2 text-center'>Base</h3>
-                            <span className='text-xs sm:text-sm text-yellow-800 dark:text-yellow-300 mb-1 sm:mb-2'>1 Ngày</span>
-                            <Button
-                                onClick={handleJoinBase}
-                                disabled={joinBaseMutation.isPending}
-                                className='w-full bg-gray-100 dark:bg-gray-700 cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 text-theme-red-200 dark:text-[#FE645F] text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
-                            >
-                                {joinBaseMutation.isPending ? (
-                                    <>
-                                        <Loader2 className='w-3 h-3 sm:w-4 sm:h-4 mr-2 animate-spin' />
-                                        Đang xử lý...
-                                    </>
-                                ) : (
-                                    'Tham gia ngay'
-                                )}
-                            </Button>
+                    <>
+                        {/* Balance Section */}
+                        <div className='flex flex-col items-center justify-center mb-4 sm:mb-6'>
+                            {isMobile ? (
+                                // Mobile: Stack vertically, compact
+                                <div className='flex flex-col items-center w-full'>
+                                    <div className='flex items-center gap-2 mb-2'>
+                                        <span className='text-xs font-medium text-theme-red-100 dark:text-[#FE645F]'>{t('wallet.coin')}:</span>
+                                        {isLoadingCoins ? (
+                                            <Skeleton className="h-7 w-20" />
+                                        ) : (
+                                            <CustomSelect
+                                                id="coin"
+                                                value={selectedCoin}
+                                                onChange={handleCoinChange}
+                                                options={coinOptions}
+                                                placeholder={t('makeMoney.selectCoinPlaceholder')}
+                                                disabled={isLoadingCoins}
+                                                className="w-20 text-xs"
+                                            />
+                                        )}
+                                    </div>
+                                    <div className='flex items-center gap-2'>
+                                        <img src="/logo.png" alt="logo" className='w-8 h-8 object-cover' />
+                                        {isLoadingBalance ? (
+                                            <Skeleton className="h-6 w-40" />
+                                        ) : balanceResponse?.data ? (
+                                            <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                                {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                            </span>
+                                        ) : (
+                                            <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                                0.00 {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                            </span>
+                                        )}
+                                        <img src="/logo.png" alt="logo" className='w-8 h-8 object-cover' />
+                                    </div>
+                                    {balanceResponse?.data && (balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
+                                        <span className='text-xs text-gray-600 dark:text-gray-300 mt-1'>
+                                            ({t('makeMoney.gift')}: {formatBalance(balanceResponse.data.balance_gift)} | {t('makeMoney.reward')}: {formatBalance(balanceResponse.data.balance_reward)})
+                                        </span>
+                                    )}
+                                </div>
+                            ) : (
+                                // Desktop: Original layout
+                                <div className='flex items-end justify-center mb-3'>
+                                    <img src="/logo.png" alt="logo" className='w-10 h-10 object-cover pt-2' />
+                                    <div className='flex flex-col items-center mx-4'>
+                                        <div className='flex items-center gap-2 mb-4'>
+                                            <span className='text-sm font-medium text-theme-red-100 dark:text-[#FE645F]'>{t('makeMoney.selectCoin')}:</span>
+                                            {isLoadingCoins ? (
+                                                <Skeleton className="h-8 w-24" />
+                                            ) : (
+                                                <CustomSelect
+                                                    id="coin"
+                                                    value={selectedCoin}
+                                                    onChange={handleCoinChange}
+                                                    options={coinOptions}
+                                                    placeholder={t('makeMoney.selectCoinPlaceholder')}
+                                                    disabled={isLoadingCoins}
+                                                    className="w-24 text-sm"
+                                                />
+                                            )}
+                                        </div>
+                                        {isLoadingBalance ? (
+                                            <Skeleton className="h-8 w-48" />
+                                        ) : balanceResponse?.data ? (
+                                            <div className='flex flex-col items-center'>
+                                                <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                                    {t('makeMoney.balance')}: {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                                </span>
+                                                {(balanceResponse.data.balance_gift || balanceResponse.data.balance) && (
+                                                    <span className='text-sm text-gray-600 dark:text-gray-300 mt-1'>
+                                                        ({t('makeMoney.gift')}: {formatBalance(balanceResponse.data.balance_gift)} | {t('makeMoney.reward')}: {formatBalance(balanceResponse.data.balance_reward)})
+                                                    </span>
+                                                )}
+                                            </div>
+                                        ) : (
+                                            <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                                {t('makeMoney.balance')}: 0.00 {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                            </span>
+                                        )}
+                                    </div>
+                                    <img src="/logo.png" alt="logo" className='w-10 h-10 object-cover pt-2' />
+                                </div>
+                            )}
                         </div>
+                        <div className='mb-6 sm:mb-8 p-3 sm:p-4 md:p-6 bg-transparent rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-sm flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-10 w-full md:w-[50vw] mx-auto'>
+                            {/* Gói Base - Luôn hiển thị */}
+                            <div className='py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-transparent border border-theme-gray-100 dark:border-[#FE645F] border-solid flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 min-h-[180px] sm:min-h-[200px] md:min-h-[230px] rounded-xl'>
+                                <h3 className='text-2xl sm:text-3xl md:text-4xl font-semibold text-black dark:text-white mb-1 sm:mb-2 text-center'>{t('makeMoney.basePackage')}</h3>
+                                <span className='text-xs sm:text-sm text-yellow-800 dark:text-yellow-300 mb-1 sm:mb-2'>{t('makeMoney.oneDay')}</span>
+                                <Button
+                                    onClick={handleJoinBase}
+                                    disabled={joinBaseMutation.isPending}
+                                    className='w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-theme-red-200 dark:text-[#FE645F] text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer'
+                                >
+                                    {joinBaseMutation.isPending ? (
+                                        <>
+                                            <Loader2 className='w-3 h-3 sm:w-4 sm:h-4 mr-2 animate-spin' />
+                                            {t('makeMoney.processing')}
+                                        </>
+                                    ) : (
+                                        t('makeMoney.joinBase')
+                                    )}
+                                </Button>
+                            </div>
 
-                        {/* Gói Staking - Luôn hiển thị */}
-                        <div className='py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 border border-green-200 flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 min-h-[180px] sm:min-h-[200px] md:min-h-[230px] rounded-xl'>
-                            <h3 className='text-2xl sm:text-3xl md:text-4xl text-center font-semibold text-white mb-1 sm:mb-2'> Staking</h3>
-                            <span className='text-xs sm:text-sm text-white mb-1 sm:mb-2'>1 Ngày / 7 Ngày / 30 Ngày</span>
-                            <Button
-                                onClick={() => setIsStakingConfirmModalOpen(true)}
-                                disabled={isStakingDisabled}
-                                className='w-full bg-white dark:bg-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-theme-red-200 dark:text-[#FE645F] text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
-                            >
-                                Tham gia ngay
-                            </Button>
+                            {/* Gói Staking - Luôn hiển thị */}
+                            <div className='py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 border border-green-200 flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 min-h-[180px] sm:min-h-[200px] md:min-h-[230px] rounded-xl'>
+                                <h3 className='text-2xl sm:text-3xl md:text-4xl text-center font-semibold text-white mb-1 sm:mb-2'>{t('makeMoney.stakingTitle')}</h3>
+                                <span className='text-xs sm:text-sm text-white mb-1 sm:mb-2'>{t('makeMoney.oneDay')} / {t('makeMoney.sevenDays')} / {t('makeMoney.thirtyDays')}</span>
+                                <Button
+                                    onClick={() => setIsStakingModalOpen(true)}
+                                    disabled={isStakingDisabled}
+                                    className='w-full bg-white dark:bg-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-theme-red-200 dark:text-[#FE645F] text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
+                                >
+                                    {t('makeMoney.joinStaking')}
+                                </Button>
+                            </div>
                         </div>
-                    </div>
+                    </>
                 )}
 
                 {/* Staking Modal */}
@@ -692,40 +882,40 @@ export default function MakeMoneyPage() {
                         setIsStakingModalOpen(false)
                         setStakingAmount('')
                     }}
-                    title="Tham gia gói Staking"
+                    title={t('makeMoney.joinStakingModalTitle')}
                     maxWidth="max-w-[500px]"
                 >
                     <div className='space-y-4'>
                         <div>
                             <label className='block text-sm font-medium text-theme-red-200 dark:text-[#FE645F] mb-2'>
-                                Loại gói
+                                {t('makeMoney.packageType')}
                             </label>
                             <CustomSelect
                                 id="staking-type-modal"
                                 value={stakingType}
                                 onChange={(e) => setStakingType(e.target.value as '1d' | '7d' | '30d')}
                                 options={stakingTypeOptions}
-                                placeholder="Chọn loại gói"
+                                placeholder={t('makeMoney.selectPackageType')}
                                 className="w-full"
                             />
                         </div>
 
                         <div>
                             <label className='block text-sm font-medium text-theme-red-200 dark:text-[#FE645F] mb-2'>
-                                Số tiền tham gia (USDT)
+                                {t('makeMoney.amountLabel')}
                             </label>
                             <Input
                                 type="number"
                                 value={stakingAmount}
                                 onChange={(e) => setStakingAmount(e.target.value)}
-                                placeholder="Nhập số tiền (tối đa 3500)"
+                                placeholder={t('makeMoney.amountPlaceholder')}
                                 min="0"
                                 max="3500"
                                 step="0.01"
                                 className="w-full rounded-full"
                             />
                             <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
-                                Số dư khả dụng: <span className='font-bold text-theme-red-200 dark:text-[#FE645F]'>{formatNumber(usdtBalance)} </span> USDT
+                                {t('makeMoney.availableBalance')}: <span className='font-bold text-theme-red-200 dark:text-[#FE645F]'>{formatNumber(usdtBalance)} </span> USDT
                             </p>
                         </div>
 
@@ -739,7 +929,7 @@ export default function MakeMoneyPage() {
                                 disabled={joinStakingMutation.isPending}
                                 className='flex-1 bg-transparent border border-solid border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
                             >
-                                Hủy
+                                {t('makeMoney.cancel')}
                             </Button>
                             <Button
                                 onClick={handleJoinStaking}
@@ -749,10 +939,10 @@ export default function MakeMoneyPage() {
                                 {joinStakingMutation.isPending ? (
                                     <>
                                         <Loader2 className='w-4 h-4 mr-2 animate-spin' />
-                                        Đang xử lý...
+                                        {t('makeMoney.processing')}
                                     </>
                                 ) : (
-                                    'Xác nhận'
+                                    t('makeMoney.confirm')
                                 )}
                             </Button>
                         </div>
@@ -763,18 +953,32 @@ export default function MakeMoneyPage() {
                 <Modal
                     isOpen={isBaseConfirmModalOpen}
                     onClose={() => setIsBaseConfirmModalOpen(false)}
-                    title="Xác nhận tham gia gói Base"
+                    title={t('makeMoney.baseConfirmModalTitle')}
                     maxWidth="max-w-[500px]"
                 >
                     <div className='space-y-4'>
                         <div className='text-center'>
                             <p className='text-base text-gray-700 dark:text-gray-300 mb-2'>
-                                Bạn có chắc chắn muốn tham gia gói <span className='font-semibold text-theme-red-200 dark:text-[#FE645F]'>Base</span>?
+                                {t('makeMoney.baseConfirmMessage')} <span className='font-semibold text-theme-red-200 dark:text-[#FE645F]'>{t('makeMoney.basePackage')}</span>?
                             </p>
-                            <p className='text-sm text-gray-500 dark:text-gray-400'>
-                                Gói Base có thời hạn <span className='font-medium'>1 ngày</span> và yêu cầu số dư nhỏ hơn $10.
+                            <p className='text-sm text-gray-500 dark:text-gray-400 mb-4'>
+                                {t('makeMoney.baseConfirmDescription')} <span className='font-medium'>{t('makeMoney.baseConfirmDuration')}</span> {t('makeMoney.baseConfirmRequirement')}
                             </p>
                         </div>
+
+                        {/* Thông tin số tiền sẽ stake */}
+                        <div className='space-y-3'>
+                            {/* Tổng số tiền sẽ stake */}
+                            <div className='p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700'>
+                                <div className='flex items-center justify-between'>
+                                    <span className='text-sm font-medium text-blue-600 dark:text-blue-400'>{t('makeMoney.amountLabelConfirm')}</span>
+                                    <span className='text-base font-semibold text-blue-700 dark:text-blue-300'>
+                                        {formatNumber(totalBaseBalance)} USDT
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
                         <div className='flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700'>
                             <Button
                                 variant="outline"
@@ -782,7 +986,7 @@ export default function MakeMoneyPage() {
                                 disabled={joinBaseMutation.isPending}
                                 className='flex-1 bg-transparent border border-solid border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
                             >
-                                Hủy
+                                {t('makeMoney.cancel')}
                             </Button>
                             <Button
                                 onClick={handleConfirmJoinBase}
@@ -792,10 +996,10 @@ export default function MakeMoneyPage() {
                                 {joinBaseMutation.isPending ? (
                                     <>
                                         <Loader2 className='w-4 h-4 mr-2 animate-spin' />
-                                        Đang xử lý...
+                                        {t('makeMoney.processing')}
                                     </>
                                 ) : (
-                                    'Xác nhận'
+                                    t('makeMoney.confirm')
                                 )}
                             </Button>
                         </div>
@@ -806,41 +1010,85 @@ export default function MakeMoneyPage() {
                 <Modal
                     isOpen={isStakingConfirmModalOpen}
                     onClose={() => setIsStakingConfirmModalOpen(false)}
-                    title="Xác nhận tham gia gói Staking"
+                    title={t('makeMoney.stakingConfirmModalTitle')}
                     maxWidth="max-w-[500px]"
                 >
                     <div className='space-y-4'>
-                        <div className='text-center'>
-                            <p className='text-base text-gray-700 dark:text-gray-300 mb-2'>
-                                Bạn có chắc chắn muốn tham gia gói <span className='font-semibold text-theme-red-200 dark:text-[#FE645F]'>Staking</span>?
+                        <div className='space-y-3'>
+                            <p className='text-base text-gray-700 dark:text-gray-300 mb-4 text-center'>
+                                {t('makeMoney.stakingConfirmMessage')}
                             </p>
-                            <p className='text-sm text-gray-500 dark:text-gray-400'>
-                                Gói Staking có các tùy chọn: <span className='font-medium'>1 ngày, 7 ngày, hoặc 30 ngày</span> và yêu cầu số dư tối thiểu $10.
-                            </p>
+                            
+                            {/* Thông tin loại gói */}
+                            <div className='p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700'>
+                                <div className='flex items-center justify-between'>
+                                    <span className='text-sm font-medium text-gray-600 dark:text-gray-400'>{t('makeMoney.packageTypeLabel')}</span>
+                                    <span className='text-base font-semibold text-theme-red-200 dark:text-[#FE645F]'>
+                                        {stakingTypeOptions.find(opt => opt.value === stakingType)?.label || stakingType}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Thông tin số tiền */}
+                            <div className='p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700'>
+                                <div className='flex items-center justify-between'>
+                                    <span className='text-sm font-medium text-gray-600 dark:text-gray-400'>{t('makeMoney.amountLabelConfirm')}</span>
+                                    <span className='text-base font-semibold text-theme-red-200 dark:text-[#FE645F]'>
+                                        {formatNumber(parseFloat(stakingAmount || '0'))} USDT
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Thông tin số dư khả dụng */}
+                            <div className='p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700'>
+                                <div className='flex items-center justify-between'>
+                                    <span className='text-sm font-medium text-gray-600 dark:text-gray-400'>{t('makeMoney.availableBalanceLabel')}</span>
+                                    <span className='text-base font-semibold text-gray-700 dark:text-gray-300'>
+                                        {formatNumber(usdtBalance)} USDT
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Thông tin số dư còn lại sau khi tham gia */}
+                            <div className='p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700'>
+                                <div className='flex items-center justify-between'>
+                                    <span className='text-sm font-medium text-blue-600 dark:text-blue-400'>{t('makeMoney.remainingBalance')}</span>
+                                    <span className='text-base font-semibold text-blue-700 dark:text-blue-300'>
+                                        {formatNumber(usdtBalance - parseFloat(stakingAmount || '0'))} USDT
+                                    </span>
+                                </div>
+                            </div>
                         </div>
+
                         <div className='flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700'>
                             <Button
                                 variant="outline"
                                 onClick={() => setIsStakingConfirmModalOpen(false)}
+                                disabled={joinStakingMutation.isPending}
                                 className='flex-1 bg-transparent border border-solid border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
                             >
-                                Hủy
+                                {t('makeMoney.cancel')}
                             </Button>
                             <Button
-                                onClick={() => {
-                                    setIsStakingConfirmModalOpen(false)
-                                    setIsStakingModalOpen(true)
-                                }}
+                                onClick={handleConfirmJoinStaking}
+                                disabled={joinStakingMutation.isPending}
                                 className='flex-1 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
                             >
-                                Tiếp tục
+                                {joinStakingMutation.isPending ? (
+                                    <>
+                                        <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+                                        {t('makeMoney.processing')}
+                                    </>
+                                ) : (
+                                    t('makeMoney.confirm')
+                                )}
                             </Button>
                         </div>
                     </div>
                 </Modal>
 
                 {/* All Packages Table Section */}
-                <h2 className='text-lg sm:text-xl font-bold text-theme-red-100 dark:text-[#FE645F] mb-3 sm:mb-4 mt-6 sm:mt-8'>Bảng các gói đã và đang tham gia</h2>
+                <h2 className='text-lg sm:text-xl font-bold text-theme-red-100 dark:text-[#FE645F] mb-3 sm:mb-4 mt-6 sm:mt-8'>{t('makeMoney.packagesTableTitle')}</h2>
                 <div className=' border-none'>
                     {isLoadingCurrentStaking || isLoadingHistories ? (
                         <div className='space-y-2 sm:space-y-3'>
@@ -850,141 +1098,137 @@ export default function MakeMoneyPage() {
                         </div>
                     ) : allPackages.length === 0 ? (
                         <div className='text-center py-6 sm:py-8 text-gray-500 dark:text-gray-400'>
-                            <p className='text-sm sm:text-base'>Chưa có gói nào được tham gia</p>
+                            <p className='text-sm sm:text-base'>{t('makeMoney.noPackages')}</p>
                         </div>
                     ) : (
                         <>
-                        {/* Mobile Card Layout */}
-                        <div className="block sm:hidden space-y-3">
-                            {allPackages.map((pkg, index) => (
-                                <div key={pkg.id} className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] p-3 shadow-sm">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">#{index + 1}</span>
-                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                            pkg.status === 'running' 
-                                                ? 'bg-gray-400 text-white' 
-                                                : pkg.status === 'pending-claim'
-                                                ? 'bg-yellow-500 text-white'
-                                                : 'bg-gray-500 text-white'
-                                        }`}>
-                                            {getStatusText(pkg.status)}
-                                        </span>
-                                    </div>
-                                    
-                                    <div className="space-y-2">
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-xs text-gray-600 dark:text-gray-300">Gói staking:</span>
-                                            <span className="px-2 py-0.5 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-full text-xs font-medium">
-                                                {getTypeDurationLabel(pkg.type)}
+                            {/* Mobile Card Layout */}
+                            <div className="block sm:hidden space-y-3">
+                                {allPackages.map((pkg, index) => (
+                                    <div key={pkg.id} className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] p-3 shadow-sm">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">{t('makeMoney.packageNumber')}{index + 1}</span>
+                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${pkg.status === 'running'
+                                                    ? 'bg-gray-400 text-white'
+                                                    : pkg.status === 'pending-claim'
+                                                        ? 'bg-yellow-500 text-white'
+                                                        : 'bg-gray-500 text-white'
+                                                }`}>
+                                                {getStatusText(pkg.status)}
                                             </span>
                                         </div>
-                                        
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-xs text-gray-600 dark:text-gray-300">Loại:</span>
-                                            <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
-                                                pkg.amount > 10 
-                                                    ? 'bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white' 
-                                                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
-                                            }`}>
-                                                {pkg.amount > 10 ? 'Staking' : 'Base'}
-                                            </span>
-                                        </div>
-                                        
-                                        <div className="flex items-center justify-between">
-                                            <span className="text-xs text-gray-600 dark:text-gray-300">Số tiền tham gia:</span>
-                                            <span className="text-xs font-semibold text-red-600 dark:text-[#FE645F]">{formatNumber(pkg.amount)} USDT</span>
-                                        </div>
-                                        
-                                        <div className="flex items-start justify-between">
-                                            <span className="text-xs text-gray-600 dark:text-gray-300">Thời gian tham gia:</span>
-                                            <span className="text-[10px] text-gray-700 dark:text-gray-300 text-right flex-1 ml-2">{formatParticipationTime(pkg.date_start)}</span>
-                                        </div>
-                                        
-                                        <div className="flex items-center justify-between pt-1 border-t border-gray-100 dark:border-gray-700">
-                                            <span className="text-xs text-gray-600 dark:text-gray-300">Tổng phần thưởng:</span>
-                                            {pkg.status === 'running' ? (
-                                                <span className="text-xs text-gray-500 dark:text-gray-400">--</span>
-                                            ) : (
-                                                <span className="text-xs font-semibold text-green-600 dark:text-green-400">{formatNumber(getRewardAmount(pkg))} USDT</span>
-                                            )}
+
+                                        <div className="space-y-2">
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-xs text-gray-600 dark:text-gray-300">{t('makeMoney.stakingTypeLabel')}</span>
+                                                <span className="px-2 py-0.5 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-full text-xs font-medium">
+                                                    {getTypeDurationLabel(pkg.type)}
+                                                </span>
+                                            </div>
+
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-xs text-gray-600 dark:text-gray-300">{t('makeMoney.typeLabel')}</span>
+                                                <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${pkg.amount > 10
+                                                        ? 'bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white'
+                                                        : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
+                                                    }`}>
+                                                    {pkg.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}
+                                                </span>
+                                            </div>
+
+                                            <div className="flex items-center justify-between">
+                                                <span className="text-xs text-gray-600 dark:text-gray-300">{t('makeMoney.amount')}:</span>
+                                                <span className="text-xs font-semibold text-red-600 dark:text-[#FE645F]">{formatNumber(pkg.amount)} USDT</span>
+                                            </div>
+
+                                            <div className="flex items-start justify-between">
+                                                <span className="text-xs text-gray-600 dark:text-gray-300">{t('makeMoney.participationTimeLabel')}</span>
+                                                <span className="text-[10px] text-gray-700 dark:text-gray-300 text-right flex-1 ml-2">{formatParticipationTime(pkg.date_start)}</span>
+                                            </div>
+
+                                            <div className="flex items-center justify-between pt-1 border-t border-gray-100 dark:border-gray-700">
+                                                <span className="text-xs text-gray-600 dark:text-gray-300">{t('makeMoney.totalRewardLabel')}</span>
+                                                {pkg.status === 'running' ? (
+                                                    <span className="text-xs text-gray-500 dark:text-gray-400">--</span>
+                                                ) : (
+                                                    <span className="text-xs font-semibold text-green-600 dark:text-green-400">{formatNumber(getRewardAmount(pkg))} USDT</span>
+                                                )}
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
-                        </div>
-                        
-                        {/* Desktop Table Layout */}
-                        <div className="hidden sm:block overflow-hidden rounded-md bg-transparent border border-none">
-                            {/* Fixed Header */}
-                            <div className="overflow-hidden rounded-t-md">
-                                <table className={tableStyles}>
-                                    <thead>
-                                        <tr>
-                                            <th className={`${tableHeaderStyles} w-[5%] text-left rounded-l-lg`}>STT</th>
-                                            <th className={`${tableHeaderStyles} w-[12%]`}>GÓI STAKING</th>
-                                            <th className={`${tableHeaderStyles} w-[10%]`}>LOẠI</th>
-                                            <th className={`${tableHeaderStyles} w-[12%]`}>SỐ TIỀN THAM GIA</th>
-                                            <th className={`${tableHeaderStyles} w-[15%]`}>THỜI GIAN THAM GIA</th>
-                                            <th className={`${tableHeaderStyles} w-[12%]`}>TỔNG PHẦN THƯỞNG</th>
-                                            <th className={`${tableHeaderStyles} w-[12%]`}>TRẠNG THÁI</th>
-                                        </tr>
-                                    </thead>
-                                </table>
+                                ))}
                             </div>
 
-                            {/* Scrollable Body */}
-                            <div className={tableContainerStyles} ref={tableRef}>
-                                <table className={tableStyles}>
-                                    <tbody>
-                                        {allPackages.map((pkg, index) => (
-                                            <tr key={pkg.id} className="group transition-colors">
-                                                <td className={`${tableCellStyles} w-[5%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
-                                                    {index + 1}
-                                                </td>
-                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                    <span className="px-3 py-1 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-full text-sm font-medium">
-                                                        {getTypeDurationLabel(pkg.type)}
-                                                    </span>
-                                                </td>
-                                                <td className={`${tableCellStyles} w-[10%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                    <span className={`px-3 py-1 rounded-full text-sm font-semibold ${
-                                                        pkg.amount > 10 
-                                                            ? 'bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white' 
-                                                            : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
-                                                    }`}>
-                                                        {pkg.amount > 10 ? 'Staking' : 'Base'}
-                                                    </span>
-                                                </td>
-                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid font-semibold text-red-600 dark:text-[#FE645F]`}>
-                                                    {formatNumber(pkg.amount)} USDT
-                                                </td>
-                                                <td className={`${tableCellStyles} w-[15%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                    {formatParticipationTime(pkg.date_start)}
-                                                </td>
-                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid font-semibold`}>
-                                                    {pkg.status === 'running' ? (
-                                                        <span className="text-gray-500 dark:text-gray-400">--</span>
-                                                    ) : (
-                                                        <span className="text-green-600 dark:text-green-400">{formatNumber(getRewardAmount(pkg))} USDT</span>
-                                                    )}
-                                                </td>
-                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-r rounded-r-lg border-theme-gray-100 border-solid`}>
-                                                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                                                        pkg.status === 'running' 
-                                                            ? 'bg-gray-400 text-white' 
-                                                            : pkg.status === 'pending-claim'
-                                                            ? 'bg-yellow-500 text-white'
-                                                            : 'bg-gray-500 text-white'
-                                                    }`}>
-                                                        {getStatusText(pkg.status)}
-                                                    </span>
-                                                </td>
+                            {/* Desktop Table Layout */}
+                            <div className="hidden sm:block overflow-hidden rounded-md bg-transparent border border-none">
+                                {/* Fixed Header */}
+                                <div className="overflow-hidden rounded-t-md">
+                                    <table className={tableStyles}>
+                                        <thead>
+                                            <tr>
+                                                <th className={`${tableHeaderStyles} w-[5%] text-left rounded-l-lg`}>{t('wallet.tableHeaders.stt')}</th>
+                                                <th className={`${tableHeaderStyles} w-[12%]`}>{t('makeMoney.packageTypeColumn')}</th>
+                                                <th className={`${tableHeaderStyles} w-[10%]`}>{t('makeMoney.typeColumn')}</th>
+                                                <th className={`${tableHeaderStyles} w-[12%]`}>{t('makeMoney.amountColumn')}</th>
+                                                <th className={`${tableHeaderStyles} w-[15%]`}>{t('makeMoney.participationTimeColumn')}</th>
+                                                <th className={`${tableHeaderStyles} w-[12%]`}>{t('makeMoney.totalRewardColumn')}</th>
+                                                <th className={`${tableHeaderStyles} w-[12%]`}>{t('makeMoney.statusColumn')}</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                    </table>
+                                </div>
+
+                                {/* Scrollable Body */}
+                                <div className={tableContainerStyles} ref={tableRef}>
+                                    <table className={tableStyles}>
+                                        <tbody>
+                                            {allPackages.map((pkg, index) => (
+                                                <tr key={pkg.id} className="group transition-colors">
+                                                    <td className={`${tableCellStyles} w-[5%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
+                                                        {index + 1}
+                                                    </td>
+                                                    <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                        <span className="px-3 py-1 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-full text-sm font-medium">
+                                                            {getTypeDurationLabel(pkg.type)}
+                                                        </span>
+                                                    </td>
+                                                    <td className={`${tableCellStyles} w-[10%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${pkg.amount > 10
+                                                                ? 'bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white'
+                                                                : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
+                                                            }`}>
+                                                            {pkg.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}
+                                                        </span>
+                                                    </td>
+                                                    <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid font-semibold text-red-600 dark:text-[#FE645F]`}>
+                                                        {formatNumber(pkg.amount)} USDT
+                                                    </td>
+                                                    <td className={`${tableCellStyles} w-[15%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                        {formatParticipationTime(pkg.date_start)}
+                                                    </td>
+                                                    <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid font-semibold`}>
+                                                        {pkg.status === 'running' ? (
+                                                            <span className="text-gray-500 dark:text-gray-400">--</span>
+                                                        ) : (
+                                                            <span className="text-green-600 dark:text-green-400">{formatNumber(getRewardAmount(pkg))} USDT</span>
+                                                        )}
+                                                    </td>
+                                                    <td className={`${tableCellStyles} w-[12%] border-x-0 border-r rounded-r-lg border-theme-gray-100 border-solid`}>
+                                                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${pkg.status === 'running'
+                                                                ? 'bg-gray-400 text-white'
+                                                                : pkg.status === 'pending-claim'
+                                                                    ? 'bg-yellow-500 text-white'
+                                                                    : 'bg-gray-500 text-white'
+                                                            }`}>
+                                                            {getStatusText(pkg.status)}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
-                        </div>
                         </>
                     )}
                 </div>

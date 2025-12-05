@@ -326,7 +326,7 @@ function WithdrawPageContent() {
                 </div>
 
                 {/* Middle Section - Withdrawal Amount Block */}
-                <div className="bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 rounded-full p-6 shadow-lg max-w-xl mx-auto">
+                <div className="bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 rounded-full p-6 shadow-lg max-w-3xl mx-auto">
                     <h3 className="text-white text-center font-semibold mb-4 text-lg">
                         Nhập số tiền muốn rút
                     </h3>
@@ -362,7 +362,7 @@ function WithdrawPageContent() {
                 </div>
 
                 {/* Lower Middle Section - Network and Address */}
-                <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center gap-6 max-w-xl mx-auto mt-10">
+                <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center gap-6 max-w-3xl mx-auto mt-10">
                     <div className="grid grid-cols-2 gap-4 w-full">
                         {/* Network Selection */}
                         <div className="space-y-2">

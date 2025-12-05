@@ -69,8 +69,8 @@ export default function MyProfileLayout({
   }
 
   return (
-    <div className='w-full min-h-svh flex justify-center items-center px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
-      <Tabs value={activeTab} onValueChange={handleTabChange} className='decoration-theme-black shadow-md rounded-lg p-4 sm:p-6 md:p-8 bg-transparent border-none w-full max-w-4xl mx-auto'>
+    <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
+      <Tabs value={activeTab} onValueChange={handleTabChange} className='decoration-theme-black shadow-md rounded-lg px-4 sm:px-6 md:px-8 bg-transparent border-none w-full max-w-4xl mx-auto flex flex-col gap-[5vh]'>
         <TabsList className='grid grid-cols-2 mb-6 sm:mb-8 md:mb-10 bg-transparent p-0 gap-4 sm:gap-6 md:gap-10 w-full sm:w-fit mx-auto'>
           <TabsTrigger 
             value='my-profile' 
@@ -85,7 +85,7 @@ export default function MyProfileLayout({
             {t('profile.kyc')}
           </TabsTrigger>
         </TabsList>
-        <div className='w-full max-w-4xl min-w-0 sm:min-w-[500px] md:min-w-[684.52px] min-h-[400px] sm:min-h-[500px] md:min-h-[615.5px] mx-auto bg-transparent rounded-lg border border-gray-200 dark:border-[#FE645F] flex items-center justify-center'>
+        <div className='w-full max-w-4xl min-w-0 sm:min-w-[500px] md:min-w-[684.52px] min-h-[400px] mx-auto bg-transparent rounded-lg border border-gray-200 dark:border-[#FE645F] flex items-center justify-center'>
           <div className='mt-0 w-full px-2 sm:px-0'>
             {children}
           </div>

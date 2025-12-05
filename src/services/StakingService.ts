@@ -13,7 +13,8 @@ export interface StakingPackage {
   turn_setting: number;      // Số lượt xem video cần hoàn thành
   devices_setting: number;   // Số thiết bị cần hoàn thành
   estimated_reward?: number; // Phần thưởng ước tính (từ API join-now)
-  real_reward?: number;     // Phần thưởng thực tế (từ API join-now)
+  real_reward?: number;  
+  total_reward?: number;   // Phần thưởng thực tế (từ API join-now)
   status: "running" | "pending-claim" | "ended";
 }
 

@@ -71,7 +71,7 @@ export default function Modal({
             {/* Modal Content */}
             <div
                 className={cn(
-                    'relative z-50 w-full bg-white rounded-lg shadow-xl',
+                    'relative z-50 w-full bg-white dark:bg-theme-gray-200 rounded-lg shadow-xl',
                     'transform transition-all duration-300',
                     maxWidth,
                     isAnimating ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4',
@@ -82,22 +82,22 @@ export default function Modal({
                 {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="absolute right-4 top-4 cursor-pointer rounded-sm opacity-70 hover:opacity-100 transition-opacity border-none bg-transparent focus:ring-gray-400 z-10 p-1 hover:bg-gray-100 "
+                    className="absolute right-4 top-4 cursor-pointer rounded-sm opacity-70 hover:opacity-100 transition-opacity border-none bg-transparent focus:ring-gray-400 dark:focus:ring-gray-600 z-10 p-1 hover:bg-gray-100 dark:hover:bg-theme-gray-100/20"
                     aria-label="Close"
                 >
-                    <X className="h-5 w-5 text-gray-600" />
+                    <X className="h-5 w-5 text-gray-600 dark:text-theme-gray-100" />
                 </button>
 
                 {/* Header */}
                 {(title || description) && (
-                    <div className="px-6 py-4 border-b border-gray-200">
+                    <div className="px-6 py-4 border-b border-gray-200 dark:border-theme-gray-100">
                         {title && (
-                            <h2 className="text-2xl font-bold text-theme-red-200 pr-8">
+                            <h2 className="text-2xl font-bold text-theme-red-200 dark:text-theme-red-200 pr-8">
                                 {title}
                             </h2>
                         )}
                         {description && (
-                            <p className="text-sm text-theme-red-200">
+                            <p className="text-sm text-theme-red-200 dark:text-theme-red-200">
                                 {description}
                             </p>
                         )}
