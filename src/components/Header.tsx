@@ -33,7 +33,7 @@ export default function Header() {
       href: '/referral/direct',
     },
     {
-      name: 'Influencer Rewards',
+      name: t('header.influencerRewards'),
       href: '/referral/smart',
     }
   ]
@@ -76,7 +76,7 @@ export default function Header() {
         <div className="hidden md:flex items-center 2xl:gap-16 gap-6 bg-theme-pink-100/80 dark:bg-[#1B1B1B]/60 px-10 py-4  justify-center rounded-full">
           {listMenu.map((item) => (
             <Link href={item.href} key={item.name}>
-              <div className={`text-sm font-inter font-medium rounded-full cursor-pointer hover:text-theme-orange-100 flex-1 text-center ${pathname === item.href ? 'text-theme-orange-100 dark:text-theme-orange-100 font-semibold' : 'text-theme-black-100 dark:text-theme-gray-100'}`}>
+              <div className={`text-sm font-inter font-medium rounded-full cursor-pointer hover:!text-theme-orange-100 flex-1 text-center ${pathname === item.href ? 'text-theme-orange-100 dark:text-theme-orange-100 font-semibold' : 'text-theme-black-100 dark:text-theme-gray-100'}`}>
                 {item.name}
               </div>
             </Link>
@@ -91,7 +91,7 @@ export default function Header() {
           <div className="relative" ref={langMenuRef}>
             <button
               onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-              className="p-1.5 sm:p-2 rounded-full bg-transparent hover:bg-pink-100 dark:hover:bg-theme-gray-200 active:bg-pink-200 dark:active:bg-theme-gray-200/50 transition-colors border-none touch-manipulation"
+              className="p-1.5 sm:px-2.5 sm:pt-2.5 sm:pb-2 cursor-pointer rounded-full bg-transparent hover:bg-pink-100 dark:hover:bg-theme-gray-200 active:bg-pink-200 dark:active:bg-theme-gray-200/50 transition-colors border-none touch-manipulation"
               aria-label="Language"
             >
               <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500 dark:text-pink-400" />
@@ -106,7 +106,7 @@ export default function Header() {
                         setLang(langOption.code);
                         setIsLangMenuOpen(false);
                       }}
-                      className={`w-full px-4 py-2.5 border-none text-sm font-inter font-medium text-left hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 transition-colors ${
+                      className={`w-full px-4 py-2.5 cursor-pointer border-none text-sm font-inter font-medium text-left hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 transition-colors ${
                         lang === langOption.code
                           ? 'text-pink-500 dark:text-pink-400 bg-pink-50 dark:bg-theme-gray-100/30'
                           : 'text-theme-black-100 dark:text-theme-gray-100 bg-white dark:bg-theme-gray-200'
@@ -122,11 +122,11 @@ export default function Header() {
           {/* Dark Mode Toggle */}
           <button
             onClick={toggleTheme}
-            className="p-1.5 sm:p-2 rounded-full bg-transparent hover:bg-pink-100 dark:hover:bg-theme-gray-200 active:bg-pink-200 dark:active:bg-theme-gray-200/50 transition-colors border-none touch-manipulation"
+            className="p-1.5 sm:px-2.5 sm:pt-2.5 sm:pb-2 cursor-pointer rounded-full bg-transparent hover:bg-pink-100 dark:hover:bg-theme-gray-200 active:bg-pink-200 dark:active:bg-theme-gray-200/50 transition-colors border-none touch-manipulation"
             aria-label="Toggle dark mode"
           >
             {theme === 'dark' ? (
-              <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500 dark:text-pink-400 mx-1" />
+              <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500 dark:text-pink-400" />
             ) : (
               <Moon className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500 mx-1" />
             )}

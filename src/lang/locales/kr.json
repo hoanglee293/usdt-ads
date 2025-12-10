@@ -17,7 +17,8 @@
     "makeMoney": "수익 참여",
     "rewards": "보상 받기",
     "wallet": "입금/출금",
-    "referral": "추천"
+    "referral": "추천",
+    "influencerRewards": "인플루언서 보상"
   },
   "user": {
     "loading": "로딩 중...",
@@ -139,7 +140,9 @@
     "linkCopied": "추천 링크가 복사되었습니다",
     "copyFailed": "복사할 수 없습니다",
     "minimumWithdrawError": "최소 출금 금액은 $10입니다. 현재 금액: ${amount}",
-    "disclaimer": "*시스템은 사용자가 직접 추천한 사람이 KYC를 완료하고 최소 1회 이상 스테이킹 패키지를 참여하고 완료한 경우 마일스톤별로 추천 보상을 지급합니다"
+    "disclaimer": "*시스템은 사용자가 직접 추천한 사람이 KYC를 완료하고 최소 1회 이상 스테이킹 패키지를 참여하고 완료한 경우 마일스톤별로 추천 보상을 지급합니다",
+    "kolPermissionTitle": "KOL 권한 필요",
+    "kolPermissionMessage": "이 기능을 사용하려면 관리자에게 연락하여 KOL 권한을 부여받아야 합니다."
   },
   "staking": {
     "joinBaseSuccess": "베이스 패키지 가입 성공!",
@@ -305,7 +308,9 @@
     "pleaseEnterAllInfo": "모든 정보를 입력해 주세요",
     "loginSuccess": "로그인 성공!",
     "loginFailed": "로그인에 실패했습니다. 로그인 정보를 다시 확인해 주세요.",
-    "required": "*"
+    "required": "*",
+    "invalidEmailOrPassword": "이메일 또는 비밀번호가 올바르지 않습니다",
+    "userNotFound": "사용자를 찾을 수 없습니다"
   },
   "register": {
     "getStarted": "우리와 함께 시작하세요",

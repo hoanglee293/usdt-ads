@@ -12,6 +12,7 @@ interface ModalProps {
     children: React.ReactNode
     className?: string
     maxWidth?: string
+    showCloseButton?: boolean
 }
 
 export default function Modal({
@@ -21,7 +22,8 @@ export default function Modal({
     description,
     children,
     className,
-    maxWidth = 'max-w-[500px]'
+    maxWidth = 'max-w-[500px]',
+    showCloseButton = true,
 }: ModalProps) {
     const [isAnimating, setIsAnimating] = useState(false)
 
@@ -80,13 +82,15 @@ export default function Modal({
                 onClick={(e) => e.stopPropagation()}
             >
                 {/* Close Button */}
-                <button
-                    onClick={onClose}
-                    className="absolute right-4 top-4 cursor-pointer rounded-sm opacity-70 hover:opacity-100 transition-opacity border-none bg-transparent focus:ring-gray-400 dark:focus:ring-gray-600 z-10 p-1 hover:bg-gray-100 dark:hover:bg-theme-gray-100/20"
-                    aria-label="Close"
-                >
-                    <X className="h-5 w-5 text-gray-600 dark:text-theme-gray-100" />
-                </button>
+                {showCloseButton && (
+                    <button
+                        onClick={onClose}
+                        className="absolute right-4 top-4 cursor-pointer rounded-sm opacity-70 hover:opacity-100 transition-opacity border-none bg-transparent focus:ring-gray-400 z-10 p-1 hover:bg-gray-100 "
+                        aria-label="Close"
+                    >
+                        <X className="h-5 w-5 text-gray-600" />
+                    </button>
+                )}
 
                 {/* Header */}
                 {(title || description) && (

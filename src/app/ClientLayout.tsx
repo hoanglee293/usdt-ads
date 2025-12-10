@@ -3,13 +3,13 @@
 import React, { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
-import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/useAuth";
+import { useProfile } from "@/hooks/useProfile";
 import { LangProvider } from "@/lang/LangProvider";
 import { ThemeProvider } from "@/theme/ThemeProvider";
 import { useTheme } from "@/theme/useTheme";
 import Header from "@/components/Header";
-import { getProfile, UserProfile } from "@/services/AuthService";
 import { Toaster } from "react-hot-toast";
 
 interface ClientLayoutProps {
@@ -52,6 +52,10 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { isAuth, login, logout } = useAuth();
+  const [showEmailVerifyModal, setShowEmailVerifyModal] = useState(false);
+  const [emailVerifyMessage, setEmailVerifyMessage] = useState(
+    "Email is not activated. Please activate your email to continue."
+  );
 
   // Check if current page is login
   const isLoginPage =
@@ -61,6 +65,8 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
     pathname === "/reset-password" ||
     pathname === "/register" ||
     pathname === "/verify-mail";
+
+  const { error: profileError } = useProfile({ enabled: isAuth && !isLoginPage });
 
   // Handle authentication redirects
   useEffect(() => {
@@ -75,7 +81,20 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
     }
   }, [isAuth, isLoginPage, pathname, router]);
 
-  console.log(isAuth)
+  useEffect(() => {
+    if (!isAuth || isLoginPage || !profileError) return;
+
+    const status = (profileError as any)?.response?.status || (profileError as any)?.statusCode;
+    const message =
+      (profileError as any)?.response?.data?.message ||
+      (profileError as any)?.message ||
+      "Email is not activated. Please activate your email to continue.";
+
+    if (status === 403 && message?.toLowerCase().includes("email is not activated") && pathname !== "/verify-mail") {
+      setEmailVerifyMessage(message);
+      setShowEmailVerifyModal(true);
+    }
+  }, [isAuth, isLoginPage, pathname, profileError]);
 
   // Hiển thị loading cho đến khi hoàn thành việc check auth và cập nhật state
   // Điều này đảm bảo không có flash của content không đúng
@@ -93,6 +112,24 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
   return (
     <>
       {!isLoginPage && <Header />}
+      {showEmailVerifyModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
+          <div className="w-full max-w-lg rounded-2xl bg-white px-8 py-6 shadow-2xl dark:bg-neutral-900 border border-theme-orange-100 dark:border-solid">
+            <div className="mb-4 text-2xl uppercase font-orbitron font-semibold text-yellow-500">
+              Cảnh báo
+            </div>
+            <p className="mb-6 text-base text-gray-700 dark:text-gray-300">{emailVerifyMessage}</p>
+            <div className="flex justify-end gap-3">
+              <button
+                onClick={() => router.push("/verify-mail")}
+                className="rounded-lg bg-pink-500 cursor-pointer px-4 py-2 border-none outline-none text-base font-semibold text-white hover:bg-pink-600"
+              >
+                Xác thực ngay
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <main className="flex-1 min-h-screen font-inter bg-theme-white-100 dark:bg-black">{children}</main>
     </>
   );

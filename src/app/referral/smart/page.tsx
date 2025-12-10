@@ -1,5 +1,5 @@
 'use client'
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Copy, Play, Link2 } from 'lucide-react'
 import { Button } from '@/ui/button'
 import { toast } from 'sonner'
@@ -7,11 +7,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getMemberRefInfo, createMemberRefWithdraw } from '@/services/RefService'
 import { useProfile } from '@/hooks/useProfile'
 import { useLang } from '@/lang/useLang'
+import Modal from '@/components/Modal'
 
 export default function SmartRefPage() {
     const queryClient = useQueryClient()
-    const { profile } = useProfile()
+    const { profile, loading: profileLoading } = useProfile()
     const { t } = useLang()
+    const [showKolModal, setShowKolModal] = useState(true)
 
     // Milestone definitions
     const milestoneDefinitions = [
@@ -89,6 +91,44 @@ export default function SmartRefPage() {
         }
 
         withdrawMutation.mutate()
+    }
+
+    // Show loading state while profile is loading
+    if (profileLoading) {
+        return (
+            <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-center px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
+                <div className='text-center'>
+                    <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-[#FE645F] mx-auto'></div>
+                    <p className='mt-4 text-gray-600 dark:text-gray-400'>{t('common.loading')}</p>
+                </div>
+            </div>
+        )
+    }
+
+    // Show modal and message if user doesn't have KOL permission
+    if (!profileLoading && profile && !profile.kol) {
+        return (
+            <>
+                <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-center px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
+                    <div className='text-center max-w-2xl mx-auto'>
+                        <div className='bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-lg p-6 sm:p-8'>
+                            <h2 className='text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4'>
+                                {t('smartRef.kolPermissionTitle')}
+                            </h2>
+                            <p className='text-gray-600 dark:text-gray-300 mb-6'>
+                                {t('smartRef.kolPermissionMessage')}
+                            </p>
+                            <Button
+                                onClick={() => setShowKolModal(true)}
+                                className="bg-gradient-to-r from-[#FE645F] to-[#C68AFE] text-white border-none hover:opacity-90"
+                            >
+                                {t('smartRef.kolPermissionTitle')}
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </>
+        )
     }
 
     return (

@@ -34,7 +34,7 @@ axiosClient.interceptors.response.use(
         return axiosClient(originalRequest);
       } catch (refreshError: any) {
         // Nếu refresh token trả về 419, tự động logout
-        if (refreshError?.response?.status === 419) {
+        if (refreshError?.response?.status === 419 || refreshError?.response?.status === 400) {
           // Chỉ logout nếu đang ở client-side
           if (typeof window !== "undefined") {
             useAuthStore.getState().logout();

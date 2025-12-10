@@ -55,9 +55,9 @@ const page = () => {
         try {
             const registerData: RegisterData = {
                 uname: username.trim(),
-                uemail: email.trim(),
-                upassword: password,
-                ufulllname: fullName.trim(),
+                email: email.trim(),
+                password,
+                display_name: fullName.trim(),
                 ref_code: refCode.trim(),
             }
 

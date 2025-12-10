@@ -17,7 +17,8 @@
     "makeMoney": "Join to Earn",
     "rewards": "Get Rewards",
     "wallet": "Deposit/Withdraw",
-    "referral": "Referral"
+    "referral": "Referral",
+    "influencerRewards": "Influencer Rewards"
   },
   "user": {
     "loading": "Loading...",
@@ -139,7 +140,9 @@
     "linkCopied": "Referral link copied",
     "copyFailed": "Unable to copy",
     "minimumWithdrawError": "Minimum withdrawal amount is $10. Current amount: ${amount}",
-    "disclaimer": "*The system rewards referrals by milestone if the User directly refers someone who has completed KYC; participated and completed at least 1 Staking package"
+    "disclaimer": "*The system rewards referrals by milestone if the User directly refers someone who has completed KYC; participated and completed at least 1 Staking package",
+    "kolPermissionTitle": "KOL Permission Required",
+    "kolPermissionMessage": "Please contact admin to grant KOL permission to use this feature."
   },
   "staking": {
     "joinBaseSuccess": "Successfully joined Base package!",
@@ -305,7 +308,8 @@
     "pleaseEnterAllInfo": "Please enter all information",
     "loginSuccess": "Login successful!",
     "loginFailed": "Login failed. Please check your login information again.",
-    "required": "*"
+    "required": "*",
+    "invalidEmailOrPassword": "Invalid email or password"
   },
   "register": {
     "getStarted": "Get Started With Us",

@@ -40,7 +40,13 @@ const page = () => {
             const errorMessage = err?.message || 
                 err?.response?.data?.message || 
                 t('login.loginFailed')
-            toast.error(errorMessage)
+            if(errorMessage === 'Invalid email or password'){
+                toast.error(t('login.invalidEmailOrPassword'))
+            } else if(errorMessage === 'User not found'){
+                toast.error(t('login.userNotFound'))
+            } else {
+                toast.error(t('login.loginFailed'))
+            }
         } finally {
             setLoading(false)
         }

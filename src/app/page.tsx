@@ -5,9 +5,11 @@ import Link from 'next/link'
 import { Network, Box, Users, Smartphone, Megaphone, Monitor, DollarSign } from 'lucide-react'
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver'
 import { useLang } from '@/lang/useLang'
+import { useRouter } from 'next/navigation'
 
 export default function HomePage() {
   const { t } = useLang()
+  const router = useRouter()
   // Hero Section Observers - Giảm threshold và rootMargin cho mobile
   const { elementRef: logoRef, isIntersecting: logoInView } = useIntersectionObserver<HTMLDivElement>({
     threshold: 0.1,
@@ -104,7 +106,7 @@ export default function HomePage() {
 
   return (
     <div className="relative min-h-screen container mx-auto overflow-hidden bg-transparent dark:bg-black py-24 lg:py-32 xl:py-48 px-4 sm:px-6">
-     
+
       {/* SVG Gradients Definitions */}
       <svg className="absolute w-0 h-0">
         <defs>
@@ -121,17 +123,17 @@ export default function HomePage() {
           ref={bgImageRef}
           className="absolute top-1/2 left-1/2 mt-[-14vh] -translate-x-1/2 -translate-y-1/2 w-[120%] sm:w-full h-full rounded-full opacity-30 sm:opacity-50 md:opacity-100"
         >
-            <img 
-            src="/bg-main.png" 
-            alt="bg-main" 
+          <img
+            src="/bg-main.png"
+            alt="bg-main"
             className={`w-full h-full object-contain animate-float-slow transition-opacity duration-1000 ${bgImageInView ? 'in-view opacity-100' : 'opacity-30 sm:opacity-50 dark:opacity-10'}`}
           />
         </div>
-        
+
         {/* Top Section - Logo, Title, Subtitle, CTA */}
         <div className="flex flex-col items-center text-center mb-12 sm:mb-16 md:mb-24 lg:mb-32 max-w-4xl w-full px-4">
           {/* Logo */}
-          <div 
+          <div
             ref={logoRef}
             className={`mb-4 sm:mb-6 md:mb-8 animate-scale-in ${logoInView ? 'in-view' : ''}`}
           >
@@ -145,7 +147,7 @@ export default function HomePage() {
           </div>
 
           {/* Main Title */}
-          <h1 
+          <h1
             ref={titleRef}
             className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 md:mb-6 text-gradient-secondary leading-tight overflow-visible animate-fade-in-up px-2 ${titleInView ? 'in-view' : ''}`}
           >
@@ -153,7 +155,7 @@ export default function HomePage() {
           </h1>
 
           {/* Subtitle */}
-          <p 
+          <p
             ref={subtitleRef}
             className={`text-xs sm:text-sm md:text-base lg:text-lg text-theme-black-100 dark:text-gray-300 mb-6 sm:mb-8 md:mb-10 font-medium max-w-2xl animate-fade-in-up-delayed px-2 ${subtitleInView ? 'in-view' : ''}`}
           >
@@ -161,15 +163,14 @@ export default function HomePage() {
           </p>
 
           {/* CTA Button */}
-          <div 
+          <div
             ref={ctaRef}
-            className={`animate-fade-in-up-more-delayed w-full sm:w-auto ${ctaInView ? 'in-view' : ''}`}
+            onClick={() => router.push('/make-money')}
+            className={`animate-fade-in-up-more-delayed w-full sm:w-auto cursor-pointer ${ctaInView ? 'in-view' : ''}`}
           >
-            <Link href="/register" className="block w-full sm:w-auto">
-              <button className="w-full sm:w-auto px-8 sm:px-12 md:px-20 border-none outline-none py-2.5 sm:py-2 md:py-3 bg-gradient-secondary text-white font-bold text-xs sm:text-sm md:text-base lg:text-lg rounded-full hover:opacity-90 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 font-orbitron uppercase tracking-wide">
-                {t('home.joinNow')}
-              </button>
-            </Link>
+            <button className="w-full cursor-pointer sm:w-auto px-8 sm:px-12 md:px-20 border-none outline-none py-2.5 sm:py-2 md:py-3 bg-gradient-secondary text-white font-bold text-xs sm:text-sm md:text-base lg:text-lg rounded-full hover:opacity-90 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 font-orbitron uppercase tracking-wide">
+              {t('home.joinNow')}
+            </button>
           </div>
         </div>
 
@@ -182,7 +183,7 @@ export default function HomePage() {
             <div className="block md:hidden space-y-8 sm:space-y-10">
               {/* Center Title - Mobile */}
               <div className="text-center w-full mb-6 sm:mb-8">
-                <h2 
+                <h2
                   ref={centerTitleRef}
                   className={`text-xl sm:text-2xl font-bold text-gradient-secondary animate-scale-in ${centerTitleInView ? 'in-view' : ''}`}
                 >
@@ -191,16 +192,16 @@ export default function HomePage() {
               </div>
 
               {/* Feature 1: Công nghệ */}
-              <div 
+              <div
                 ref={feature1Ref}
                 className={`flex flex-col items-center gap-3 sm:gap-4 animate-fade-in-up ${feature1InView ? 'in-view' : ''}`}
               >
                 <div className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24">
                   <div className="relative w-full h-full flex items-center justify-center">
-                    <img 
+                    <img
                       ref={feature1ImageRef}
-                      src="/block-chain.png" 
-                      alt="tech" 
+                      src="/block-chain.png"
+                      alt="tech"
                       className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-float ${feature1ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
                     />
                   </div>
@@ -214,15 +215,15 @@ export default function HomePage() {
               </div>
 
               {/* Feature 2: Thiết bị */}
-              <div 
+              <div
                 ref={feature2Ref}
                 className={`flex flex-col items-center gap-3 sm:gap-4 animate-fade-in-up ${feature2InView ? 'in-view' : ''}`}
               >
                 <div className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24">
-                  <img 
+                  <img
                     ref={feature2ImageRef}
-                    src="/phone.png" 
-                    alt="tech" 
+                    src="/phone.png"
+                    alt="tech"
                     className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-float-fast ${feature2ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
                   />
                 </div>
@@ -235,16 +236,16 @@ export default function HomePage() {
               </div>
 
               {/* Feature 3: Blockchain */}
-              <div 
+              <div
                 ref={feature3Ref}
                 className={`flex flex-col items-center gap-3 sm:gap-4 animate-fade-in-up ${feature3InView ? 'in-view' : ''}`}
               >
                 <div className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24">
                   <div className="relative">
-                    <img 
+                    <img
                       ref={feature3ImageRef}
-                      src="/ai-block-chain.png" 
-                      alt="tech" 
+                      src="/ai-block-chain.png"
+                      alt="tech"
                       className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-pulse-glow ${feature3ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
                     />
                   </div>
@@ -258,15 +259,15 @@ export default function HomePage() {
               </div>
 
               {/* Feature 4: Cộng đồng */}
-              <div 
+              <div
                 ref={feature4Ref}
                 className={`flex flex-col items-center gap-3 sm:gap-4 animate-fade-in-up ${feature4InView ? 'in-view' : ''}`}
               >
                 <div className="flex-shrink-0 w-20 h-20 sm:w-24 sm:h-24">
-                  <img 
+                  <img
                     ref={feature4ImageRef}
-                    src="/socical.png" 
-                    alt="tech" 
+                    src="/socical.png"
+                    alt="tech"
                     className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-bounce-gentle ${feature4ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
                   />
                 </div>
@@ -282,16 +283,16 @@ export default function HomePage() {
             {/* Tablet/Desktop Layout: 3x3 Grid */}
             <div className="hidden md:grid md:grid-cols-3 md:grid-rows-3 gap-6 md:gap-8 lg:gap-10">
               {/* Feature 1: Công nghệ - Top Right */}
-              <div 
+              <div
                 ref={feature1Ref}
                 className={`col-start-2 row-start-1 flex flex-col items-center gap-4 md:gap-6 animate-fade-in-down ${feature1InView ? 'in-view' : ''}`}
               >
                 <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36">
                   <div className="relative w-full h-full flex items-center justify-center">
-                    <img 
+                    <img
                       ref={feature1ImageRef}
-                      src="/block-chain.png" 
-                      alt="tech" 
+                      src="/block-chain.png"
+                      alt="tech"
                       className={`w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 object-contain transition-all duration-500 animate-float ${feature1ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
                     />
                   </div>
@@ -305,15 +306,15 @@ export default function HomePage() {
               </div>
 
               {/* Feature 2: Thiết bị - Middle Left */}
-              <div 
+              <div
                 ref={feature2Ref}
                 className={`col-start-1 row-start-2 flex flex-col items-center gap-4 md:gap-6 animate-fade-in-right ${feature2InView ? 'in-view' : ''}`}
               >
                 <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36">
-                  <img 
+                  <img
                     ref={feature2ImageRef}
-                    src="/phone.png" 
-                    alt="tech" 
+                    src="/phone.png"
+                    alt="tech"
                     className={`w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 object-contain transition-all duration-500 animate-float-fast ${feature2ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
                   />
                 </div>
@@ -327,7 +328,7 @@ export default function HomePage() {
 
               {/* Center Title */}
               <div className="text-center col-start-2 row-start-2 flex justify-center items-center w-full">
-                <h2 
+                <h2
                   ref={centerTitleRef}
                   className={`text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gradient-secondary max-w-80 animate-scale-in ${centerTitleInView ? 'in-view' : ''}`}
                 >
@@ -336,16 +337,16 @@ export default function HomePage() {
               </div>
 
               {/* Feature 3: Blockchain - Middle Right */}
-              <div 
+              <div
                 ref={feature3Ref}
                 className={`col-start-3 row-start-2 flex flex-col items-center gap-4 md:gap-6 justify-center animate-fade-in-left ${feature3InView ? 'in-view' : ''}`}
               >
                 <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36">
                   <div className="relative">
-                    <img 
+                    <img
                       ref={feature3ImageRef}
-                      src="/ai-block-chain.png" 
-                      alt="tech" 
+                      src="/ai-block-chain.png"
+                      alt="tech"
                       className={`w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 object-contain transition-all duration-500 animate-pulse-glow ${feature3ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
                     />
                   </div>
@@ -359,15 +360,15 @@ export default function HomePage() {
               </div>
 
               {/* Feature 4: Cộng đồng - Bottom Center */}
-              <div 
+              <div
                 ref={feature4Ref}
                 className={`col-start-2 row-start-3 flex flex-col items-center gap-4 md:gap-6 animate-fade-in-up ${feature4InView ? 'in-view' : ''}`}
               >
                 <div className="flex-shrink-0 w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36">
-                  <img 
+                  <img
                     ref={feature4ImageRef}
-                    src="/socical.png" 
-                    alt="tech" 
+                    src="/socical.png"
+                    alt="tech"
                     className={`w-24 h-24 md:w-32 md:h-32 lg:w-36 lg:h-36 object-contain transition-all duration-500 animate-bounce-gentle ${feature4ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
                   />
                 </div>
@@ -383,11 +384,11 @@ export default function HomePage() {
         </div>
 
       </div>
-      
+
       {/* How USDA Works Section */}
       <div className="w-full max-w-7xl mx-auto mt-12 sm:mt-16 md:mt-24 lg:mt-32 xl:mt-40 px-4 sm:px-6">
         {/* Section Title */}
-        <h2 
+        <h2
           ref={sectionTitleRef}
           className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gradient-secondary w-full text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16 font-orbitron animate-fade-in-up px-2 ${sectionTitleInView ? 'in-view' : ''}`}
         >
@@ -397,7 +398,7 @@ export default function HomePage() {
         {/* Three Panels Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10">
           {/* Panel 1: Advertising Revenue */}
-          <div 
+          <div
             ref={panel1Ref}
             className={`bg-white dark:bg-gray-800 border-2 dark:border border-solid border-[#FA4E4D] dark:border-[#FE645F] rounded-xl p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 flex flex-col gap-2 items-center text-center hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-purple-500/20 transition-shadow animate-fade-in-up ${panel1InView ? 'in-view' : ''}`}
           >
@@ -441,7 +442,7 @@ export default function HomePage() {
           </div>
 
           {/* Panel 2: Invest in Device System */}
-          <div 
+          <div
             ref={panel2Ref}
             className={`bg-white dark:bg-gray-800 border-2 dark:border border-solid border-[#FA4E4D] dark:border-[#FE645F] rounded-xl p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 flex flex-col gap-2 items-center text-center hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-purple-500/20 transition-shadow animate-fade-in-up-delayed ${panel2InView ? 'in-view' : ''}`}
           >
@@ -477,9 +478,9 @@ export default function HomePage() {
               {t('home.howItWorks.investDeviceSystem.description')}
             </p>
           </div>
-          
+
           {/* Panel 3: Community Development & USDA Coin */}
-          <div 
+          <div
             ref={panel3Ref}
             className={`bg-white dark:bg-gray-800 border-2 dark:border border-solid border-[#FA4E4D] dark:border-[#FE645F] rounded-xl p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 flex flex-col gap-2 items-center text-center hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-purple-500/20 transition-shadow animate-fade-in-up-more-delayed sm:col-span-2 md:col-span-1 ${panel3InView ? 'in-view' : ''}`}
           >

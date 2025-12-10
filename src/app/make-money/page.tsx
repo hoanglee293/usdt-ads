@@ -953,8 +953,9 @@ export default function MakeMoneyPage() {
                 <Modal
                     isOpen={isBaseConfirmModalOpen}
                     onClose={() => setIsBaseConfirmModalOpen(false)}
-                    title={t('makeMoney.baseConfirmModalTitle')}
+                    showCloseButton={false}
                     maxWidth="max-w-[500px]"
+                    className='p-4'
                 >
                     <div className='space-y-4'>
                         <div className='text-center'>
@@ -974,6 +975,14 @@ export default function MakeMoneyPage() {
                                     <span className='text-sm font-medium text-blue-600 dark:text-blue-400'>{t('makeMoney.amountLabelConfirm')}</span>
                                     <span className='text-base font-semibold text-blue-700 dark:text-blue-300'>
                                         {formatNumber(totalBaseBalance)} USDT
+                                    </span>
+                                </div>
+                            </div>
+                            <div className='p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700'>
+                                <div className='flex items-center justify-between'>
+                                    <span className='text-sm font-medium text-blue-600 dark:text-blue-400'>Phần trăm lợi nhuận :</span>
+                                    <span className='text-base font-semibold text-blue-700 dark:text-blue-300'>
+                                        0.2%
                                     </span>
                                 </div>
                             </div>

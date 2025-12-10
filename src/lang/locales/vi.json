@@ -17,7 +17,8 @@
     "makeMoney": "Tham gia kiếm tiền",
     "rewards": "Nhận phần thưởng",
     "wallet": "Nạp/Rút tiền",
-    "referral": "Giới thiệu"
+    "referral": "Giới thiệu",
+    "influencerRewards": "Thưởng Influencer"
   },
   "user": {
     "loading": "Đang tải...",
@@ -139,7 +140,9 @@
     "linkCopied": "Đã sao chép link giới thiệu",
     "copyFailed": "Không thể sao chép",
     "minimumWithdrawError": "Số tiền tối thiểu để rút là $10. Số tiền hiện tại: ${amount}",
-    "disclaimer": "*Hệ thống trả thưởng giới thiệu theo mốc nếu User giới thiệu trực tiếp được được người tham gia khác KYC; tham gia và hoàn gói Staking ít nhất 1 lần"
+    "disclaimer": "*Hệ thống trả thưởng giới thiệu theo mốc nếu User giới thiệu trực tiếp được được người tham gia khác KYC; tham gia và hoàn gói Staking ít nhất 1 lần",
+    "kolPermissionTitle": "Yêu cầu quyền KOL",
+    "kolPermissionMessage": "Vui lòng liên hệ với admin để được cấp quyền KOL để sử dụng tính năng này."
   },
   "staking": {
     "joinBaseSuccess": "Tham gia gói Base thành công!",
@@ -305,7 +308,9 @@
     "pleaseEnterAllInfo": "Vui lòng nhập đầy đủ thông tin",
     "loginSuccess": "Đăng nhập thành công!",
     "loginFailed": "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập.",
-    "required": "*"
+    "required": "*",
+    "invalidEmailOrPassword": "Email hoặc mật khẩu không hợp lệ",
+    "userNotFound": "Không tìm thấy người dùng"
   },
   "register": {
     "getStarted": "Bắt đầu với chúng tôi",

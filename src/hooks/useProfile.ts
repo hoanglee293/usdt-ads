@@ -1,6 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getProfile, UserProfile, updateProfile, UpdateProfileRequest } from '@/services/AuthService';
 
+interface UseProfileOptions {
+  enabled?: boolean;
+}
+
 interface UseProfileReturn {
   profile: UserProfile | null;
   loading: boolean;
@@ -8,7 +12,7 @@ interface UseProfileReturn {
   refetch: () => Promise<void>;
 }
 
-export const useProfile = (): UseProfileReturn => {
+export const useProfile = (options?: UseProfileOptions): UseProfileReturn => {
   const {
     data,
     isLoading,
@@ -20,6 +24,7 @@ export const useProfile = (): UseProfileReturn => {
       const response = await getProfile();
       return response.user;
     },
+    enabled: options?.enabled ?? true,
     retry: 1,
   });
 

@@ -2,14 +2,32 @@ import axiosClient from "@/utils/axiosClient";
 
 export interface RegisterData {
   uname: string;
-  uemail: string;
-  upassword: string;
-  ufulllname: string;
+  email: string;
+  password: string;
+  display_name: string;
   ref_code: string;
-  usex?: "man" | "woman" | "other";
-  uphone?: string;
-  utelegram?: string;
-  ubirthday?: string; // Format: "YYYY-MM-DD"
+  sex?: "man" | "woman" | "other";
+  phone?: string;
+  telegram?: string;
+  birthday?: string; // Format: "YYYY-MM-DD"
+}
+
+export interface RegisterUser {
+  id: number;
+  name: string;
+  email: string;
+  display_name: string;
+}
+
+export interface RegisterSuccessResponse {
+  statusCode: 201;
+  message: "User registered successfully";
+  user: RegisterUser;
+}
+
+export interface RegisterErrorResponse {
+  statusCode: 400 | 409;
+  message: string;
 }
 
 export interface VerifyEmailData {
@@ -167,11 +185,16 @@ export const loginPassword = async (email: string, password: string): Promise<Lo
   }
 }
 
-export const registerPassword = async (data: RegisterData) => {
+export const registerPassword = async (
+  data: RegisterData
+): Promise<RegisterSuccessResponse> => {
   try {
-    const response = await axiosClient.post('/users/register', data);
+    const response = await axiosClient.post<RegisterSuccessResponse>('/users/register', data);
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
+    if (error.response?.data) {
+      throw error.response.data as RegisterErrorResponse;
+    }
     console.error(error);
     throw error;
   }

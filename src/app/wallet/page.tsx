@@ -585,7 +585,7 @@ export default function WalletPage() {
                                         <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
                                             {t('wallet.balanceLabel')}: {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                         </span>
-                                        {(balanceResponse.data.balance_gift || balanceResponse.data.balance) && (
+                                        {(balanceResponse.data.balance_gift !== 0 || balanceResponse.data.balance_reward !== 0) && (
                                             <span className='text-sm text-gray-600 dark:text-gray-300 mt-1'>
                                                 ({t('wallet.gift')}: {formatBalance(balanceResponse.data.balance_gift)} | {t('wallet.reward')}: {formatBalance(balanceResponse.data.balance_reward)})
                                             </span>

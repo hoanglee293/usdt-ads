@@ -42,7 +42,7 @@ const UserDropdown: React.FC = () => {
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="p-2 rounded-full hover:bg-pink-100 dark:hover:bg-theme-gray-200 transition-colors border-none"
+          className="p-2 rounded-full hover:bg-pink-100 dark:hover:bg-theme-gray-200 transition-colors border-none cursor-pointer"
         >
           <UserIcon className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500 dark:text-pink-400" />
         </button>
@@ -60,7 +60,7 @@ const UserDropdown: React.FC = () => {
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="p-2 rounded-full hover:bg-pink-100 dark:hover:bg-theme-gray-200 transition-colors border-none"
+          className="p-2 rounded-full hover:bg-pink-100 dark:hover:bg-theme-gray-200 transition-colors border-none cursor-pointer"
         >
           <UserIcon className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500 dark:text-pink-400" />
         </button>
@@ -77,7 +77,7 @@ const UserDropdown: React.FC = () => {
     <div className="relative" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="p-2 rounded-full hover:bg-pink-100 dark:hover:bg-theme-gray-200 transition-colors border-none"
+        className="p-2 rounded-full hover:bg-pink-100 dark:hover:bg-theme-gray-200 transition-colors border-none cursor-pointer"
         aria-label="User menu"
       >
         <UserIcon className="w-5 h-4 sm:w-6 sm:h-5 text-pink-500 dark:text-pink-400" />
