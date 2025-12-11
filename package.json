@@ -41,7 +41,7 @@
     "embla-carousel-react": "^8.6.0",
     "lucide-react": "^0.552.0",
     "moment": "^2.30.1",
-    "next": "15.2.2",
+    "next": "15.5.7",
     "react": "^19",
     "react-day-picker": "^9.11.1",
     "react-dom": "^19",
