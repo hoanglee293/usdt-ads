@@ -342,6 +342,11 @@
     "invalidEmail": "Invalid email",
     "registerSuccess": "Registration successful! Please check your email to verify your account.",
     "registerFailed": "Registration failed. Please check your information again.",
+    "referralCodeInvalid": "Referral code is invalid",
+    "referralCodeRequired": "Referral code (ref_code) is required",
+    "referralCodeNotExist": "Invalid referral code. Referral code does not exist",
+    "userAlreadyExists": "User already exists with this information",
+    "dataAlreadyExists": "Data already exists",
     "required": "*"
   },
   "forgotPassword": {
@@ -395,7 +400,11 @@
     "resendAfter": "Resend code after {seconds}s",
     "sending": "Sending...",
     "verifying": "Verifying...",
-    "verify": "Verify"
+    "verify": "Verify",
+    "emailAlreadyActivated": "Email is already activated",
+    "invalidOrExpiredCode": "Invalid code, expired code, email already activated",
+    "jwtTokenMissingOrInvalid": "JWT token missing/invalid",
+    "emailNotActivatedOrAccountBlocked": "Email not activated, account blocked"
   },
   "home": {
     "title": "Earn Money Easily with USDA",

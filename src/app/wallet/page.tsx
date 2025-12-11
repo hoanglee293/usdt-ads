@@ -560,7 +560,6 @@ export default function WalletPage() {
                     ) : (
                         // Desktop: Original layout
                         <div className='flex items-end justify-center mb-3'>
-                            <img src="/logo.png" alt="logo" className='w-10 h-10 object-cover pt-2' />
                             <div className='flex flex-col items-center mx-4'>
                                 <div className='flex items-center gap-2 mb-4'>
                                     <span className='text-sm font-medium text-theme-red-100 dark:text-[#FE645F]'>{t('wallet.selectCoin')}:</span>
@@ -582,7 +581,7 @@ export default function WalletPage() {
                                     <Skeleton className="h-8 w-48" />
                                 ) : balanceResponse?.data ? (
                                     <div className='flex flex-col items-center'>
-                                        <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                        <span className='text-2xl font-bold text-center text-pink-500 font-orbitron bg-theme-pink-100 py-3 px-4 rounded-full'>
                                             {t('wallet.balanceLabel')}: {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                         </span>
                                         {(balanceResponse.data.balance_gift !== 0 || balanceResponse.data.balance_reward !== 0) && (
@@ -597,7 +596,6 @@ export default function WalletPage() {
                                     </span>
                                 )}
                             </div>
-                            <img src="/logo.png" alt="logo" className='w-10 h-10 object-cover pt-2' />
                         </div>
                     )}
                 </div>

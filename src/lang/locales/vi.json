@@ -343,6 +343,11 @@
     "invalidEmail": "Email không hợp lệ",
     "registerSuccess": "Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.",
     "registerFailed": "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin.",
+    "referralCodeInvalid": "Mã giới thiệu không hợp lệ",
+    "referralCodeRequired": "Mã giới thiệu (ref_code) là bắt buộc",
+    "referralCodeNotExist": "Mã giới thiệu không hợp lệ. Mã giới thiệu không tồn tại",
+    "userAlreadyExists": "Người dùng đã tồn tại với thông tin này",
+    "dataAlreadyExists": "Dữ liệu đã tồn tại",
     "required": "*"
   },
   "forgotPassword": {
@@ -396,7 +401,11 @@
     "resendAfter": "Gửi lại mã sau {seconds}s",
     "sending": "Đang gửi...",
     "verifying": "Đang xác thực...",
-    "verify": "Xác thực"
+    "verify": "Xác thực",
+    "emailAlreadyActivated": "Email đã được kích hoạt",
+    "invalidOrExpiredCode": "Mã không hợp lệ, mã đã hết hạn, email đã được kích hoạt",
+    "jwtTokenMissingOrInvalid": "JWT token thiếu/không hợp lệ",
+    "emailNotActivatedOrAccountBlocked": "Email chưa được kích hoạt, tài khoản bị chặn"
   },
   "home": {
     "title": "Kiếm tiền dễ dàng với USDA",

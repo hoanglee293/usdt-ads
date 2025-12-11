@@ -342,6 +342,11 @@
     "invalidEmail": "無効なメールアドレス",
     "registerSuccess": "登録成功！アカウントを確認するためにメールを確認してください。",
     "registerFailed": "登録に失敗しました。情報を再度確認してください。",
+    "referralCodeInvalid": "紹介コードが無効です",
+    "referralCodeRequired": "紹介コード(ref_code)は必須です",
+    "referralCodeNotExist": "無効な紹介コードです。紹介コードが存在しません",
+    "userAlreadyExists": "この情報でユーザーが既に存在します",
+    "dataAlreadyExists": "データが既に存在します",
     "required": "*"
   },
   "forgotPassword": {
@@ -395,7 +400,11 @@
     "resendAfter": "{seconds}秒後にコードを再送信",
     "sending": "送信中...",
     "verifying": "確認中...",
-    "verify": "確認"
+    "verify": "確認",
+    "emailAlreadyActivated": "メールアドレスは既に有効化されています",
+    "invalidOrExpiredCode": "無効なコード、期限切れのコード、既に有効化されたメールアドレス",
+    "jwtTokenMissingOrInvalid": "JWTトークンが欠落しているか無効です",
+    "emailNotActivatedOrAccountBlocked": "メールアドレスが有効化されていないか、アカウントがブロックされています"
   },
   "home": {
     "title": "USDAで簡単にお金を稼ぐ",

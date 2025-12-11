@@ -81,6 +81,35 @@ const page = () => {
             const errorMessage = err?.message || 
                 err?.response?.data?.message || 
                 t('register.registerFailed')
+            
+            // Handle specific error messages
+            if(errorMessage.includes('Referral code is invalid') || errorMessage.includes('Invalid referral code')) {
+                toast.error(t('register.referralCodeInvalid'))
+                setLoading(false)
+                return
+            }
+            if(errorMessage.includes('Referral code (ref_code) is required')) {
+                toast.error(t('register.referralCodeRequired'))
+                setLoading(false)
+                return
+            }
+            if(errorMessage.includes('Invalid referral code. Referral code does not exist') || errorMessage.includes('Referral code does not exist')) {
+                toast.error(t('register.referralCodeNotExist'))
+                setLoading(false)
+                return
+            }
+            if(errorMessage.includes('User already exists with this information')) {
+                toast.error(t('register.userAlreadyExists'))
+                setLoading(false)
+                return
+            }
+            if(errorMessage.includes('Data already exists')) {
+                toast.error(t('register.dataAlreadyExists'))
+                setLoading(false)
+                return
+            }
+            
+            // Default error message
             toast.error(errorMessage)
         } finally {
             setLoading(false)

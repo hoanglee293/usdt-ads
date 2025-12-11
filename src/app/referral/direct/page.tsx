@@ -81,12 +81,10 @@ export default function DirectReferralPage() {
         <div className="w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1">
             <div className="w-full max-w-7xl space-y-6">
                 {/* Title Section */}
-                <div className="flex items-center justify-center gap-3 sm:gap-4 mb-6">
-                    <img src="/logo.png" alt="logo" className="w-8 h-8 sm:w-10 sm:h-10 object-cover" />
-                    <h1 className="text-xl sm:text-2xl md:text-3xl text-gradient-primary text-center">
+                <div className="flex items-center justify-center gap-3 sm:gap-4 mb-10">
+                    <h1 className="text-xl sm:text-3xl md:text-4xl text-gradient-secondary text-center">
                         {t('ref.title')}
                     </h1>
-                    <img src="/logo.png" alt="logo" className="w-8 h-8 sm:w-10 sm:h-10 object-cover" />
                 </div>
 
                 {/* Your Referral Link Section */}

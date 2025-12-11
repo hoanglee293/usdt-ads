@@ -110,6 +110,38 @@ const page = () => {
             const errorMessage = err?.message || 
                 err?.response?.data?.message || 
                 t('verifyMail.invalidCode')
+            
+            // Handle specific error messages
+            if(errorMessage.includes('Email is already activated')) {
+                toast.error(t('verifyMail.emailAlreadyActivated'))
+                setLoading(false)
+                return
+            }
+            if(errorMessage.includes('Invalid code, expired code, email already activated') || 
+               errorMessage.includes('Invalid code') || 
+               errorMessage.includes('expired code') ||
+               errorMessage.includes('email already activated')) {
+                toast.error(t('verifyMail.invalidOrExpiredCode'))
+                setLoading(false)
+                return
+            }
+            if(errorMessage.includes('JWT token missing/invalid') || 
+               errorMessage.includes('JWT token') ||
+               errorMessage.includes('token missing') ||
+               errorMessage.includes('token invalid')) {
+                toast.error(t('verifyMail.jwtTokenMissingOrInvalid'))
+                setLoading(false)
+                return
+            }
+            if(errorMessage.includes('Email not activated, account blocked') ||
+               errorMessage.includes('Email not activated') ||
+               errorMessage.includes('account blocked')) {
+                toast.error(t('verifyMail.emailNotActivatedOrAccountBlocked'))
+                setLoading(false)
+                return
+            }
+            
+            // Default error message
             toast.error(errorMessage)
             setLoading(false)
         }

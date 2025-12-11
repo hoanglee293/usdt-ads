@@ -137,11 +137,9 @@ export default function SmartRefPage() {
             <div className='w-full max-w-7xl space-y-6'>
                 {/* Title Section */}
                 <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6'>
-                    <img src="/logo.png" alt="logo" className="w-8 h-8 sm:w-10 sm:h-10 object-cover" />
-                    <h1 className='text-xl sm:text-2xl md:text-3xl font-bold text-center text-gradient-primary '>
+                    <h1 className='text-xl sm:text-3xl md:text-4xl font-bold text-center text-gradient-secondary '>
                         {t('smartRef.title')}
                     </h1>
-                    <img src="/logo.png" alt="logo" className="w-8 h-8 sm:w-10 sm:h-10 object-cover" />
                 </div>
 
                 {/* Progress Bar */}

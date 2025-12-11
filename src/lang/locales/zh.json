@@ -342,6 +342,11 @@
     "invalidEmail": "无效的电子邮件",
     "registerSuccess": "注册成功！请查看您的电子邮件以验证您的账户。",
     "registerFailed": "注册失败。请再次检查您的信息。",
+    "referralCodeInvalid": "推荐代码无效",
+    "referralCodeRequired": "推荐代码(ref_code)是必需的",
+    "referralCodeNotExist": "无效的推荐代码。推荐代码不存在",
+    "userAlreadyExists": "使用此信息的用户已存在",
+    "dataAlreadyExists": "数据已存在",
     "required": "*"
   },
   "forgotPassword": {
@@ -395,7 +400,11 @@
     "resendAfter": "{seconds}秒后重新发送代码",
     "sending": "发送中...",
     "verifying": "验证中...",
-    "verify": "验证"
+    "verify": "验证",
+    "emailAlreadyActivated": "电子邮件已被激活",
+    "invalidOrExpiredCode": "无效代码、过期代码、电子邮件已被激活",
+    "jwtTokenMissingOrInvalid": "JWT令牌缺失/无效",
+    "emailNotActivatedOrAccountBlocked": "电子邮件未激活，账户已被阻止"
   },
   "home": {
     "title": "使用USDA轻松赚钱",
