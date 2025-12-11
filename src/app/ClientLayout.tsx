@@ -68,6 +68,18 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
 
   const { error: profileError } = useProfile({ enabled: isAuth && !isLoginPage });
 
+  // Handle referral code from URL
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const urlParams = new URLSearchParams(window.location.search);
+      const refCode = urlParams.get('ref');
+      
+      if (refCode && refCode.trim()) {
+        localStorage.setItem('refCode', refCode.trim());
+      }
+    }
+  }, []);
+
   // Handle authentication redirects
   useEffect(() => {
 

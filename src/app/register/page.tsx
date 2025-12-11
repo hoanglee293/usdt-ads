@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { registerPassword, RegisterData } from '@/services/AuthService'
 import { useRouter } from 'next/navigation'
@@ -20,6 +20,16 @@ const page = () => {
     const router = useRouter()
     const isMobile = useIsMobile()
     const { t } = useLang()
+
+    // Load referral code from localStorage on mount
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            const savedRefCode = localStorage.getItem('refCode')
+            if (savedRefCode) {
+                setRefCode(savedRefCode)
+            }
+        }
+    }, [])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()

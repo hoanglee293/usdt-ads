@@ -104,6 +104,7 @@ export default function SmartRefPage() {
             </div>
         )
     }
+    console.log(profile)
 
     // Show modal and message if user doesn't have KOL permission
     if (!profileLoading && profile && !profile.kol) {
