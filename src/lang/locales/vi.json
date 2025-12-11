@@ -13,6 +13,13 @@
     "copied": "Đã sao chép",
     "logout": "Đăng xuất"
   },
+  "languages": {
+    "kr": "Tiếng Hàn",
+    "en": "Tiếng Anh",
+    "vi": "Tiếng Việt",
+    "ja": "Tiếng Nhật",
+    "zh": "Tiếng Trung"
+  },
   "header": {
     "makeMoney": "Tham gia kiếm tiền",
     "rewards": "Nhận phần thưởng",

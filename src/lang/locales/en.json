@@ -13,6 +13,13 @@
     "copied": "Copied",
     "logout": "Logout"
   },
+  "languages": {
+    "kr": "Korean",
+    "en": "English",
+    "vi": "Vietnamese",
+    "ja": "Japanese",
+    "zh": "Chinese"
+  },
   "header": {
     "makeMoney": "Join to Earn",
     "rewards": "Get Rewards",

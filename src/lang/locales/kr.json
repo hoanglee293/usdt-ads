@@ -13,6 +13,13 @@
     "copied": "복사됨",
     "logout": "로그아웃"
   },
+  "languages": {
+    "kr": "한국어",
+    "en": "영어",
+    "vi": "베트남어",
+    "ja": "일본어",
+    "zh": "중국어"
+  },
   "header": {
     "makeMoney": "수익 참여",
     "rewards": "보상 받기",

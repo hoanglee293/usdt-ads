@@ -19,6 +19,18 @@ export default function Header() {
   const { t, lang, setLang, langConfig } = useLang();
   const { theme, toggleTheme } = useTheme();
 
+  // Language flags mapping
+  const langFlags: Record<string, string> = {
+    'kr': '🇰🇷',
+    'en': '🇺🇸',
+    'vi': '🇻🇳',
+    'ja': '🇯🇵',
+    'zh': '🇨🇳',
+  };
+
+  // Get current language info
+  const currentLang = langConfig.listLangs.find(l => l.code === lang) || langConfig.listLangs[0];
+
   const listMenu = [
     {
       name: t('header.makeMoney'),
@@ -91,14 +103,22 @@ export default function Header() {
           <div className="relative" ref={langMenuRef}>
             <button
               onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
-              className="p-1.5 sm:px-2.5 sm:pt-2.5 sm:pb-2 cursor-pointer rounded-full bg-transparent hover:bg-pink-100 dark:hover:bg-theme-gray-200 active:bg-pink-200 dark:active:bg-theme-gray-200/50 transition-colors border-none touch-manipulation"
+              className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 cursor-pointer rounded-full bg-transparent hover:bg-pink-100 dark:hover:bg-theme-gray-200 active:bg-pink-200 dark:active:bg-theme-gray-200/50 transition-colors border-none touch-manipulation"
               aria-label="Language"
             >
-              <Globe className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500 dark:text-pink-400" />
+              <span className="text-base sm:text-lg">{langFlags[lang] || '🌐'}</span>
+              {!isMobile && (
+                <span className="text-xs sm:text-sm font-inter font-medium text-pink-500 dark:text-pink-400 uppercase">
+                  {lang}
+                </span>
+              )}
+              {isMobile && (
+                <Globe className="w-4 h-4 text-pink-500 dark:text-pink-400" />
+              )}
             </button>
             {isLangMenuOpen && (
-              <div className="absolute right-0 top-[100%] mt-2 w-40 bg-white dark:bg-theme-gray-200 rounded-lg shadow-xl border border-gray-200 dark:border-theme-gray-100 overflow-hidden z-50">
-                <div className="py-0">
+              <div className="absolute right-0 top-[100%] mt-2 w-48 sm:w-52 bg-white dark:bg-theme-gray-200 rounded-lg shadow-xl border border-gray-200 dark:border-theme-gray-100 overflow-hidden z-50 animate-fade-in-down">
+                <div className="py-1">
                   {langConfig.listLangs.map((langOption) => (
                     <button
                       key={langOption.code}
@@ -106,13 +126,17 @@ export default function Header() {
                         setLang(langOption.code);
                         setIsLangMenuOpen(false);
                       }}
-                      className={`w-full px-4 py-2.5 cursor-pointer border-none text-sm font-inter font-medium text-left hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 transition-colors ${
+                      className={`w-full px-4 py-2.5 sm:py-3 cursor-pointer border-none text-sm sm:text-base font-inter font-medium text-left hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 transition-colors flex items-center gap-3 ${
                         lang === langOption.code
                           ? 'text-pink-500 dark:text-pink-400 bg-pink-50 dark:bg-theme-gray-100/30'
                           : 'text-theme-black-100 dark:text-theme-gray-100 bg-white dark:bg-theme-gray-200'
                       }`}
                     >
-                      {langOption.name}
+                      <span className="text-lg sm:text-xl">{langFlags[langOption.code] || '🌐'}</span>
+                      <span className="flex-1">{t(`languages.${langOption.code}`)}</span>
+                      {lang === langOption.code && (
+                        <span className="text-pink-500 dark:text-pink-400 text-xs">✓</span>
+                      )}
                     </button>
                   ))}
                 </div>
