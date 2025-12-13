@@ -71,6 +71,23 @@ const page = () => {
             const errorMessage = err?.message || 
                 err?.response?.data?.message || 
                 t('verifyMail.resendCodeError')
+            
+            // Handle specific error messages
+            if (errorMessage.includes('Email is already activated')) {
+                toast.error(t('verifyMail.generateCodeEmailAlreadyActivated'))
+                setResendLoading(false)
+                return
+            }
+            if (errorMessage.includes('JWT token missing/invalid') || 
+                errorMessage.includes('JWT token') ||
+                errorMessage.includes('token missing') ||
+                errorMessage.includes('token invalid')) {
+                toast.error(t('verifyMail.generateCodeJwtTokenMissingOrInvalid'))
+                setResendLoading(false)
+                return
+            }
+            
+            // Default error message
             toast.error(errorMessage)
         } finally {
             setResendLoading(false)

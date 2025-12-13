@@ -248,7 +248,8 @@
     "updateError": "无法更新信息。请重试。",
     "referral": "推荐：",
     "myProfile": "我的个人资料",
-    "kyc": "KYC"
+    "kyc": "KYC",
+    "displayNameCannotBeEmpty": "显示名称不能为空"
   },
   "kyc": {
     "title": "KYC验证",
@@ -316,7 +317,8 @@
     "loginSuccess": "登录成功！",
     "loginFailed": "登录失败。请再次检查您的登录信息。",
     "required": "*",
-    "invalidEmailOrPassword": "无效的电子邮件或密码"
+    "invalidEmailOrPassword": "无效的电子邮件或密码",
+    "accountBlocked": "您的账户已被阻止。请联系支持寻求帮助。"
   },
   "register": {
     "getStarted": "开始使用",
@@ -362,7 +364,9 @@
     "resetPasswordSuccess": "如果电子邮件存在，我们已向您的电子邮件发送密码重置链接。请查看您的收件箱并点击链接以重置密码。",
     "backToLogin": "返回登录",
     "sending": "发送中...",
-    "sendResetLink": "发送重置链接"
+    "sendResetLink": "发送重置链接",
+    "emailRequired": "电子邮件是必需的",
+    "tokenAlreadyExists": "密码重置令牌已存在且仍然有效。请检查您的电子邮件或等待令牌过期。"
   },
   "changePassword": {
     "getStarted": "开始使用",
@@ -383,7 +387,15 @@
     "backToForgotPassword": "返回忘记密码",
     "backToLogin": "返回登录",
     "resetting": "正在重置密码...",
-    "resetPassword": "重置密码"
+    "resetPassword": "重置密码",
+    "codeRequired": "代码是必需的",
+    "passwordRequired": "密码是必需的",
+    "codeExpired": "重置密码代码已过期。请请求新的密码重置。",
+    "invalidCode": "无效的代码。找不到代码、不属于此用户、不是重置密码代码或已被使用",
+    "currentPasswordRequired": "当前密码是必需的",
+    "newPasswordRequired": "新密码是必需的",
+    "newPasswordMinLength": "新密码必须至少6个字符",
+    "currentPasswordIncorrect": "当前密码不正确"
   },
   "verifyMail": {
     "getStarted": "开始使用",
@@ -404,7 +416,9 @@
     "emailAlreadyActivated": "电子邮件已被激活",
     "invalidOrExpiredCode": "无效代码、过期代码、电子邮件已被激活",
     "jwtTokenMissingOrInvalid": "JWT令牌缺失/无效",
-    "emailNotActivatedOrAccountBlocked": "电子邮件未激活，账户已被阻止"
+    "emailNotActivatedOrAccountBlocked": "电子邮件未激活，账户已被阻止",
+    "generateCodeEmailAlreadyActivated": "电子邮件已被激活",
+    "generateCodeJwtTokenMissingOrInvalid": "JWT令牌缺失/无效"
   },
   "home": {
     "title": "使用USDA轻松赚钱",

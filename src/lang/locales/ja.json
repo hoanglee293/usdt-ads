@@ -248,7 +248,8 @@
     "updateError": "情報を更新できません。もう一度お試しください。",
     "referral": "紹介：",
     "myProfile": "マイプロフィール",
-    "kyc": "KYC"
+    "kyc": "KYC",
+    "displayNameCannotBeEmpty": "表示名を空にすることはできません"
   },
   "kyc": {
     "title": "KYC認証",
@@ -316,7 +317,8 @@
     "loginSuccess": "ログイン成功！",
     "loginFailed": "ログインに失敗しました。ログイン情報を再度確認してください。",
     "required": "*",
-    "invalidEmailOrPassword": "メールアドレスまたはパスワードが無効です"
+    "invalidEmailOrPassword": "メールアドレスまたはパスワードが無効です",
+    "accountBlocked": "アカウントがブロックされました。サポートにお問い合わせください。"
   },
   "register": {
     "getStarted": "始めましょう",
@@ -362,7 +364,9 @@
     "resetPasswordSuccess": "メールアドレスが存在する場合、パスワードリセットリンクをメールに送信しました。受信トレイを確認し、リンクをクリックしてパスワードをリセットしてください。",
     "backToLogin": "ログインに戻る",
     "sending": "送信中...",
-    "sendResetLink": "リセットリンクを送信"
+    "sendResetLink": "リセットリンクを送信",
+    "emailRequired": "メールアドレスは必須です",
+    "tokenAlreadyExists": "パスワードリセットトークンが既に存在し、まだ有効です。メールを確認するか、トークンの有効期限が切れるまでお待ちください。"
   },
   "changePassword": {
     "getStarted": "始めましょう",
@@ -383,7 +387,15 @@
     "backToForgotPassword": "パスワード忘れに戻る",
     "backToLogin": "ログインに戻る",
     "resetting": "パスワードをリセット中...",
-    "resetPassword": "パスワードをリセット"
+    "resetPassword": "パスワードをリセット",
+    "codeRequired": "コードは必須です",
+    "passwordRequired": "パスワードは必須です",
+    "codeExpired": "パスワードリセットコードの有効期限が切れました。新しいパスワードリセットをリクエストしてください。",
+    "invalidCode": "無効なコードです。コードが見つからない、このユーザーに属していない、パスワードリセットコードではない、または既に使用されています",
+    "currentPasswordRequired": "現在のパスワードは必須です",
+    "newPasswordRequired": "新しいパスワードは必須です",
+    "newPasswordMinLength": "新しいパスワードは6文字以上である必要があります",
+    "currentPasswordIncorrect": "現在のパスワードが正しくありません"
   },
   "verifyMail": {
     "getStarted": "始めましょう",
@@ -404,7 +416,9 @@
     "emailAlreadyActivated": "メールアドレスは既に有効化されています",
     "invalidOrExpiredCode": "無効なコード、期限切れのコード、既に有効化されたメールアドレス",
     "jwtTokenMissingOrInvalid": "JWTトークンが欠落しているか無効です",
-    "emailNotActivatedOrAccountBlocked": "メールアドレスが有効化されていないか、アカウントがブロックされています"
+    "emailNotActivatedOrAccountBlocked": "メールアドレスが有効化されていないか、アカウントがブロックされています",
+    "generateCodeEmailAlreadyActivated": "メールアドレスは既に有効化されています",
+    "generateCodeJwtTokenMissingOrInvalid": "JWTトークンが欠落しているか無効です"
   },
   "home": {
     "title": "USDAで簡単にお金を稼ぐ",

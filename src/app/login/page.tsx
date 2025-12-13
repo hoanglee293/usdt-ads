@@ -40,13 +40,26 @@ const page = () => {
             const errorMessage = err?.message ||
                 err?.response?.data?.message ||
                 t('login.loginFailed')
-            if (errorMessage === 'Invalid email or password') {
+            
+            // Handle specific error messages
+            if (errorMessage.includes('Invalid email or password')) {
                 toast.error(t('login.invalidEmailOrPassword'))
-            } else if (errorMessage === 'User not found') {
-                toast.error(t('login.userNotFound'))
-            } else {
-                toast.error(t('login.loginFailed'))
+                setLoading(false)
+                return
             }
+            if (errorMessage.includes('User not found')) {
+                toast.error(t('login.userNotFound'))
+                setLoading(false)
+                return
+            }
+            if (errorMessage.includes('Your account has been blocked') || errorMessage.includes('account has been blocked')) {
+                toast.error(t('login.accountBlocked'))
+                setLoading(false)
+                return
+            }
+            
+            // Default error message
+            toast.error(errorMessage)
         } finally {
             setLoading(false)
         }

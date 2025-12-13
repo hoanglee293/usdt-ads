@@ -70,6 +70,35 @@ const ChangePasswordContent = () => {
             const errorMessage = err?.message || 
                 err?.response?.data?.message || 
                 t('auth.resetPasswordTokenError')
+            
+            // Handle specific error messages
+            if (errorMessage.includes('Code is required')) {
+                toast.error(t('changePassword.codeRequired'))
+                setLoading(false)
+                return
+            }
+            if (errorMessage.includes('Password is required')) {
+                toast.error(t('changePassword.passwordRequired'))
+                setLoading(false)
+                return
+            }
+            if (errorMessage.includes('Password must be at least 6 characters long')) {
+                toast.error(t('changePassword.passwordMinLength'))
+                setLoading(false)
+                return
+            }
+            if (errorMessage.includes('Reset password code has expired') || errorMessage.includes('code has expired')) {
+                toast.error(t('changePassword.codeExpired'))
+                setLoading(false)
+                return
+            }
+            if (errorMessage.includes('Invalid code') && (errorMessage.includes('not found') || errorMessage.includes('does not belong') || errorMessage.includes('not a reset-password code') || errorMessage.includes('already been used'))) {
+                toast.error(t('changePassword.invalidCode'))
+                setLoading(false)
+                return
+            }
+            
+            // Default error message
             toast.error(errorMessage)
         } finally {
             setLoading(false)

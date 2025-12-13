@@ -248,7 +248,8 @@
     "updateError": "Không thể cập nhật thông tin. Vui lòng thử lại.",
     "referral": "Giới thiệu:",
     "myProfile": "My Profile",
-    "kyc": "KYC"
+    "kyc": "KYC",
+    "displayNameCannotBeEmpty": "Tên hiển thị không thể để trống"
   },
   "kyc": {
     "title": "Xác thực KYC",
@@ -317,7 +318,8 @@
     "loginFailed": "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập.",
     "required": "*",
     "invalidEmailOrPassword": "Email hoặc mật khẩu không hợp lệ",
-    "userNotFound": "Không tìm thấy người dùng"
+    "userNotFound": "Không tìm thấy người dùng",
+    "accountBlocked": "Tài khoản của bạn đã bị chặn. Vui lòng liên hệ hỗ trợ để được trợ giúp."
   },
   "register": {
     "getStarted": "Bắt đầu với chúng tôi",
@@ -363,7 +365,9 @@
     "resetPasswordSuccess": "Nếu email tồn tại, chúng tôi đã gửi link reset mật khẩu đến email của bạn. Vui lòng kiểm tra hộp thư và click vào link để đặt lại mật khẩu.",
     "backToLogin": "Quay lại đăng nhập",
     "sending": "Đang gửi...",
-    "sendResetLink": "Gửi link reset"
+    "sendResetLink": "Gửi link reset",
+    "emailRequired": "Email là bắt buộc",
+    "tokenAlreadyExists": "Token đặt lại mật khẩu đã tồn tại và vẫn còn hiệu lực. Vui lòng kiểm tra email của bạn hoặc đợi cho đến khi token hết hạn."
   },
   "changePassword": {
     "getStarted": "Bắt đầu với chúng tôi",
@@ -384,7 +388,15 @@
     "backToForgotPassword": "Quay lại quên mật khẩu",
     "backToLogin": "Quay lại đăng nhập",
     "resetting": "Đang đặt lại mật khẩu...",
-    "resetPassword": "Đặt lại mật khẩu"
+    "resetPassword": "Đặt lại mật khẩu",
+    "codeRequired": "Mã là bắt buộc",
+    "passwordRequired": "Mật khẩu là bắt buộc",
+    "codeExpired": "Mã đặt lại mật khẩu đã hết hạn. Vui lòng yêu cầu đặt lại mật khẩu mới.",
+    "invalidCode": "Mã không hợp lệ. Mã không tìm thấy, không thuộc về người dùng này, không phải là mã đặt lại mật khẩu, hoặc đã được sử dụng",
+    "currentPasswordRequired": "Mật khẩu hiện tại là bắt buộc",
+    "newPasswordRequired": "Mật khẩu mới là bắt buộc",
+    "newPasswordMinLength": "Mật khẩu mới phải có ít nhất 6 ký tự",
+    "currentPasswordIncorrect": "Mật khẩu hiện tại không đúng"
   },
   "verifyMail": {
     "getStarted": "Bắt đầu với chúng tôi",
@@ -405,7 +417,9 @@
     "emailAlreadyActivated": "Email đã được kích hoạt",
     "invalidOrExpiredCode": "Mã không hợp lệ, mã đã hết hạn, email đã được kích hoạt",
     "jwtTokenMissingOrInvalid": "JWT token thiếu/không hợp lệ",
-    "emailNotActivatedOrAccountBlocked": "Email chưa được kích hoạt, tài khoản bị chặn"
+    "emailNotActivatedOrAccountBlocked": "Email chưa được kích hoạt, tài khoản bị chặn",
+    "generateCodeEmailAlreadyActivated": "Email đã được kích hoạt",
+    "generateCodeJwtTokenMissingOrInvalid": "JWT token thiếu/không hợp lệ"
   },
   "home": {
     "title": "Kiếm tiền dễ dàng với USDA",

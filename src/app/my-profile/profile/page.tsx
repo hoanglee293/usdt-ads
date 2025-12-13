@@ -5,10 +5,12 @@ import CustomDateInput from '@/components/CustomDateInput'
 import CustomSelect from '@/components/CustomSelect'
 import { Pencil, Check, X, User2 } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { useLang } from '@/lang/useLang'
 
 const ProfilePage = () => {
   const { profile, loading: profileLoading, error: profileError } = useProfile()
   const { updateProfile, isLoading: updateLoading, error: updateError } = useUpdateProfile()
+  const { t } = useLang()
 
   const [displayName, setDisplayName] = useState('')
   const [birthday, setBirthday] = useState('')
@@ -43,16 +45,24 @@ const ProfilePage = () => {
   // Show error toast when profile error occurs
   useEffect(() => {
     if (profileError) {
-      toast.error(profileError.message || 'Không thể tải thông tin profile')
+      toast.error(profileError.message || t('profile.loadError'))
     }
-  }, [profileError])
+  }, [profileError, t])
 
   // Show error toast when update error occurs
   useEffect(() => {
     if (updateError) {
-      toast.error(updateError.message || 'Có lỗi xảy ra khi cập nhật')
+      const errorMessage = updateError.message || t('profile.updateError')
+      
+      // Handle specific error messages
+      if (errorMessage.includes('Display name cannot be empty')) {
+        toast.error(t('profile.displayNameCannotBeEmpty'))
+        return
+      }
+      
+      toast.error(errorMessage)
     }
-  }, [updateError])
+  }, [updateError, t])
 
   // Handle edit field
   const handleEditField = (field: 'displayName' | 'birthday' | 'sex') => {
@@ -83,7 +93,7 @@ const ProfilePage = () => {
       if (field === 'displayName') {
         const value = tempDisplayName.trim()
         if (!value) {
-          toast.error('Tên hiển thị không được để trống')
+          toast.error(t('profile.displayNameCannotBeEmpty'))
           return
         }
         updateData.display_name = value
@@ -102,7 +112,15 @@ const ProfilePage = () => {
     } catch (err: any) {
       const errorMessage = err?.message ||
         err?.response?.data?.message ||
-        'Không thể cập nhật thông tin. Vui lòng thử lại.'
+        t('profile.updateError')
+      
+      // Handle specific error messages
+      if (errorMessage.includes('Display name cannot be empty')) {
+        toast.error(t('profile.displayNameCannotBeEmpty'))
+        return
+      }
+      
+      // Default error message
       toast.error(errorMessage)
     }
   }

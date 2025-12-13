@@ -248,7 +248,8 @@
     "updateError": "Unable to update information. Please try again.",
     "referral": "Referral:",
     "myProfile": "My Profile",
-    "kyc": "KYC"
+    "kyc": "KYC",
+    "displayNameCannotBeEmpty": "Display name cannot be empty"
   },
   "kyc": {
     "title": "KYC Verification",
@@ -316,7 +317,8 @@
     "loginSuccess": "Login successful!",
     "loginFailed": "Login failed. Please check your login information again.",
     "required": "*",
-    "invalidEmailOrPassword": "Invalid email or password"
+    "invalidEmailOrPassword": "Invalid email or password",
+    "accountBlocked": "Your account has been blocked. Please contact support for assistance."
   },
   "register": {
     "getStarted": "Get Started With Us",
@@ -362,7 +364,9 @@
     "resetPasswordSuccess": "If the email exists, we have sent a password reset link to your email. Please check your inbox and click on the link to reset your password.",
     "backToLogin": "Back to login",
     "sending": "Sending...",
-    "sendResetLink": "Send reset link"
+    "sendResetLink": "Send reset link",
+    "emailRequired": "Email is required",
+    "tokenAlreadyExists": "A password reset token already exists and is still valid. Please check your email or wait until the token expires."
   },
   "changePassword": {
     "getStarted": "Get Started With Us",
@@ -383,7 +387,15 @@
     "backToForgotPassword": "Back to forgot password",
     "backToLogin": "Back to login",
     "resetting": "Resetting password...",
-    "resetPassword": "Reset Password"
+    "resetPassword": "Reset Password",
+    "codeRequired": "Code is required",
+    "passwordRequired": "Password is required",
+    "codeExpired": "Reset password code has expired. Please request a new password reset.",
+    "invalidCode": "Invalid code. Code not found, does not belong to this user, is not a reset-password code, or has already been used",
+    "currentPasswordRequired": "Current password is required",
+    "newPasswordRequired": "New password is required",
+    "newPasswordMinLength": "New password must be at least 6 characters long",
+    "currentPasswordIncorrect": "Current password is incorrect"
   },
   "verifyMail": {
     "getStarted": "Get Started With Us",
@@ -404,7 +416,9 @@
     "emailAlreadyActivated": "Email is already activated",
     "invalidOrExpiredCode": "Invalid code, expired code, email already activated",
     "jwtTokenMissingOrInvalid": "JWT token missing/invalid",
-    "emailNotActivatedOrAccountBlocked": "Email not activated, account blocked"
+    "emailNotActivatedOrAccountBlocked": "Email not activated, account blocked",
+    "generateCodeEmailAlreadyActivated": "Email is already activated",
+    "generateCodeJwtTokenMissingOrInvalid": "JWT token missing/invalid"
   },
   "home": {
     "title": "Earn Money Easily with USDA",
