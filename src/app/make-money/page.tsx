@@ -843,7 +843,7 @@ export default function MakeMoneyPage() {
                                 <span className='text-xs sm:text-sm text-yellow-800 dark:text-yellow-300 mb-1 sm:mb-2'>{t('makeMoney.oneDay')}</span>
                                 <Button
                                     onClick={handleJoinBase}
-                                    disabled={joinBaseMutation.isPending}
+                                    disabled={joinBaseMutation.isPending || isBaseDisabled}
                                     className='w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-theme-red-200 dark:text-[#FE645F] text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer'
                                 >
                                     {joinBaseMutation.isPending ? (
