@@ -7,6 +7,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { handleLogout } from '@/services/AuthService';
 import { useRouter } from 'next/navigation';
 import { useLang } from '@/lang/useLang';
+import { useQueryClient } from '@tanstack/react-query';
 
 const UserDropdown: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +16,7 @@ const UserDropdown: React.FC = () => {
   const { logout } = useAuth();
   const router = useRouter();
   const { t } = useLang();
+  const queryClient = useQueryClient();
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -32,9 +34,23 @@ const UserDropdown: React.FC = () => {
   }, [isOpen]);
 
   const onLogoutClick = async () => {
-    await handleLogout();
-    setIsOpen(false);
-    logout();
+    try {
+      await handleLogout();
+      // Clear all React Query cache to remove old user data
+      queryClient.clear();
+      // Clear auth state
+      logout();
+      setIsOpen(false);
+      // Redirect to login page
+      router.push('/login');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Even if logout API fails, clear local data and redirect
+      queryClient.clear();
+      logout();
+      setIsOpen(false);
+      router.push('/login');
+    }
   }
 
   if (loading) {

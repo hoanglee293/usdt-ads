@@ -78,37 +78,37 @@ const page = () => {
                 router.push('/verify-mail')
             }
         } catch (err: any) {
-            const errorMessage = err?.message || 
-                err?.response?.data?.message || 
+            const errorMessage = err?.message ||
+                err?.response?.data?.message ||
                 t('register.registerFailed')
-            
+
             // Handle specific error messages
-            if(errorMessage.includes('Referral code is invalid') || errorMessage.includes('Invalid referral code')) {
+            if (errorMessage.includes('Referral code is invalid') || errorMessage.includes('Invalid referral code')) {
                 toast.error(t('register.referralCodeInvalid'))
                 setLoading(false)
                 return
             }
-            if(errorMessage.includes('Referral code (ref_code) is required')) {
+            if (errorMessage.includes('Referral code (ref_code) is required')) {
                 toast.error(t('register.referralCodeRequired'))
                 setLoading(false)
                 return
             }
-            if(errorMessage.includes('Invalid referral code. Referral code does not exist') || errorMessage.includes('Referral code does not exist')) {
+            if (errorMessage.includes('Invalid referral code. Referral code does not exist') || errorMessage.includes('Referral code does not exist')) {
                 toast.error(t('register.referralCodeNotExist'))
                 setLoading(false)
                 return
             }
-            if(errorMessage.includes('User already exists with this information')) {
+            if (errorMessage.includes('User already exists with this information')) {
                 toast.error(t('register.userAlreadyExists'))
                 setLoading(false)
                 return
             }
-            if(errorMessage.includes('Data already exists')) {
+            if (errorMessage.includes('Data already exists')) {
                 toast.error(t('register.dataAlreadyExists'))
                 setLoading(false)
                 return
             }
-            
+
             // Default error message
             toast.error(errorMessage)
         } finally {
@@ -119,12 +119,12 @@ const page = () => {
     return (
         <div className='w-full h-svh flex justify-center items-center md:p-6 bg-theme-white-100 dark:bg-black'>
             <div className='w-full h-full hidden md:flex justify-center items-center flex-col flex-1 radial-gradient rounded-3xl p-6 border-none dark:border dark:border-solid border-transparent dark:border-[#fe645f]'>
-                <div className='flex justify-center items-center flex-col mt-[30%] gap-[1vh]'>
+                <div className='flex justify-center items-center flex-col gap-[1vh]'>
                     <img src="/logo.png" alt="logo" className='w-24 h-24 object-contain' />
-                    <span className='tracking-[-0.02em] leading-[150%] inline-block font-orbitron text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] font-bold text-base'>USDT ADS</span>
-                    <h2 className='text-[2rem] font-bold text-center text-black-100 dark:text-white my-4'>{t('register.getStarted')}</h2>
-                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium'>{t('register.description1')}</p>
-                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium'>{t('register.description2')}</p>
+                    <span className='tracking-[-0.02em] leading-[150%] inline-block font-orbitron text-white font-bold text-3xl'>USDT ADS</span>
+                    <img src="/636.png" alt="logo" className='w-full h-auto object-contain' />
+                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium mt-6'>Nền tảng Airdrop thông minh giúp bạn kiếm thu nhập thụ động từ việc xem quảng cáo mỗi ngày.</p>
+                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium'>Tham gia staking - hoàn thành nhiệm vụ - nhận thưởng dễ dàng. Xác minh KYC để mở khoá tính năng rút tiền an toàn và nhanh chóng.</p>
                 </div>
             </div>
             <div className={`w-full h-full flex justify-center items-center flex-col flex-1 px-8 bg-transparent ${isMobile ? 'radial-gradient pb-[20vh]' : ''}`}>

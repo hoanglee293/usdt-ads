@@ -37,12 +37,12 @@ const page = () => {
             }
         } catch (err: any) {
             // Handle API error response (statusCode: 400 | 401 | 403)
-            const errorMessage = err?.message || 
-                err?.response?.data?.message || 
+            const errorMessage = err?.message ||
+                err?.response?.data?.message ||
                 t('login.loginFailed')
-            if(errorMessage === 'Invalid email or password'){
+            if (errorMessage === 'Invalid email or password') {
                 toast.error(t('login.invalidEmailOrPassword'))
-            } else if(errorMessage === 'User not found'){
+            } else if (errorMessage === 'User not found') {
                 toast.error(t('login.userNotFound'))
             } else {
                 toast.error(t('login.loginFailed'))
@@ -55,7 +55,7 @@ const page = () => {
     return (
         <div className='w-full h-svh flex justify-center items-center md:p-6 bg-theme-white-100 dark:bg-black'>
             <div className='w-full h-full hidden md:flex justify-center items-center flex-col flex-1 radial-gradient rounded-3xl py-6 border-none dark:border dark:border-solid border-transparent dark:border-[#fe645f]'>
-                <div className='flex justify-center items-center flex-col gap-[1vh]'>
+                <div className='flex justify-center items-center flex-col gap-[1vh] w-full'>
                     <img src="/logo.png" alt="logo" className='w-24 h-24 object-contain' />
                     <span className='tracking-[-0.02em] leading-[150%] inline-block font-orbitron text-white font-bold text-3xl'>USDT ADS</span>
                     <img src="/636.png" alt="logo" className='w-full h-auto object-contain' />
@@ -64,12 +64,11 @@ const page = () => {
                     <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium'>{t('login.description2')}</p>
                 </div>
             </div>
-            <div className={`w-full h-full flex justify-center items-center flex-col flex-1 px-8 bg-transparent ${isMobile ? 'radial-gradient pb-[20vh]' : ''}`}>
-                <div className='w-full max-w-md flex flex-col items-center'>
-                    <img src="/logo.png" alt="logo" className='w-28 h-28 object-contain mb-6' />
-                    <h2 className='text-3xl font-semibold text-white md:text-gray-800 dark:md:text-white mb-2'>{t('login.signIn')}</h2>
-                    
-                    <form onSubmit={handleSubmit} className='w-full flex flex-col gap-4 mt-6'>
+            <div className={`w-full h-full flex gap-3 justify-end md:justify-center items-center flex-col flex-1 bg-transparent ${isMobile ? 'radial-gradient' : ''}`}>
+                <div className='w-full lg:max-w-lg px-8 flex flex-col items-center mt-[10vh] md:mt-0'>
+                    <img src="/logo.png" alt="logo" className='w-24 h-24 object-contain' />
+                    <h2 className='text-3xl font-semibold text-white md:text-gray-800 dark:md:text-white mb-2 mt-6'>{t('login.signIn')}</h2>
+                    <form onSubmit={handleSubmit} className='w-full flex flex-col gap-4 mt-6 px-8 md:px-0'>
                         <div className='space-y-1'>
                             <label htmlFor="username" className='block text-sm font-semibold text-gray-700 dark:text-gray-300'>
                                 {t('login.username')} <span className='text-theme-red dark:text-theme-red-200'>{t('login.required')}</span>
@@ -107,7 +106,7 @@ const page = () => {
                                         {showPassword ? <EyeOff size={16} className='text-gray-500 dark:text-gray-400' /> : <Eye size={16} className='text-gray-500 dark:text-gray-400' />}
                                     </div>
                                 )}
-                              
+
                             </div>
                         </div>
 
@@ -135,6 +134,7 @@ const page = () => {
                         </button>
                     </form>
                 </div>
+                <img src="/636.png" alt="logo" className='w-full h-auto object-contain opacity-60 block md:hidden' />
             </div>
         </div>
     )
