@@ -75,8 +75,14 @@ export interface RefErrorResponse {
 
 // ==================== Smart Ref Interfaces ====================
 
+export interface RewardLevel {
+  level: number;
+  percentage: number;
+}
+
 export interface SmartRefInfoData {
   max_level: number;
+  reward_levels: RewardLevel[];
   total_branches: number;
   total_invitees: number;
   total_rewards: number;

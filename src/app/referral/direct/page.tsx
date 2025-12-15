@@ -176,37 +176,57 @@ export default function DirectReferralPage() {
                     </div>
                     {showReferralStructure && (
                         <div className="flex flex-col items-center ">
-                            {/* Top Level */}
-                            <div className="flex flex-col items-center gap-2 relative">
-                                <div className="text-sm font-semibold text-gray-700 dark:text-gray-300">10%</div>
-                                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center shadow-lg">
-                                    <User className="w-8 h-8 text-white" />
-                                </div>
-                                <div className="absolute top-[105%] left-1/2 transform w-[2px] h-10 bg-gradient-to-b from-pink-400 to-purple-400"></div>
-                            </div>
-
-                            {/* Connection Lines */}
-                            <div className="flex items-center justify-center space-x-8 sm:space-x-16 mt-10 12 sm:w-60 h-0.5 bg-gradient-to-r from-pink-400 to-purple-400">
-                                
-                            </div>
-
-                            {/* Bottom Level */}
-                            <div className="flex items-center justify-between w-72 mt-8">
-                                <div className="flex flex-col items-center relative">
-                                    <div className="absolute bottom-[103%] left-1/2 transform w-[2px] h-8 bg-gradient-to-b from-pink-400 to-purple-400"></div>
-                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center shadow-lg">
-                                        <User className="w-8 h-8 text-white" />
+                            {smartRefInfo.data?.reward_levels && smartRefInfo.data.reward_levels.length > 0 ? (
+                                <>
+                                    {/* Top Level */}
+                                    <div className="flex flex-col items-center gap-2 relative">
+                                        <div className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                            {smartRefInfo.data.reward_levels.find((rl: any) => rl.level === 1)?.percentage || 0}%
+                                        </div>
+                                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center shadow-lg">
+                                            <User className="w-8 h-8 text-white" />
+                                        </div>
+                                        {smartRefInfo.data.max_level > 1 && (
+                                            <div className="absolute top-[105%] left-1/2 transform w-[2px] h-10 bg-gradient-to-b from-pink-400 to-purple-400"></div>
+                                        )}
                                     </div>
-                                    <p className="mt-2 text-sm font-semibold text-gray-700 dark:text-gray-300">5%</p>
+
+                                    {/* Connection Lines */}
+                                    {smartRefInfo.data.max_level > 1 && (
+                                        <div className="flex items-center justify-center space-x-8 sm:space-x-16 mt-10 w-12 sm:w-60 h-0.5 bg-gradient-to-r from-pink-400 to-purple-400">
+                                            
+                                        </div>
+                                    )}
+
+                                    {/* Bottom Level */}
+                                    {smartRefInfo.data.max_level > 1 && (() => {
+                                        const level2Rewards = smartRefInfo.data.reward_levels.filter((rl: any) => rl.level > 1);
+                                        const level2Percentage = level2Rewards.length > 0 ? level2Rewards[0].percentage : 0;
+                                        // Luôn hiển thị 2 thành phần ở cấp 2 để minh họa
+                                        const displayItems = [level2Percentage, level2Percentage];
+                                        
+                                        return (
+                                            <div className="flex items-center justify-between w-72 mt-8">
+                                                {displayItems.map((percentage, index) => (
+                                                    <div key={index} className="flex flex-col items-center relative">
+                                                        <div className="absolute bottom-[103%] left-1/2 transform w-[2px] h-8 bg-gradient-to-b from-pink-400 to-purple-400"></div>
+                                                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center shadow-lg">
+                                                            <User className="w-8 h-8 text-white" />
+                                                        </div>
+                                                        <p className="mt-2 text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                                            {percentage}%
+                                                        </p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        );
+                                    })()}
+                                </>
+                            ) : (
+                                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                                    <p>{t('ref.noData') || 'No data available'}</p>
                                 </div>
-                                <div className="flex flex-col items-center relative">
-                                    <div className="absolute bottom-[103%] left-1/2 transform w-[2px] h-8 bg-gradient-to-b from-pink-400 to-purple-400"></div>
-                                    <div className="w-12 h-12 rounded-full bg-gradient-to-br from-pink-500 to-purple-500 flex items-center justify-center shadow-lg">
-                                        <User className="w-8 h-8 text-white" />
-                                    </div>
-                                    <p className="mt-2 text-sm font-semibold text-gray-700 dark:text-gray-300">5%</p>
-                                </div>
-                            </div>
+                            )}
                         </div>
                     )}
                 </div>
@@ -349,7 +369,7 @@ export default function DirectReferralPage() {
                                 </div>
 
                                 {/* Table Rows */}
-                                <div className="max-h-[400px] overflow-y-auto flex flex-col gap-2">
+                                <div className=" overflow-y-auto flex flex-col gap-2">
                                     {isLoadingDetail ? (
                                         <div className="text-center py-8">
                                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 dark:border-purple-400 mx-auto"></div>

@@ -56,6 +56,7 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
   const [emailVerifyMessage, setEmailVerifyMessage] = useState(
     "Email is not activated. Please activate your email to continue."
   );
+  const [isAuthInitialized, setIsAuthInitialized] = useState(false);
 
   // Check if current page is login
   const isLoginPage =
@@ -66,7 +67,13 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
     pathname === "/register" ||
     pathname === "/verify-mail";
 
-  const { error: profileError } = useProfile({ enabled: isAuth && !isLoginPage });
+  const { error: profileError } = useProfile({ enabled: isAuth && !isLoginPage && isAuthInitialized });
+
+  // Initialize auth state on client side only
+  useEffect(() => {
+    // Mark auth as initialized after first render on client
+    setIsAuthInitialized(true);
+  }, []);
 
   // Handle referral code from URL
   useEffect(() => {
@@ -80,8 +87,9 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
     }
   }, []);
 
-  // Handle authentication redirects
+  // Handle authentication redirects - only after auth is initialized
   useEffect(() => {
+    if (!isAuthInitialized) return;
 
     if (!isAuth && !isLoginPage) {
       router.push("/login");
@@ -91,10 +99,10 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
     if (isAuth && isLoginPage && pathname !== "/verify-mail") {
       router.push("/");
     }
-  }, [isAuth, isLoginPage, pathname, router]);
+  }, [isAuth, isLoginPage, pathname, router, isAuthInitialized]);
 
   useEffect(() => {
-    if (!isAuth || isLoginPage || !profileError) return;
+    if (!isAuth || isLoginPage || !profileError || !isAuthInitialized) return;
 
     const status = (profileError as any)?.response?.status || (profileError as any)?.statusCode;
     const message =
@@ -106,20 +114,20 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
       setEmailVerifyMessage(message);
       setShowEmailVerifyModal(true);
     }
-  }, [isAuth, isLoginPage, pathname, profileError]);
+  }, [isAuth, isLoginPage, pathname, profileError, isAuthInitialized]);
 
   // Hiển thị loading cho đến khi hoàn thành việc check auth và cập nhật state
   // Điều này đảm bảo không có flash của content không đúng
-  // if (!isAuthInitialized) {
-  //   return (
-  //     <div className="min-h-svh flex items-center justify-center bg-theme-white-100">
-  //       <div className="flex flex-col items-center gap-4 relative">
-  //         <div className="animate-spin rounded-full h-24 w-24 border-t-2 border-b-2 border-pink-500 border-solid flex items-center justify-center absolute top-0 left-0 z-10"></div>
-  //         <img src="/logo.png" alt="Loading" className="w-24 h-24" />
-  //       </div>
-  //     </div>
-  //   );
-  // }
+  if (!isAuthInitialized) {
+    return (
+      <div className="min-h-svh flex items-center justify-center bg-theme-white-100 dark:bg-black">
+        <div className="flex flex-col items-center gap-4 relative">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-x-pink-500 border-y-blue-600 border-double flex items-center justify-center absolute top-0 left-0 z-10 ml-[-17px] mt-[-16px]"></div>
+          <img src="/logo.png" alt="Loading" className="w-24 h-24" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
