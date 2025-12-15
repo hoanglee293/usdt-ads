@@ -7,6 +7,7 @@ import { Eye, EyeOff } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useIsMobile } from '@/ui/use-mobile'
 import { useLang } from '@/lang/useLang'
+import AuthLayoutPanel from '@/components/AuthLayoutPanel'
 
 const page = () => {
     const [username, setUsername] = useState('')
@@ -118,15 +119,12 @@ const page = () => {
 
     return (
         <div className='w-full h-svh flex justify-center items-center md:p-6 bg-theme-white-100 dark:bg-black'>
-            <div className='w-full h-full hidden md:flex justify-center items-center flex-col flex-1 radial-gradient rounded-3xl p-6 border-none dark:border dark:border-solid border-transparent dark:border-[#fe645f]'>
-                <div className='flex justify-center items-center flex-col gap-[1vh]'>
-                    <img src="/logo.png" alt="logo" className='w-24 h-24 object-contain' />
-                    <span className='tracking-[-0.02em] leading-[150%] inline-block font-orbitron text-white font-bold text-3xl'>USDT ADS</span>
-                    <img src="/636.png" alt="logo" className='w-full h-auto object-contain' />
-                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium mt-6'>Nền tảng Airdrop thông minh giúp bạn kiếm thu nhập thụ động từ việc xem quảng cáo mỗi ngày.</p>
-                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium'>Tham gia staking - hoàn thành nhiệm vụ - nhận thưởng dễ dàng. Xác minh KYC để mở khoá tính năng rút tiền an toàn và nhanh chóng.</p>
-                </div>
-            </div>
+            <AuthLayoutPanel
+                variant="register"
+                showLogo={true}
+                description1="Nền tảng Airdrop thông minh giúp bạn kiếm thu nhập thụ động từ việc xem quảng cáo mỗi ngày."
+                description2="Tham gia staking - hoàn thành nhiệm vụ - nhận thưởng dễ dàng. Xác minh KYC để mở khoá tính năng rút tiền an toàn và nhanh chóng."
+            />
             <div className={`w-full h-full flex justify-center items-center flex-col flex-1 px-8 bg-transparent ${isMobile ? 'radial-gradient pb-[20vh]' : ''}`}>
                 <div className='w-full max-w-md flex flex-col items-center'>
                     <img src="/logo.png" alt="logo" className='w-20 h-20 object-contain mb-6' />

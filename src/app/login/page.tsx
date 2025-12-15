@@ -7,6 +7,7 @@ import { Eye, EyeOff } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useIsMobile } from '@/ui/use-mobile'
 import { useLang } from '@/lang/useLang'
+import AuthLayoutPanel from '@/components/AuthLayoutPanel'
 
 const page = () => {
     const [username, setUsername] = useState('')
@@ -67,16 +68,11 @@ const page = () => {
 
     return (
         <div className='w-full h-svh flex justify-center items-center md:p-6 bg-theme-white-100 dark:bg-black'>
-            <div className='w-full h-full hidden md:flex justify-center items-center flex-col flex-1 radial-gradient rounded-3xl py-6 border-none dark:border dark:border-solid border-transparent dark:border-[#fe645f]'>
-                <div className='flex justify-center items-center flex-col gap-[1vh] w-full'>
-                    <img src="/logo.png" alt="logo" className='w-24 h-24 object-contain' />
-                    <span className='tracking-[-0.02em] leading-[150%] inline-block font-orbitron text-white font-bold text-3xl'>USDT ADS</span>
-                    <img src="/636.png" alt="logo" className='w-full h-auto object-contain' />
-                    <h2 className='text-[2rem] font-bold text-center text-black-100 dark:text-white my-4'>{t('login.getStarted')}</h2>
-                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium'>{t('login.description1')}</p>
-                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium'>{t('login.description2')}</p>
-                </div>
-            </div>
+            <AuthLayoutPanel
+                variant="login"
+                description1={t('login.description1')}
+                description2={t('login.description2')}
+            />
             <div className={`w-full h-full flex gap-3 justify-end md:justify-center items-center flex-col flex-1 bg-transparent ${isMobile ? 'radial-gradient' : ''}`}>
                 <div className='w-full lg:max-w-lg px-8 flex flex-col items-center mt-[10vh] md:mt-0'>
                     <img src="/logo.png" alt="logo" className='w-24 h-24 object-contain' />

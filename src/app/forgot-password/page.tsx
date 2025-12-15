@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 import { useIsMobile } from '@/ui/use-mobile'
 import { useLang } from '@/lang/useLang'
+import AuthLayoutPanel from '@/components/AuthLayoutPanel'
 
 const ForgotPasswordPage = () => {
     const [email, setEmail] = useState('')
@@ -49,15 +50,14 @@ const ForgotPasswordPage = () => {
 
     return (
         <div className='w-full h-svh flex justify-center items-center md:p-6 bg-theme-white-100 dark:bg-black'>
-            <div className='w-full h-full hidden md:flex justify-center items-center flex-col flex-1 radial-gradient rounded-3xl p-6 border-none dark:border dark:border-solid border-transparent dark:border-[#fe645f]'>
-                <div className='flex justify-center items-center flex-col mt-[30%] gap-[1vh]'>
-                    <img src="/logo.png" alt="logo" className='w-24 h-24 object-contain' />
-                    <span className='tracking-[-0.02em] leading-[150%] inline-block font-orbitron text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] font-bold text-base'>USDT ADS</span>
-                    <h2 className='text-[2rem] font-bold text-center text-black-100 dark:text-white my-4'>{t('forgotPassword.getStarted')}</h2>
-                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium'>{t('forgotPassword.description1')}</p>
-                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium'>{t('forgotPassword.description2')}</p>
-                </div>
-            </div>
+            <AuthLayoutPanel
+                variant="default"
+                showLogo={true}
+                showHeading={true}
+                headingText={t('forgotPassword.getStarted')}
+                description1={t('forgotPassword.description1')}
+                description2={t('forgotPassword.description2')}
+            />
             <div className={`w-full h-full flex justify-center items-center flex-col flex-1 px-8 bg-transparent ${isMobile ? 'radial-gradient pb-[20vh]' : ''}`}>
                 <div className='w-full max-w-md flex flex-col items-center'>
                     <img src="/logo.png" alt="logo" className='w-28 h-28 object-contain mb-6' />
