@@ -7,24 +7,31 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getMemberRefInfo, createMemberRefWithdraw } from '@/services/RefService'
 import { useProfile } from '@/hooks/useProfile'
 import { useLang } from '@/lang/useLang'
-import Modal from '@/components/Modal'
+import { useRouter } from 'next/navigation'
+
+interface MilestoneItem {
+    milestone: number
+    reward: number
+    is_claimed: boolean
+    reward_id: string | null
+}
+
+interface MilestoneDefinition {
+    count: number
+    reward: number
+    is_claimed: boolean
+    reward_id: string | null
+    achieved?: boolean
+    showLink?: boolean
+}
 
 export default function SmartRefPage() {
     const queryClient = useQueryClient()
+    const router = useRouter()
     const { profile, loading: profileLoading } = useProfile()
     const { t } = useLang()
     const [showKolModal, setShowKolModal] = useState(true)
 
-    // Milestone definitions
-    const milestoneDefinitions = [
-        { count: 5, reward: 10 },
-        { count: 10, reward: 15 },
-        { count: 20, reward: 30, showLink: true },
-        { count: 35, reward: 50 },
-        { count: 50, reward: 75 },
-        { count: 75, reward: 100 },
-        { count: 100, reward: 150 },
-    ]
 
     // Fetch Member Ref Info
     const { data: memberRefInfo = {} as any, isLoading: isLoadingInfo } = useQuery({
@@ -34,25 +41,44 @@ export default function SmartRefPage() {
 
     const memberRefData = memberRefInfo?.data || {}
     const currentReferrals = memberRefData.total_members || 0
-    const currentMilestone = memberRefData.current_milestone || 0
+    const currentMilestone = memberRefData.current_milestone || null
     const totalRewards = memberRefData.total_rewards || 0
     const totalCanWithdraw = memberRefData.total_can_withdraw || 0
+    const rewardMilestones = memberRefData.reward_milestone || []
 
-    // Calculate milestones based on current milestone
-    const milestones = useMemo(() => {
-        return milestoneDefinitions.map((milestone) => ({
-            ...milestone,
-            achieved: currentReferrals >= milestone.count,
+    // Transform API milestone data to match component structure
+    const milestoneDefinitions = useMemo(() => {
+        return rewardMilestones.map((item: MilestoneItem): MilestoneDefinition => ({
+            count: item.milestone,
+            reward: item.reward,
+            is_claimed: item.is_claimed,
+            reward_id: item.reward_id,
         }))
-    }, [currentReferrals])
+    }, [rewardMilestones])
 
     // Find next milestone for progress bar
     const nextMilestone = useMemo(() => {
-        return milestoneDefinitions.find((m) => m.count > currentReferrals) || milestoneDefinitions[milestoneDefinitions.length - 1]
-    }, [currentReferrals])
+        if (milestoneDefinitions.length === 0) return null
+        return milestoneDefinitions.find((m: MilestoneDefinition) => m.count > currentReferrals) || milestoneDefinitions[milestoneDefinitions.length - 1]
+    }, [currentReferrals, milestoneDefinitions])
+
+    // Get max milestone count for progress display
+    const maxMilestoneCount = useMemo(() => {
+        if (milestoneDefinitions.length === 0) return 100
+        return milestoneDefinitions[milestoneDefinitions.length - 1]?.count || 100
+    }, [milestoneDefinitions])
+
+    // Calculate milestones based on current milestone
+    const milestones = useMemo(() => {
+        return milestoneDefinitions.map((milestone: MilestoneDefinition) => ({
+            ...milestone,
+            achieved: currentReferrals >= milestone.count,
+            showLink: nextMilestone?.count === milestone.count,
+        }))
+    }, [currentReferrals, nextMilestone, milestoneDefinitions])
 
     const progressPercentage = nextMilestone
-        ? (currentReferrals / nextMilestone.count) * 100
+        ? Math.min((currentReferrals / nextMilestone.count) * 100, 100)
         : 100
 
     // Generate referral link
@@ -145,19 +171,31 @@ export default function SmartRefPage() {
                 {/* Progress Bar */}
                 <div className='bg-transparent rounded-lg border border-gray-200 dark:border-[#FE645F] p-4 sm:p-6'>
                     {isLoadingInfo ? (
-                        <div className='w-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE] rounded-full h-8 sm:h-10 animate-pulse' />
+                        <div className='w-full max-w-[20vw] mx-auto bg-gradient-to-br from-[#FE645F] to-[#C68AFE] rounded-full h-8 sm:h-10 animate-pulse' />
                     ) : (
-                        <div className='w-[20vw] mx-auto bg-gradient-to-br from-[#FE645F] to-[#C68AFE] rounded-full h-8 sm:h-10 overflow-hidden relative'>
-                            
+                        <div className='w-[20vw] mx-auto bg-gray-200 dark:bg-gray-700 rounded-full h-8 sm:h-10 overflow-hidden relative'>
+                            <div 
+                                className='absolute inset-0 bg-gradient-to-br from-[#FE645F] to-[#C68AFE] rounded-full transition-all duration-300'
+                                style={{ width: '100%' }}
+                            />
                             <div className='absolute inset-0 flex items-center justify-center'>
                                 <span className='text-xs sm:text-sm font-semibold px-2 whitespace-nowrap z-10'>
                                     <span className='text-white drop-shadow-md'>
-                                        {t('smartRef.progressText', { current: currentReferrals, total: nextMilestone?.count || 100 })}
+                                        {t('smartRef.progressText', { 
+                                            current: currentReferrals, 
+                                            total: nextMilestone?.count || maxMilestoneCount 
+                                        })}
                                     </span>
                                 </span>
                             </div>
                         </div>
                     )}
+                </div>
+
+                <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 bg-theme-pink-100 px-8 py-4 !w-fit mx-auto rounded-full'>
+                    <h2 className='text-xl sm:text-3xl md:text-4xl font-bold text-center text-gradient-secondary '>
+                        {t('smartRef.totalRewardsUpTo')}
+                    </h2>
                 </div>
 
                 {/* SVG Gradient Definition for custom icon */}
@@ -176,7 +214,7 @@ export default function SmartRefPage() {
 
                 {/* Milestone Columns */}
                 <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 '>
-                    {milestones.map((milestone, index) => (
+                    {milestones.map((milestone: MilestoneDefinition, index: number) => (
                         <div
                             key={index}
                             className='flex flex-col items-center space-y-2 sm:space-y-3 hover:bg-white dark:hover:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] hover:shadow-md p-3 sm:p-4'
@@ -255,8 +293,8 @@ export default function SmartRefPage() {
                             {/* Referral Link Button (only for 20 people milestone) */}
                             {milestone.showLink && (
                                 <Button
-                                    onClick={handleCopyLink}
-                                    className='mt-2 w-full bg-gradient-to-r from-pink-500 to-red-500 text-white border-none hover:opacity-90 text-xs sm:text-sm font-medium rounded-lg'
+                                    onClick={() => router.push('/referral/direct')}
+                                    className='mt-2 w-full bg-gradient-to-r from-pink-500 to-red-500 text-white border-none hover:opacity-90 text-xs sm:text-sm font-medium rounded-lg hover:bg-gradient-to-r hover:from-pink-600 hover:to-red-600 cursor-pointer'
                                     size='sm'
                                 >
                                     <Link2 className='w-3 h-3 sm:w-4 sm:h-4 mr-1' />

@@ -149,7 +149,8 @@
     "minimumWithdrawError": "Số tiền tối thiểu để rút là $10. Số tiền hiện tại: ${amount}",
     "disclaimer": "*Hệ thống trả thưởng giới thiệu theo mốc nếu User giới thiệu trực tiếp được được người tham gia khác KYC; tham gia và hoàn gói Staking ít nhất 1 lần",
     "kolPermissionTitle": "Yêu cầu quyền KOL",
-    "kolPermissionMessage": "Vui lòng liên hệ với admin để được cấp quyền KOL để sử dụng tính năng này."
+    "kolPermissionMessage": "Vui lòng liên hệ với admin để được cấp quyền KOL để sử dụng tính năng này.",
+    "totalRewardsUpTo": "Tổng giải thưởng lên đến 430 USDT"
   },
   "staking": {
     "joinBaseSuccess": "Tham gia gói Base thành công!",

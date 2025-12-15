@@ -149,7 +149,8 @@
     "minimumWithdrawError": "最低提款金额为$10。当前金额: ${amount}",
     "disclaimer": "*如果用户直接推荐的人已完成KYC；参与并完成至少1个质押套餐，系统将按里程碑奖励推荐",
     "kolPermissionTitle": "需要KOL权限",
-    "kolPermissionMessage": "请联系管理员授予KOL权限以使用此功能。"
+    "kolPermissionMessage": "请联系管理员授予KOL权限以使用此功能。",
+    "totalRewardsUpTo": "总奖励最高430 USDT"
   },
   "staking": {
     "joinBaseSuccess": "成功加入基础套餐！",

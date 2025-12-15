@@ -51,7 +51,7 @@ export default function DirectReferralPage() {
 
     const handleCopyLink = async () => {
         try {
-            const referralLink = `${process.env.NEXT_PUBLIC_API_URL}/?ref=${smartRefInfo.data?.referent_code || ''}`;
+            const referralLink = `https://usda-demo.vercel.app/?ref=${profile?.ref || ''}`;
             await navigator.clipboard.writeText(referralLink);
             toast.success(t('ref.linkCopied') || 'Link copied successfully');
         } catch (err) {
@@ -95,7 +95,7 @@ export default function DirectReferralPage() {
                     <div className="flex items-center gap-2 relative">
                         <input
                             type="text"
-                            value={`${process.env.NEXT_PUBLIC_API_URL}/?ref=${profile?.ref || ''}`}
+                            value={`https://usda-demo.vercel.app/?ref=${profile?.ref || ''}`}
                             readOnly
                             className="flex-1 bg-gray-50 dark:bg-gray-900/50 text-sm sm:text-base px-3 py-2 rounded-md border border-theme-gray-100 dark:border-gray-700 border-solid text-gray-500 dark:text-gray-400"
                         />
