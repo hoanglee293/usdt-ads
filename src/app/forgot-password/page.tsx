@@ -42,6 +42,21 @@ const ForgotPasswordPage = () => {
             const errorMessage = err?.message || 
                 err?.response?.data?.message || 
                 t('auth.resetPasswordError')
+            if(errorMessage.includes('Email is required')) {
+                toast.error(t('forgotPassword.emailRequired'))
+                setLoading(false)
+                return
+            }
+            if(errorMessage.includes('Invalid email')) {
+                toast.error(t('forgotPassword.invalidEmail'))
+                setLoading(false)
+                return
+            }
+            if(errorMessage.includes('A password reset token already exists and is still valid. Please check your email or wait until the token expires.')) {
+                toast.error(t('forgotPassword.tokenAlreadyExists'))
+                setLoading(false)
+                return
+            }
             toast.error(errorMessage)
         } finally {
             setLoading(false)

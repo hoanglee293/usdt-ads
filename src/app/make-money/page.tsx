@@ -413,8 +413,7 @@ export default function MakeMoneyPage() {
 
     // Get reward amount - ưu tiên real_reward, fallback về estimated_reward hoặc tính toán
     const getRewardAmount = (staking: StakingPackage): number => {
-        // Fallback: tính toán 30% của amount
-        return staking.total_reward || 0
+        return staking?.total_usd - staking?.amount || 0
     }
 
     // Get status badge
