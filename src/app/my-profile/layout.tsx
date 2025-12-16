@@ -70,8 +70,8 @@ export default function MyProfileLayout({
 
   return (
     <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
-      <Tabs value={activeTab} onValueChange={handleTabChange} className='decoration-theme-black shadow-md rounded-lg px-4 sm:px-6 md:px-8 bg-transparent border-none w-full max-w-4xl mx-auto flex flex-col gap-[5vh]'>
-        <TabsList className='grid grid-cols-2 mb-6 sm:mb-8 md:mb-10 bg-transparent p-0 gap-4 sm:gap-6 md:gap-10 w-full sm:w-fit mx-auto'>
+      <Tabs value={activeTab} onValueChange={handleTabChange} className='decoration-theme-black !bg-gray-100/60 dark:!bg-gray-800/50 shadow-md rounded-lg px-4 py-6 sm:px-6 md:px-8 bg-transparent border-none w-full max-w-4xl mx-auto flex flex-col gap-[5vh]'>
+        <TabsList className='grid grid-cols-2 mb-6  bg-transparent p-0 gap-4 sm:gap-6 md:gap-10 w-full sm:w-fit mx-auto'>
           <TabsTrigger 
             value='my-profile' 
             className='bg-transparent w-full sm:w-fit text-base sm:text-lg md:text-xl decoration-theme-black border-0 border-b-2 border-gray-300 dark:border-gray-700 data-[state=active]:border-gray-800 dark:data-[state=active]:border-gray-200 data-[state=active]:text-gray-900 dark:data-[state=active]:text-gray-100 data-[state=active]:font-semibold text-gray-500 dark:text-gray-400 rounded-none pb-2 sm:pb-3 cursor-pointer hover:text-gray-900 dark:hover:text-gray-100'

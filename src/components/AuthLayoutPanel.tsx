@@ -41,7 +41,7 @@ const AuthLayoutPanel: React.FC<AuthLayoutPanelProps> = ({
 
     // Get content container class - use login style for all variants
     const getContentContainerClass = () => {
-        return 'flex justify-center mb-[20vh] items-center flex-col gap-[1vh] w-full px-4 min-w-0 relative z-10 bg-white/70 dark:bg-black/30 py-6'
+        return 'flex justify-center mb-[10vh] items-center flex-col gap-[1vh] w-full px-4 min-w-0 relative z-10 bg-white/70 dark:bg-black/30 py-6'
     }
 
     return (

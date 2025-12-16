@@ -180,7 +180,7 @@ const page = () => {
                 description2={t('verifyMail.description2')}
             />
             <div className={`w-full h-full flex justify-center items-center flex-col flex-1 px-8 bg-transparent ${isMobile ? 'radial-gradient pb-[20vh]' : ''}`}>
-                <div className='w-full max-w-md flex flex-col items-center'>
+                <div className='w-full lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl px-8 flex flex-col items-center mt-[10vh] md:mt-0'>
                     <img src="/logo.png" alt="logo" className='w-20 h-20 object-contain mb-6' />
                     <h2 className='text-2xl font-semibold text-white md:text-gray-800 dark:md:text-white mb-2'>{t('verifyMail.title')}</h2>
                     
