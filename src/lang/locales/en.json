@@ -129,6 +129,9 @@
     "unknown": "Unknown",
     "noReferredUsers": "No referred users",
     "withdraw": "Withdraw",
+    "withdrawSuccess": "Withdrawal successful!",
+    "withdrawError": "Failed to withdraw",
+    "minimumWithdrawError": "Minimum withdrawal amount is $10. Current amount is ${amount}",
     "you": "YOU"
   },
   "smartRef": {

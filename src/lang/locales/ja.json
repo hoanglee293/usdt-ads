@@ -129,6 +129,9 @@
     "unknown": "不明",
     "noReferredUsers": "紹介されたユーザーがいません",
     "withdraw": "出金",
+    "withdrawSuccess": "出金成功！",
+    "withdrawError": "出金に失敗しました",
+    "minimumWithdrawError": "最低出金額は$10です。現在の金額: ${amount}",
     "you": "あなた"
   },
   "smartRef": {

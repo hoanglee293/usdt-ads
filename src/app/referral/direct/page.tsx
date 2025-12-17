@@ -17,8 +17,8 @@ import {
     Activity,
     Wallet,
 } from "lucide-react"
-import { useQuery } from "@tanstack/react-query";
-import { getSmartRefInfo, getSmartRefTree, getSmartRefDetail } from "@/services/RefService";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getSmartRefInfo, getSmartRefTree, getSmartRefDetail, createSmartRefWithdraw } from "@/services/RefService";
 import { useLang } from "@/lang";
 import toast from "react-hot-toast";
 import { useProfile } from "@/hooks/useProfile";
@@ -26,6 +26,7 @@ import { useProfile } from "@/hooks/useProfile";
 export default function DirectReferralPage() {
     const { t } = useLang();
     const { profile } = useProfile();
+    const queryClient = useQueryClient();
     console.log(profile);
     const [showReferralStructure, setShowReferralStructure] = useState(true)
     const [activeTab, setActiveTab] = useState("level-referral") // 'level-referral', 'referred-users'
@@ -49,6 +50,19 @@ export default function DirectReferralPage() {
         queryFn: () => getSmartRefDetail(selectedLevel),
     });
 
+    // Withdraw mutation
+    const withdrawMutation = useMutation({
+        mutationFn: createSmartRefWithdraw,
+        onSuccess: (data) => {
+            toast.success(t('ref.withdrawSuccess') || 'Withdraw successful');
+            queryClient.invalidateQueries({ queryKey: ['smartRefInfo'] });
+        },
+        onError: (error: any) => {
+            const message = error?.response?.data?.message || t('ref.withdrawError') || 'Failed to withdraw';
+            toast.error(message);
+        },
+    });
+
     const handleCopyLink = async () => {
         try {
             const referralLink = `https://usda-demo.vercel.app/?ref=${profile?.ref || ''}`;
@@ -60,10 +74,18 @@ export default function DirectReferralPage() {
     }
 
     const handleWithdraw = () => {
-        // TODO: Implement withdraw functionality for Smart Ref
-        toast(t('ref.withdrawComingSoon') || 'Withdraw feature coming soon', {
-            icon: 'ℹ️',
-        });
+        const totalCanWithdraw = smartRefInfo.data?.total_can_withdraw || 0;
+        
+        if (totalCanWithdraw < 10) {
+            toast.error(t('ref.minimumWithdrawError', { amount: totalCanWithdraw.toFixed(2) }) || `Minimum withdrawal amount is $10. Current amount is $${totalCanWithdraw.toFixed(2)}`);
+            return;
+        }
+
+        if (withdrawMutation.isPending) {
+            return;
+        }
+
+        withdrawMutation.mutate();
     }
 
     // Format date to display in a more readable format
@@ -131,10 +153,11 @@ export default function DirectReferralPage() {
                             </p>
                             <button
                                 onClick={handleWithdraw}
-                                className="px-3 bg-white dark:bg-gray-700 text-pink-600 dark:text-pink-400 hover:bg-gray-100 dark:hover:bg-gray-600 border-none font-medium rounded-full py-2 transition-colors flex items-center justify-center gap-2 cursor-pointer"
+                                disabled={withdrawMutation.isPending || isLoadingInfo || (smartRefInfo.data?.total_can_withdraw || 0) < 10}
+                                className="px-3 bg-white dark:bg-gray-700 text-pink-600 dark:text-pink-400 hover:bg-gray-100 dark:hover:bg-gray-600 border-none font-medium rounded-full py-2 transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Wallet className="w-4 h-4" />
-                                {t('ref.withdraw') || 'Withdraw'}
+                                {withdrawMutation.isPending ? (t('common.loading') || 'Loading...') : (t('ref.withdraw') || 'Withdraw')}
                             </button>
                         </div>
 

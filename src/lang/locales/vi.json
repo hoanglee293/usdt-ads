@@ -129,6 +129,9 @@
     "unknown": "Không xác định",
     "noReferredUsers": "Không có người dùng được giới thiệu",
     "withdraw": "Rút tiền",
+    "withdrawSuccess": "Rút tiền thành công!",
+    "withdrawError": "Không thể rút tiền",
+    "minimumWithdrawError": "Số tiền tối thiểu để rút là $10. Số tiền hiện tại là ${amount}",
     "you": "BẠN"
   },
   "smartRef": {

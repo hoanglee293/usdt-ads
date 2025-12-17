@@ -154,6 +154,20 @@ export interface CreateMemberRefWithdrawResponse {
   data: MemberRefWithdrawData;
 }
 
+export interface SmartRefWithdrawData {
+  withdraw_history_id: number;
+  total_amount: number;
+  total_amount_usd: number;
+  rewards_count: number;
+  date: string;
+}
+
+export interface CreateSmartRefWithdrawResponse {
+  statusCode: number;
+  message: string;
+  data: SmartRefWithdrawData;
+}
+
 // ==================== API Functions ====================
 
 /**
@@ -282,6 +296,20 @@ export const createMemberRefWithdraw = async (): Promise<CreateMemberRefWithdraw
     return response.data;
   } catch (error: any) {
     console.error("Error creating member ref withdraw:", error);
+    throw error;
+  }
+};
+
+/**
+ * Rút thưởng Smart Ref (tối thiểu 10$)
+ * @returns Promise<CreateSmartRefWithdrawResponse>
+ */
+export const createSmartRefWithdraw = async (): Promise<CreateSmartRefWithdrawResponse> => {
+  try {
+    const response = await axiosClient.post("/referrals/smart-ref-withdraw");
+    return response.data;
+  } catch (error: any) {
+    console.error("Error creating smart ref withdraw:", error);
     throw error;
   }
 };
