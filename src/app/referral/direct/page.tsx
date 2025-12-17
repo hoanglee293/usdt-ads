@@ -131,7 +131,7 @@ export default function DirectReferralPage() {
                             </p>
                             <button
                                 onClick={handleWithdraw}
-                                className="px-3 bg-white dark:bg-gray-700 text-pink-600 dark:text-pink-400 hover:bg-gray-100 dark:hover:bg-gray-600 border-none font-medium rounded-full py-2 transition-colors flex items-center justify-center gap-2"
+                                className="px-3 bg-white dark:bg-gray-700 text-pink-600 dark:text-pink-400 hover:bg-gray-100 dark:hover:bg-gray-600 border-none font-medium rounded-full py-2 transition-colors flex items-center justify-center gap-2 cursor-pointer"
                             >
                                 <Wallet className="w-4 h-4" />
                                 {t('ref.withdraw') || 'Withdraw'}

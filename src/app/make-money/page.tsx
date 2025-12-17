@@ -120,6 +120,30 @@ export default function MakeMoneyPage() {
         },
         onError: (error: any) => {
             const message = error?.response?.data?.message || t('staking.joinBaseError')
+            
+            // Check for specific error messages and use translations
+            if(message.includes('User already has an active staking lock')) {
+                toast.error(t('staking.userAlreadyHasActiveStaking'))
+                return
+            }
+            if(message.includes('USDT coin not found')) {
+                toast.error(t('staking.usdtCoinNotFound'))
+                return
+            }
+            if(message.includes('USDT wallet not found for user')) {
+                toast.error(t('staking.usdtWalletNotFound'))
+                return
+            }
+            if(message.includes('USDT balance must be less than $10')) {
+                toast.error(t('staking.usdtBalanceMustBeLessThan10'))
+                return
+            }
+            if(message.includes('Failed to join base staking')) {
+                toast.error(t('staking.failedToJoinBase'))
+                return
+            }
+            
+            // Fallback to show the original message if no translation found
             toast.error(message)
         }
     })
@@ -140,6 +164,46 @@ export default function MakeMoneyPage() {
         },
         onError: (error: any) => {
             const message = error?.response?.data?.message || t('staking.joinStakingError')
+            
+            // Check for specific error messages and use translations
+            if(message.includes('Type must be one of: 1d, 7d, 30d')) {
+                toast.error(t('staking.typeMustBeOneOf'))
+                return
+            }
+            if(message.includes('Amount must be greater than 0')) {
+                toast.error(t('staking.amountMustBeGreaterThan0'))
+                return
+            }
+            if(message.includes('Amount must not exceed 3500')) {
+                toast.error(t('staking.amountMustNotExceed3500'))
+                return
+            }
+            if(message.includes('User already has an active staking lock')) {
+                toast.error(t('staking.userAlreadyHasActiveStaking'))
+                return
+            }
+            if(message.includes('USDT coin not found')) {
+                toast.error(t('staking.usdtCoinNotFound'))
+                return
+            }
+            if(message.includes('USDT balance must be greater than or equal to $10')) {
+                toast.error(t('staking.usdtBalanceMustBeGreaterOrEqual10'))
+                return
+            }
+            if(message.includes('Insufficient balance')) {
+                toast.error(t('staking.insufficientBalance'))
+                return
+            }
+            if(message.includes('Invalid staking type')) {
+                toast.error(t('staking.invalidStakingType'))
+                return
+            }
+            if(message.includes('Failed to join staking')) {
+                toast.error(t('staking.failedToJoinStaking'))
+                return
+            }
+            
+            // Fallback to show the original message if no translation found
             toast.error(message)
         }
     })
@@ -175,6 +239,42 @@ export default function MakeMoneyPage() {
         },
         onError: (error: any) => {
             const message = error?.response?.data?.message || t('staking.claimError')
+            
+            // Check for specific error messages and use translations
+            if(message.includes('You have already claimed the reward')) {
+                toast.error(t('staking.alreadyClaimed'))
+                return
+            }
+            if(message.includes('You have not completed the mission')) {
+                toast.error(t('staking.notCompletedMission'))
+                return
+            }
+            if(message.includes('No active staking lock found')) {
+                toast.error(t('staking.noActiveStakingLock'))
+                return
+            }
+            if(message.includes('Can only claim after 00:05:00 UTC of the day after staking ends')) {
+                toast.error(t('staking.canOnlyClaimAfterTime'))
+                return
+            }
+            if(message.includes('Invalid staking lock type')) {
+                toast.error(t('staking.invalidStakingLockType'))
+                return
+            }
+            if(message.includes('USDT coin not found')) {
+                toast.error(t('staking.usdtCoinNotFound'))
+                return
+            }
+            if(message.includes('USDT wallet not found for user')) {
+                toast.error(t('staking.usdtWalletNotFound'))
+                return
+            }
+            if(message.includes('Failed to claim mission')) {
+                toast.error(t('staking.failedToClaimMission'))
+                return
+            }
+            
+            // Fallback to show the original message if no translation found
             toast.error(message)
         }
     })
@@ -816,7 +916,7 @@ export default function MakeMoneyPage() {
                                         {isLoadingBalance ? (
                                             <Skeleton className="h-8 w-48" />
                                         ) : balanceResponse?.data ? (
-                                            <div className='flex flex-col items-center bg-theme-pink-100 py-3 px-4 rounded-full'>
+                                            <div className='flex flex-col items-center bg-theme-pink-100 dark:bg-transparent py-3 px-4 rounded-full'>
                                                 <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
                                                     {t('makeMoney.balance')}: {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                                 </span>
