@@ -24,12 +24,15 @@ import {
     getStakingHistories,
     claimMissionReward,
     getMissionNow,
+    getCurrentStakingWithMissions,
     type StakingPackage,
     type JoinStakingRequest,
     type CurrentStakingResponse,
     type StakingHistoriesResponse,
     type MissionClaimResponse,
     type MissionNowResponse,
+    type CurrentStakingWithMissionsResponse,
+    type Mission,
 } from '@/services/StakingService'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
@@ -92,27 +95,52 @@ export default function MakeMoneyPage() {
         staleTime: 2 * 60 * 1000, // Cache 2 phút
     })
 
-    // 5. Get Mission Progress
-    const currentStaking = useMemo(() => {
-        return currentStakingResponse?.data || null
-    }, [currentStakingResponse])
+    // 5. Get Current Staking with Missions
+    // Query khi đã load xong currentStaking (không cần kiểm tra status, để API tự xử lý 404)
+    const { data: stakingWithMissionsResponse, isLoading: isLoadingStakingWithMissions, refetch: refetchStakingWithMissions, error: stakingWithMissionsError, isError: isStakingWithMissionsError } = useQuery<CurrentStakingWithMissionsResponse>({
+        queryKey: ['current-staking-with-missions'],
+        queryFn: getCurrentStakingWithMissions,
+        enabled: !isLoadingCurrentStaking, // Chỉ cần đợi currentStaking load xong, không cần kiểm tra status
+        refetchInterval: 30000, // Refetch mỗi 30 giây
+        refetchOnWindowFocus: false,
+        retry: false, // Không retry nếu 404 (không có staking)
+    })
 
+    // Get current staking from either source
+    const currentStaking = useMemo(() => {
+        // Ưu tiên dùng staking_lock từ API mới nếu có, fallback về currentStakingResponse
+        return stakingWithMissionsResponse?.data?.staking_lock || currentStakingResponse?.data || null
+    }, [stakingWithMissionsResponse, currentStakingResponse])
+
+    // Get missions list - sorted by date (newest first)
+    const missions = useMemo(() => {
+        const missionsList = stakingWithMissionsResponse?.data?.missions || []
+        // Sort by date descending (newest first)
+        return [...missionsList].sort((a, b) => {
+            const dateA = new Date(a.date).getTime()
+            const dateB = new Date(b.date).getTime()
+            return dateB - dateA
+        })
+    }, [stakingWithMissionsResponse])
+
+    // 6. Get Mission Progress (keep for backward compatibility if needed)
     const { data: missionNowResponse, isLoading: isLoadingMission, refetch: refetchMissionNow, error: missionError, isError: isMissionError } = useQuery<MissionNowResponse>({
         queryKey: ['mission-now'],
         queryFn: getMissionNow,
-        enabled: !!currentStaking && currentStaking.status === 'running', // Chỉ query khi có staking running
+        enabled: !!currentStaking && currentStaking.status === 'running' && !stakingWithMissionsResponse, // Chỉ query khi không có staking-with-missions
         refetchInterval: 30000, // Refetch mỗi 30 giây để cập nhật countdown
         refetchOnWindowFocus: false,
         retry: false, // Không retry nếu 400 (không có staking)
     })
 
-    // 6. Join Base Mutation
+    // 7. Join Base Mutation
     const joinBaseMutation = useMutation({
         mutationFn: joinBasePackage,
         onSuccess: (data) => {
             const message = data?.message || t('staking.joinBaseSuccess')
             toast.success(message)
             queryClient.invalidateQueries({ queryKey: ['current-staking'] })
+            queryClient.invalidateQueries({ queryKey: ['current-staking-with-missions'] })
             queryClient.invalidateQueries({ queryKey: ['staking-histories'] })
             queryClient.invalidateQueries({ queryKey: ['mission-now'] })
             refetchBalance()
@@ -148,7 +176,7 @@ export default function MakeMoneyPage() {
         }
     })
 
-    // 7. Join Staking Mutation
+    // 8. Join Staking Mutation
     const joinStakingMutation = useMutation({
         mutationFn: (data: JoinStakingRequest) => joinStakingPackage(data),
         onSuccess: (response) => {
@@ -157,6 +185,7 @@ export default function MakeMoneyPage() {
             setStakingAmount('')
             setIsStakingModalOpen(false)
             queryClient.invalidateQueries({ queryKey: ['current-staking'] })
+            queryClient.invalidateQueries({ queryKey: ['current-staking-with-missions'] })
             queryClient.invalidateQueries({ queryKey: ['staking-histories'] })
             queryClient.invalidateQueries({ queryKey: ['mission-now'] })
             refetchBalance()
@@ -208,7 +237,7 @@ export default function MakeMoneyPage() {
         }
     })
 
-    // 8. Claim Mission Reward Mutation
+    // 9. Claim Mission Reward Mutation
     const claimMissionMutation = useMutation({
         mutationFn: claimMissionReward,
         onSuccess: async (data: MissionClaimResponse) => {
@@ -220,6 +249,7 @@ export default function MakeMoneyPage() {
             toast.success(successMessage)
             // Invalidate tất cả các queries liên quan
             queryClient.invalidateQueries({ queryKey: ['current-staking'] })
+            queryClient.invalidateQueries({ queryKey: ['current-staking-with-missions'] })
             queryClient.invalidateQueries({ queryKey: ['staking-histories'] })
             queryClient.invalidateQueries({ queryKey: ['mission-now'] })
             queryClient.invalidateQueries({ queryKey: ['balance', selectedCoin] })
@@ -231,9 +261,10 @@ export default function MakeMoneyPage() {
                 refetchHistories(),
             ])
 
-            // Refetch mission-now nếu staking vẫn đang running (sử dụng dữ liệu từ response)
+            // Refetch staking-with-missions và mission-now nếu staking vẫn đang running (sử dụng dữ liệu từ response)
             const updatedStaking = data.data.staking_lock
             if (updatedStaking && updatedStaking.status === 'running') {
+                refetchStakingWithMissions()
                 refetchMissionNow()
             }
         },
@@ -340,6 +371,18 @@ export default function MakeMoneyPage() {
             toast.error(message)
         }
     }, [isHistoriesError, historiesError, t])
+
+    useEffect(() => {
+        if (isStakingWithMissionsError && stakingWithMissionsError) {
+            const error: any = stakingWithMissionsError
+            // 404 is expected when no active staking exists, don't show error
+            if (error?.response?.status === 404) {
+                return
+            }
+            const message = error?.response?.data?.message || t('makeMoney.errors.loadMissionError')
+            toast.error(message)
+        }
+    }, [isStakingWithMissionsError, stakingWithMissionsError, t])
 
     useEffect(() => {
         if (isMissionError && missionError) {
@@ -735,50 +778,195 @@ export default function MakeMoneyPage() {
                     </div>
                 ) : currentStaking ? (
                     <div className='mb-6 sm:mb-8 p-3 sm:p-4 md:p-6 rounded-lg border border-gray-200 dark:border-[#FE645F] bg-transparent'>
-                        <div className='grid grid-cols-1 md:grid-cols-2 w-full md:max-w-3xl mx-auto gap-3 sm:gap-4 mb-3 sm:mb-4'>
+                        <div className='grid grid-cols-1 md:grid-cols-2 w-full md:max-w-3xl mx-auto gap-3 sm:gap-y-4 sm:gap-x-10 mb-3 sm:mb-4'>
                             {/* Right Column */}
-                            <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
+                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
                                 <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.stakingType')}:</p>
-                                <p className='text-base sm:text-lg font-semibold text-red-600 dark:text-[#FE645F]'>{getTypeDurationLabel(currentStaking.type)}</p>
+                                <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#FE645F]'>{getTypeDurationLabel(currentStaking.type)}</p>
                             </div>
 
                             {/* Left Column */}
-                            <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
+                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
                                 <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.status')}:</p>
-                                <p className='text-xs sm:text-sm font-medium text-gray-900 dark:text-gray-300'>{getStatusText(currentStaking.status)}</p>
+                                <p className='text-xs sm:text-sm font-medium text-red-600 dark:text-[#FE645F]'>{getStatusText(currentStaking.status)}</p>
                             </div>
 
                             {/* Right Column */}
-                            <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
+                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
                                 <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.time')}:</p>
                                 <p className='text-xs sm:text-sm font-medium text-red-600 dark:text-[#FE645F]'>{formatDateOnly(currentStaking.date_start)} - {formatDateOnly(currentStaking.date_end)}</p>
                             </div>
 
                             {/* Left Column */}
-                            <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
+                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
                                 <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.amount')}:</p>
-                                <p className='text-base sm:text-lg font-semibold text-red-600 dark:text-[#FE645F]'>{currentStaking.amount} USDT</p>
+                                <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#FE645F]'>{currentStaking.amount} USDT</p>
                             </div>
 
                             {/* Right Column */}
-                            <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md flex-wrap'>
+                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md flex-wrap'>
                                 <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.estimatedReward')}:</p>
                                 <div className='flex gap-1 sm:gap-2 items-center flex-wrap'>
-                                    <p className='text-base sm:text-lg font-semibold text-red-600 dark:text-[#FE645F]'>{currentStaking.estimated_reward} USDT</p>
+                                    <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#FE645F]'>{currentStaking.estimated_reward} USDT</p>
                                 </div>
                             </div>
 
-                            <div className='p-2 sm:p-3 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md flex-wrap'>
+                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md flex-wrap'>
                                 <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.earnedAmount')}:</p>
                                 <div className='flex gap-1 sm:gap-2 items-center flex-wrap'>
-                                    <p className='text-base sm:text-lg font-semibold text-red-600 dark:text-[#FE645F]'>{(currentStaking.real_reward || 0).toFixed(3)} USDT</p>
+                                    <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#FE645F]'>{(currentStaking.real_reward || 0).toFixed(3)} USDT</p>
                                 </div>
                             </div>
 
 
                         </div>
-                        {/* Tasks - Chỉ hiển thị khi có dữ liệu mission-now */}
-                        {missionNowResponse?.data ? (
+                        {/* Tasks & Missions - Hiển thị khi có dữ liệu staking-with-missions hoặc mission-now */}
+                        {stakingWithMissionsResponse?.data ? (
+                            <>
+                                {/* Video Views & Devices Info */}
+                                <div className='grid grid-cols-2 gap-2 sm:gap-3 md:gap-10 w-full md:max-w-3xl mx-auto mb-3 sm:mb-4'>
+                                    <div className='p-2 sm:p-3 md:p-4 bg-blue-50 dark:bg-blue-900/55 rounded-lg border border-blue-200 dark:border-blue-700'>
+                                        <div className='flex items-center justify-between mb-1 sm:mb-2'>
+                                            <p className='text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium'>{t('makeMoney.videoViews')}</p>
+                                            <p className='text-xs sm:text-sm font-semibold text-blue-900 dark:text-blue-300'>
+                                                {currentStaking?.turn_setting || 0}
+                                            </p>
+                                        </div>
+                                        <p className='text-[10px] sm:text-xs text-blue-500 dark:text-blue-400'>
+                                            {t('makeMoney.videoViewsDescription')}
+                                        </p>
+                                    </div>
+                                    <div className='p-2 sm:p-3 md:p-4 bg-green-50 dark:bg-green-900/65 rounded-lg border border-green-200 dark:border-green-700'>
+                                        <div className='flex items-center justify-between mb-1 sm:mb-2'>
+                                            <p className='text-xs sm:text-sm text-green-600 dark:text-green-400 font-medium'>{t('makeMoney.devices')}</p>
+                                            <p className='text-xs sm:text-sm font-semibold text-green-900 dark:text-green-300'>
+                                                {currentStaking?.devices_setting || 0}
+                                            </p>
+                                        </div>
+                                        <p className='text-[10px] sm:text-xs text-green-500 dark:text-green-400'>
+                                            {t('makeMoney.devicesDescription')}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                {/* Missions History Table */}
+                                {missions.length > 0 && (
+                                    <div className='w-full md:max-w-3xl mx-auto mb-3 sm:my-8'>
+                                        <h3 className='text-lg sm:text-xl font-bold text-theme-red-100 dark:text-[#FE645F] mb-3 sm:mb-4 mt-6 sm:mt-8'>
+                                            {t('makeMoney.missionsHistory') || 'Lịch sử nhiệm vụ'}
+                                        </h3>
+                                        
+                                        {/* Mobile Card Layout */}
+                                        <div className="block sm:hidden space-y-3">
+                                            {missions.map((mission, index) => (
+                                                <div 
+                                                    key={mission.id} 
+                                                    className={`bg-white dark:bg-gray-800 rounded-lg border ${
+                                                        mission.status === 'success'
+                                                            ? 'border-green-200 dark:border-green-700'
+                                                            : 'border-orange-200 dark:border-orange-700'
+                                                    } p-3 shadow-sm`}
+                                                >
+                                                    <div className="flex items-center justify-between mb-2">
+                                                        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                                                            {t('wallet.tableHeaders.stt')} {index + 1}
+                                                        </span>
+                                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                                            mission.status === 'success'
+                                                                ? 'bg-green-500 text-white'
+                                                                : 'bg-orange-500 text-white'
+                                                        }`}>
+                                                            {mission.status === 'success'
+                                                                ? t('makeMoney.completed') || 'Hoàn thành'
+                                                                : t('makeMoney.notCompleted') || 'Chưa đạt'}
+                                                        </span>
+                                                    </div>
+                                                    <div className="space-y-2">
+                                                        <div className="flex items-center justify-between">
+                                                            <span className="text-xs text-gray-600 dark:text-gray-300">
+                                                                {t('makeMoney.date') || 'Ngày'}:</span>
+                                                            <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
+                                                                {formatDateOnly(mission.date)}
+                                                            </span>
+                                                        </div>
+                                                        <div className="flex items-center justify-between">
+                                                            <span className="text-xs text-gray-600 dark:text-gray-300">
+                                                                {t('makeMoney.videosWatched') || 'Video đã xem'}:</span>
+                                                            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">
+                                                                {mission.turn} / {currentStaking?.turn_setting || 0}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {/* Desktop Table Layout */}
+                                        <div className="hidden sm:block overflow-hidden rounded-md bg-transparent border border-none">
+                                            {/* Fixed Header */}
+                                            <div className="overflow-hidden rounded-t-md">
+                                                <table className={tableStyles}>
+                                                    <thead>
+                                                        <tr>
+                                                            <th className={`${tableHeaderStyles} w-[15%] text-left rounded-l-lg`}>
+                                                                {t('wallet.tableHeaders.stt')}
+                                                            </th>
+                                                            <th className={`${tableHeaderStyles} w-[30%]`}>
+                                                                {t('makeMoney.date') || 'Ngày'}
+                                                            </th>
+                                                            <th className={`${tableHeaderStyles} w-[35%]`}>
+                                                                {t('makeMoney.videosWatched') || 'Video đã xem'}
+                                                            </th>
+                                                            <th className={`${tableHeaderStyles} w-[37%] text-right rounded-r-lg`}>
+                                                                {t('makeMoney.statusColumn')}
+                                                            </th>
+                                                        </tr>
+                                                    </thead>
+                                                </table>
+                                            </div>
+
+                                            {/* Scrollable Body */}
+                                            <div className={tableContainerStyles}>
+                                                <table className={tableStyles}>
+                                                    <tbody>
+                                                        {missions.map((mission, index) => (
+                                                            <tr key={mission.id} className="group transition-colors">
+                                                                <td className={`${tableCellStyles} w-[15%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
+                                                                    {index + 1}
+                                                                </td>
+                                                                <td className={`${tableCellStyles} w-[30%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                                    <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                        {formatDateOnly(mission.date)}
+                                                                    </span>
+                                                                </td>
+                                                                <td className={`${tableCellStyles} w-[35%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                                    <span className="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400">
+                                                                        {mission.turn} / {currentStaking?.turn_setting || 0}
+                                                                    </span>
+                                                                </td>
+                                                                <td className={`${tableCellStyles} w-[37%] border-x-0 border-r text-right rounded-r-lg border-theme-gray-100 border-solid`}>
+                                                                    <div className="flex items-center gap-2 justify-end">
+                                                                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                                                            mission.status === 'success'
+                                                                                ? 'bg-green-500 text-white'
+                                                                                : 'bg-orange-500 text-white'
+                                                                        }`}>
+                                                                            {mission.status === 'success'
+                                                                                ? t('makeMoney.completed') || 'Hoàn thành'
+                                                                                : t('makeMoney.notCompleted') || 'Chưa đạt'}
+                                                                        </span>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        ))}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        ) : missionNowResponse?.data ? (
                             <div className='grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full md:max-w-3xl mx-auto'>
                                 <div className='p-2 sm:p-3 md:p-4 bg-blue-50 dark:bg-blue-900/55 rounded-lg border border-blue-200 dark:border-blue-700'>
                                     <div className='flex items-center justify-between mb-1 sm:mb-2'>
@@ -825,7 +1013,7 @@ export default function MakeMoneyPage() {
                                     </p>
                                 </div>
                             </div>
-                        ) : isLoadingMission ? (
+                        ) : isLoadingStakingWithMissions || isLoadingMission ? (
                             <div className='grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full md:max-w-[50vw] mx-auto'>
                                 <Skeleton className='h-20 sm:h-24 w-full rounded-lg' />
                                 <Skeleton className='h-20 sm:h-24 w-full rounded-lg' />

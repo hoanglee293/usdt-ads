@@ -9,12 +9,13 @@ export interface StakingPackage {
   date_start: string;        // ISO 8601 datetime
   date_end: string;          // ISO 8601 datetime
   amount: number;            // Số tiền tham gia
+  amount_gift?: number;      // Số tiền quà tặng (từ API join-now/missions)
   total_usd: number;         // Tổng giá trị USD
   turn_setting: number;      // Số lượt xem video cần hoàn thành
   devices_setting: number;   // Số thiết bị cần hoàn thành
   estimated_reward?: number; // Phần thưởng ước tính (từ API join-now)
-  real_reward?: number;  
-  total_reward?: number;   // Phần thưởng thực tế (từ API join-now)
+  real_reward?: number;      // Phần thưởng thực tế (từ API join-now/missions)
+  total_reward?: number;     // Phần thưởng thực tế (từ API join-now)
   status: "running" | "pending-claim" | "ended";
 }
 
@@ -80,6 +81,23 @@ export interface MissionNowResponse {
     turn_day: number;             // Số video đã xem
     time_watch_new: string | null; // Thời gian xem video mới nhất (ISO 8601)
     time_gap: number;             // Khoảng thời gian giữa các lần xem (phút)
+  };
+}
+
+export interface Mission {
+  id: number;
+  stake_id: number;
+  date: string;                  // Date format: "YYYY-MM-DD"
+  turn: number;                  // Số lượt xem video đã hoàn thành trong ngày
+  status: "success" | "out";     // Trạng thái nhiệm vụ: success (hoàn thành), out (chưa đạt)
+}
+
+export interface CurrentStakingWithMissionsResponse {
+  statusCode: 200;
+  message: string;
+  data: {
+    staking_lock: StakingPackage; // Thông tin gói staking đang tham gia
+    missions: Mission[];          // Danh sách nhiệm vụ theo ngày
   };
 }
 
@@ -187,6 +205,24 @@ export const getMissionNow = async (): Promise<MissionNowResponse> => {
       throw error;
     }
     console.error('Error fetching mission now:', error);
+    throw error;
+  }
+}
+
+/**
+ * Lấy thông tin gói staking đang tham gia kèm danh sách nhiệm vụ theo ngày
+ * @returns Promise<CurrentStakingWithMissionsResponse>
+ */
+export const getCurrentStakingWithMissions = async (): Promise<CurrentStakingWithMissionsResponse> => {
+  try {
+    const response = await axiosClient.get('/incomes/join-now/missions');
+    return response.data;
+  } catch (error: any) {
+    // 404 is expected when no active staking exists
+    if (error?.response?.status === 404) {
+      throw error;
+    }
+    console.error('Error fetching current staking with missions:', error);
     throw error;
   }
 }
