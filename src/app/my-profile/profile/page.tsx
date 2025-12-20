@@ -595,7 +595,7 @@ const ProfilePage = () => {
               type="button"
               onClick={handleCloseChangePasswordModal}
               disabled={isChangingPassword}
-              className="flex-1 px-4 py-2.5 border dark:border-gray-300 border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-full bg-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed outline-none border-solid"
+              className="flex-1 px-4 py-2.5 border dark:border-gray-300 border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-full bg-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed outline-none border-solid hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 cursor-pointer"
             >
               Hủy
             </button>

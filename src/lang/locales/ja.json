@@ -30,7 +30,9 @@
   "user": {
     "loading": "読み込み中...",
     "loadError": "ユーザー情報を読み込めません",
-    "logout": "ログアウト"
+    "logout": "ログアウト",
+    "verified": "認証済み",
+    "notVerified": "未認証"
   },
   "wallet": {
     "deposit": "入金",
@@ -211,6 +213,9 @@
     "canWatchNow": "今すぐ動画を視聴できます",
     "claim": "受け取る",
     "processing": "処理中...",
+    "calculating": "計算中...",
+    "previewInfo": "プレビュー情報",
+    "videosPerDay": "1日の動画数",
     "joinBase": "今すぐ参加",
     "joinStaking": "今すぐ参加",
     "basePackage": "ベース",
@@ -225,6 +230,7 @@
     "amountLabel": "参加金額（USDT）",
     "amountPlaceholder": "金額を入力（最大3500）",
     "availableBalance": "利用可能残高",
+    "useMax": "最大",
     "cancel": "キャンセル",
     "confirm": "確認",
     "baseConfirmModalTitle": "ベースパッケージ参加の確認",

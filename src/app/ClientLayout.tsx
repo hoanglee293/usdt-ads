@@ -26,7 +26,7 @@ function ThemeAwareToaster() {
     <Toaster 
       position="top-right"
       toastOptions={{
-        duration: 4000,
+        duration: 2500,
         style: {
           background: theme === 'dark' ? '#1E1E1E' : '#fff',
           color: theme === 'dark' ? '#E0E0E0' : '#333',

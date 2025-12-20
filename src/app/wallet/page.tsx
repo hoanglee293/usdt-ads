@@ -586,7 +586,7 @@ export default function WalletPage() {
                                         </span>
                                         {(balanceResponse.data.balance_gift !== 0 || balanceResponse.data.balance_reward !== 0) && (
                                             <span className='text-sm text-gray-600 dark:text-gray-300 mt-1'>
-                                                ({t('wallet.gift')}: {formatBalance(balanceResponse.data.balance_gift)} | {t('wallet.reward')}: {formatBalance(balanceResponse.data.balance_reward)})
+                                                ({t('wallet.gift')}: {formatBalance(balanceResponse.data.balance_gift)} USDT | {t('wallet.reward')}: {formatBalance(balanceResponse.data.balance_reward)} USDT)
                                             </span>
                                         )}
                                     </div>

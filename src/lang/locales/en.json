@@ -30,7 +30,9 @@
   "user": {
     "loading": "Loading...",
     "loadError": "Unable to load user information",
-    "logout": "Logout"
+    "logout": "Logout",
+    "verified": "Verified",
+    "notVerified": "Not Verified"
   },
   "wallet": {
     "deposit": "Deposit",
@@ -211,6 +213,9 @@
     "canWatchNow": "Can watch video now",
     "claim": "Claim",
     "processing": "Processing...",
+    "calculating": "Calculating...",
+    "previewInfo": "Preview Information",
+    "videosPerDay": "Videos per day",
     "joinBase": "Join Now",
     "joinStaking": "Join Now",
     "basePackage": "Base",
@@ -225,6 +230,7 @@
     "amountLabel": "Participation Amount (USDT)",
     "amountPlaceholder": "Enter amount (max 3500)",
     "availableBalance": "Available balance",
+    "useMax": "Max",
     "cancel": "Cancel",
     "confirm": "Confirm",
     "baseConfirmModalTitle": "Confirm Join Base Package",

@@ -30,7 +30,9 @@
   "user": {
     "loading": "Đang tải...",
     "loadError": "Không thể tải thông tin người dùng",
-    "logout": "Đăng xuất"
+    "logout": "Đăng xuất",
+    "verified": "Đã xác thực",
+    "notVerified": "Chưa xác thực"
   },
   "wallet": {
     "deposit": "Nạp tiền",
@@ -211,6 +213,9 @@
     "canWatchNow": "Có thể xem video ngay",
     "claim": "Claim",
     "processing": "Đang xử lý...",
+    "calculating": "Đang tính toán...",
+    "previewInfo": "Thông tin xem trước",
+    "videosPerDay": "Số video mỗi ngày",
     "joinBase": "Tham gia ngay",
     "joinStaking": "Tham gia ngay",
     "basePackage": "Base",
@@ -225,6 +230,7 @@
     "amountLabel": "Số tiền tham gia (USDT)",
     "amountPlaceholder": "Nhập số tiền (tối đa 3500)",
     "availableBalance": "Số dư khả dụng",
+    "useMax": "Tối đa",
     "cancel": "Hủy",
     "confirm": "Xác nhận",
     "baseConfirmModalTitle": "Xác nhận tham gia gói Base",

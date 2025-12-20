@@ -54,7 +54,7 @@ export default function Modal({
     return (
         <div
             className={cn(
-                "fixed inset-0 z-50 flex items-center justify-center p-4",
+                "fixed inset-0 z-50 flex items-center justify-center p-4 !mt-0",
                 "transition-opacity duration-300",
                 isAnimating ? "opacity-100" : "opacity-0"
             )}

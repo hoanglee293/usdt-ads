@@ -25,6 +25,7 @@ import {
     claimMissionReward,
     getMissionNow,
     getCurrentStakingWithMissions,
+    calculateStaking,
     type StakingPackage,
     type JoinStakingRequest,
     type CurrentStakingResponse,
@@ -32,6 +33,7 @@ import {
     type MissionClaimResponse,
     type MissionNowResponse,
     type CurrentStakingWithMissionsResponse,
+    type CalculateStakingResponse,
     type Mission,
 } from '@/services/StakingService'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -133,7 +135,57 @@ export default function MakeMoneyPage() {
         retry: false, // Không retry nếu 400 (không có staking)
     })
 
-    // 7. Join Base Mutation
+    // Debounced staking amount for calculator API - chỉ gọi API sau 2s khi user ngừng nhập
+    const [debouncedStakingAmount, setDebouncedStakingAmount] = useState<string>('')
+    useEffect(() => {
+        // Reset debounced value nếu input rỗng
+        if (!stakingAmount || stakingAmount.trim() === '') {
+            setDebouncedStakingAmount('')
+            return
+        }
+
+        // Chỉ debounce khi có giá trị hợp lệ
+        const timer = setTimeout(() => {
+            setDebouncedStakingAmount(stakingAmount)
+        }, 1000) // 2 seconds delay - tránh gọi API liên tục khi đang nhập
+
+        return () => clearTimeout(timer)
+    }, [stakingAmount])
+
+    // 7. Calculate Staking (preview) - với debounce 2s
+    const { data: calculatorResponse, isLoading: isLoadingCalculator } = useQuery<CalculateStakingResponse>({
+        queryKey: ['staking-calculator', stakingType, debouncedStakingAmount],
+        queryFn: () => calculateStaking({
+            type: stakingType,
+            amount: Number(debouncedStakingAmount)
+        }),
+        enabled: !!debouncedStakingAmount && 
+                 !isNaN(Number(debouncedStakingAmount)) && 
+                 Number(debouncedStakingAmount) > 0 &&
+                 !!stakingType,
+        refetchOnWindowFocus: false,
+        staleTime: 1 * 1000, // Cache 3 giây
+        retry: false,
+    })
+
+    // 7b. Calculate Staking for confirm modal (không debounce, chỉ khi modal mở)
+    const { data: calculatorConfirmResponse, isLoading: isLoadingCalculatorConfirm } = useQuery<CalculateStakingResponse>({
+        queryKey: ['staking-calculator-confirm', stakingType, stakingAmount],
+        queryFn: () => calculateStaking({
+            type: stakingType,
+            amount: Number(stakingAmount)
+        }),
+        enabled: isStakingConfirmModalOpen &&
+                 !!stakingAmount && 
+                 !isNaN(Number(stakingAmount)) && 
+                 Number(stakingAmount) > 0 &&
+                 !!stakingType,
+        refetchOnWindowFocus: false,
+        staleTime: 3 * 1000, // Cache 30 giây
+        retry: false,
+    })
+
+    // 8. Join Base Mutation
     const joinBaseMutation = useMutation({
         mutationFn: joinBasePackage,
         onSuccess: (data) => {
@@ -148,41 +200,42 @@ export default function MakeMoneyPage() {
         },
         onError: (error: any) => {
             const message = error?.response?.data?.message || t('staking.joinBaseError')
-            
+
             // Check for specific error messages and use translations
-            if(message.includes('User already has an active staking lock')) {
+            if (message.includes('User already has an active staking lock')) {
                 toast.error(t('staking.userAlreadyHasActiveStaking'))
                 return
             }
-            if(message.includes('USDT coin not found')) {
+            if (message.includes('USDT coin not found')) {
                 toast.error(t('staking.usdtCoinNotFound'))
                 return
             }
-            if(message.includes('USDT wallet not found for user')) {
+            if (message.includes('USDT wallet not found for user')) {
                 toast.error(t('staking.usdtWalletNotFound'))
                 return
             }
-            if(message.includes('USDT balance must be less than $10')) {
+            if (message.includes('USDT balance must be less than $10')) {
                 toast.error(t('staking.usdtBalanceMustBeLessThan10'))
                 return
             }
-            if(message.includes('Failed to join base staking')) {
+            if (message.includes('Failed to join base staking')) {
                 toast.error(t('staking.failedToJoinBase'))
                 return
             }
-            
+
             // Fallback to show the original message if no translation found
             toast.error(message)
         }
     })
 
-    // 8. Join Staking Mutation
+    // 9. Join Staking Mutation
     const joinStakingMutation = useMutation({
         mutationFn: (data: JoinStakingRequest) => joinStakingPackage(data),
         onSuccess: (response) => {
             const message = response?.message || t('staking.joinStakingSuccess')
             toast.success(message)
             setStakingAmount('')
+            setDebouncedStakingAmount('')
             setIsStakingModalOpen(false)
             queryClient.invalidateQueries({ queryKey: ['current-staking'] })
             queryClient.invalidateQueries({ queryKey: ['current-staking-with-missions'] })
@@ -193,45 +246,45 @@ export default function MakeMoneyPage() {
         },
         onError: (error: any) => {
             const message = error?.response?.data?.message || t('staking.joinStakingError')
-            
+
             // Check for specific error messages and use translations
-            if(message.includes('Type must be one of: 1d, 7d, 30d')) {
+            if (message.includes('Type must be one of: 1d, 7d, 30d')) {
                 toast.error(t('staking.typeMustBeOneOf'))
                 return
             }
-            if(message.includes('Amount must be greater than 0')) {
+            if (message.includes('Amount must be greater than 0')) {
                 toast.error(t('staking.amountMustBeGreaterThan0'))
                 return
             }
-            if(message.includes('Amount must not exceed 3500')) {
+            if (message.includes('Amount must not exceed 3500')) {
                 toast.error(t('staking.amountMustNotExceed3500'))
                 return
             }
-            if(message.includes('User already has an active staking lock')) {
+            if (message.includes('User already has an active staking lock')) {
                 toast.error(t('staking.userAlreadyHasActiveStaking'))
                 return
             }
-            if(message.includes('USDT coin not found')) {
+            if (message.includes('USDT coin not found')) {
                 toast.error(t('staking.usdtCoinNotFound'))
                 return
             }
-            if(message.includes('USDT balance must be greater than or equal to $10')) {
+            if (message.includes('USDT balance must be greater than or equal to $10')) {
                 toast.error(t('staking.usdtBalanceMustBeGreaterOrEqual10'))
                 return
             }
-            if(message.includes('Insufficient balance')) {
+            if (message.includes('Insufficient balance')) {
                 toast.error(t('staking.insufficientBalance'))
                 return
             }
-            if(message.includes('Invalid staking type')) {
+            if (message.includes('Invalid staking type')) {
                 toast.error(t('staking.invalidStakingType'))
                 return
             }
-            if(message.includes('Failed to join staking')) {
+            if (message.includes('Failed to join staking')) {
                 toast.error(t('staking.failedToJoinStaking'))
                 return
             }
-            
+
             // Fallback to show the original message if no translation found
             toast.error(message)
         }
@@ -243,7 +296,7 @@ export default function MakeMoneyPage() {
         onSuccess: async (data: MissionClaimResponse) => {
             const apiMessage = data?.message
             const rewardAmount = formatNumber(data.data.total_reward)
-            const successMessage = apiMessage 
+            const successMessage = apiMessage
                 ? `${apiMessage} ${t('makeMoney.reward')}: ${rewardAmount} USDT`
                 : `${t('makeMoney.claim')} ${t('common.success')}! ${t('makeMoney.reward')}: ${rewardAmount} USDT`
             toast.success(successMessage)
@@ -270,41 +323,41 @@ export default function MakeMoneyPage() {
         },
         onError: (error: any) => {
             const message = error?.response?.data?.message || t('staking.claimError')
-            
+
             // Check for specific error messages and use translations
-            if(message.includes('You have already claimed the reward')) {
+            if (message.includes('You have already claimed the reward')) {
                 toast.error(t('staking.alreadyClaimed'))
                 return
             }
-            if(message.includes('You have not completed the mission')) {
+            if (message.includes('You have not completed the mission')) {
                 toast.error(t('staking.notCompletedMission'))
                 return
             }
-            if(message.includes('No active staking lock found')) {
+            if (message.includes('No active staking lock found')) {
                 toast.error(t('staking.noActiveStakingLock'))
                 return
             }
-            if(message.includes('Can only claim after 00:05:00 UTC of the day after staking ends')) {
+            if (message.includes('Can only claim after 00:05:00 UTC of the day after staking ends')) {
                 toast.error(t('staking.canOnlyClaimAfterTime'))
                 return
             }
-            if(message.includes('Invalid staking lock type')) {
+            if (message.includes('Invalid staking lock type')) {
                 toast.error(t('staking.invalidStakingLockType'))
                 return
             }
-            if(message.includes('USDT coin not found')) {
+            if (message.includes('USDT coin not found')) {
                 toast.error(t('staking.usdtCoinNotFound'))
                 return
             }
-            if(message.includes('USDT wallet not found for user')) {
+            if (message.includes('USDT wallet not found for user')) {
                 toast.error(t('staking.usdtWalletNotFound'))
                 return
             }
-            if(message.includes('Failed to claim mission')) {
+            if (message.includes('Failed to claim mission')) {
                 toast.error(t('staking.failedToClaimMission'))
                 return
             }
-            
+
             // Fallback to show the original message if no translation found
             toast.error(message)
         }
@@ -731,6 +784,7 @@ export default function MakeMoneyPage() {
         const amount = parseFloat(stakingAmount)
         setIsStakingConfirmModalOpen(false)
         setIsStakingModalOpen(false)
+        setDebouncedStakingAmount('')
         joinStakingMutation.mutate({
             type: stakingType,
             amount: amount
@@ -855,27 +909,25 @@ export default function MakeMoneyPage() {
                                         <h3 className='text-lg sm:text-xl font-bold text-theme-red-100 dark:text-[#FE645F] mb-3 sm:mb-4 mt-6 sm:mt-8'>
                                             {t('makeMoney.missionsHistory') || 'Lịch sử nhiệm vụ'}
                                         </h3>
-                                        
+
                                         {/* Mobile Card Layout */}
                                         <div className="block sm:hidden space-y-3">
                                             {missions.map((mission, index) => (
-                                                <div 
-                                                    key={mission.id} 
-                                                    className={`bg-white dark:bg-gray-800 rounded-lg border ${
-                                                        mission.status === 'success'
+                                                <div
+                                                    key={mission.id}
+                                                    className={`bg-white dark:bg-gray-800 rounded-lg border ${mission.status === 'success'
                                                             ? 'border-green-200 dark:border-green-700'
                                                             : 'border-orange-200 dark:border-orange-700'
-                                                    } p-3 shadow-sm`}
+                                                        } p-3 shadow-sm`}
                                                 >
                                                     <div className="flex items-center justify-between mb-2">
                                                         <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
                                                             {t('wallet.tableHeaders.stt')} {index + 1}
                                                         </span>
-                                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                                            mission.status === 'success'
+                                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${mission.status === 'success'
                                                                 ? 'bg-green-500 text-white'
                                                                 : 'bg-orange-500 text-white'
-                                                        }`}>
+                                                            }`}>
                                                             {mission.status === 'success'
                                                                 ? t('makeMoney.completed') || 'Hoàn thành'
                                                                 : t('makeMoney.notCompleted') || 'Chưa đạt'}
@@ -946,11 +998,10 @@ export default function MakeMoneyPage() {
                                                                 </td>
                                                                 <td className={`${tableCellStyles} w-[37%] border-x-0 border-r text-right rounded-r-lg border-theme-gray-100 border-solid`}>
                                                                     <div className="flex items-center gap-2 justify-end">
-                                                                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                                                                            mission.status === 'success'
+                                                                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${mission.status === 'success'
                                                                                 ? 'bg-green-500 text-white'
                                                                                 : 'bg-orange-500 text-white'
-                                                                        }`}>
+                                                                            }`}>
                                                                             {mission.status === 'success'
                                                                                 ? t('makeMoney.completed') || 'Hoàn thành'
                                                                                 : t('makeMoney.notCompleted') || 'Chưa đạt'}
@@ -1056,7 +1107,7 @@ export default function MakeMoneyPage() {
                                                 options={coinOptions}
                                                 placeholder={t('makeMoney.selectCoinPlaceholder')}
                                                 disabled={isLoadingCoins}
-                                                className="w-20 text-xs"
+                                                className="w-24 h-8 text-xs"
                                             />
                                         )}
                                     </div>
@@ -1110,7 +1161,7 @@ export default function MakeMoneyPage() {
                                                 </span>
                                                 {(balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
                                                     <span className='text-sm text-gray-600 dark:text-gray-300 mt-1'>
-                                                        ({t('makeMoney.gift')}: {formatBalance(balanceResponse.data.balance_gift)} | {t('makeMoney.reward')}: {formatBalance(balanceResponse.data.balance_reward)})
+                                                        ({t('makeMoney.gift')}: {formatBalance(balanceResponse.data.balance_gift)} USDT | {t('makeMoney.reward')}: {formatBalance(balanceResponse.data.balance_reward)} USDT)
                                                     </span>
                                                 )}
                                             </div>
@@ -1166,6 +1217,7 @@ export default function MakeMoneyPage() {
                     onClose={() => {
                         setIsStakingModalOpen(false)
                         setStakingAmount('')
+                        setDebouncedStakingAmount('')
                     }}
                     title={t('makeMoney.joinStakingModalTitle')}
                     maxWidth="max-w-[500px]"
@@ -1189,20 +1241,71 @@ export default function MakeMoneyPage() {
                             <label className='block text-sm font-medium text-theme-red-200 dark:text-[#FE645F] mb-2'>
                                 {t('makeMoney.amountLabel')}
                             </label>
-                            <Input
-                                type="number"
-                                value={stakingAmount}
-                                onChange={(e) => setStakingAmount(e.target.value)}
-                                placeholder={t('makeMoney.amountPlaceholder')}
-                                min="0"
-                                max="3500"
-                                step="0.01"
-                                className="w-full rounded-full"
-                            />
-                            <p className='text-xs text-gray-500 dark:text-gray-400 mt-1'>
-                                {t('makeMoney.availableBalance')}: <span className='font-bold text-theme-red-200 dark:text-[#FE645F]'>{formatNumber(usdtBalance)} </span> USDT
-                            </p>
+                            <div className='flex items-center gap-2'>
+                                <Input
+                                    type="number"
+                                    value={stakingAmount}
+                                    onChange={(e) => setStakingAmount(e.target.value)}
+                                    placeholder={t('makeMoney.amountPlaceholder')}
+                                    min="0"
+                                    max="3500"
+                                    className="w-full rounded-full"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        const maxAmount = Math.min(usdtBalance, 3500)
+                                        setStakingAmount(maxAmount.toFixed(2))
+                                    }}
+                                    className='text-sm min-w-[50px] bg-transparent border-none outline-none cursor-pointer font-medium text-theme-red-200 dark:text-[#FE645F] hover:underline'
+                                >
+                                    {t('makeMoney.useMax') || 'Max'}
+                                </button>
+                            </div>
+                            <div className='flex items-center justify-between mt-2'>
+                                <p className='text-xs text-gray-500 dark:text-gray-400'>
+                                    {t('makeMoney.availableBalance')}: <span className='font-bold text-theme-red-200 dark:text-[#FE645F]'>{formatNumber(usdtBalance)} </span> USDT
+                                </p>
+                            </div>
                         </div>
+
+                        {/* Calculator Preview */}
+                        {stakingType && stakingAmount && parseFloat(stakingAmount) > 0 && (
+                            <div className='p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800'>
+                                {isLoadingCalculator ? (
+                                    <div className='flex items-center gap-2'>
+                                        <Loader2 className='w-4 h-4 animate-spin text-theme-red-200 dark:text-[#FE645F]' />
+                                        <span className='text-sm text-gray-600 dark:text-gray-400'>
+                                            {t('makeMoney.calculating')}
+                                        </span>
+                                    </div>
+                                ) : calculatorResponse?.data ? (
+                                    <div className='space-y-3'>
+                                        <h4 className='text-sm font-semibold text-theme-red-200 dark:text-[#FE645F] mb-2'>
+                                            {t('makeMoney.previewInfo')}
+                                        </h4>
+                                        <div className='grid grid-cols-2 gap-3'>
+                                            <div>
+                                                <p className='text-xs text-gray-500 dark:text-gray-400 mb-1'>
+                                                    {t('makeMoney.videosPerDay')}
+                                                </p>
+                                                <p className='text-sm font-semibold text-gray-900 dark:text-gray-100'>
+                                                    {calculatorResponse.data.videos_per_day}
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <p className='text-xs text-gray-500 dark:text-gray-400 mb-1'>
+                                                    {t('makeMoney.devices')}
+                                                </p>
+                                                <p className='text-sm font-semibold text-gray-900 dark:text-gray-100'>
+                                                    {calculatorResponse.data.devices}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : null}
+                            </div>
+                        )}
 
                         <div className='flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700'>
                             <Button
@@ -1210,9 +1313,10 @@ export default function MakeMoneyPage() {
                                 onClick={() => {
                                     setIsStakingModalOpen(false)
                                     setStakingAmount('')
+                                    setDebouncedStakingAmount('')
                                 }}
                                 disabled={joinStakingMutation.isPending}
-                                className='flex-1 bg-transparent border border-solid border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
+                                className='flex-1 bg-transparent border border-solid border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 cursor-pointer'
                             >
                                 {t('makeMoney.cancel')}
                             </Button>
@@ -1312,7 +1416,7 @@ export default function MakeMoneyPage() {
                             <p className='text-base text-gray-700 dark:text-gray-300 mb-4 text-center'>
                                 {t('makeMoney.stakingConfirmMessage')}
                             </p>
-                            
+
                             {/* Thông tin loại gói */}
                             <div className='p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700'>
                                 <div className='flex items-center justify-between'>
@@ -1352,6 +1456,47 @@ export default function MakeMoneyPage() {
                                     </span>
                                 </div>
                             </div>
+
+                            {/* Thông tin số video cần làm mỗi ngày và số thiết bị */}
+                            {(calculatorConfirmResponse?.data || calculatorResponse?.data) && (
+                                <>
+                                    {isLoadingCalculatorConfirm ? (
+                                        <div className='p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700'>
+                                            <div className='flex items-center justify-center gap-2'>
+                                                <Loader2 className='w-4 h-4 animate-spin text-theme-red-200 dark:text-[#FE645F]' />
+                                                <span className='text-sm text-gray-600 dark:text-gray-400'>
+                                                    {t('makeMoney.calculating')}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <div className='p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-700'>
+                                                <div className='flex items-center justify-between'>
+                                                    <span className='text-sm font-medium text-green-600 dark:text-green-400'>
+                                                        {t('makeMoney.videosPerDay')}
+                                                    </span>
+                                                    <span className='text-base font-semibold text-green-700 dark:text-green-300'>
+                                                        {(calculatorConfirmResponse?.data || calculatorResponse?.data)?.videos_per_day}
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            {/* Thông tin số thiết bị */}
+                                            <div className='p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-700'>
+                                                <div className='flex items-center justify-between'>
+                                                    <span className='text-sm font-medium text-purple-600 dark:text-purple-400'>
+                                                        {t('makeMoney.devices')}
+                                                    </span>
+                                                    <span className='text-base font-semibold text-purple-700 dark:text-purple-300'>
+                                                        {(calculatorConfirmResponse?.data || calculatorResponse?.data)?.devices}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </>
+                                    )}
+                                </>
+                            )}
                         </div>
 
                         <div className='flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700'>
@@ -1403,10 +1548,10 @@ export default function MakeMoneyPage() {
                                         <div className="flex items-center justify-between mb-2">
                                             <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">{t('makeMoney.packageNumber')}{index + 1}</span>
                                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${pkg.status === 'running'
-                                                    ? 'bg-gray-400 text-white'
-                                                    : pkg.status === 'pending-claim'
-                                                        ? 'bg-yellow-500 text-white'
-                                                        : 'bg-gray-500 text-white'
+                                                ? 'bg-gray-400 text-white'
+                                                : pkg.status === 'pending-claim'
+                                                    ? 'bg-yellow-500 text-white'
+                                                    : 'bg-gray-500 text-white'
                                                 }`}>
                                                 {getStatusText(pkg.status)}
                                             </span>
@@ -1423,8 +1568,8 @@ export default function MakeMoneyPage() {
                                             <div className="flex items-center justify-between">
                                                 <span className="text-xs text-gray-600 dark:text-gray-300">{t('makeMoney.typeLabel')}</span>
                                                 <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${pkg.amount > 10
-                                                        ? 'bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white'
-                                                        : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
+                                                    ? 'bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white'
+                                                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
                                                     }`}>
                                                     {pkg.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}
                                                 </span>
@@ -1488,8 +1633,8 @@ export default function MakeMoneyPage() {
                                                     </td>
                                                     <td className={`${tableCellStyles} w-[10%] border-x-0 border-theme-gray-100 border-solid`}>
                                                         <span className={`px-3 py-1 rounded-full text-sm font-semibold ${pkg.amount > 10
-                                                                ? 'bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white'
-                                                                : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
+                                                            ? 'bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white'
+                                                            : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
                                                             }`}>
                                                             {pkg.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}
                                                         </span>
@@ -1509,10 +1654,10 @@ export default function MakeMoneyPage() {
                                                     </td>
                                                     <td className={`${tableCellStyles} w-[12%] border-x-0 border-r rounded-r-lg border-theme-gray-100 border-solid`}>
                                                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${pkg.status === 'running'
-                                                                ? 'bg-gray-400 text-white'
-                                                                : pkg.status === 'pending-claim'
-                                                                    ? 'bg-yellow-500 text-white'
-                                                                    : 'bg-gray-500 text-white'
+                                                            ? 'bg-gray-400 text-white'
+                                                            : pkg.status === 'pending-claim'
+                                                                ? 'bg-yellow-500 text-white'
+                                                                : 'bg-gray-500 text-white'
                                                             }`}>
                                                             {getStatusText(pkg.status)}
                                                         </span>

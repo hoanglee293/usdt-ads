@@ -101,6 +101,22 @@ export interface CurrentStakingWithMissionsResponse {
   };
 }
 
+export interface CalculateStakingRequest {
+  type: "1d" | "7d" | "30d";
+  amount: number;
+}
+
+export interface CalculateStakingResponse {
+  statusCode: 200;
+  message: string;
+  data: {
+    devices: number;
+    videos_per_day: number;
+    time_gap: number;
+    estimated_reward: number;
+  };
+}
+
 // ==================== API Functions ====================
 
 /**
@@ -223,6 +239,31 @@ export const getCurrentStakingWithMissions = async (): Promise<CurrentStakingWit
       throw error;
     }
     console.error('Error fetching current staking with missions:', error);
+    throw error;
+  }
+}
+
+/**
+ * Tính toán ước tính các thông số của gói staking
+ * @param data - Dữ liệu tính toán (type và amount)
+ * @returns Promise<CalculateStakingResponse>
+ */
+export const calculateStaking = async (
+  data: CalculateStakingRequest
+): Promise<CalculateStakingResponse> => {
+  try {
+    // Validation
+    if (!data.type || !['1d', '7d', '30d'].includes(data.type)) {
+      throw new Error('Type must be one of: 1d, 7d, 30d');
+    }
+    if (!data.amount || data.amount <= 0) {
+      throw new Error('Amount must be greater than 0');
+    }
+
+    const response = await axiosClient.post('/incomes/calculator', data);
+    return response.data;
+  } catch (error) {
+    console.error('Error calculating staking:', error);
     throw error;
   }
 }

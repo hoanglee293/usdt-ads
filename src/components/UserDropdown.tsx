@@ -17,6 +17,7 @@ const UserDropdown: React.FC = () => {
   const router = useRouter();
   const { t } = useLang();
   const queryClient = useQueryClient();
+  console.log(profile);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -104,23 +105,28 @@ const UserDropdown: React.FC = () => {
           {/* Content */}
           <div className="p-2 max-h-96 overflow-y-auto">
             {/* Email */}
-            <div className="flex items-center gap-4 cursor-pointer hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 p-2 rounded-lg" onClick={() => {router.push('/my-profile'); setIsOpen(false)}}>
-              {profile.avatar ? (
-                <img
-                  src={profile.avatar}
-                  alt={profile.display_name}
-                  className="w-16 h-16 rounded-full border-2 border-white dark:border-theme-gray-100 object-cover"
-                />
-              ) : (
-                <div className="w-12 h-12 rounded-full border-2 border-white dark:border-theme-gray-100 flex items-center justify-center bg-theme-gray-100 dark:bg-theme-gray-100/30">
-                  <User className="w-8 h-8 text-theme-black-100 dark:text-theme-gray-100" />
-                  
+            <div className="flex items-center gap-4 cursor-pointer " >
+              <div className="flex items-center gap-4 hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 p-2 rounded-lg" onClick={() => { router.push('/my-profile'); setIsOpen(false) }}>
+                {profile.avatar ? (
+                  <img
+                    src={profile.avatar}
+                    alt={profile.display_name}
+                    className="w-10 h-10 rounded-full border-2 border-white dark:border-theme-gray-100 object-cover"
+                  />
+                ) : (
+                  <div className="w-10 h-10 rounded-full border-2 border-white dark:border-theme-gray-100 flex items-center justify-center bg-theme-gray-100 dark:bg-theme-gray-100/30">
+                    <User className="w-7 h-7 text-theme-black-100 dark:text-theme-gray-100" />
+
+                  </div>
+                )}
+                <div className="flex-1">
+                  <div className="flex items-center justify-between">
+                    <p className="font-semibold text-lg text-theme-black-100 dark:text-theme-gray-100">{profile.display_name}</p>
+                  </div>
+                  <p className="text-sm opacity-90 text-gray-500 dark:text-theme-gray-100/70">{profile.email}</p>
                 </div>
-              )}
-              <div className="flex-1">
-                <p className="font-semibold text-lg text-theme-black-100 dark:text-theme-gray-100">{profile.display_name}</p>
-                <p className="text-sm opacity-90 text-gray-500 dark:text-theme-gray-100/70">{profile.email}</p>
               </div>
+              <button onClick={() => { router.push('/my-profile/kyc'); setIsOpen(false) }} className={`text-sm font-inter font-semibold border-none outline-none cursor-pointer bg-transparent hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 rounded-lg px-2 py-1 ${profile.verify ? 'text-green-500' : 'text-red-500'}`}>{profile.verify ? t('user.verified') : t('user.notVerified')}</button>
             </div>
           </div>
           {/* Footer */}

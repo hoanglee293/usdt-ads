@@ -74,7 +74,7 @@ const page = () => {
                 description2={t('login.description2')}
             />
             <div className={`w-full h-full flex gap-3 relative justify-center items-center flex-col flex-1 bg-transparent ${isMobile ? 'radial-gradient' : ''}`}>
-                <div className='w-full lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl px-8 flex flex-col items-center mt-[10vh] md:mt-0 z-20'>
+                <div className='w-full lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl flex flex-col items-center mt-[10vh] md:mt-0 z-20'>
                     <img src="/logo.png" alt="logo" className='w-24 h-24 object-contain hidden md:block' />
                     <h2 className='text-3xl font-semibold text-white md:text-gray-800 dark:md:text-white mb-2 mt-6'>{t('login.signIn')}</h2>
                     <form onSubmit={handleSubmit} className='w-full flex flex-col gap-4 mt-6 px-0'>
