@@ -42,11 +42,11 @@ export default function Header() {
     },
     {
       name: t('header.referral'),
-      href: '/referral/direct',
+      href: '/referral/smart',
     },
     {
       name: t('header.influencerRewards'),
-      href: '/referral/smart',
+      href: '/referral/kol',
     }
   ]
 

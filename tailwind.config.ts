@@ -200,7 +200,7 @@ const config: Config = {
           'display': 'inline-block',
         },
         '.radial-gradient': {
-          'background': 'radial-gradient(139.32% 65.26% at 50% 0%, #FE645F 34.83%, #fdb7fe59, rgba(253, 183, 254, 0) 100%)',
+          'background': 'radial-gradient(139.32% 65.26% at 50% 0%, #aa5ffe 34.83%, #fdb7fe59, rgba(253, 183, 254, 0) 100%)',
           'background-blend-mode': 'multiply',
           'flex-shrink': '0',
         },
