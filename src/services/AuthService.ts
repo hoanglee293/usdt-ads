@@ -109,6 +109,22 @@ export interface ResetPasswordErrorResponse {
   message: string;
 }
 
+// Change Password API Types
+export interface ChangePasswordRequest {
+  current_password: string;
+  new_password: string;
+}
+
+export interface ChangePasswordSuccessResponse {
+  statusCode: 200;
+  message: "Password has been changed successfully";
+}
+
+export interface ChangePasswordErrorResponse {
+  statusCode: 400;
+  message: string;
+}
+
 // Update Profile API Types
 export interface UpdateProfileRequest {
   display_name: string;
@@ -267,6 +283,23 @@ export const setNewPassword = async (code: string, password: string): Promise<Se
     // API returns error response with statusCode and message
     if (error.response?.data) {
       throw error.response.data as ResetPasswordErrorResponse;
+    }
+    console.error(error);
+    throw error;
+  }
+}
+
+export const changePassword = async (data: ChangePasswordRequest): Promise<ChangePasswordSuccessResponse> => {
+  try {
+    const response = await axiosClient.post<ChangePasswordSuccessResponse>('/users/change-password', {
+      current_password: data.current_password,
+      new_password: data.new_password
+    });
+    return response.data;
+  } catch (error: any) {
+    // API returns error response with statusCode and message
+    if (error.response?.data) {
+      throw error.response.data as ChangePasswordErrorResponse;
     }
     console.error(error);
     throw error;

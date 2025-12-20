@@ -282,7 +282,7 @@ export default function KycPage() {
                                     type='button'
                                     onClick={removeFrontImage}
                                     disabled={isLoading}
-                                    className='absolute border-none outline-none top-[-5px] right-[-5px] bg-red-500 dark:bg-red-600 text-white rounded-full p-1.5 sm:p-2 hover:bg-red-600 dark:hover:bg-red-700 transition-all disabled:opacity-50 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center'
+                                    className='absolute border-none outline-none top-[-15px] right-[-15px] sm:right-[-5px] bg-red-500 dark:bg-red-600 text-white rounded-full p-1.5 sm:p-2 hover:bg-red-600 dark:hover:bg-red-700 transition-all disabled:opacity-50 w-7 h-7 flex items-center justify-center'
                                 >
                                     <X size={14} className='sm:w-4 sm:h-4' />
                                 </button>
@@ -323,7 +323,7 @@ export default function KycPage() {
                                     type='button'
                                     onClick={removeBackImage}
                                     disabled={isLoading}
-                                    className='absolute top-[-5px] right-[-5px] border-none outline-none bg-red-500 dark:bg-red-600 text-white rounded-full p-1.5 sm:p-2 hover:bg-red-600 dark:hover:bg-red-700 transition-all disabled:opacity-50 w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center'
+                                    className='absolute top-[-15px] right-[-5px] border-none outline-none bg-red-500 dark:bg-red-600 text-white rounded-full p-1.5 sm:p-2 hover:bg-red-600 dark:hover:bg-red-700 transition-all disabled:opacity-50 w-7 h-7 flex items-center justify-center'
                                 >
                                     <X size={14} className='sm:w-4 sm:h-4' />
                                 </button>

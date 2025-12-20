@@ -148,7 +148,7 @@ const ChangePasswordContent = () => {
                                         id="password"
                                         type={showPassword ? 'text' : 'password'}
                                         value={password}
-                                        maxLength={6}
+                                        minLength={6}
                                         onChange={(e) => setPassword(e.target.value)}
                                         placeholder={t('changePassword.newPasswordPlaceholder')}
                                         className='w-full px-4 py-3 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all pr-12 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
@@ -174,7 +174,7 @@ const ChangePasswordContent = () => {
                                         id="confirmPassword"
                                         type={showConfirmPassword ? 'text' : 'password'}
                                         value={confirmPassword}
-                                        maxLength={6}
+                                        minLength={6}
                                         onChange={(e) => setConfirmPassword(e.target.value)}
                                         placeholder={t('changePassword.confirmPasswordPlaceholder')}
                                         className='w-full px-4 py-3 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all pr-12 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'

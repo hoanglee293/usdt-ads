@@ -73,11 +73,11 @@ const page = () => {
                 description1={t('login.description1')}
                 description2={t('login.description2')}
             />
-            <div className={`w-full h-full flex gap-3 justify-end md:justify-center items-center flex-col flex-1 bg-transparent ${isMobile ? 'radial-gradient' : ''}`}>
-                <div className='w-full lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl px-8 flex flex-col items-center mt-[10vh] md:mt-0'>
-                    <img src="/logo.png" alt="logo" className='w-24 h-24 object-contain' />
+            <div className={`w-full h-full flex gap-3 relative justify-center items-center flex-col flex-1 bg-transparent ${isMobile ? 'radial-gradient' : ''}`}>
+                <div className='w-full lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl px-8 flex flex-col items-center mt-[10vh] md:mt-0 z-20'>
+                    <img src="/logo.png" alt="logo" className='w-24 h-24 object-contain hidden md:block' />
                     <h2 className='text-3xl font-semibold text-white md:text-gray-800 dark:md:text-white mb-2 mt-6'>{t('login.signIn')}</h2>
-                    <form onSubmit={handleSubmit} className='w-full flex flex-col gap-4 mt-6 px-8 md:px-0'>
+                    <form onSubmit={handleSubmit} className='w-full flex flex-col gap-4 mt-6 px-0'>
                         <div className='space-y-1'>
                             <label htmlFor="username" className='block text-sm font-semibold text-gray-700 dark:text-gray-300'>
                                 {t('login.username')} <span className='text-theme-red dark:text-theme-red-200'>{t('login.required')}</span>
@@ -143,7 +143,7 @@ const page = () => {
                         </button>
                     </form>
                 </div>
-                <img src="/636.png" alt="logo" className='w-full h-auto object-contain opacity-60 block md:hidden' />
+                <img src="/636.png" alt="logo" className='w-full h-[70%] top-[10vh] object-cover absolute opacity-60 block md:hidden z-10' />
             </div>
         </div>
     )

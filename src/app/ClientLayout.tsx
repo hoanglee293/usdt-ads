@@ -11,6 +11,9 @@ import { ThemeProvider } from "@/theme/ThemeProvider";
 import { useTheme } from "@/theme/useTheme";
 import Header from "@/components/Header";
 import { Toaster } from "react-hot-toast";
+import toast from "react-hot-toast";
+import { generateCodeVerifyEmail } from "@/services/AuthService";
+import { useLang } from "@/lang/useLang";
 
 interface ClientLayoutProps {
   children: React.ReactNode;
@@ -52,17 +55,19 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
   const { isAuth, login, logout } = useAuth();
+  const { t } = useLang();
   const [showEmailVerifyModal, setShowEmailVerifyModal] = useState(false);
   const [emailVerifyMessage, setEmailVerifyMessage] = useState(
     "Email is not activated. Please activate your email to continue."
   );
   const [isAuthInitialized, setIsAuthInitialized] = useState(false);
+  const [resendCountdown, setResendCountdown] = useState(0);
+  const [resendLoading, setResendLoading] = useState(false);
 
   // Check if current page is login
   const isLoginPage =
     pathname === "/login" ||
     pathname === "/forgot-password" ||
-    pathname === "/change-password" ||
     pathname === "/reset-password" ||
     pathname === "/register" ||
     pathname === "/verify-mail";
@@ -116,6 +121,51 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
     }
   }, [isAuth, isLoginPage, pathname, profileError, isAuthInitialized]);
 
+  const handleResendCode = async () => {
+    if (resendCountdown > 0 || resendLoading) return;
+
+    setResendLoading(true);
+    try {
+      await generateCodeVerifyEmail();
+      setResendCountdown(60);
+      toast.success(t('verifyMail.resendCodeSuccess'));
+    } catch (err: any) {
+      console.error('Error resending code:', err);
+      const errorMessage = err?.message || 
+        err?.response?.data?.message || 
+        t('verifyMail.resendCodeError');
+      
+      // Handle specific error messages
+      if (errorMessage.includes('Email is already activated')) {
+        toast.error(t('verifyMail.generateCodeEmailAlreadyActivated'));
+        setResendLoading(false);
+        return;
+      }
+      if (errorMessage.includes('JWT token missing/invalid') || 
+        errorMessage.includes('JWT token') ||
+        errorMessage.includes('token missing') ||
+        errorMessage.includes('token invalid')) {
+        toast.error(t('verifyMail.generateCodeJwtTokenMissingOrInvalid'));
+        setResendLoading(false);
+        return;
+      }
+      
+      // Default error message
+      toast.error(errorMessage);
+    } finally {
+      setResendLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (resendCountdown > 0) {
+      const timer = setTimeout(() => {
+        setResendCountdown(resendCountdown - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [resendCountdown]);
+
   // Hiển thị loading cho đến khi hoàn thành việc check auth và cập nhật state
   // Điều này đảm bảo không có flash của content không đúng
   if (!isAuthInitialized) {
@@ -132,7 +182,7 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
   return (
     <>
       {!isLoginPage && <Header />}
-      {showEmailVerifyModal && (
+      {showEmailVerifyModal && pathname !== "/verify-mail" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
           <div className="w-full max-w-lg rounded-2xl bg-white px-8 py-6 shadow-2xl dark:bg-neutral-900 border border-theme-orange-100 dark:border-solid">
             <div className="mb-4 text-2xl uppercase font-orbitron font-semibold text-yellow-500">
@@ -141,7 +191,10 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
             <p className="mb-6 text-base text-gray-700 dark:text-gray-300">{emailVerifyMessage}</p>
             <div className="flex justify-end gap-3">
               <button
-                onClick={() => router.push("/verify-mail")}
+                onClick={() => {
+                  handleResendCode();
+                  router.push("/verify-mail");
+                }}
                 className="rounded-lg bg-pink-500 cursor-pointer px-4 py-2 border-none outline-none text-base font-semibold text-white hover:bg-pink-600"
               >
                 Xác thực ngay

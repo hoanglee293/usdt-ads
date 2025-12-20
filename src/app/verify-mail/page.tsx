@@ -165,9 +165,9 @@ const page = () => {
         }
     }
 
-    useEffect(() => {
-      handleResendCode()
-    }, [])
+    // useEffect(() => {
+    //   handleResendCode()
+    // }, [])
 
     return (
         <div className='w-full h-svh flex justify-center items-center md:p-6 bg-theme-white-100 dark:bg-black'>

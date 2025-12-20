@@ -3,9 +3,11 @@ import React, { useState, useEffect } from 'react'
 import { useProfile, useUpdateProfile } from '@/hooks/useProfile'
 import CustomDateInput from '@/components/CustomDateInput'
 import CustomSelect from '@/components/CustomSelect'
-import { Pencil, Check, X, User2 } from 'lucide-react'
+import Modal from '@/components/Modal'
+import { Pencil, Check, X, User2, LockIcon, Eye, EyeOff } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useLang } from '@/lang/useLang'
+import { changePassword } from '@/services/AuthService'
 
 const ProfilePage = () => {
   const { profile, loading: profileLoading, error: profileError } = useProfile()
@@ -23,6 +25,16 @@ const ProfilePage = () => {
   const [tempDisplayName, setTempDisplayName] = useState('')
   const [tempBirthday, setTempBirthday] = useState('')
   const [tempSex, setTempSex] = useState<'man' | 'woman' | 'other'>('man')
+
+  // Change Password Modal State
+  const [isChangePasswordModalOpen, setIsChangePasswordModalOpen] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+  const [isChangingPassword, setIsChangingPassword] = useState(false)
 
   // Initialize form with profile data
   useEffect(() => {
@@ -53,13 +65,13 @@ const ProfilePage = () => {
   useEffect(() => {
     if (updateError) {
       const errorMessage = updateError.message || t('profile.updateError')
-      
+
       // Handle specific error messages
       if (errorMessage.includes('Display name cannot be empty')) {
         toast.error(t('profile.displayNameCannotBeEmpty'))
         return
       }
-      
+
       toast.error(errorMessage)
     }
   }, [updateError, t])
@@ -113,13 +125,13 @@ const ProfilePage = () => {
       const errorMessage = err?.message ||
         err?.response?.data?.message ||
         t('profile.updateError')
-      
+
       // Handle specific error messages
       if (errorMessage.includes('Display name cannot be empty')) {
         toast.error(t('profile.displayNameCannotBeEmpty'))
         return
       }
-      
+
       // Default error message
       toast.error(errorMessage)
     }
@@ -130,6 +142,83 @@ const ProfilePage = () => {
     { value: 'woman', label: 'Nữ' },
     { value: 'other', label: 'Khác' },
   ]
+
+  // Handle Change Password Modal
+  const handleOpenChangePasswordModal = () => {
+    setIsChangePasswordModalOpen(true)
+    setCurrentPassword('')
+    setNewPassword('')
+    setConfirmPassword('')
+    setShowCurrentPassword(false)
+    setShowNewPassword(false)
+    setShowConfirmPassword(false)
+  }
+
+  const handleCloseChangePasswordModal = () => {
+    setIsChangePasswordModalOpen(false)
+    setCurrentPassword('')
+    setNewPassword('')
+    setConfirmPassword('')
+  }
+
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    // Validation
+    if (!currentPassword.trim()) {
+      toast.error(t('changePassword.currentPasswordRequired') || 'Mật khẩu hiện tại là bắt buộc')
+      return
+    }
+
+    if (!newPassword.trim()) {
+      toast.error(t('changePassword.newPasswordRequired') || 'Mật khẩu mới là bắt buộc')
+      return
+    }
+
+    if (newPassword.length < 6) {
+      toast.error(t('changePassword.newPasswordMinLength') || 'Mật khẩu mới phải có ít nhất 6 ký tự')
+      return
+    }
+
+    if (newPassword !== confirmPassword) {
+      toast.error(t('changePassword.passwordMismatch') || 'Mật khẩu xác nhận không khớp')
+      return
+    }
+
+    setIsChangingPassword(true)
+
+    try {
+      const response = await changePassword({
+        current_password: currentPassword,
+        new_password: newPassword
+      })
+
+      if (response && response.statusCode === 200) {
+        toast.success(t('changePassword.resetPasswordSuccess') || 'Đổi mật khẩu thành công!')
+        handleCloseChangePasswordModal()
+      }
+    } catch (err: any) {
+      const errorMessage = err?.message || 
+        err?.response?.data?.message || 
+        t('changePassword.currentPasswordIncorrect') || 
+        'Có lỗi xảy ra khi đổi mật khẩu'
+      
+      // Handle specific error messages
+      if (errorMessage.includes('Current password is required')) {
+        toast.error(t('changePassword.currentPasswordRequired') || 'Mật khẩu hiện tại là bắt buộc')
+      } else if (errorMessage.includes('New password is required')) {
+        toast.error(t('changePassword.newPasswordRequired') || 'Mật khẩu mới là bắt buộc')
+      } else if (errorMessage.includes('New password must be at least 6 characters long')) {
+        toast.error(t('changePassword.newPasswordMinLength') || 'Mật khẩu mới phải có ít nhất 6 ký tự')
+      } else if (errorMessage.includes('Current password is incorrect')) {
+        toast.error(t('changePassword.currentPasswordIncorrect') || 'Mật khẩu hiện tại không đúng')
+      } else {
+        toast.error(errorMessage)
+      }
+    } finally {
+      setIsChangingPassword(false)
+    }
+  }
 
   if (profileLoading) {
     return (
@@ -174,7 +263,7 @@ const ProfilePage = () => {
                 onChange={(e) => setTempDisplayName(e.target.value)}
                 placeholder='Nhập tên hiển thị'
                 disabled={updateLoading}
-                className='w-full px-3 sm:px-4 py-2.5 sm:py-3 pr-20 sm:pr-24 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-sm sm:text-base text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500'
+                className='w-full px-2 sm:px-4 sm:py-2 pr-20 sm:pr-24 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-sm sm:text-base text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500'
                 autoFocus
               />
               <div className='absolute right-1.5 sm:right-2 top-1/2 transform -translate-y-1/2 flex gap-1.5 sm:gap-2'>
@@ -205,7 +294,7 @@ const ProfilePage = () => {
                 type="text"
                 value={displayName}
                 disabled
-                className='w-full px-3 sm:px-4 py-2.5 sm:py-3 pr-10 sm:pr-12 border border-solid border-theme-gray-100 dark:border-gray-700 rounded-full outline-none bg-gray-50 dark:bg-gray-800 text-sm sm:text-base text-gray-900 dark:text-gray-300 cursor-not-allowed'
+                className='w-full px-2 sm:px-4 sm:py-2 pr-10 sm:pr-12 border border-solid border-theme-gray-100 dark:border-gray-700 rounded-full outline-none bg-gray-50 dark:bg-gray-800 text-sm sm:text-base text-gray-900 dark:text-gray-300 cursor-not-allowed'
               />
               <button
                 type="button"
@@ -230,7 +319,7 @@ const ProfilePage = () => {
             type="email"
             value={profile.email || ''}
             disabled
-            className='w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-solid border-theme-gray-100 dark:border-gray-700 rounded-full outline-none bg-white dark:bg-gray-800 text-sm sm:text-base text-gray-600 dark:text-gray-400 cursor-not-allowed'
+            className='w-full px-2 sm:px-4 py-2 border border-solid border-theme-gray-100 dark:border-gray-700 rounded-full outline-none bg-white dark:bg-gray-800 text-sm sm:text-base text-gray-600 dark:text-gray-400 cursor-not-allowed'
           />
         </div>
 
@@ -242,7 +331,7 @@ const ProfilePage = () => {
             type="text"
             value={profile.name || ''}
             disabled
-            className='w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-solid border-theme-gray-100 dark:border-gray-700 rounded-full outline-none bg-white dark:bg-gray-800 text-sm sm:text-base text-gray-600 dark:text-gray-400 cursor-not-allowed'
+            className='w-full px-2 sm:px-4 py-2 border border-solid border-theme-gray-100 dark:border-gray-700 rounded-full outline-none bg-white dark:bg-gray-800 text-sm sm:text-base text-gray-600 dark:text-gray-400 cursor-not-allowed'
           />
         </div>
       </div>
@@ -389,15 +478,147 @@ const ProfilePage = () => {
         </div>
       )}
 
-      {/* Referral */}
-      <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-6'>
-        <label htmlFor="sex" className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
-          Referral:
-        </label>
-        <div className='relative text-sm sm:text-base'>
-          <span className='text-gray-900 dark:text-gray-200 break-all'>{profile.ref}</span>
+      <div className='flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 sm:gap-6'>
+        {/* Referral */}
+        <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-6'>
+          <label htmlFor="sex" className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
+            Referral:
+          </label>
+          <div className='relative text-sm sm:text-base'>
+            <span className='text-gray-900 dark:text-gray-200 break-all'>{profile.ref}</span>
+          </div>
         </div>
+        <button
+          type="button"
+          onClick={handleOpenChangePasswordModal}
+          className='out-line border-none px-6 py-2 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm uppercase cursor-pointer'
+          title='Đổi mật khẩu'
+        >
+          Đổi mật khẩu
+        </button>
       </div>
+
+      {/* Change Password Modal */}
+      <Modal
+        isOpen={isChangePasswordModalOpen}
+        onClose={handleCloseChangePasswordModal}
+        title={t('changePassword.title') || 'Đổi mật khẩu'}
+        maxWidth="max-w-md"
+        showCloseButton={false}
+      >
+        <form onSubmit={handleChangePassword} className="space-y-4">
+          {/* Current Password */}
+          <div className="space-y-2">
+            <label htmlFor="currentPassword" className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+              {t('changePassword.currentPassword') || 'Mật khẩu hiện tại'} <span className="text-red-500 dark:text-red-400">*</span>
+            </label>
+            <div className="relative">
+              <input
+                id="currentPassword"
+                type={showCurrentPassword ? 'text' : 'password'}
+                value={currentPassword}
+                onChange={(e) => setCurrentPassword(e.target.value)}
+                placeholder={t('changePassword.currentPasswordPlaceholder') || 'Nhập mật khẩu hiện tại'}
+                disabled={isChangingPassword}
+                className="w-full px-4 py-3 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all pr-12 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+                autoFocus
+              />
+              {currentPassword.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none cursor-pointer bg-transparent border-none"
+                >
+                  {showCurrentPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* New Password */}
+          <div className="space-y-2">
+            <label htmlFor="newPassword" className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+              {t('changePassword.newPassword') || 'Mật khẩu mới'} <span className="text-red-500 dark:text-red-400">*</span>
+            </label>
+            <div className="relative">
+              <input
+                id="newPassword"
+                type={showNewPassword ? 'text' : 'password'}
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder={t('changePassword.newPasswordPlaceholder') || 'Nhập mật khẩu mới (ít nhất 6 ký tự)'}
+                disabled={isChangingPassword}
+                className="w-full px-4 py-3 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all pr-12 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+              />
+              {newPassword.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setShowNewPassword(!showNewPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none cursor-pointer bg-transparent border-none"
+                >
+                  {showNewPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Confirm Password */}
+          <div className="space-y-2">
+            <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 dark:text-gray-300">
+              {t('changePassword.confirmPassword') || 'Xác nhận mật khẩu'} <span className="text-red-500 dark:text-red-400">*</span>
+            </label>
+            <div className="relative">
+              <input
+                id="confirmPassword"
+                type={showConfirmPassword ? 'text' : 'password'}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder={t('changePassword.confirmPasswordPlaceholder') || 'Nhập lại mật khẩu mới'}
+                disabled={isChangingPassword}
+                className="w-full px-4 py-3 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all pr-12 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 disabled:opacity-50 disabled:cursor-not-allowed"
+              />
+              {confirmPassword.length > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none cursor-pointer bg-transparent border-none"
+                >
+                  {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex gap-3 pt-4">
+            <button
+              type="button"
+              onClick={handleCloseChangePasswordModal}
+              disabled={isChangingPassword}
+              className="flex-1 px-4 py-2.5 border dark:border-gray-300 border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-full bg-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed outline-none border-solid"
+            >
+              Hủy
+            </button>
+            <button
+              type="submit"
+              disabled={isChangingPassword}
+              className="flex-1 px-4 py-2.5 outline-none border-none bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center cursor-pointer"
+            >
+              {isChangingPassword ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  {t('changePassword.resetting') || 'Đang đổi...'}
+                </>
+              ) : (
+                t('changePassword.resetPassword') || 'Đổi mật khẩu'
+              )}
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   )
 }
