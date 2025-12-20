@@ -67,7 +67,7 @@ const page = () => {
     }
 
     return (
-        <div className='w-full h-svh flex justify-center items-center md:p-6 bg-theme-white-100 dark:bg-black'>
+        <div className='w-full md:h-svh h-screen flex justify-center items-center md:p-6 bg-theme-white-100 dark:bg-black'>
             <AuthLayoutPanel
                 variant="login"
                 description1={t('login.description1')}
@@ -88,7 +88,7 @@ const page = () => {
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 placeholder={t('login.usernamePlaceholder')}
-                                className='w-full px-4 py-3 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
+                                className='w-full pr-4 py-4 pl-5 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
                                 disabled={loading}
                             />
                         </div>
@@ -104,7 +104,7 @@ const page = () => {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder={t('login.passwordPlaceholder')}
-                                    className='w-full px-4 py-3 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all pr-12 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
+                                    className='w-full pr-4 py-4 pl-5 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
                                     disabled={loading}
                                 />
                                 {password.length > 0 && (
