@@ -155,7 +155,7 @@
     "disclaimer": "*시스템은 사용자가 직접 추천한 사람이 KYC를 완료하고 최소 1회 이상 스테이킹 패키지를 참여하고 완료한 경우 마일스톤별로 추천 보상을 지급합니다",
     "kolPermissionTitle": "KOL 권한 필요",
     "kolPermissionMessage": "이 기능을 사용하려면 관리자에게 연락하여 KOL 권한을 부여받아야 합니다.",
-    "totalRewardsUpTo": "총 보상 최대 430 USDT"
+    "totalRewardsUpTo": "총 보상 최대 {total} USDT"
   },
   "staking": {
     "joinBaseSuccess": "베이스 패키지 가입 성공!",

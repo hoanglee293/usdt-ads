@@ -155,7 +155,7 @@
     "disclaimer": "*The system rewards referrals by milestone if the User directly refers someone who has completed KYC; participated and completed at least 1 Staking package",
     "kolPermissionTitle": "KOL Permission Required",
     "kolPermissionMessage": "Please contact admin to grant KOL permission to use this feature.",
-    "totalRewardsUpTo": "Total rewards up to 430 USDT"
+    "totalRewardsUpTo": "Total rewards up to {total} USDT"
   },
   "staking": {
     "joinBaseSuccess": "Successfully joined Base package!",

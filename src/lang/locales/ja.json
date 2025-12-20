@@ -155,7 +155,7 @@
     "disclaimer": "*システムは、ユーザーが直接紹介した人がKYCを完了し、少なくとも1つのステーキングパッケージに参加して完了した場合、マイルストーンごとに紹介報酬を付与します",
     "kolPermissionTitle": "KOL権限が必要です",
     "kolPermissionMessage": "この機能を使用するには、管理者に連絡してKOL権限を付与してください。",
-    "totalRewardsUpTo": "総報酬最大430 USDT"
+    "totalRewardsUpTo": "総報酬最大{total} USDT"
   },
   "staking": {
     "joinBaseSuccess": "ベースパッケージへの参加に成功しました！",

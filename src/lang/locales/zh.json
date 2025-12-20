@@ -155,7 +155,7 @@
     "disclaimer": "*如果用户直接推荐的人已完成KYC；参与并完成至少1个质押套餐，系统将按里程碑奖励推荐",
     "kolPermissionTitle": "需要KOL权限",
     "kolPermissionMessage": "请联系管理员授予KOL权限以使用此功能。",
-    "totalRewardsUpTo": "总奖励最高430 USDT"
+    "totalRewardsUpTo": "总奖励最高{total} USDT"
   },
   "staking": {
     "joinBaseSuccess": "成功加入基础套餐！",

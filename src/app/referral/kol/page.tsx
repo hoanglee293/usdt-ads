@@ -77,6 +77,11 @@ export default function SmartRefPage() {
         }))
     }, [currentReferrals, nextMilestone, milestoneDefinitions])
 
+    // Calculate total rewards from all milestones
+    const totalRewardsFromMilestones = useMemo(() => {
+        return milestoneDefinitions.reduce((sum: number, milestone: MilestoneDefinition) => sum + (milestone.reward || 0), 0)
+    }, [milestoneDefinitions])
+
     const progressPercentage = nextMilestone
         ? Math.min((currentReferrals / nextMilestone.count) * 100, 100)
         : 100
@@ -192,9 +197,9 @@ export default function SmartRefPage() {
                     )}
                 </div>
 
-                <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 bg-theme-pink-100 px-8 py-4 !w-fit mx-auto rounded-full'>
+                <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 bg-theme-pink-100 px-8 py-3 !w-fit mx-auto rounded-full'>
                     <h2 className='text-xl sm:text-3xl md:text-4xl font-bold text-center text-gradient-secondary '>
-                        {t('smartRef.totalRewardsUpTo')}
+                        {t('smartRef.totalRewardsUpTo', { total: totalRewardsFromMilestones })}
                     </h2>
                 </div>
 
