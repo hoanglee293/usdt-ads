@@ -26,7 +26,7 @@ export default function RootLayout({
     <html lang="kr" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/logo.png" type="image/png" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
