@@ -25,7 +25,10 @@
     "rewards": "Get Rewards",
     "wallet": "Deposit/Withdraw",
     "referral": "Referral",
-    "influencerRewards": "Influencer Rewards"
+    "influencerRewards": "Influencer Rewards",
+    "language": "Language",
+    "lightMode": "Light Mode",
+    "darkMode": "Dark Mode"
   },
   "user": {
     "loading": "Loading...",

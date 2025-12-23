@@ -25,7 +25,10 @@
     "rewards": "获得奖励",
     "wallet": "存款/提款",
     "referral": "推荐",
-    "influencerRewards": "网红奖励"
+    "influencerRewards": "网红奖励",
+    "language": "语言",
+    "lightMode": "浅色模式",
+    "darkMode": "深色模式"
   },
   "user": {
     "loading": "加载中...",

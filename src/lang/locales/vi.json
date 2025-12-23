@@ -25,7 +25,10 @@
     "rewards": "Nhận phần thưởng",
     "wallet": "Nạp/Rút tiền",
     "referral": "Giới thiệu",
-    "influencerRewards": "Thưởng Influencer"
+    "influencerRewards": "Thưởng Influencer",
+    "language": "Ngôn ngữ",
+    "lightMode": "Chế độ sáng",
+    "darkMode": "Chế độ tối"
   },
   "user": {
     "loading": "Đang tải...",

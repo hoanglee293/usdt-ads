@@ -186,7 +186,7 @@ export default function DirectReferralPage() {
                         </h2>
                         <button
                             onClick={() => setShowReferralStructure(!showReferralStructure)}
-                            className="text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200 px-3 py-0.5 border-none rounded-full transition-colors flex items-center gap-1 text-sm"
+                            className="text-gray-600 dark:text-black hover:text-gray-800 dark:hover:text-gray-200 px-3 py-0.5 border-none rounded-full transition-colors flex items-center gap-1 text-sm"
                         >
                             {showReferralStructure ? (
                                 <>

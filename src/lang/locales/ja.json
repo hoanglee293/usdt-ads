@@ -25,7 +25,10 @@
     "rewards": "報酬を受け取る",
     "wallet": "入金/出金",
     "referral": "紹介",
-    "influencerRewards": "インフルエンサー報酬"
+    "influencerRewards": "インフルエンサー報酬",
+    "language": "言語",
+    "lightMode": "ライトモード",
+    "darkMode": "ダークモード"
   },
   "user": {
     "loading": "読み込み中...",
