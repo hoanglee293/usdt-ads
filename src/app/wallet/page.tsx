@@ -208,7 +208,7 @@ export default function WalletPage() {
     const [selectedNetworkSymbol, setSelectedNetworkSymbol] = useState<string>('')
     const [showCreateWalletDialog, setShowCreateWalletDialog] = useState(false)
     const [transactionTypeFilter, setTransactionTypeFilter] = useState<'all' | 'deposit' | 'withdraw'>('all')
-    const [activeView, setActiveView] = useState<'main' | 'deposit' | 'withdraw'>('main')
+    const [activeView, setActiveView] = useState<'main' | 'deposit' | 'withdraw'>('deposit')
     const tableRef = useRef<HTMLDivElement>(null)
     const queryClient = useQueryClient()
     const router = useRouter()
