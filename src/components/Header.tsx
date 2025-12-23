@@ -1,6 +1,6 @@
 'use client'
 
-import { BellRing, SettingsIcon, Menu, Globe, Moon, Sun, User, ChevronDown, ChevronUp, X } from 'lucide-react'
+import { BellRing, SettingsIcon, Menu, Globe, Moon, Sun, User, ChevronDown, ChevronUp, X, Coins, Wallet, Users, Award } from 'lucide-react'
 import Link from 'next/link'
 import React, { useState, useRef, useEffect } from 'react'
 import UserDropdown from './UserDropdown'
@@ -140,18 +140,22 @@ export default function Header() {
     {
       name: t('header.makeMoney'),
       href: '/make-money',
+      icon: Coins,
     },
     {
       name: t('header.wallet'),
       href: '/wallet',
+      icon: Wallet,
     },
     {
       name: t('header.referral'),
       href: '/referral/smart',
+      icon: Users,
     },
     {
       name: t('header.influencerRewards'),
       href: '/referral/kol',
+      icon: Award,
     }
   ]
 
@@ -294,22 +298,6 @@ export default function Header() {
                       </button>
                     </div>
                     <div className="p-2 sm:py-2">
-                      {/* Menu Items */}
-                      {listMenu.map((item) => (
-                        <Link
-                          href={item.href}
-                          key={item.name}
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          <div
-                            className={`px-3 sm:px-4 bg-theme-pink-100/80 mb-2 rounded-lg mx-3 dark:text-theme-gray-200 py-2.5 sm:py-3 text-sm sm:text-base font-inter font-medium cursor-pointer hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 active:bg-theme-gray-100 dark:active:bg-theme-gray-100/30 transition-colors touch-manipulation ${pathname === item.href ? 'text-pink-500 dark:text-pink-400 bg-pink-50 dark:bg-theme-gray-100/30' : 'text-theme-black-100 dark:text-theme-gray-100'
-                              }`}
-                          >
-                            {item.name}
-                          </div>
-                        </Link>
-                      ))}
-                      
                       {/* Separator */}
                       <div className="border-t border-gray-200 dark:border-theme-gray-100 my-1"></div>
                       
@@ -396,6 +384,44 @@ export default function Header() {
 
 
       </div>
+      
+      {/* Bottom Navigation Bar - Mobile Only */}
+      {isMobile && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-theme-gray-200 border-t border-gray-200 dark:border-theme-gray-100 safe-area-bottom">
+          <div className="flex items-center justify-around px-1 py-1.5">
+            {listMenu.map((item) => {
+              const IconComponent = item.icon;
+              const isActive = pathname === item.href;
+              return (
+                <Link
+                  href={item.href}
+                  key={item.name}
+                  className="flex-1 flex flex-col items-center justify-center py-1.5 px-0 min-w-0"
+                >
+                  <div
+                    className={`w-full flex flex-col items-center justify-center gap-1 py-1.5 px-0 rounded-lg transition-all touch-manipulation ${
+                      isActive
+                        ? 'text-pink-500 dark:text-pink-400'
+                        : 'text-theme-black-100 dark:text-theme-gray-100'
+                    }`}
+                  >
+                    <IconComponent 
+                      className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform ${
+                        isActive ? 'scale-110' : 'scale-100'
+                      }`}
+                    />
+                    <span className={`text-[10px] sm:text-xs font-inter font-medium truncate w-full text-center ${
+                      isActive ? 'font-semibold' : 'font-medium'
+                    }`}>
+                      {item.name}
+                    </span>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
