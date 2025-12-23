@@ -305,7 +305,7 @@ export default function Header() {
                       <div className="px-3 sm:px-4 py-2">
                         <button
                           onClick={() => setIsLangSectionOpen(!isLangSectionOpen)}
-                          className="w-full flex items-center justify-between px-3 py-2.5 cursor-pointer border-none text-xs font-inter font-semibold text-gray-500 dark:text-theme-gray-100/70 uppercase hover:bg-theme-gray-100 rounded-lg transition-colors touch-manipulation dark:text-gray-700"
+                          className="w-full flex items-center justify-between px-3 py-2.5 cursor-pointer border-none text-xs font-inter font-semibold text-gray-500 uppercase hover:bg-theme-gray-100 rounded-lg transition-colors touch-manipulation dark:text-gray-700"
                         >
                           <span>{t('header.language') || 'Language'}</span>
                           {isLangSectionOpen ? (
