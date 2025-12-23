@@ -1,6 +1,6 @@
 'use client'
 
-import { BellRing, SettingsIcon, Menu, Globe, Moon, Sun, User, ChevronDown, ChevronUp, X, Coins, Wallet, Users, Award } from 'lucide-react'
+import { BellRing, SettingsIcon, Menu, Globe, Moon, Sun, User, ChevronDown, ChevronUp, X, Coins, Wallet, Users, Award, Book } from 'lucide-react'
 import Link from 'next/link'
 import React, { useState, useRef, useEffect } from 'react'
 import UserDropdown from './UserDropdown'
@@ -151,6 +151,11 @@ export default function Header() {
       name: t('header.referral'),
       href: '/referral/smart',
       icon: Users,
+    },
+    {
+      name: t('header.whitepaper'),
+      href: '/whitepaper',
+      icon: Book,
     },
     {
       name: t('header.influencerRewards'),
@@ -305,7 +310,7 @@ export default function Header() {
                       <div className="px-3 sm:px-4 py-2">
                         <button
                           onClick={() => setIsLangSectionOpen(!isLangSectionOpen)}
-                          className="w-full flex items-center justify-between px-3 py-2.5 cursor-pointer border-none text-xs font-inter font-semibold text-gray-500 uppercase hover:bg-theme-gray-100 rounded-lg transition-colors touch-manipulation dark:text-gray-700"
+                          className="w-full flex items-center justify-between px-3 py-2.5 cursor-pointer border-none text-xs font-inter font-semibold text-gray-500  uppercase hover:bg-theme-gray-100 rounded-lg transition-colors touch-manipulation dark:text-gray-700"
                         >
                           <span>{t('header.language') || 'Language'}</span>
                           {isLangSectionOpen ? (
@@ -345,7 +350,7 @@ export default function Header() {
                       {/* Theme Toggle Section */}
                       <button
                         onClick={toggleTheme}
-                        className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border-none outline-none bg-transparent font-inter font-medium text-left hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 active:bg-theme-gray-100 dark:active:bg-theme-gray-100/30 transition-colors touch-manipulation flex items-center gap-3 text-theme-black-100 dark:text-theme-gray-100"
+                        className="w-[-webkit-fill-available] px-2 mx-3 rounded-lg sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border-none outline-none bg-transparent font-inter font-medium text-left hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 active:bg-theme-gray-100 dark:active:bg-theme-gray-100/30 transition-colors touch-manipulation flex items-center gap-3 text-theme-black-100 dark:text-theme-gray-100"
                       >
                         {theme === 'dark' ? (
                           <>
@@ -388,8 +393,8 @@ export default function Header() {
       {/* Bottom Navigation Bar - Mobile Only */}
       {isMobile && (
         <div className="fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-theme-gray-200 border-t border-gray-200 dark:border-theme-gray-100 safe-area-bottom">
-          <div className="flex items-center justify-around px-1 py-1.5">
-            {listMenu.map((item) => {
+          <div className="flex items-center justify-around px-1 py-1.5 shadow-lg">
+            {listMenu.filter(item => item.href !== '/whitepaper').map((item) => {
               const IconComponent = item.icon;
               const isActive = pathname === item.href;
               return (

@@ -22,6 +22,7 @@
   },
   "header": {
     "makeMoney": "Join to Earn",
+    "whitepaper": "White Paper",
     "rewards": "Get Rewards",
     "wallet": "Deposit/Withdraw",
     "referral": "Referral",
@@ -495,6 +496,173 @@
         "title": "COMMUNITY DEVELOPMENT & USDA COIN",
         "description": "Expand users, Airdrop coin rewards, attract investors to develop the ecosystem."
       }
+    }
+  },
+  "whitepaper": {
+    "title": "Whitepaper",
+    "section1": {
+      "title": "1. Introduction",
+      "intro": "This is a pioneering finance-advertising platform connecting Users and Businesses through USDT staking mechanisms and completing advertising viewing tasks. Unlike traditional investment models, we create real value from users' ad viewing behavior across multiple devices simultaneously to deliver sustainable returns. The platform provides real device farms for users to rent, bringing high efficiency in ad views and saving time for participants.",
+      "marketProblems": {
+        "title": "Current Market Problems",
+        "item1": "Passive income is difficult to access - Traditional investment channels require large capital and specialized knowledge",
+        "item2": "Ineffective advertising - Businesses pay high costs but don't reach the right audience that is genuinely interested",
+        "item3": "Lack of transparency - Users don't know where the real income comes from to pay participants for their work"
+      },
+      "solution": {
+        "title": "USDA Solution",
+        "item1": "Dual income - Profits from both USDT staking and completing ad viewing tasks",
+        "item2": "Real value - Businesses reach real customers, increasing traffic for businesses, users get paid for the value they create",
+        "item3": "Multi-layered security - KYC, data encryption, and mobile app anti-spam protection",
+        "item4": "Spread community - 2-level referral system creates organic growth momentum and sustainable ecosystem"
+      }
+    },
+    "section2": {
+      "title": "2. Operating Model",
+      "cycle": {
+        "title": "2.1. Value Cycle",
+        "step1": "User Deposits USDT",
+        "step2": "KYC",
+        "step3": "Choose Staking Package",
+        "step4": "Watch Ads on App",
+        "step5": "Revenue from Ads",
+        "step6": "Platform Re-invests Technical Infrastructure",
+        "step7": "Businesses Pay for Ad Views"
+      },
+      "process": {
+        "title": "2.2. Detailed Process",
+        "step1": {
+          "title": "Step 1: Registration & KYC",
+          "item1": "User registers via referral code",
+          "item2": "Identity verification (KYC) to prevent spam and fraud",
+          "item3": "Information is encrypted and secured"
+        },
+        "step2": {
+          "title": "Step 2: Deposit & Choose Package",
+          "item1": "Deposit USDT via personal wallet",
+          "item2": "Choose from 4 flexible staking packages:",
+          "package1": "Free Package: $10 reward, 0.2%/day",
+          "package2": "Daily Package: 0.2%/day",
+          "package3": "Weekly Package: 2.5%/week",
+          "package4": "Monthly Package: 20%/month"
+        },
+        "step3": {
+          "title": "Step 3: Complete Tasks",
+          "item1": "Use USDA app to watch ad videos",
+          "item2": "Anti-spam and fraud system",
+          "item3": "Progress updated in real-time"
+        },
+        "step4": {
+          "title": "Step 4: Receive Rewards",
+          "item1": "Interest calculated automatically",
+          "item2": "Flexible withdrawal with first 5 times free"
+        }
+      }
+    },
+    "section3": {
+      "title": "3. Staking & Task System",
+      "packages": {
+        "title": "3.1. Staking Packages",
+        "table": {
+          "package": "Package",
+          "capital": "Capital",
+          "videosPerDay": "Videos/Day",
+          "devices": "Number of devices supporting simultaneous viewing"
+        },
+        "packageFree": "Free",
+        "packageBasic": "Basic Package",
+        "packageMid1": "Mid 1 Package",
+        "packageMid2": "Mid 2 Package",
+        "packageMid3": "Mid 3 Package",
+        "packagePremium": "Premium Package"
+      },
+      "penalty": {
+        "title": "3.2. Incomplete Task Mechanism",
+        "description": "Users who purchase a package but don't watch ads will lose that day's interest.",
+        "example": "Example: 30-day package only completed 28 days → lose 1%/20% interest (0.5% / 1 day)"
+      }
+    },
+    "section5": {
+      "title": "5. Referral Program (Affiliate)",
+      "commission": {
+        "title": "5.1. Referral Commission",
+        "description": "Transaction commission: You will receive a % commission from the USDT amount of users you invite to participate",
+        "level1": "Receive 10% from Level 1 user deposit amount (directly below you)",
+        "level2": "Receive 5% from Level 2 user deposit amount (referred by Level 1)"
+      },
+      "milestones": {
+        "title": "5.2. Referral Milestone Rewards exclusively for influential partners",
+        "table": {
+          "people": "Number of People",
+          "regularReward": "Regular Reward",
+          "vipReward": "VIP Reward"
+        },
+        "condition": "Condition: Invited person must deposit at least once, complete work once, and complete KYC"
+      }
+    },
+    "section6": {
+      "title": "6. Revenue Sources & Sustainability",
+      "revenue": {
+        "title": "6.1. Multi-Channel Revenue",
+        "description": "From Advertising Partners:",
+        "item1": "Businesses pay fees for each quality video view",
+        "item2": "Users filtered through KYC → high-value quality"
+      },
+      "liquidity": {
+        "title": "6.2. Liquidity Protection Mechanism",
+        "description": "Withdrawal fee: 1 USDT/time (first 5 times free)"
+      }
+    },
+    "section7": {
+      "title": "7. Security & Transparency",
+      "security": {
+        "title": "7.1. Multi-Layer Security",
+        "item1": "KYC/AML: Identity verification for all users",
+        "item2": "Encryption: Data encrypted end-to-end",
+        "item3": "Mobile application: Anti-spam tools and automation prevention"
+      },
+      "transparency": {
+        "title": "7.2. Financial Transparency",
+        "item1": "Public interest calculation mechanism",
+        "item2": "Regular reports on investment performance",
+        "item3": "Smart contract"
+      }
+    },
+    "section8": {
+      "title": "8. Development Roadmap",
+      "phase1": {
+        "title": "Phase 1: Launch (Q1/2025)",
+        "item1": "Develop basic platform",
+        "item2": "Deploy KYC system",
+        "item3": "Launch mobile app on CH Play & TestFlight",
+        "item4": "USDB IDO Round 1"
+      },
+      "phase2": {
+        "title": "Phase 2: Growth (Q2-Q3/2025)",
+        "item1": "Develop AI Trading feature",
+        "item2": "Expand advertising partnerships",
+        "item3": "Deploy affiliate program"
+      }
+    },
+    "section9": {
+      "title": "9. Core Message",
+      "message": "We are not just an investment platform - we create an ecosystem where every action creates real value. Users earn income from their attention, businesses reach quality customers, and the entire community develops sustainably together.",
+      "responsibility": {
+        "title": "Responsibilities and Rights",
+        "description": "As a bridge between advertisers and users, we disclaim all responsibility related to product quality, assets, or investment results. Customers need to carefully consider the risks before making decisions."
+      }
+    },
+    "section11": {
+      "title": "11. Conclusion",
+      "paragraph1": "We represent the next generation of finance combined with digital advertising. With a transparent business model, advanced security technology, and long-term vision, we are committed to delivering sustainable passive income solutions for the global community.",
+      "paragraph2": "Join us on the journey to create the future of decentralized finance!"
+    },
+    "footer": {
+      "note": "This document may be updated according to each development phase of the project. The latest version will be published on the official website.",
+      "website": "Website:",
+      "email": "Email:",
+      "telegram": "Telegram:",
+      "updating": "[Updating]"
     }
   }
 }

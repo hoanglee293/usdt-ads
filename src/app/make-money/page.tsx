@@ -816,11 +816,9 @@ export default function MakeMoneyPage() {
                 {currentStaking && (
                     <div className='flex flex-col items-center justify-center'>
                         <div className='flex items-end justify-center mb-2 sm:mb-4 gap-2 sm:gap-4'>
-                            <img src="/logo.png" alt="logo" className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-cover pt-1 sm:pt-2' />
                             <div className='flex flex-col items-center mx-2 sm:mx-4'>
                                 <h1 className='text-xl sm:text-2xl md:text-3xl font-semibold font-orbitron text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]'>{currentStaking && currentStaking?.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}</h1>
                             </div>
-                            <img src="/logo.png" alt="logo" className='w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 object-cover pt-1 sm:pt-2' />
                         </div>
                     </div>
                 )}

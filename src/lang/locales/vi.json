@@ -22,6 +22,7 @@
   },
   "header": {
     "makeMoney": "Tham gia kiếm tiền",
+    "whitepaper": "White Paper",
     "rewards": "Nhận phần thưởng",
     "wallet": "Nạp/Rút tiền",
     "referral": "Giới thiệu",
@@ -496,6 +497,173 @@
         "title": "PHÁT TRIỂN CỘNG ĐỒNG & USDA COIN",
         "description": "Mở rộng người dùng, Airdrop thưởng coin, thu hút nhà đầu tư để phát triển hệ sinh thái."
       }
+    }
+  },
+  "whitepaper": {
+    "title": "Whitepaper",
+    "section1": {
+      "title": "1. Giới Thiệu",
+      "intro": "Đây là nền tảng tài chính - quảng cáo tiên phong kết nối Người dùng và Doanh nghiệp thông qua cơ chế staking USDT và hoàn thành nhiệm vụ xem quảng cáo. Khác với các mô hình đầu tư truyền thống, tạo ra giá trị thực từ chính hành vi xem quảng cáo của người dùng trên nhiều thiết bị 1 lúc để mang lại lợi nhuận bền vững. Việc nền tảng cung cấp dàn thiết bị thật để cho người dùng thuê sử dụng mang lại hiệu suất cao về số lượt xem quảng cáo và tiết kiệm thời gian cho người tham gia.",
+      "marketProblems": {
+        "title": "Vấn Đề Thị Trường Hiện Tại",
+        "item1": "Thu nhập thụ động khó tiếp cận - Các kênh đầu tư truyền thống yêu cầu vốn lớn và kiến thức chuyên sâu",
+        "item2": "Quảng cáo kém hiệu quả - Doanh nghiệp chi trả cao nhưng không tiếp cận đúng đối tượng thực sự quan tâm",
+        "item3": "Thiếu minh bạch - Người dùng không biết nguồn thu nhập thực sự đến từ đâu để chi trả cho người tham gia làm việc"
+      },
+      "solution": {
+        "title": "Giải Pháp USDA",
+        "item1": "Thu nhập kép - Lợi nhuận từ cả staking USDT và hoàn thành công việc xem quảng cáo",
+        "item2": "Giá trị thực - Doanh nghiệp tiếp cận khách hàng thực tăng lượt traffic cho doanh nghiệp, người dùng được trả tiền cho giá trị họ tạo ra",
+        "item3": "Bảo mật đa tầng - KYC, mã hóa dữ liệu và ứng dụng di động chống spam",
+        "item4": "Cộng đồng lan tỏa - Hệ thống giới thiệu 2 cấp tạo động lực phát triển hữu cơ và hệ sinh thái bền vững"
+      }
+    },
+    "section2": {
+      "title": "2. Mô Hình Hoạt Động",
+      "cycle": {
+        "title": "2.1. Vòng Tuần Hoàn Giá Trị",
+        "step1": "Người dùng Nạp USDT",
+        "step2": "KYC",
+        "step3": "Chọn gói Staking",
+        "step4": "Xem QC trên App",
+        "step5": "Doanh thu từ QC",
+        "step6": "Platform tái đầu tư hạ tầng kỹ thuật",
+        "step7": "Doanh nghiệp Trả phí xem QC"
+      },
+      "process": {
+        "title": "2.2. Quy Trình Chi Tiết",
+        "step1": {
+          "title": "Bước 1: Đăng Ký & KYC",
+          "item1": "User đăng ký qua mã giới thiệu",
+          "item2": "Xác minh danh tính là người thật (KYC) để chống spam và gian lận",
+          "item3": "Thông tin được mã hóa và bảo mật"
+        },
+        "step2": {
+          "title": "Bước 2: Nạp Tiền & Chọn Gói",
+          "item1": "Nạp USDT qua ví cá nhân",
+          "item2": "Lựa chọn 4 gói staking linh hoạt:",
+          "package1": "Gói Free: $10 thưởng, 0.2%/ngày",
+          "package2": "Gói Ngày: 0.2%/ngày",
+          "package3": "Gói Tuần: 2.5%/tuần",
+          "package4": "Gói Tháng: 20%/tháng"
+        },
+        "step3": {
+          "title": "Bước 3: Hoàn Thành Nhiệm Vụ",
+          "item1": "Sử dụng ứng dụng USDA để xem video quảng cáo",
+          "item2": "Hệ thống chống spam và gian lận",
+          "item3": "Tiến độ được cập nhật thời gian thực"
+        },
+        "step4": {
+          "title": "Bước 4: Nhận Thưởng",
+          "item1": "Lãi suất được tính toán tự động",
+          "item2": "Rút tiền linh hoạt với 5 lần miễn phí đầu tiên"
+        }
+      }
+    },
+    "section3": {
+      "title": "3. Hệ Thống Staking & Nhiệm Vụ",
+      "packages": {
+        "title": "3.1. Các Gói Staking",
+        "table": {
+          "package": "Gói",
+          "capital": "Vốn",
+          "videosPerDay": "Số Video/Ngày",
+          "devices": "Số thiết bị hỗ trợ xem cùng lúc"
+        },
+        "packageFree": "Free",
+        "packageBasic": "Gói Basic",
+        "packageMid1": "Gói Mid 1",
+        "packageMid2": "Gói Mid 2",
+        "packageMid3": "Gói Mid 3",
+        "packagePremium": "Gói Premium"
+      },
+      "penalty": {
+        "title": "3.2. Cơ Chế Không Hoàn Thành Nhiệm Vụ",
+        "description": "User mua gói nhưng không xem quảng cáo sẽ mất lãi ngày hôm đó.",
+        "example": "Ví dụ: Gói 30 ngày chỉ hoàn thành 28 ngày → mất 1%/20% lãi suất (0.5% / 1 ngày)"
+      }
+    },
+    "section5": {
+      "title": "5. Chương Trình Giới Thiệu (Affiliate)",
+      "commission": {
+        "title": "5.1. Hoa Hồng Giới Thiệu",
+        "description": "Hoa hồng giao dịch: Bạn sẽ nhận được % hoa hồng từ số USDT người được bạn mời tham gia",
+        "level1": "Nhận 10% từ số tiền nạp của người dùng cấp 1 ngay kề bạn",
+        "level2": "Nhận 5% từ số tiền nạp của người dùng cấp 2 (do người cấp 1 giới thiệu)"
+      },
+      "milestones": {
+        "title": "5.2. Thưởng Mốc Giới Thiệu dành riêng cho đối tác có sức ảnh hưởng",
+        "table": {
+          "people": "Số Người",
+          "regularReward": "Thưởng Thường",
+          "vipReward": "Thưởng VIP"
+        },
+        "condition": "Điều kiện: Người được mời phải nạp tiền ít nhất 1 lần, hoàn thành công việc 1 lần và hoàn thành KYC"
+      }
+    },
+    "section6": {
+      "title": "6. Nguồn Doanh Thu & Tính Bền Vững",
+      "revenue": {
+        "title": "6.1. Doanh Thu Đa Kênh",
+        "description": "Từ Đối Tác Quảng Cáo:",
+        "item1": "Doanh nghiệp trả phí cho mỗi lượt xem video chất lượng",
+        "item2": "User được chọn lọc qua KYC → chất lượng giá trị cao"
+      },
+      "liquidity": {
+        "title": "6.2. Cơ Chế Bảo Vệ Thanh Khoản",
+        "description": "Phí rút: 1 USDT/lần (miễn phí 5 lần đầu)"
+      }
+    },
+    "section7": {
+      "title": "7. Bảo Mật & Minh Bạch",
+      "security": {
+        "title": "7.1. Bảo Mật Đa Lớp",
+        "item1": "KYC/AML: Xác minh danh tính toàn bộ user",
+        "item2": "Mã hóa: Dữ liệu được mã hóa end-to-end",
+        "item3": "Ứng dụng di động: Chống tool spam và tự động hóa"
+      },
+      "transparency": {
+        "title": "7.2. Minh Bạch Tài Chính",
+        "item1": "Công khai cơ chế tính lãi",
+        "item2": "Báo cáo định kỳ về hiệu quả đầu tư",
+        "item3": "Smart contract"
+      }
+    },
+    "section8": {
+      "title": "8. Lộ Trình Phát Triển",
+      "phase1": {
+        "title": "Giai Đoạn 1: Khởi Động (Q1/2025)",
+        "item1": "Phát triển platform cơ bản",
+        "item2": "Triển khai KYC system",
+        "item3": "Launch app mobile trên CH Play & TestFlight",
+        "item4": "IDO USDB đợt 1"
+      },
+      "phase2": {
+        "title": "Giai Đoạn 2: Tăng Trưởng (Q2-Q3/2025)",
+        "item1": "Phát triển tính năng AI Trading",
+        "item2": "Mở rộng quan hệ đối tác quảng cáo",
+        "item3": "Triển khai affiliate program"
+      }
+    },
+    "section9": {
+      "title": "9. Thông Điệp Cốt Lõi",
+      "message": "Chúng tôi không chỉ là nền tảng đầu tư - chúng tôi kiến tạo hệ sinh thái nơi mọi hành động tạo ra giá trị thực. Người dùng kiếm thu nhập từ chính sự chú ý của họ, doanh nghiệp tiếp cận khách hàng chất lượng, và cả cộng đồng cùng phát triển bền vững.",
+      "responsibility": {
+        "title": "Trách Nhiệm và Quyền Lợi",
+        "description": "Là cầu nối giữa nhà quảng cáo và người dùng, chúng tôi miễn trừ mọi trách nhiệm liên quan đến chất lượng sản phẩm, tài sản hoặc kết quả đầu tư. Khách hàng cần tự cân nhắc kỹ lưỡng các rủi ro trước khi đưa ra quyết định."
+      }
+    },
+    "section11": {
+      "title": "11. Kết Luận",
+      "paragraph1": "Chúng tôi đại diện cho thế hệ tiếp theo của nền tài chính kết hợp quảng cáo số. Với mô hình kinh doanh minh bạch, công nghệ bảo mật tiên tiến và tầm nhìn dài hạn, chúng tôi cam kết mang đến giải pháp thu nhập thụ động bền vững cho cộng đồng toàn cầu.",
+      "paragraph2": "Tham gia cùng chúng tôi trên hành trình kiến tạo tương lai của tài chính phi tập trung!"
+    },
+    "footer": {
+      "note": "Tài liệu này có thể được cập nhật theo từng giai đoạn phát triển của dự án. Phiên bản mới nhất sẽ được công bố trên website chính thức.",
+      "website": "Website:",
+      "email": "Email:",
+      "telegram": "Telegram:",
+      "updating": "[Đang cập nhật]"
     }
   }
 }
