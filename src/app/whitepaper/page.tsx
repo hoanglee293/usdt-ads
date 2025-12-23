@@ -129,9 +129,6 @@ export default function WhitepaperPage() {
                   <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#C68AFE] dark:text-[#FE645F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 17l-5-5m0 0l5-5m-5 5h12" />
                   </svg>
-                  <div className="px-3 py-1.5 bg-gradient-to-r from-[#C68AFE] to-[#FE645F] text-white rounded-lg font-semibold shadow-md">
-                    {t('whitepaper.section2.cycle.step5')}
-                  </div>
                 </div>
               </div>
             </div>
