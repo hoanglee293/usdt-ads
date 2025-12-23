@@ -302,7 +302,7 @@ export default function Header() {
                           onClick={() => setIsMenuOpen(false)}
                         >
                           <div
-                            className={`px-3 sm:px-4 bg-theme-pink-100/80 mb-2 rounded-lg mx-3 py-2.5 sm:py-3 text-sm sm:text-base font-inter font-medium cursor-pointer hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 active:bg-theme-gray-100 dark:active:bg-theme-gray-100/30 transition-colors touch-manipulation ${pathname === item.href ? 'text-pink-500 dark:text-pink-400 bg-pink-50 dark:bg-theme-gray-100/30' : 'text-theme-black-100 dark:text-theme-gray-100'
+                            className={`px-3 sm:px-4 bg-theme-pink-100/80 mb-2 rounded-lg mx-3 dark:text-theme-gray-200 py-2.5 sm:py-3 text-sm sm:text-base font-inter font-medium cursor-pointer hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 active:bg-theme-gray-100 dark:active:bg-theme-gray-100/30 transition-colors touch-manipulation ${pathname === item.href ? 'text-pink-500 dark:text-pink-400 bg-pink-50 dark:bg-theme-gray-100/30' : 'text-theme-black-100 dark:text-theme-gray-100'
                               }`}
                           >
                             {item.name}
@@ -317,13 +317,13 @@ export default function Header() {
                       <div className="px-3 sm:px-4 py-2">
                         <button
                           onClick={() => setIsLangSectionOpen(!isLangSectionOpen)}
-                          className="w-full flex items-center justify-between px-3 py-2.5 cursor-pointer border-none text-xs font-inter font-semibold text-gray-500 dark:text-theme-gray-100/70 uppercase hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 rounded-lg transition-colors touch-manipulation"
+                          className="w-full flex items-center justify-between px-3 py-2.5 cursor-pointer border-none text-xs font-inter font-semibold text-gray-500 dark:text-theme-gray-100/70 uppercase hover:bg-theme-gray-100 rounded-lg transition-colors touch-manipulation dark:text-gray-700"
                         >
                           <span>{t('header.language') || 'Language'}</span>
                           {isLangSectionOpen ? (
-                            <ChevronUp className="w-4 h-4 text-gray-500 dark:text-theme-gray-100/70" />
+                            <ChevronUp className="w-4 h-4 text-gray-500" />
                           ) : (
-                            <ChevronDown className="w-4 h-4 text-gray-500 dark:text-theme-gray-100/70" />
+                            <ChevronDown className="w-4 h-4 text-gray-500" />
                           )}
                         </button>
                         {isLangSectionOpen && (
@@ -334,14 +334,14 @@ export default function Header() {
                                 onClick={() => {
                                   setLang(langOption.code);
                                 }}
-                                className={`w-full px-3 py-2.5 cursor-pointer border-none text-sm font-inter font-medium text-left hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 transition-colors flex items-center gap-3 rounded-lg touch-manipulation ${
+                                className={`w-full px-3 py-1.5 mb-1 cursor-pointer border-none text-sm font-inter font-medium text-left hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 transition-colors flex items-center gap-3 rounded-lg touch-manipulation ${
                                   lang === langOption.code
-                                    ? 'text-pink-500 dark:text-pink-400 bg-pink-50 dark:bg-theme-gray-100/30'
+                                    ? 'text-pink-500 dark:text-pink-400 bg-pink-50'
                                     : 'text-theme-black-100 dark:text-theme-gray-100'
                                 }`}
                               >
-                                <span className="text-lg">{langFlags[langOption.code] || '🌐'}</span>
-                                <span className="flex-1">{t(`languages.${langOption.code}`)}</span>
+                                <span className="text-lg text-theme-black-100">{langFlags[langOption.code] || '🌐'}</span>
+                                <span className="flex-1 text-theme-black-100">{t(`languages.${langOption.code}`)}</span>
                                 {lang === langOption.code && (
                                   <span className="text-pink-500 dark:text-pink-400 text-xs">✓</span>
                                 )}
