@@ -22,11 +22,13 @@ import { getSmartRefInfo, getSmartRefTree, getSmartRefDetail, createSmartRefWith
 import { useLang } from "@/lang";
 import toast from "react-hot-toast";
 import { useProfile } from "@/hooks/useProfile";
+import { useIsMobile } from "@/ui/use-mobile";
 
 export default function DirectReferralPage() {
     const { t } = useLang();
     const { profile } = useProfile();
     const queryClient = useQueryClient();
+    const isMobile = useIsMobile();
     console.log(profile);
     const [showReferralStructure, setShowReferralStructure] = useState(true)
     const [activeTab, setActiveTab] = useState("level-referral") // 'level-referral', 'referred-users'
@@ -131,9 +133,9 @@ export default function DirectReferralPage() {
                 </div>
 
                 {/* Stats Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
                     {/* Total Branches Card */}
-                    <div className="bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 rounded-lg p-4 sm:px-6 sm:py-4 gap-2 text-white shadow-lg flex flex-col justify-between">
+                    <div className="bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 rounded-lg p-4 sm:px-6 sm:py-4 gap-2 text-white shadow-lg flex flex-col justify-between order-1 sm:order-1">
                         <h3 className="text-sm font-medium opacity-90">
                             {t('ref.totalBranches') || 'Total Branches'}
                         </h3>
@@ -143,7 +145,7 @@ export default function DirectReferralPage() {
                     </div>
 
                     {/* Total Can Withdraw Card */}
-                    <div className="bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 rounded-lg p-4 sm:px-6 sm:py-4 gap-2 text-white shadow-lg flex flex-col justify-between ">
+                    <div className="bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 rounded-lg p-4 sm:px-6 sm:py-4 gap-2 text-white shadow-lg flex flex-col justify-between order-3 sm:order-2 col-span-2 sm:col-span-1">
                         <h3 className="text-sm font-medium opacity-90">
                             {t('ref.totalCanWithdraw') || 'Total Can Withdraw'}
                         </h3>
@@ -164,7 +166,7 @@ export default function DirectReferralPage() {
                     </div>
 
                     {/* Total Invitees Card */}
-                    <div className="bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 rounded-lg p-4 sm:px-6 sm:py-4 gap-2 text-white shadow-lg flex flex-col justify-between">
+                    <div className="bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 rounded-lg p-4 sm:px-6 sm:py-4 gap-2 text-white shadow-lg flex flex-col justify-between order-2 sm:order-3">
                         <h3 className="text-sm font-medium opacity-90">
                             {t('ref.totalInvitees') || 'Total Invitees'}
                         </h3>
@@ -220,7 +222,7 @@ export default function DirectReferralPage() {
 
                                     {/* Connection Lines */}
                                     {smartRefInfo.data.max_level > 1 && (
-                                        <div className="flex items-center justify-center space-x-8 sm:space-x-16 mt-12 w-12 sm:w-60 h-0.5 bg-gradient-to-r from-pink-400 to-purple-400">
+                                        <div className="flex items-center justify-center space-x-8 sm:space-x-16 mt-12 w-60 h-0.5 bg-gradient-to-r from-pink-400 to-purple-400">
                                             
                                         </div>
                                     )}
@@ -233,7 +235,7 @@ export default function DirectReferralPage() {
                                         const displayItems = [level2Percentage, level2Percentage];
                                         
                                         return (
-                                            <div className="flex items-center justify-between w-72 mt-8">
+                                            <div className="flex items-center justify-between w-72 mt-[34px]">
                                                 {displayItems.map((percentage, index) => (
                                                     <div key={index} className="flex flex-col items-center relative">
                                                         <div className="absolute bottom-[103%] left-1/2 transform w-[2px] h-8 bg-gradient-to-b from-pink-400 to-purple-400"></div>
@@ -378,63 +380,127 @@ export default function DirectReferralPage() {
                                 }
                             </div>
 
-                            {/* Users Table */}
+                            {/* Users Table/Cards */}
                             <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-                                {/* Table Headers */}
-                                <div className="grid grid-cols-5 gap-2 p-3 text-xs font-medium text-purple-600 dark:text-purple-400 bg-transparent border-b border-gray-200 dark:border-gray-700">
-                                    <div className="px-2 py-1">{t('ref.user') || 'User'}</div>
-                                    <div className="px-2 py-1 text-center">
-                                        <Calendar className="w-3 h-3 inline mr-1" />
-                                        {t('ref.joinDate') || 'Join Date'}
+                                {/* Table Headers - Desktop Only */}
+                                {!isMobile && (
+                                    <div className="grid grid-cols-5 gap-2 p-3 text-xs font-medium text-purple-600 dark:text-purple-400 bg-transparent border-b border-gray-200 dark:border-gray-700">
+                                        <div className="px-2 py-1">{t('ref.user') || 'User'}</div>
+                                        <div className="px-2 py-1 text-center">
+                                            <Calendar className="w-3 h-3 inline mr-1" />
+                                            {t('ref.joinDate') || 'Join Date'}
+                                        </div>
+                                        <div className="px-2 py-1 text-center">{t('ref.level') || 'Level'}</div>
+                                        <div className="px-2 py-1 text-center">{t('ref.transactions') || 'Transactions'}</div>
+                                        <div className="px-2 py-1 text-center">
+                                            <DollarSign className="w-3 h-3 inline mr-1" />
+                                            {t('ref.rewards') || 'Rewards'}
+                                        </div>
                                     </div>
-                                    <div className="px-2 py-1 text-center">{t('ref.level') || 'Level'}</div>
-                                    <div className="px-2 py-1 text-center">{t('ref.transactions') || 'Transactions'}</div>
-                                    <div className="px-2 py-1 text-center">
-                                        <DollarSign className="w-3 h-3 inline mr-1" />
-                                        {t('ref.rewards') || 'Rewards'}
-                                    </div>
-                                </div>
+                                )}
 
-                                {/* Table Rows */}
-                                <div className=" overflow-y-auto flex flex-col gap-2">
+                                {/* Content */}
+                                <div className="overflow-y-auto">
                                     {isLoadingDetail ? (
                                         <div className="text-center py-8">
                                             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 dark:border-purple-400 mx-auto"></div>
                                             <p className="text-gray-500 dark:text-gray-400 text-sm mt-2">{t('common.loading')}</p>
                                         </div>
                                     ) : filteredUsers.length > 0 ? (
-                                        filteredUsers.map((user: any) => (
-                                            <div
-                                                key={user.uid}
-                                                className="grid grid-cols-5 gap-2 items-center border-solid border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors p-3 rounded-md overflow-hidden"
-                                            >
-                                                <div className="flex items-center gap-2">
-                                                    <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
-                                                        <User className="w-4 h-4 text-white" />
+                                        <div className={isMobile ? "space-y-3 p-3" : "flex flex-col gap-2 p-2"}>
+                                            {filteredUsers.map((user: any) => (
+                                                isMobile ? (
+                                                    // Mobile Card Layout
+                                                    <div
+                                                        key={user.uid}
+                                                        className="bg-gray-50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-700 rounded-lg p-4 space-y-3 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                                                    >
+                                                        {/* User Info Section */}
+                                                        <div className="flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-gray-700">
+                                                            <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center flex-shrink-0">
+                                                                <User className="w-5 h-5 text-white" />
+                                                            </div>
+                                                            <div className="flex-1 min-w-0">
+                                                                <p className="text-sm font-medium text-gray-900 dark:text-gray-200 truncate">
+                                                                    {user.display_name || t('ref.unknown') || 'Unknown'}
+                                                                </p>
+                                                                <p className="text-xs text-gray-500 dark:text-gray-400">ID: {user.uid}</p>
+                                                            </div>
+                                                            <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300 flex-shrink-0">
+                                                                {t('ref.level') || 'Level'} {user.level}
+                                                            </span>
+                                                        </div>
+
+                                                        {/* Details Grid */}
+                                                        <div className="grid grid-cols-2 gap-3">
+                                                            <div className="space-y-1">
+                                                                <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+                                                                    <Calendar className="w-3.5 h-3.5" />
+                                                                    <span>{t('ref.joinDate') || 'Join Date'}</span>
+                                                                </div>
+                                                                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                    {user.join_date ? formatDate(user.join_date) : '-'}
+                                                                </p>
+                                                            </div>
+                                                            <div className="space-y-1">
+                                                                <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+                                                                    <Activity className="w-3.5 h-3.5" />
+                                                                    <span>{t('ref.transactions') || 'Transactions'}</span>
+                                                                </div>
+                                                                <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                                    {user.total_transactions || 0}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Rewards Section */}
+                                                        <div className="pt-2 border-t border-gray-200 dark:border-gray-700">
+                                                            <div className="flex items-center justify-between">
+                                                                <div className="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400">
+                                                                    <DollarSign className="w-3.5 h-3.5" />
+                                                                    <span>{t('ref.rewards') || 'Rewards'}</span>
+                                                                </div>
+                                                                <p className="text-base font-bold text-green-600 dark:text-green-400">
+                                                                    ${typeof user.total_rewards === 'number' ? user.total_rewards.toFixed(2) : '0.00'}
+                                                                </p>
+                                                            </div>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-gray-200">
-                                                            {user.display_name || t('ref.unknown') || 'Unknown'}
-                                                        </p>
-                                                        <p className="text-[10px] text-gray-500 dark:text-gray-400">ID: {user.uid}</p>
+                                                ) : (
+                                                    // Desktop Grid Layout
+                                                    <div
+                                                        key={user.uid}
+                                                        className="grid grid-cols-5 gap-2 items-center border-solid border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors p-3 rounded-md overflow-hidden"
+                                                    >
+                                                        <div className="flex items-center gap-2">
+                                                            <div className="w-8 h-8 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+                                                                <User className="w-4 h-4 text-white" />
+                                                            </div>
+                                                            <div>
+                                                                <p className="text-xs sm:text-sm font-medium text-gray-900 dark:text-gray-200">
+                                                                    {user.display_name || t('ref.unknown') || 'Unknown'}
+                                                                </p>
+                                                                <p className="text-[10px] text-gray-500 dark:text-gray-400">ID: {user.uid}</p>
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-center text-xs text-gray-700 dark:text-gray-300">
+                                                            {user.join_date ? formatDate(user.join_date) : '-'}
+                                                        </div>
+                                                        <div className="text-center">
+                                                            <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">
+                                                                {t('ref.level') || 'Level'} {user.level}
+                                                            </span>
+                                                        </div>
+                                                        <div className="text-center text-xs font-medium text-gray-700 dark:text-gray-300">
+                                                            {user.total_transactions || 0}
+                                                        </div>
+                                                        <div className="text-center text-xs font-bold text-green-600 dark:text-green-400">
+                                                            ${typeof user.total_rewards === 'number' ? user.total_rewards.toFixed(2) : '0.00'}
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div className="text-center text-xs text-gray-700 dark:text-gray-300">
-                                                    {user.join_date ? formatDate(user.join_date) : '-'}
-                                                </div>
-                                                <div className="text-center">
-                                                    <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 dark:bg-purple-900/30 text-purple-800 dark:text-purple-300">
-                                                        {t('ref.level') || 'Level'} {user.level}
-                                                    </span>
-                                                </div>
-                                                <div className="text-center text-xs font-medium text-gray-700 dark:text-gray-300">
-                                                    {user.total_transactions || 0}
-                                                </div>
-                                                <div className="text-center text-xs font-bold text-green-600 dark:text-green-400">
-                                                    ${typeof user.total_rewards === 'number' ? user.total_rewards.toFixed(2) : '0.00'}
-                                                </div>
-                                            </div>
-                                        ))
+                                                )
+                                            ))}
+                                        </div>
                                     ) : (
                                         <div className="text-center py-8 text-gray-500 dark:text-gray-400">
                                             <p>{t('ref.noReferredUsers') || 'No referred users'}</p>

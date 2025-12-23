@@ -285,7 +285,7 @@ export default function WithdrawContent({
         <div className='w-full'>
             {/* Middle Section - Withdrawal Amount Block */}
             <div className="bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 rounded-full p-6 shadow-lg max-w-xl mx-auto">
-                <div className="flex items-center gap-3 my-3 w-full relative">
+                <div className="flex items-center gap-3 my-3 w-full max-w-[19rem] mx-auto relative">
                     <Input
                         id="amount"
                         type="number"
@@ -295,14 +295,14 @@ export default function WithdrawContent({
                         onChange={(e) => setWithdrawAmount(e.target.value)}
                         placeholder="0"
                         disabled={withdrawMutation.isPending}
-                        className="max-w-[300px] mx-auto bg-white text-center text-lg font-semibold rounded-xl border-none h-10 text-gray-800"
+                        className="w-full bg-white text-center text-lg font-semibold rounded-xl border-none h-10 text-gray-800"
                         required
                     />
                     <Button
                         type="button"
                         onClick={handleMaxAmount}
                         disabled={withdrawMutation.isPending || !balanceResponse?.data}
-                        className="bg-pink-500 absolute right-0 hover:bg-pink-600 text-white rounded-xl px-6 h-8 font-semibold uppercase border-none disabled:opacity-50"
+                        className="bg-pink-500 absolute right-2 hover:bg-pink-600 text-white rounded-lg md:px-6 px-4 md:h-8 h-7 font-semibold uppercase border-none disabled:opacity-50"
                     >
                         MAX
                     </Button>

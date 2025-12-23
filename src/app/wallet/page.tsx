@@ -532,7 +532,7 @@ export default function WalletPage() {
                                         options={coinOptions}
                                         placeholder={t('wallet.selectCoinPlaceholder')}
                                         disabled={isLoadingCoins}
-                                        className="w-20 text-xs"
+                                        className="lg:w-20 text-xs"
                                     />
                                 )}
                             </div>
@@ -612,14 +612,14 @@ export default function WalletPage() {
                         options={networkOptions}
                         placeholder={t('wallet.selectNetworkPlaceholder')}
                         disabled={isLoadingNetworks}
-                        className="w-full max-w-xs sm:max-w-56 text-sm"
+                        className="w-full max-w-[10rem] sm:max-w-56 text-sm"
                     />
                 </div>
 
                 {/* Deposit/Withdraw Buttons */}
                 {selectedNetwork && (
                     <>
-                        <div className='flex flex-col sm:flex-row items-stretch sm:items-center justify-between max-w-xl mx-auto gap-3 sm:gap-10 mb-6 sm:mb-10 px-3 sm:px-0'>
+                        <div className='flex flex-row items-stretch sm:items-center justify-between max-w-xl mx-auto gap-3 sm:gap-10 mb-6 sm:mb-10 px-3 sm:px-0'>
                             <Button
                                 onClick={handleDeposit}
                                 disabled={!hasWallet || !selectedNetwork}

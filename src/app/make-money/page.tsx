@@ -834,38 +834,38 @@ export default function MakeMoneyPage() {
                     <div className='mb-6 sm:mb-8 p-3 sm:p-4 md:p-6 rounded-lg border border-gray-200 dark:border-[#FE645F] bg-transparent'>
                         <div className='grid grid-cols-1 md:grid-cols-2 w-full md:max-w-3xl mx-auto gap-3 sm:gap-y-4 sm:gap-x-10 mb-3 sm:mb-4'>
                             {/* Right Column */}
-                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
+                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md'>
                                 <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.stakingType')}:</p>
                                 <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#FE645F]'>{getTypeDurationLabel(currentStaking.type)}</p>
                             </div>
 
                             {/* Left Column */}
-                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
+                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md'>
                                 <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.status')}:</p>
                                 <p className='text-xs sm:text-sm font-medium text-red-600 dark:text-[#FE645F]'>{getStatusText(currentStaking.status)}</p>
                             </div>
 
                             {/* Right Column */}
-                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
+                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md'>
                                 <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.time')}:</p>
                                 <p className='text-xs sm:text-sm font-medium text-red-600 dark:text-[#FE645F]'>{formatDateOnly(currentStaking.date_start)} - {formatDateOnly(currentStaking.date_end)}</p>
                             </div>
 
                             {/* Left Column */}
-                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md'>
+                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md'>
                                 <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.amount')}:</p>
                                 <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#FE645F]'>{currentStaking.amount} USDT</p>
                             </div>
 
                             {/* Right Column */}
-                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md flex-wrap'>
+                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md flex-wrap'>
                                 <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.estimatedReward')}:</p>
                                 <div className='flex gap-1 sm:gap-2 items-center flex-wrap'>
                                     <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#FE645F]'>{currentStaking.estimated_reward} USDT</p>
                                 </div>
                             </div>
 
-                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 justify-start shadow-md flex-wrap'>
+                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md flex-wrap'>
                                 <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.earnedAmount')}:</p>
                                 <div className='flex gap-1 sm:gap-2 items-center flex-wrap'>
                                     <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#FE645F]'>{(currentStaking.real_reward || 0).toFixed(3)} USDT</p>

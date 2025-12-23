@@ -164,21 +164,21 @@ export default function SmartRefPage() {
     }
 
     return (
-        <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
+        <div className='w-full min-h-svh flex pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
             <div className='w-full max-w-7xl space-y-6'>
                 {/* Title Section */}
                 <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6'>
-                    <h1 className='text-xl sm:text-3xl md:text-4xl font-bold text-center text-gradient-secondary '>
+                    <h1 className='text-2xl md:text-4xl font-bold text-center text-gradient-secondary '>
                         {t('smartRef.title')}
                     </h1>
                 </div>
 
                 {/* Progress Bar */}
-                <div className='bg-transparent rounded-lg border border-gray-200 dark:border-[#FE645F] p-4 sm:p-6'>
+                <div className='bg-transparent rounded-lg border border-gray-200 dark:border-[#FE645F] p-4 sm:p-6 md:max-w-xl mx-auto'>
                     {isLoadingInfo ? (
                         <div className='w-full max-w-[20vw] mx-auto bg-gradient-to-br from-[#FE645F] to-[#C68AFE] rounded-full h-8 sm:h-10 animate-pulse' />
                     ) : (
-                        <div className='w-[20vw] mx-auto bg-gray-200 dark:bg-gray-700 rounded-full h-8 sm:h-10 overflow-hidden relative'>
+                        <div className='xl:w-[20vw] w-full mx-auto bg-gray-200 dark:bg-gray-700 rounded-full h-8 sm:h-10 overflow-hidden relative'>
                             <div 
                                 className='absolute inset-0 bg-gradient-to-br from-[#FE645F] to-[#C68AFE] rounded-full transition-all duration-300'
                                 style={{ width: '100%' }}
@@ -197,8 +197,8 @@ export default function SmartRefPage() {
                     )}
                 </div>
 
-                <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 bg-theme-pink-100 px-8 py-3 !w-fit mx-auto rounded-full'>
-                    <h2 className='text-xl sm:text-3xl md:text-4xl font-bold text-center text-gradient-secondary '>
+                <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 bg-theme-pink-100 md:px-8 px-6 !mt-0 py-2 md:py-3 md:!w-fit mx-auto rounded-full'>
+                    <h2 className='text-sm sm:text-2xl md:text-4xl font-bold text-center text-gradient-secondary '>
                         {t('smartRef.totalRewardsUpTo', { total: totalRewardsFromMilestones })}
                     </h2>
                 </div>
@@ -218,7 +218,7 @@ export default function SmartRefPage() {
                 </svg>
 
                 {/* Milestone Columns */}
-                <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 '>
+                <div className='grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 '>
                     {milestones.map((milestone: MilestoneDefinition, index: number) => (
                         <div
                             key={index}
@@ -297,14 +297,13 @@ export default function SmartRefPage() {
 
                             {/* Referral Link Button (only for 20 people milestone) */}
                             {milestone.showLink && (
-                                <Button
+                                <button
                                     onClick={() => router.push('/referral/direct')}
-                                    className='mt-2 w-full bg-gradient-to-r from-pink-500 to-red-500 text-white border-none hover:opacity-90 text-xs sm:text-sm font-medium rounded-lg hover:bg-gradient-to-r hover:from-pink-600 hover:to-red-600 cursor-pointer'
-                                    size='sm'
+                                    className='mt-2 w-full hidden sm:block bg-gradient-to-r from-pink-500 to-red-500 text-white border-none hover:opacity-90 text-xs sm:text-sm font-medium rounded-lg hover:bg-gradient-to-r hover:from-pink-600 hover:to-red-600 cursor-pointer'
                                 >
                                     <Link2 className='w-3 h-3 sm:w-4 sm:h-4 mr-1' />
                                     {t('smartRef.referralLinkButton')}
-                                </Button>
+                                </button>
                             )}
                         </div>
                     ))}
