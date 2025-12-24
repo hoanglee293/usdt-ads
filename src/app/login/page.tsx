@@ -88,7 +88,7 @@ const page = () => {
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
                                 placeholder={t('login.usernamePlaceholder')}
-                                className='w-full pr-4 py-4 pl-5 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
+                                className='w-full pr-4 py-4 pl-5 border-transparent border focus:border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
                                 disabled={loading}
                             />
                         </div>
@@ -104,7 +104,7 @@ const page = () => {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     placeholder={t('login.passwordPlaceholder')}
-                                    className='w-full pr-4 py-4 pl-5 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
+                                    className='w-full pr-4 py-4 pl-5 border-transparent border focus:border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
                                     disabled={loading}
                                 />
                                 {password.length > 0 && (
@@ -120,8 +120,8 @@ const page = () => {
                         </div>
 
                         <div className='flex justify-between items-center'>
-                            <div onClick={() => router.push('/forgot-password')} className='text-sm text-theme-black-100 dark:text-gray-300 hover:text-theme-black-100 dark:hover:text-gray-200 font-medium cursor-pointer'>{t('login.forgotPassword')}</div>
-                            <div onClick={() => router.push('/register')} className='text-sm text-theme-red dark:text-theme-red-200 hover:text-theme-red-100 dark:hover:text-theme-red-200/80 font-medium cursor-pointer'>{t('login.register')}</div>
+                            <div onClick={() => router.push('/forgot-password')} className='text-sm text-theme-black-100 dark:text-white hover:text-theme-black-100 dark:hover:text-gray-200 font-semibold cursor-pointer'>{t('login.forgotPassword')}</div>
+                            <div onClick={() => router.push('/register')} className='text-sm text-theme-red dark:text-theme-red-100 hover:text-theme-red-100 dark:hover:text-theme-red-200/80 font-semibold cursor-pointer'>{t('login.register')}</div>
                         </div>
 
                         <button

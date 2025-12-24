@@ -49,6 +49,10 @@
     "loadNetworksError": "无法加载网络列表",
     "loadCoinsError": "无法加载币种列表",
     "loadBalanceError": "无法加载余额",
+    "networkNotFound": "未找到网络",
+    "coinNotFound": "未找到币种",
+    "notFound": "未找到",
+    "identityNotVerified": "身份未验证",
     "withdrawSuccess": "提款成功！",
     "createWalletSuccess": "钱包创建成功！",
     "pleaseSelectNetwork": "请先选择网络",
@@ -72,6 +76,12 @@
     "depositButton": "存款",
     "withdrawButton": "提款",
     "noTransactions": "暂无交易",
+    "kycModal": {
+      "title": "警告",
+      "description": "您需要验证KYC才能提现",
+      "message": "要提现，您需要完成身份验证（KYC）。请验证您的KYC以继续。",
+      "goToKyc": "前往KYC"
+    },
     "noWithdrawTransactions": "暂无提款交易",
     "tableHeaders": {
       "stt": "编号",

@@ -49,6 +49,10 @@
     "loadNetworksError": "Unable to load network list",
     "loadCoinsError": "Unable to load coin list",
     "loadBalanceError": "Unable to load balance",
+    "networkNotFound": "Network not found",
+    "coinNotFound": "Coin not found",
+    "notFound": "Not Found",
+    "identityNotVerified": "Identity not verified",
     "withdrawSuccess": "Withdrawal successful!",
     "createWalletSuccess": "Wallet created successfully!",
     "pleaseSelectNetwork": "Please select a network first",
@@ -72,6 +76,12 @@
     "depositButton": "Deposit",
     "withdrawButton": "Withdraw",
     "noTransactions": "No transactions yet",
+    "kycModal": {
+      "title": "Warning",
+      "description": "You need to verify KYC to withdraw funds",
+      "message": "To withdraw funds, you need to complete identity verification (KYC). Please verify your KYC to continue.",
+      "goToKyc": "Go to KYC"
+    },
     "noWithdrawTransactions": "No withdrawal transactions yet",
     "tableHeaders": {
       "stt": "NO",

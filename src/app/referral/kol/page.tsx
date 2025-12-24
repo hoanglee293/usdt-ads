@@ -2,7 +2,7 @@
 import React, { useMemo, useState } from 'react'
 import { Copy, Play, Link2 } from 'lucide-react'
 import { Button } from '@/ui/button'
-import { toast } from 'sonner'
+import toast from 'react-hot-toast'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getMemberRefInfo, createMemberRefWithdraw } from '@/services/RefService'
 import { useProfile } from '@/hooks/useProfile'

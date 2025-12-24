@@ -49,6 +49,10 @@
     "loadNetworksError": "ネットワークリストを読み込めません",
     "loadCoinsError": "コインリストを読み込めません",
     "loadBalanceError": "残高を読み込めません",
+    "networkNotFound": "ネットワークが見つかりません",
+    "coinNotFound": "コインが見つかりません",
+    "notFound": "見つかりません",
+    "identityNotVerified": "本人確認が完了していません",
     "withdrawSuccess": "出金成功！",
     "createWalletSuccess": "ウォレット作成成功！",
     "pleaseSelectNetwork": "まずネットワークを選択してください",
@@ -72,6 +76,12 @@
     "depositButton": "入金",
     "withdrawButton": "出金",
     "noTransactions": "まだ取引がありません",
+    "kycModal": {
+      "title": "警告",
+      "description": "出金するにはKYC認証が必要です",
+      "message": "出金するには、本人確認（KYC）を完了する必要があります。続行するにはKYCを認証してください。",
+      "goToKyc": "KYCへ移動"
+    },
     "noWithdrawTransactions": "まだ出金取引がありません",
     "tableHeaders": {
       "stt": "番号",

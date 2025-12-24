@@ -49,6 +49,10 @@
     "loadNetworksError": "네트워크 목록을 불러올 수 없습니다",
     "loadCoinsError": "코인 목록을 불러올 수 없습니다",
     "loadBalanceError": "잔액을 불러올 수 없습니다",
+    "networkNotFound": "네트워크를 찾을 수 없습니다",
+    "coinNotFound": "코인을 찾을 수 없습니다",
+    "notFound": "찾을 수 없습니다",
+    "identityNotVerified": "신원이 확인되지 않았습니다",
     "withdrawSuccess": "출금 성공!",
     "createWalletSuccess": "지갑 생성 성공!",
     "pleaseSelectNetwork": "먼저 네트워크를 선택해 주세요",
@@ -72,6 +76,12 @@
     "depositButton": "입금",
     "withdrawButton": "출금",
     "noTransactions": "거래 내역이 없습니다",
+    "kycModal": {
+      "title": "경고",
+      "description": "출금하려면 KYC 인증이 필요합니다",
+      "message": "출금하려면 신원 확인(KYC)을 완료해야 합니다. 계속하려면 KYC를 인증해 주세요.",
+      "goToKyc": "KYC로 이동"
+    },
     "noWithdrawTransactions": "출금 거래 내역이 없습니다",
     "tableHeaders": {
       "stt": "번호",

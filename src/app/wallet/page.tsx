@@ -4,7 +4,7 @@ import DepositContent from '@/components/DepositContent'
 import WithdrawContent from '@/components/WithdrawContent'
 import React, { useState, useRef, useMemo, useEffect } from 'react'
 import { Copy, ExternalLink, Plus, Loader2, ChevronDown, ChevronUp, Wallet, ArrowLeft } from 'lucide-react'
-import { toast } from 'sonner'
+import toast from 'react-hot-toast'
 import { Button } from '@/ui/button'
 import { useRouter } from 'next/navigation'
 import { useLang } from '@/lang/useLang'
@@ -581,7 +581,7 @@ export default function WalletPage() {
                                     <Skeleton className="h-8 w-48" />
                                 ) : balanceResponse?.data ? (
                                     <div className='flex flex-col items-center'>
-                                        <span className='text-2xl font-bold text-center text-pink-500 bg-theme-pink-100 py-3 px-4 rounded-full'>
+                                        <span className='text-2xl font-bold text-center text-pink-500 bg-theme-pink-100 py-2 mb-2 px-4 rounded-full'>
                                             {t('wallet.balanceLabel')}: {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                         </span>
                                         {(balanceResponse.data.balance_gift !== 0 || balanceResponse.data.balance_reward !== 0) && (

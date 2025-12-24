@@ -2,7 +2,7 @@
 import React, { useState, useMemo, useEffect, Suspense, useRef } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { ArrowLeft, Loader2, Copy, Wallet } from 'lucide-react'
-import { toast } from 'sonner'
+import toast from 'react-hot-toast'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
     getListNetworks,

@@ -49,6 +49,10 @@
     "loadNetworksError": "Không thể tải danh sách mạng",
     "loadCoinsError": "Không thể tải danh sách coin",
     "loadBalanceError": "Không thể tải số dư",
+    "networkNotFound": "Mạng lưới không tìm thấy",
+    "coinNotFound": "Coin không tìm thấy",
+    "notFound": "Không tìm thấy",
+    "identityNotVerified": "Danh tính chưa được xác thực",
     "withdrawSuccess": "Rút tiền thành công!",
     "createWalletSuccess": "Tạo ví thành công!",
     "pleaseSelectNetwork": "Vui lòng chọn mạng lưới trước",
@@ -72,6 +76,12 @@
     "depositButton": "Nạp",
     "withdrawButton": "Rút",
     "noTransactions": "Chưa có giao dịch nào",
+    "kycModal": {
+      "title": "Cảnh báo",
+      "description": "Bạn cần xác thực KYC để thực hiện rút tiền",
+      "message": "Để rút tiền, bạn cần hoàn thành xác thực danh tính (KYC). Vui lòng xác thực KYC để tiếp tục.",
+      "goToKyc": "Đi đến KYC"
+    },
     "noWithdrawTransactions": "Chưa có giao dịch rút tiền nào",
     "tableHeaders": {
       "stt": "STT",

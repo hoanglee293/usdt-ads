@@ -1,7 +1,8 @@
 'use client'
 import React, { useState, useMemo, useEffect, useRef } from 'react'
-import { Loader2, Copy, Wallet } from 'lucide-react'
-import { toast } from 'sonner'
+import { Loader2, Copy, Wallet, AlertCircle } from 'lucide-react'
+import toast from 'react-hot-toast'
+import { useRouter } from 'next/navigation'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import {
     getListNetworks,
@@ -22,9 +23,9 @@ import { Skeleton } from '@/ui/skeleton'
 import { Button } from '@/ui/button'
 import { Input } from '@/ui/input'
 import { Label } from '@/ui/label'
-import CustomSelect from '@/components/CustomSelect'
 import { useIsMobile } from '@/ui/use-mobile'
 import { useLang } from '@/lang/useLang'
+import Modal from '@/components/Modal'
 
 interface WithdrawContentProps {
     networkId: string
@@ -47,17 +48,19 @@ export default function WithdrawContent({
     const tableRef = useRef<HTMLDivElement>(null)
     const isMobile = useIsMobile()
     const { t, lang } = useLang()
+    const router = useRouter()
 
     // Form state
     const [withdrawAddress, setWithdrawAddress] = useState<string>('')
     const [withdrawAmount, setWithdrawAmount] = useState<string>('')
-    const [selectedNetworkId, setSelectedNetworkId] = useState<string>(networkId || '')
     const [selectedCoinId, setSelectedCoinId] = useState<string>(coinId || '')
+    const [showKycModal, setShowKycModal] = useState(false)
 
-    // Fetch networks
-    const { data: networksResponse, isLoading: isLoadingNetworks } = useQuery<ListNetworksResponse>({
+    // Fetch networks (only for getting network info if not provided via props)
+    const { data: networksResponse } = useQuery<ListNetworksResponse>({
         queryKey: ['networks'],
-        queryFn: async () => await getListNetworks()
+        queryFn: async () => await getListNetworks(),
+        enabled: !networkSymbol || !networkName // Only fetch if network info not provided via props
     })
 
     // Fetch coins
@@ -92,20 +95,35 @@ export default function WithdrawContent({
             }
         },
         onError: (error: any) => {
-            const message = error?.response?.data?.message || error?.message || t('wallet.loadNetworksError')
-            toast.error(message)
+            const errorMessage = error?.response?.data?.message || error?.message || ''
+            
+            // Map specific error messages to translations
+            let translatedMessage = ''
+            if (errorMessage.includes('Network not found')) {
+                translatedMessage = t('wallet.networkNotFound')
+                toast.error(translatedMessage)
+            } else if (errorMessage.includes('Coin not found')) {
+                translatedMessage = t('wallet.coinNotFound')
+                toast.error(translatedMessage)
+            } else if (errorMessage.includes('Not Found')) {
+                translatedMessage = t('wallet.notFound')
+                toast.error(translatedMessage)
+            } else if (errorMessage.includes('Identity not verified')) {
+                // Show KYC modal instead of toast
+                setShowKycModal(true)
+            } else {
+                translatedMessage = errorMessage || t('wallet.loadNetworksError')
+                toast.error(translatedMessage)
+            }
         }
     })
 
     // Initialize from props
     useEffect(() => {
-        if (networkId && !selectedNetworkId) {
-            setSelectedNetworkId(networkId)
-        }
         if (coinId && !selectedCoinId) {
             setSelectedCoinId(coinId)
         }
-    }, [networkId, coinId, selectedNetworkId, selectedCoinId])
+    }, [coinId, selectedCoinId])
 
     // Auto-select first coin if not provided
     useEffect(() => {
@@ -116,19 +134,6 @@ export default function WithdrawContent({
             }
         }
     }, [coinsResponse, selectedCoinId])
-
-    // Network options
-    const networkOptions = useMemo(() => {
-        if (!networksResponse?.data || !Array.isArray(networksResponse.data)) {
-            return []
-        }
-        return networksResponse.data
-            .filter((network: Network) => network.net_status === 'active')
-            .map((network: Network) => ({
-                value: network.net_id.toString(),
-                label: `${network.net_name} (${network.net_symbol})`
-            }))
-    }, [networksResponse])
 
     // Coin options
     const coinOptions = useMemo(() => {
@@ -141,21 +146,29 @@ export default function WithdrawContent({
         }))
     }, [coinsResponse])
 
-    // Get selected network info
+    // Get selected network info from props or networksResponse
     const selectedNetworkInfo = useMemo(() => {
-        if (!selectedNetworkId || !networksResponse?.data) return null
-        return networksResponse.data.find((n: Network) => n.net_id.toString() === selectedNetworkId)
-    }, [selectedNetworkId, networksResponse])
+        // First try to get from props
+        if (networkSymbol && networkName) {
+            return {
+                net_id: Number(networkId),
+                net_name: networkName,
+                net_symbol: networkSymbol,
+                net_status: 'active'
+            } as Network
+        }
+        // Fallback to networksResponse if props not available
+        if (networkId && networksResponse?.data) {
+            return networksResponse.data.find((n: Network) => n.net_id.toString() === networkId)
+        }
+        return null
+    }, [networkId, networkName, networkSymbol, networksResponse])
 
     // Get selected coin info
     const selectedCoinInfo = useMemo(() => {
         if (!selectedCoinId || !coinsResponse?.data) return null
         return coinsResponse.data.find((c: Coin) => c.coin_id?.toString() === selectedCoinId)
     }, [selectedCoinId, coinsResponse])
-
-    const handleNetworkChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedNetworkId(e.target.value)
-    }
 
     const handleCoinChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedCoinId(e.target.value)
@@ -171,7 +184,7 @@ export default function WithdrawContent({
         e.preventDefault()
 
         // Validation
-        if (!selectedNetworkId) {
+        if (!networkId) {
             toast.error(t('wallet.pleaseSelectNetwork'))
             return
         }
@@ -204,7 +217,7 @@ export default function WithdrawContent({
 
         // Prepare withdraw data
         const withdrawData: WithdrawRequest = {
-            network: selectedNetworkInfo?.net_symbol || selectedNetworkId,
+            network: networkSymbol || selectedNetworkInfo?.net_symbol || networkId,
             coin: selectedCoinInfo?.coin_symbol || selectedCoinId,
             address: withdrawAddress.trim(),
             amount: amount
@@ -317,26 +330,7 @@ export default function WithdrawContent({
 
             {/* Lower Middle Section - Network and Address */}
             <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center gap-6 max-w-xl mx-auto mt-10">
-                <div className="grid grid-cols-2 gap-4 w-full">
-                    {/* Network Selection */}
-                    <div className="space-y-2">
-                        <Label htmlFor="network" className="text-sm font-medium text-theme-red-100 dark:text-[#FE645F]">
-                            {t('wallet.selectNetwork')}
-                        </Label>
-                        {isLoadingNetworks ? (
-                            <Skeleton className="h-12 w-full rounded-full" />
-                        ) : (
-                            <CustomSelect
-                                id="network"
-                                value={selectedNetworkId}
-                                onChange={handleNetworkChange}
-                                options={networkOptions}
-                                placeholder={t('wallet.selectNetworkPlaceholder')}
-                                disabled={isLoadingNetworks}
-                            />
-                        )}
-                    </div>
-
+                <div className="grid grid-cols-1 gap-4 w-full">
                     {/* Wallet Address Input */}
                     <div className="space-y-2 w-full">
                         <Label htmlFor="address" className="text-sm font-medium text-theme-red-100 dark:text-[#FE645F]">
@@ -365,7 +359,7 @@ export default function WithdrawContent({
                     type="submit"
                     disabled={
                         withdrawMutation.isPending ||
-                        !selectedNetworkId ||
+                        !networkId ||
                         !selectedCoinId ||
                         !withdrawAddress ||
                         !withdrawAmount ||
@@ -398,6 +392,40 @@ export default function WithdrawContent({
                     </p>
                 </div>
             )}
+
+            {/* KYC Verification Modal */}
+            <Modal
+                isOpen={showKycModal}
+                onClose={() => setShowKycModal(false)}
+                title={t('wallet.kycModal.title')}
+                maxWidth="max-w-md"
+                showCloseButton={false}
+            >
+                <div className="flex flex-col items-center gap-4 py-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                        {t('wallet.kycModal.message')}
+                    </p>
+                    <div className="flex gap-3 w-full mt-2">
+                        <Button
+                            type="button"
+                            onClick={() => setShowKycModal(false)}
+                            className="flex-1 bg-gray-200 border-none cursor-pointer outline-none dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600"
+                        >
+                            {t('common.cancel')}
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={() => {
+                                setShowKycModal(false)
+                                router.push('/my-profile/kyc')
+                            }}
+                            className="flex-1 bg-gradient-to-r cursor-pointer border-none outline-none from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full hover:opacity-90"
+                        >
+                            {t('wallet.kycModal.goToKyc')}
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
 
             {/* Transaction History Section */}
             <div className="w-full mt-8">

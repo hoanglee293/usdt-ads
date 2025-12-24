@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useMemo, useEffect, useRef } from 'react'
 import { Loader2, Calendar, DollarSign, Target, Clock, CheckCircle2, XCircle } from 'lucide-react'
-import { toast } from 'sonner'
+import toast from 'react-hot-toast'
 import { Button } from '@/ui/button'
 import { Input } from '@/ui/input'
 import CustomSelect from '@/components/CustomSelect'
