@@ -1,6 +1,6 @@
 'use client'
 import React, { useMemo, useRef } from 'react'
-import { Copy, Wallet } from 'lucide-react'
+import { Copy, Wallet, Plus, Loader2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useQuery } from '@tanstack/react-query'
 import {
@@ -13,19 +13,24 @@ import {
 import { Skeleton } from '@/ui/skeleton'
 import { useIsMobile } from '@/ui/use-mobile'
 import { useLang } from '@/lang/useLang'
+import { Button } from '@/ui/button'
 
 interface DepositContentProps {
     networkId: string
     networkName?: string
     networkSymbol?: string
     coinSymbol?: string
+    onCreateWallet?: (networkId: number) => void
+    isCreatingWallet?: boolean
 }
 
 export default function DepositContent({
     networkId,
     networkName,
     networkSymbol,
-    coinSymbol
+    coinSymbol,
+    onCreateWallet,
+    isCreatingWallet = false
 }: DepositContentProps) {
     const tableRef = useRef<HTMLDivElement>(null)
     const isMobile = useIsMobile()
@@ -39,7 +44,22 @@ export default function DepositContent({
             return await getWalletByNetwork(Number(networkId))
         },
         enabled: !!networkId && networkId !== '',
+        retry: false, // Don't retry on 404
     })
+
+    // Check if error is 404 - Wallet not found
+    const isWalletNotFound = useMemo(() => {
+        if (!error) return false
+        const axiosError = error as any
+        const statusCode = axiosError?.response?.status || axiosError?.response?.data?.statusCode
+        const message = (axiosError?.response?.data?.message || '').toLowerCase()
+        return statusCode === 404 && (message.includes('wallet not found') || message.includes('not found'))
+    }, [error])
+
+    const handleCreateWallet = () => {
+        if (!networkId || !onCreateWallet) return
+        onCreateWallet(Number(networkId))
+    }
 
     const handleCopy = async (text: string, type: string) => {
         try {
@@ -110,6 +130,30 @@ export default function DepositContent({
                         <Skeleton className="w-64 h-64 rounded-lg" />
                         <Skeleton className="h-12 w-full max-w-sm" />
                     </>
+                ) : isWalletNotFound ? (
+                    // Show create wallet form when wallet not found (404)
+                    <div className='w-full max-w-xl mx-auto p-3 sm:p-4 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg border border-yellow-200 dark:border-yellow-700'>
+                        <p className='text-xs sm:text-sm text-yellow-800 dark:text-yellow-300 mb-2 sm:mb-3 text-center'>
+                            {t('wallet.noWalletForNetwork', { name: networkName, symbol: networkSymbol })}
+                        </p>
+                        <Button
+                            onClick={handleCreateWallet}
+                            disabled={isCreatingWallet || !networkId}
+                            className='w-full bg-gradient-to-r cursor-pointer from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none h-10 sm:h-12 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
+                        >
+                            {isCreatingWallet ? (
+                                <>
+                                    <Loader2 className='w-4 h-4 mr-2 animate-spin' />
+                                    {t('wallet.creatingWallet')}
+                                </>
+                            ) : (
+                                <>
+                                    <Plus className='w-4 h-4 mr-2' />
+                                    {t('wallet.createWalletFor', { symbol: networkSymbol })}
+                                </>
+                            )}
+                        </Button>
+                    </div>
                 ) : error ? (
                     <div className="text-center py-8">
                         <p className="text-red-500 mb-2">{t('wallet.loadNetworksError')}</p>
@@ -162,8 +206,9 @@ export default function DepositContent({
                 )}
             </div>
 
-            {/* Transaction History Section */}
-            <div className="w-full mt-8">
+            {/* Transaction History Section - Only show when wallet exists */}
+            {walletResponse?.data && (
+                <div className="w-full mt-8">
                 <h3 className="text-lg font-semibold text-theme-red-100 dark:text-[#FE645F] mb-4">
                     {t('wallet.transactionHistory')} - {t('wallet.transactionTypes.deposit')}
                 </h3>
@@ -345,7 +390,8 @@ export default function DepositContent({
                         </div>
                     </div>
                 )}
-            </div>
+                </div>
+            )}
         </div>
     )
 }

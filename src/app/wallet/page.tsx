@@ -275,6 +275,7 @@ export default function WalletPage() {
             // Refetch related queries
             queryClient.invalidateQueries({ queryKey: ['my-wallets'] })
             queryClient.invalidateQueries({ queryKey: ['wallet-check', selectedNetworkSymbol] })
+            queryClient.invalidateQueries({ queryKey: ['wallet-by-network', selectedNetwork] })
             refetchMyWallets()
             refetchWalletCheck()
         },
@@ -692,6 +693,8 @@ export default function WalletPage() {
                                 networkName={selectedNetworkInfo?.net_name}
                                 networkSymbol={selectedNetworkInfo?.net_symbol}
                                 coinSymbol={selectedCoinInfo?.coin_symbol}
+                                onCreateWallet={confirmCreateWallet}
+                                isCreatingWallet={createWalletMutation.isPending}
                             />
                         )}
 
