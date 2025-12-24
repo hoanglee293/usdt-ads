@@ -58,7 +58,7 @@ export default function Modal({
                 "transition-opacity duration-300",
                 isAnimating ? "opacity-100" : "opacity-0"
             )}
-            onClick={onClose}
+            // onClick={onClose}
         >
             {/* Overlay */}
             <div
@@ -67,7 +67,7 @@ export default function Modal({
                     "transition-opacity duration-300",
                     isAnimating ? "opacity-100" : "opacity-0"
                 )}
-                onClick={onClose}
+                // onClick={onClose}
             />
 
             {/* Modal Content */}
@@ -85,10 +85,10 @@ export default function Modal({
                 {showCloseButton && (
                     <button
                         onClick={onClose}
-                        className="absolute right-4 top-4 cursor-pointer rounded-sm opacity-70 hover:opacity-100 transition-opacity border-none bg-transparent focus:ring-gray-400 z-10 p-1 hover:bg-gray-100 "
+                        className="absolute right-4 top-4 cursor-pointer rounded-sm opacity-70 hover:opacity-100 transition-opacity border-none bg-transparent focus:ring-gray-400 z-10 p-1 group"
                         aria-label="Close"
                     >
-                        <X className="h-5 w-5 text-gray-600" />
+                        <X className="h-5 w-5 text-white group-hover:text-gray-300" />
                     </button>
                 )}
 

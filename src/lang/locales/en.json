@@ -111,6 +111,28 @@
       "fromAddress": "from address",
       "toAddress": "to address",
       "transactionId": "transaction ID"
+    },
+    "transferReward": {
+      "title": "Transfer Reward Wallet",
+      "transferToMain": "Transfer Reward to Main Wallet",
+      "transferButton": "Transfer",
+      "transferSuccess": "Transfer successful!",
+      "transferError": "Transfer failed",
+      "transferNoBalance": "No reward balance to transfer",
+      "transferConfirm": "Are you sure you want to transfer all reward balance to main wallet?",
+      "transferring": "Transferring...",
+      "history": "Transfer History",
+      "historyEmpty": "No transfer history",
+      "currentRewardBalance": "Current Reward Balance",
+      "newRewardBalance": "New Reward Balance",
+      "tabTransfer": "Transfer",
+      "tabHistory": "History",
+      "amount": "Amount",
+      "status": "Status",
+      "date": "Date",
+      "statusPending": "Pending",
+      "statusSuccess": "Success",
+      "statusError": "Error"
     }
   },
   "ref": {

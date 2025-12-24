@@ -3,7 +3,7 @@ import CustomSelect from '@/components/CustomSelect'
 import DepositContent from '@/components/DepositContent'
 import WithdrawContent from '@/components/WithdrawContent'
 import React, { useState, useRef, useMemo, useEffect } from 'react'
-import { Copy, ExternalLink, Plus, Loader2, ChevronDown, ChevronUp, Wallet, ArrowLeft } from 'lucide-react'
+import { Copy, ExternalLink, Plus, Loader2, ChevronDown, ChevronUp, Wallet, ArrowLeft, ArrowRight } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { Button } from '@/ui/button'
 import { useRouter } from 'next/navigation'
@@ -16,6 +16,8 @@ import {
     handleCheckNetwork,
     createWallet,
     getTransactionHistory,
+    getTransferRewardHistory,
+    transferRewardToMain,
     type Network,
     type Coin,
     type ListNetworksResponse,
@@ -24,17 +26,12 @@ import {
     type MyWalletResponse,
     type CheckWalletNetworkResponse,
     type TransactionHistoryResponse,
-    type TransactionHistoryItem
+    type TransactionHistoryItem,
+    type TransferRewardHistoryResponse,
+    type TransferRewardHistoryItem
 } from '@/services/WalletService'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTitle,
-    DialogDescription,
-    DialogFooter,
-} from '@/ui/dialog'
+import Modal from '@/components/Modal'
 import { Skeleton } from '@/ui/skeleton'
 import { useIsMobile } from '@/ui/use-mobile'
 
@@ -209,6 +206,8 @@ export default function WalletPage() {
     const [showCreateWalletDialog, setShowCreateWalletDialog] = useState(false)
     const [transactionTypeFilter, setTransactionTypeFilter] = useState<'all' | 'deposit' | 'withdraw'>('all')
     const [activeView, setActiveView] = useState<'main' | 'deposit' | 'withdraw'>('deposit')
+    const [showTransferRewardModal, setShowTransferRewardModal] = useState(false)
+    const [showTransferConfirmModal, setShowTransferConfirmModal] = useState(false)
     const tableRef = useRef<HTMLDivElement>(null)
     const queryClient = useQueryClient()
     const router = useRouter()
@@ -286,6 +285,34 @@ export default function WalletPage() {
     })
 
     // 7. Transaction History (moved after selectedCoinInfo definition)
+
+    // 8. Transfer Reward History
+    const { data: transferRewardHistoryResponse, isLoading: isLoadingTransferRewardHistory, refetch: refetchTransferRewardHistory } = useQuery<TransferRewardHistoryResponse>({
+        queryKey: ['transfer-reward-history'],
+        queryFn: async () => {
+            return await getTransferRewardHistory()
+        },
+        enabled: showTransferRewardModal
+    })
+
+    // 9. Transfer Reward Mutation
+    const transferRewardMutation = useMutation({
+        mutationFn: () => transferRewardToMain(),
+        onSuccess: (data) => {
+            toast.success(t('wallet.transferReward.transferSuccess'))
+            // Close confirmation modal
+            setShowTransferConfirmModal(false)
+            // Refresh balance
+            queryClient.invalidateQueries({ queryKey: ['balance', selectedCoin] })
+            refetchBalance()
+            // Refresh transfer history
+            refetchTransferRewardHistory()
+        },
+        onError: (error: any) => {
+            const message = error?.response?.data?.message || t('wallet.transferReward.transferError')
+            toast.error(message)
+        }
+    })
 
     // ==================== Error Handling ====================
     useEffect(() => {
@@ -557,6 +584,14 @@ export default function WalletPage() {
                                     ({t('wallet.gift')}: {formatBalance(balanceResponse.data.balance_gift)} | {t('wallet.reward')}: {formatBalance(balanceResponse.data.balance_reward)})
                                 </span>
                             )}
+                            {balanceResponse?.data && (
+                                <div
+                                    className='text-xs sm:text-sm text-yellow-500 cursor-pointer font-semibold bg-yellow-500/10 rounded-full px-3 sm:px-4 py-2 mt-4 hover:bg-yellow-500/20 transition-colors'
+                                    onClick={() => setShowTransferRewardModal(true)}
+                                >
+                                    {t('wallet.transferReward.transferToMain')}
+                                </div>
+                            )}
                         </div>
                     ) : (
                         // Desktop: Original layout
@@ -590,6 +625,12 @@ export default function WalletPage() {
                                                 ({t('wallet.gift')}: {formatBalance(balanceResponse.data.balance_gift)} USDT | {t('wallet.reward')}: {formatBalance(balanceResponse.data.balance_reward)} USDT)
                                             </span>
                                         )}
+                                        <div
+                                            className='text-sm text-yellow-500 cursor-pointer font-semibold bg-yellow-500/10 rounded-full px-4 py-2 mt-4 hover:bg-yellow-500/20 transition-colors'
+                                            onClick={() => setShowTransferRewardModal(true)}
+                                        >
+                                            {t('wallet.transferReward.transferToMain')}
+                                        </div>
                                     </div>
                                 ) : (
                                     <span className='text-2xl font-bold text-center text-pink-500'>
@@ -613,7 +654,7 @@ export default function WalletPage() {
                         options={networkOptions}
                         placeholder={t('wallet.selectNetworkPlaceholder')}
                         disabled={isLoadingNetworks}
-                        className="w-full max-w-[10rem] sm:max-w-56 text-sm"
+                        className=" max-w-[10rem] sm:max-w-48 text-sm"
                     />
                 </div>
 
@@ -841,6 +882,226 @@ export default function WalletPage() {
                     </>
                 )}
 
+                {/* Transfer Reward Modal */}
+                <Modal
+                    isOpen={showTransferRewardModal}
+                    onClose={() => setShowTransferRewardModal(false)}
+                    title={t('wallet.transferReward.title')}
+                    maxWidth="max-w-3xl"
+                    showCloseButton={true}
+                    className="h-[80vh]"
+                >
+                    <div className="space-y-6 pt-4">
+                        {/* Transfer Section */}
+                        <div className="space-y-4">
+                            {isLoadingBalance ? (
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-4">
+                                        <div className="flex-1 bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                                            <Skeleton className="h-4 w-32 mb-2" />
+                                            <Skeleton className="h-8 w-40" />
+                                        </div>
+                                        <div className="flex-shrink-0">
+                                            <Skeleton className="w-12 h-12 rounded-full" />
+                                        </div>
+                                        <div className="flex-1 bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                                            <Skeleton className="h-4 w-32 mb-2" />
+                                            <Skeleton className="h-8 w-40" />
+                                        </div>
+                                    </div>
+                                    <Skeleton className="h-12 w-full rounded-full" />
+                                </div>
+                            ) : balanceResponse?.data ? (
+                                <>
+                                    <div className="flex items-center md:gap-10 gap-4 flex-wrap">
+                                        {/* Reward Wallet Box */}
+                                        <div className="flex-1 bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                                            <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                                {t('wallet.transferReward.currentRewardBalance')}
+                                            </div>
+                                            <div className="text-xl font-bold text-yellow-600 dark:text-yellow-400">
+                                                {formatBalance(balanceResponse.data.balance_reward)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                            </div>
+                                        </div>
+
+                                        {/* Transfer Icon */}
+                                        <div className="flex-shrink-0">
+                                            <div className="bg-theme-orange-100 rounded-full h-10 w-10 flex items-center justify-center">
+                                                <ArrowRight className="w-6 h-5 text-white" />
+                                            </div>
+                                        </div>
+
+                                        {/* Main Wallet Box */}
+                                        <div className="flex-1 bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                                            <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                                                {t('wallet.balanceLabel')}
+                                            </div>
+                                            <div className="text-xl font-bold text-pink-500 dark:text-[#FE645F]">
+                                                {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4 w-full flex flex-col items-center justify-center" >
+                                        <Button
+                                            onClick={() => setShowTransferConfirmModal(true)}
+                                            disabled={transferRewardMutation.isPending || !balanceResponse?.data || balanceResponse.data.balance_reward <= 0}
+                                            className="w-fit bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none h-10 cursor-pointer text-base font-semibold hover:opacity-90 disabled:opacity-50"
+                                        >
+                                            {t('wallet.transferReward.transferButton')}
+                                        </Button>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="text-center py-8">
+                                    <p className="text-gray-500 dark:text-gray-400">
+                                        {t('wallet.loadBalanceError')}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* History Section */}
+                        <div className="space-y-4">
+                            <div className="text-lg font-semibold text-theme-red-100 dark:text-[#FE645F] border-b border-gray-200 dark:border-gray-700 pb-2">
+                                {t('wallet.transferReward.history')}
+                            </div>
+                            {isLoadingTransferRewardHistory ? (
+                                <div className="space-y-3">
+                                    {[1, 2, 3].map((i) => (
+                                        <Skeleton key={i} className="h-20 w-full rounded-lg" />
+                                    ))}
+                                </div>
+                            ) : transferRewardHistoryResponse?.data && transferRewardHistoryResponse.data.length > 0 ? (
+                                <div className="space-y-3 max-h-[300px] sm:max-h-[400px] overflow-y-auto overflow-x-hidden scrollbar-thin pr-2 -mr-2 scroll-smooth">
+                                    {transferRewardHistoryResponse.data.map((item: TransferRewardHistoryItem) => {
+                                        const date = new Date(item.created_at)
+                                        const locale = lang === 'kr' ? 'ko-KR' : lang === 'en' ? 'en-US' : 'vi-VN'
+                                        const formattedDate = date.toLocaleDateString(locale, {
+                                            day: '2-digit',
+                                            month: '2-digit',
+                                            year: 'numeric',
+                                            hour: '2-digit',
+                                            minute: '2-digit'
+                                        })
+
+                                        const getStatusColor = (status: string) => {
+                                            switch (status) {
+                                                case 'success':
+                                                    return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                                                case 'pending':
+                                                    return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400'
+                                                case 'error':
+                                                    return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
+                                                default:
+                                                    return 'bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-400'
+                                            }
+                                        }
+
+                                        const getStatusText = (status: string) => {
+                                            switch (status) {
+                                                case 'success':
+                                                    return t('wallet.transferReward.statusSuccess')
+                                                case 'pending':
+                                                    return t('wallet.transferReward.statusPending')
+                                                case 'error':
+                                                    return t('wallet.transferReward.statusError')
+                                                default:
+                                                    return status
+                                            }
+                                        }
+
+                                        return (
+                                            <div
+                                                key={item.id}
+                                                className="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-md px-6 py-3"
+                                            >
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <span className="text-sm text-gray-500 dark:text-gray-400">#{item.id}</span>
+                                                    <div className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(item.status)}`}>
+                                                        {getStatusText(item.status)}
+                                                    </div>
+                                                </div>
+                                                <div className="flex items-center justify-between">
+                                                    <div>
+                                                        <div className="text-base font-semibold text-red-500 dark:text-[#FE645F]">
+                                                            {formatBalance(item.amount)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                                        </div>
+                                                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                            {formattedDate}
+                                                        </div>
+                                                    </div>
+                                                    <div className="text-xs text-gray-600 dark:text-gray-400">
+                                                        {item.from} → {item.to}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )
+                                    })}
+                                </div>
+                            ) : (
+                                <div className="text-center py-12">
+                                    <Wallet className="w-12 h-12 mx-auto text-gray-400 dark:text-gray-500 mb-2" />
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                                        {t('wallet.transferReward.historyEmpty')}
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </Modal>
+
+                {/* Transfer Reward Confirmation Modal */}
+                <Modal
+                    isOpen={showTransferConfirmModal}
+                    onClose={() => setShowTransferConfirmModal(false)}
+                    title={t('wallet.transferReward.title')}
+                    maxWidth="max-w-md"
+                    showCloseButton={true}
+                >
+                    <div className="space-y-6 pt-4">
+                        <div className="space-y-4">
+                            <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                                {t('wallet.transferReward.transferConfirm')}
+                            </p>
+                            
+                            {balanceResponse?.data && (
+                                <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                                    <div className="text-sm text-gray-600 dark:text-gray-400 mb-2 text-center">
+                                        {t('wallet.transferReward.currentRewardBalance')}
+                                    </div>
+                                    <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 text-center">
+                                        {formatBalance(balanceResponse.data.balance_reward)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="flex gap-3 justify-center">
+                                <Button
+                                    onClick={() => setShowTransferConfirmModal(false)}
+                                    disabled={transferRewardMutation.isPending}
+                                    className="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full border-none h-10 cursor-pointer text-base font-semibold hover:opacity-90 disabled:opacity-50"
+                                >
+                                    {t('common.cancel')}
+                                </Button>
+                                <Button
+                                    onClick={() => transferRewardMutation.mutate()}
+                                    disabled={transferRewardMutation.isPending}
+                                    className="flex-1 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none h-10 cursor-pointer text-base font-semibold hover:opacity-90 disabled:opacity-50"
+                                >
+                                    {transferRewardMutation.isPending ? (
+                                        <>
+                                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                            {t('wallet.transferReward.transferring')}
+                                        </>
+                                    ) : (
+                                        t('common.confirm')
+                                    )}
+                                </Button>
+                            </div>
+                        </div>
+                    </div>
+                </Modal>
 
             </div>
         </div>

@@ -111,6 +111,28 @@
       "fromAddress": "送信元アドレス",
       "toAddress": "送信先アドレス",
       "transactionId": "取引ID"
+    },
+    "transferReward": {
+      "title": "リワードウォレット転送",
+      "transferToMain": "リワードをメインウォレットに転送",
+      "transferButton": "転送",
+      "transferSuccess": "転送成功！",
+      "transferError": "転送失敗",
+      "transferNoBalance": "転送するリワード残高がありません",
+      "transferConfirm": "すべてのリワード残高をメインウォレットに転送しますか？",
+      "transferring": "転送中...",
+      "history": "転送履歴",
+      "historyEmpty": "転送履歴がありません",
+      "currentRewardBalance": "現在のリワード残高",
+      "newRewardBalance": "転送後のリワード残高",
+      "tabTransfer": "転送",
+      "tabHistory": "履歴",
+      "amount": "金額",
+      "status": "ステータス",
+      "date": "日付",
+      "statusPending": "処理中",
+      "statusSuccess": "成功",
+      "statusError": "エラー"
     }
   },
   "ref": {

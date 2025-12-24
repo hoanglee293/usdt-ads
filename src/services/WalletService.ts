@@ -138,6 +138,38 @@ export interface TransactionHistoryParams {
   type?: "withdraw" | "deposit" | null;
 }
 
+// ==================== Transfer Reward Interfaces ====================
+
+export interface TransferRewardHistoryItem {
+  id: number;
+  user_id: number;
+  from: "reward";
+  to: "main";
+  amount: number;
+  status: "pending" | "success" | "error";
+  created_at: string;
+  updated_at: string;
+}
+
+export interface TransferRewardHistoryResponse {
+  statusCode: 200;
+  message: string;
+  data: TransferRewardHistoryItem[];
+}
+
+export interface TransferRewardHistoryParams {
+  status?: "pending" | "success" | "error";
+}
+
+export interface TransferRewardResponse {
+  statusCode: 200;
+  message: string;
+  data: {
+    new_balance_reward: number;
+    updated_coins: number[];
+  };
+}
+
 // ==================== API Functions ====================
 
 /**
@@ -313,6 +345,46 @@ export const getTransactionHistory = async (
     return response.data;
   } catch (error) {
     console.error('Error fetching transaction history:', error);
+    throw error;
+  }
+}
+
+/**
+ * Lấy lịch sử chuyển tiền từ ví Reward sang ví Main
+ * @param params - Query parameters (optional)
+ * @returns Promise<TransferRewardHistoryResponse>
+ */
+export const getTransferRewardHistory = async (
+  params?: TransferRewardHistoryParams
+): Promise<TransferRewardHistoryResponse> => {
+  try {
+    const queryParams = new URLSearchParams();
+    
+    if (params?.status) {
+      queryParams.append('status', params.status);
+    }
+
+    const queryString = queryParams.toString();
+    const url = `/wallets/transfer-rewards${queryString ? `?${queryString}` : ''}`;
+    
+    const response = await axiosClient.get(url);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching transfer reward history:', error);
+    throw error;
+  }
+}
+
+/**
+ * Chuyển tiền từ ví Reward sang ví Main
+ * @returns Promise<TransferRewardResponse>
+ */
+export const transferRewardToMain = async (): Promise<TransferRewardResponse> => {
+  try {
+    const response = await axiosClient.post('/wallets/transfer-reward', {});
+    return response.data;
+  } catch (error) {
+    console.error('Error transferring reward to main:', error);
     throw error;
   }
 }

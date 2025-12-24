@@ -106,6 +106,28 @@
       "to": "接收",
       "txId": "交易ID"
     },
+    "transferReward": {
+      "title": "转移奖励钱包",
+      "transferToMain": "将奖励转移到主钱包",
+      "transferButton": "转移",
+      "transferSuccess": "转移成功！",
+      "transferError": "转移失败",
+      "transferNoBalance": "没有可转移的奖励余额",
+      "transferConfirm": "您确定要将所有奖励余额转移到主钱包吗？",
+      "transferring": "转移中...",
+      "history": "转移历史",
+      "historyEmpty": "没有转移历史",
+      "currentRewardBalance": "当前奖励余额",
+      "newRewardBalance": "转移后奖励余额",
+      "tabTransfer": "转移",
+      "tabHistory": "历史",
+      "amount": "金额",
+      "status": "状态",
+      "date": "日期",
+      "statusPending": "处理中",
+      "statusSuccess": "成功",
+      "statusError": "错误"
+    },
     "copyLabels": {
       "walletAddress": "钱包地址",
       "fromAddress": "发送地址",

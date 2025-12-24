@@ -111,6 +111,28 @@
       "fromAddress": "địa chỉ gửi",
       "toAddress": "địa chỉ nhận",
       "transactionId": "mã giao dịch"
+    },
+    "transferReward": {
+      "title": "Chuyển đổi",
+      "transferToMain": "Chuyển đổi tiền ví Reward đến ví Main",
+      "transferButton": "Chuyển đổi",
+      "transferSuccess": "Chuyển đổi thành công!",
+      "transferError": "Chuyển đổi thất bại",
+      "transferNoBalance": "Không có số dư Reward để chuyển đổi",
+      "transferConfirm": "Bạn có chắc chắn muốn chuyển toàn bộ số dư Reward sang ví Main?",
+      "transferring": "Đang chuyển đổi...",
+      "history": "Lịch sử chuyển đổi",
+      "historyEmpty": "Chưa có lịch sử chuyển đổi",
+      "currentRewardBalance": "Số dư Reward hiện tại",
+      "newRewardBalance": "Số dư Reward sau chuyển đổi",
+      "tabTransfer": "Chuyển đổi",
+      "tabHistory": "Lịch sử",
+      "amount": "Số tiền",
+      "status": "Trạng thái",
+      "date": "Ngày",
+      "statusPending": "Đang xử lý",
+      "statusSuccess": "Thành công",
+      "statusError": "Lỗi"
     }
   },
   "ref": {

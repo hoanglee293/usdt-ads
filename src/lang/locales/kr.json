@@ -111,6 +111,28 @@
       "fromAddress": "보낸 주소",
       "toAddress": "받은 주소",
       "transactionId": "거래 ID"
+    },
+    "transferReward": {
+      "title": "리워드 지갑 전환",
+      "transferToMain": "리워드를 메인 지갑으로 전환",
+      "transferButton": "전환",
+      "transferSuccess": "전환 성공!",
+      "transferError": "전환 실패",
+      "transferNoBalance": "전환할 리워드 잔액이 없습니다",
+      "transferConfirm": "모든 리워드 잔액을 메인 지갑으로 전환하시겠습니까?",
+      "transferring": "전환 중...",
+      "history": "전환 내역",
+      "historyEmpty": "전환 내역이 없습니다",
+      "currentRewardBalance": "현재 리워드 잔액",
+      "newRewardBalance": "전환 후 리워드 잔액",
+      "tabTransfer": "전환",
+      "tabHistory": "내역",
+      "amount": "금액",
+      "status": "상태",
+      "date": "날짜",
+      "statusPending": "대기 중",
+      "statusSuccess": "성공",
+      "statusError": "오류"
     }
   },
   "ref": {
