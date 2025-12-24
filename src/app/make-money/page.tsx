@@ -6,7 +6,6 @@ import { Button } from '@/ui/button'
 import { Input } from '@/ui/input'
 import CustomSelect from '@/components/CustomSelect'
 import { Skeleton } from '@/ui/skeleton'
-import { Progress } from '@/ui/progress'
 import Modal from '@/components/Modal'
 import { useIsMobile } from '@/ui/use-mobile'
 import { useLang } from '@/lang/useLang'
@@ -300,6 +299,7 @@ export default function MakeMoneyPage() {
                 ? `${apiMessage} ${t('makeMoney.reward')}: ${rewardAmount} USDT`
                 : `${t('makeMoney.claim')} ${t('common.success')}! ${t('makeMoney.reward')}: ${rewardAmount} USDT`
             toast.success(successMessage)
+            
             // Invalidate tất cả các queries liên quan
             queryClient.invalidateQueries({ queryKey: ['current-staking'] })
             queryClient.invalidateQueries({ queryKey: ['current-staking-with-missions'] })
@@ -314,11 +314,36 @@ export default function MakeMoneyPage() {
                 refetchHistories(),
             ])
 
-            // Refetch staking-with-missions và mission-now nếu staking vẫn đang running (sử dụng dữ liệu từ response)
+            // Kiểm tra trạng thái staking sau khi claim
             const updatedStaking = data.data.staking_lock
             if (updatedStaking && updatedStaking.status === 'running') {
+                // Nếu staking vẫn đang running, refetch để cập nhật dữ liệu mới
                 refetchStakingWithMissions()
                 refetchMissionNow()
+            } else {
+                // Nếu staking đã kết thúc hoặc không còn active, clear dữ liệu để tránh hiển thị dữ liệu cũ
+                queryClient.setQueryData(['current-staking-with-missions'], null)
+                queryClient.setQueryData(['mission-now'], null)
+                
+                // Thử refetch để kiểm tra xem còn staking active không
+                // Nếu API trả về 404, query sẽ tự động set data thành undefined
+                try {
+                    await refetchStakingWithMissions()
+                } catch (error: any) {
+                    // 404 là expected khi không còn staking active
+                    if (error?.response?.status === 404) {
+                        queryClient.setQueryData(['current-staking-with-missions'], null)
+                    }
+                }
+                
+                try {
+                    await refetchMissionNow()
+                } catch (error: any) {
+                    // 400 là expected khi không còn staking active
+                    if (error?.response?.status === 400) {
+                        queryClient.setQueryData(['mission-now'], null)
+                    }
+                }
             }
         },
         onError: (error: any) => {
@@ -408,14 +433,17 @@ export default function MakeMoneyPage() {
     useEffect(() => {
         if (isCurrentStakingError && currentStakingError) {
             const error: any = currentStakingError
-            // 404 is expected when no active staking exists, don't show error
+            // 404 is expected when no active staking exists, reset related data
             if (error?.response?.status === 404) {
+                // Reset missions data vì không còn staking active
+                queryClient.setQueryData(['current-staking-with-missions'], null)
+                queryClient.setQueryData(['mission-now'], null)
                 return
             }
             const message = error?.response?.data?.message || t('makeMoney.errors.loadStakingError')
             toast.error(message)
         }
-    }, [isCurrentStakingError, currentStakingError, t])
+    }, [isCurrentStakingError, currentStakingError, queryClient])
 
     useEffect(() => {
         if (isHistoriesError && historiesError) {
@@ -428,26 +456,28 @@ export default function MakeMoneyPage() {
     useEffect(() => {
         if (isStakingWithMissionsError && stakingWithMissionsError) {
             const error: any = stakingWithMissionsError
-            // 404 is expected when no active staking exists, don't show error
+            // 404 is expected when no active staking exists, reset data to null
             if (error?.response?.status === 404) {
+                queryClient.setQueryData(['current-staking-with-missions'], null)
                 return
             }
             const message = error?.response?.data?.message || t('makeMoney.errors.loadMissionError')
             toast.error(message)
         }
-    }, [isStakingWithMissionsError, stakingWithMissionsError, t])
+    }, [isStakingWithMissionsError, stakingWithMissionsError, t, queryClient])
 
     useEffect(() => {
         if (isMissionError && missionError) {
             const error: any = missionError
-            // 400 is expected when no active staking exists, don't show error
+            // 400 is expected when no active staking exists, reset data to null
             if (error?.response?.status === 400) {
+                queryClient.setQueryData(['mission-now'], null)
                 return
             }
             const message = error?.response?.data?.message || t('makeMoney.errors.loadMissionError')
             toast.error(message)
         }
-    }, [isMissionError, missionError, t])
+    }, [isMissionError, missionError, t, queryClient])
 
     // ==================== Computed Values ====================
 
@@ -881,7 +911,7 @@ export default function MakeMoneyPage() {
                                         <div className='flex items-center justify-between mb-1 sm:mb-2'>
                                             <p className='text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium'>{t('makeMoney.videoViews')}</p>
                                             <p className='text-xs sm:text-sm font-semibold text-blue-900 dark:text-blue-300'>
-                                                {currentStaking?.turn_setting || 0}
+                                                {currentStaking?.turn_setting * (currentStaking?.devices_setting || 0) || 0}
                                             </p>
                                         </div>
                                         <p className='text-[10px] sm:text-xs text-blue-500 dark:text-blue-400'>
