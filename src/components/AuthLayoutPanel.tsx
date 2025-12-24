@@ -36,7 +36,7 @@ const AuthLayoutPanel: React.FC<AuthLayoutPanelProps> = ({
 
     // Get title styling - use login style for all variants
     const getTitleClassName = () => {
-        return 'tracking-[-0.02em] leading-[150%] inline-block font-orbitron dark:text-white text-black-100 font-bold text-3xl flex-shrink-0'
+        return 'tracking-[-0.02em] leading-[150%] inline-block   dark:text-white text-black-100 font-bold text-3xl flex-shrink-0'
     }
 
     // Get content container class - use login style for all variants

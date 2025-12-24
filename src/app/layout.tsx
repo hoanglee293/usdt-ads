@@ -10,7 +10,7 @@ const inter = Inter({
 })
 const orbitron = Orbitron({
   subsets: ["latin"],
-  variable: "--font-orbitron",
+  variable: "-- ",
 })
 export const metadata: Metadata = {
   title: process.env.NEXT_PUBLIC_APP_NAME,

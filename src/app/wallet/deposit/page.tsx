@@ -143,7 +143,7 @@ function DepositPageContent() {
                                 <Skeleton className="h-8 w-48" />
                             ) : balanceResponse?.data ? (
                                 <div className='flex flex-col items-center'>
-                                    <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                    <span className='text-2xl font-bold text-center text-pink-500  '>
                                         Số dư: {formatBalance(balanceResponse.data.balance)} {coinSymbol || 'USDT'}
                                     </span>
                                     {(balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
@@ -153,7 +153,7 @@ function DepositPageContent() {
                                     )}
                                 </div>
                             ) : (
-                                <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                <span className='text-2xl font-bold text-center text-pink-500  '>
                                     Số dư: 0.00 {coinSymbol || 'USDT'}
                                 </span>
                             )}

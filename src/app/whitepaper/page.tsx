@@ -12,7 +12,7 @@ export default function WhitepaperPage() {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-bold text-gradient-secondary mb-4 font-orbitron">
+          <h1 className="text-4xl sm:text-5xl font-bold text-gradient-secondary mb-4  ">
             {t('whitepaper.title')}
           </h1>
           <div className="w-24 h-1 bg-gradient-to-r from-[#FE645F] to-[#C68AFE] mx-auto"></div>
@@ -22,7 +22,7 @@ export default function WhitepaperPage() {
         <div className="prose prose-lg dark:prose-invert max-w-none">
           {/* Section 1: Giới Thiệu */}
           <section className="mb-12">
-            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6 font-orbitron">
+            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6  ">
               {t('whitepaper.section1.title')}
             </h2>
             <p className="text-base sm:text-lg leading-relaxed text-theme-black-100 dark:text-gray-300 mb-6 indent-8">
@@ -69,7 +69,7 @@ export default function WhitepaperPage() {
 
           {/* Section 2: Mô Hình Hoạt Động */}
           <section className="mb-12">
-            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6 font-orbitron">
+            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6  ">
               {t('whitepaper.section2.title')}
             </h2>
 
@@ -190,7 +190,7 @@ export default function WhitepaperPage() {
 
           {/* Section 3: Hệ Thống Staking & Nhiệm Vụ */}
           <section className="mb-12">
-            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6 font-orbitron">
+            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6  ">
               {t('whitepaper.section3.title')}
             </h2>
 
@@ -263,7 +263,7 @@ export default function WhitepaperPage() {
 
           {/* Section 5: Chương Trình Giới Thiệu */}
           <section className="mb-12">
-            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6 font-orbitron">
+            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6  ">
               {t('whitepaper.section5.title')}
             </h2>
 
@@ -340,7 +340,7 @@ export default function WhitepaperPage() {
 
           {/* Section 6: Nguồn Doanh Thu & Tính Bền Vững */}
           <section className="mb-12">
-            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6 font-orbitron">
+            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6  ">
               {t('whitepaper.section6.title')}
             </h2>
 
@@ -369,7 +369,7 @@ export default function WhitepaperPage() {
 
           {/* Section 7: Bảo Mật & Minh Bạch */}
           <section className="mb-12">
-            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6 font-orbitron">
+            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6  ">
               {t('whitepaper.section7.title')}
             </h2>
 
@@ -394,7 +394,7 @@ export default function WhitepaperPage() {
 
           {/* Section 8: Lộ Trình Phát Triển */}
           <section className="mb-12">
-            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6 font-orbitron">
+            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6  ">
               {t('whitepaper.section8.title')}
             </h2>
 
@@ -426,7 +426,7 @@ export default function WhitepaperPage() {
 
           {/* Section 9: Thông Điệp Cốt Lõi */}
           <section className="mb-12">
-            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6 font-orbitron">
+            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6  ">
               {t('whitepaper.section9.title')}
             </h2>
             <div className="bg-gradient-to-r from-[#FE645F] to-[#C68AFE] p-6 rounded-lg mb-6 text-white">
@@ -447,7 +447,7 @@ export default function WhitepaperPage() {
 
           {/* Section 11: Kết Luận */}
           <section className="mb-12">
-            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6 font-orbitron">
+            <h2 className="text-3xl font-bold text-theme-black-100 dark:text-white mb-6  ">
               {t('whitepaper.section11.title')}
             </h2>
             <p className="text-base sm:text-lg leading-relaxed text-theme-black-100 dark:text-gray-300 mb-6 indent-8">

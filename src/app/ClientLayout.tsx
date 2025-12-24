@@ -185,7 +185,7 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
       {showEmailVerifyModal && pathname !== "/verify-mail" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
           <div className="w-full max-w-lg rounded-2xl bg-white px-8 py-6 shadow-2xl dark:bg-neutral-900 border border-theme-orange-100 dark:border-solid">
-            <div className="mb-4 text-2xl uppercase font-orbitron font-semibold text-yellow-500">
+            <div className="mb-4 text-2xl uppercase   font-semibold text-yellow-500">
               Cảnh báo
             </div>
             <p className="mb-6 text-base text-gray-700 dark:text-gray-300">{emailVerifyMessage}</p>

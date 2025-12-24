@@ -541,11 +541,11 @@ export default function WalletPage() {
                                 {isLoadingBalance ? (
                                     <Skeleton className="h-6 w-40" />
                                 ) : balanceResponse?.data ? (
-                                    <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                    <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500  '>
                                         {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                     </span>
                                 ) : (
-                                    <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                    <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500  '>
                                         0.00 {selectedCoinInfo?.coin_symbol || 'USDT'}
                                     </span>
                                 )}
@@ -581,7 +581,7 @@ export default function WalletPage() {
                                     <Skeleton className="h-8 w-48" />
                                 ) : balanceResponse?.data ? (
                                     <div className='flex flex-col items-center'>
-                                        <span className='text-2xl font-bold text-center text-pink-500 font-orbitron bg-theme-pink-100 py-3 px-4 rounded-full'>
+                                        <span className='text-2xl font-bold text-center text-pink-500 bg-theme-pink-100 py-3 px-4 rounded-full'>
                                             {t('wallet.balanceLabel')}: {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                         </span>
                                         {(balanceResponse.data.balance_gift !== 0 || balanceResponse.data.balance_reward !== 0) && (
@@ -591,7 +591,7 @@ export default function WalletPage() {
                                         )}
                                     </div>
                                 ) : (
-                                    <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                    <span className='text-2xl font-bold text-center text-pink-500'>
                                         {t('wallet.balanceLabel')}: 0.00 {selectedCoinInfo?.coin_symbol || 'USDT'}
                                     </span>
                                 )}

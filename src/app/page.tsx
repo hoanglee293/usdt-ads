@@ -168,7 +168,7 @@ export default function HomePage() {
             onClick={() => router.push('/make-money')}
             className={`animate-fade-in-up-more-delayed w-full sm:w-auto cursor-pointer ${ctaInView ? 'in-view' : ''}`}
           >
-            <button className="w-full cursor-pointer sm:w-auto px-8 sm:px-12 md:px-20 border-none outline-none py-2.5 sm:py-2 md:py-3 bg-gradient-secondary text-white font-bold text-xs sm:text-sm md:text-base lg:text-lg rounded-full hover:opacity-90 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 font-orbitron uppercase tracking-wide">
+            <button className="w-full cursor-pointer sm:w-auto px-8 sm:px-12 md:px-20 border-none outline-none py-2.5 sm:py-2 md:py-3 bg-gradient-secondary text-white font-bold text-xs sm:text-sm md:text-base lg:text-lg rounded-full hover:opacity-90 transition-all shadow-lg hover:shadow-xl transform hover:scale-105   uppercase tracking-wide">
               {t('home.joinNow')}
             </button>
           </div>
@@ -207,7 +207,7 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 sm:px-6 py-2 text-white shadow-lg w-full max-w-sm text-center">
-                  <span className="font-bold text-xs sm:text-sm font-orbitron underline underline-offset-4">{t('home.features.technology.title')}</span>
+                  <span className="font-bold text-xs sm:text-sm   underline underline-offset-4">{t('home.features.technology.title')}</span>
                   <span className="text-xs sm:text-sm font-inter leading-relaxed">
                     : {t('home.features.technology.description')}
                   </span>
@@ -228,7 +228,7 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 sm:px-6 py-2 text-white shadow-lg w-full max-w-sm text-center">
-                  <span className="font-bold text-xs sm:text-sm font-orbitron underline underline-offset-4">{t('home.features.device.title')}</span>
+                  <span className="font-bold text-xs sm:text-sm   underline underline-offset-4">{t('home.features.device.title')}</span>
                   <span className="text-xs sm:text-sm font-inter leading-relaxed">
                     : {t('home.features.device.description')}
                   </span>
@@ -251,7 +251,7 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 sm:px-6 py-2 text-white shadow-lg w-full max-w-sm text-center">
-                  <span className="font-bold text-xs sm:text-sm font-orbitron underline underline-offset-4">{t('home.features.blockchain.title')}</span>
+                  <span className="font-bold text-xs sm:text-sm   underline underline-offset-4">{t('home.features.blockchain.title')}</span>
                   <span className="text-xs sm:text-sm font-inter leading-relaxed">
                     : {t('home.features.blockchain.description')}
                   </span>
@@ -272,7 +272,7 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 sm:px-6 py-2 text-white shadow-lg w-full max-w-sm text-center">
-                  <span className="font-bold text-xs sm:text-sm font-orbitron underline underline-offset-4">{t('home.features.community.title')}</span>
+                  <span className="font-bold text-xs sm:text-sm   underline underline-offset-4">{t('home.features.community.title')}</span>
                   <span className="text-xs sm:text-sm font-inter leading-relaxed">
                     : {t('home.features.community.description')}
                   </span>
@@ -298,7 +298,7 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 md:px-6 py-2 text-white shadow-lg justify-start items-start max-w-lg text-center md:text-left">
-                  <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">{t('home.features.technology.title')}</span>
+                  <span className="font-bold text-sm md:text-base   underline underline-offset-4">{t('home.features.technology.title')}</span>
                   <span className="text-sm md:text-base font-inter leading-relaxed">
                     : {t('home.features.technology.description')}
                   </span>
@@ -319,7 +319,7 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 md:px-6 py-2 text-white shadow-lg max-w-lg text-center md:text-left">
-                  <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">{t('home.features.device.title')}</span>
+                  <span className="font-bold text-sm md:text-base   underline underline-offset-4">{t('home.features.device.title')}</span>
                   <span className="text-sm md:text-base font-inter leading-relaxed">
                     : {t('home.features.device.description')}
                   </span>
@@ -352,7 +352,7 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 md:px-6 py-2 text-white shadow-lg max-w-lg text-center md:text-left">
-                  <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">{t('home.features.blockchain.title')}</span>
+                  <span className="font-bold text-sm md:text-base   underline underline-offset-4">{t('home.features.blockchain.title')}</span>
                   <span className="text-sm md:text-base font-inter leading-relaxed">
                     : {t('home.features.blockchain.description')}
                   </span>
@@ -373,7 +373,7 @@ export default function HomePage() {
                   />
                 </div>
                 <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 md:px-6 py-2 text-white shadow-lg max-w-lg text-center md:text-left">
-                  <span className="font-bold text-sm md:text-base font-orbitron underline underline-offset-4">{t('home.features.community.title')}</span>
+                  <span className="font-bold text-sm md:text-base   underline underline-offset-4">{t('home.features.community.title')}</span>
                   <span className="text-sm md:text-base font-inter leading-relaxed">
                     : {t('home.features.community.description')}
                   </span>
@@ -390,7 +390,7 @@ export default function HomePage() {
         {/* Section Title */}
         <h2
           ref={sectionTitleRef}
-          className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gradient-secondary w-full text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16 font-orbitron animate-fade-in-up px-2 ${sectionTitleInView ? 'in-view' : ''}`}
+          className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gradient-secondary w-full text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16   animate-fade-in-up px-2 ${sectionTitleInView ? 'in-view' : ''}`}
         >
           {t('home.howItWorks.title')}
         </h2>

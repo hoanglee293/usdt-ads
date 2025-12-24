@@ -817,7 +817,7 @@ export default function MakeMoneyPage() {
                     <div className='flex flex-col items-center justify-center'>
                         <div className='flex items-end justify-center mb-2 sm:mb-4 gap-2 sm:gap-4'>
                             <div className='flex flex-col items-center mx-2 sm:mx-4'>
-                                <h1 className='text-xl sm:text-2xl md:text-3xl font-semibold font-orbitron text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]'>{currentStaking && currentStaking?.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}</h1>
+                                <h1 className='text-xl sm:text-2xl md:text-3xl font-semibold   text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]'>{currentStaking && currentStaking?.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}</h1>
                             </div>
                         </div>
                     </div>
@@ -1114,11 +1114,11 @@ export default function MakeMoneyPage() {
                                         {isLoadingBalance ? (
                                             <Skeleton className="h-6 w-40" />
                                         ) : balanceResponse?.data ? (
-                                            <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                            <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500  '>
                                                 {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                             </span>
                                         ) : (
-                                            <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                            <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500  '>
                                                 0.00 {selectedCoinInfo?.coin_symbol || 'USDT'}
                                             </span>
                                         )}
@@ -1154,7 +1154,7 @@ export default function MakeMoneyPage() {
                                             <Skeleton className="h-8 w-48" />
                                         ) : balanceResponse?.data ? (
                                             <div className='flex flex-col items-center bg-theme-pink-100 dark:bg-transparent py-3 px-4 rounded-full'>
-                                                <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                                <span className='text-2xl font-bold text-center text-pink-500  '>
                                                     {t('makeMoney.balance')}: {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                                 </span>
                                                 {(balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
@@ -1164,7 +1164,7 @@ export default function MakeMoneyPage() {
                                                 )}
                                             </div>
                                         ) : (
-                                            <span className='text-2xl font-bold text-center text-pink-500 font-orbitron'>
+                                            <span className='text-2xl font-bold text-center text-pink-500  '>
                                                 {t('makeMoney.balance')}: 0.00 {selectedCoinInfo?.coin_symbol || 'USDT'}
                                             </span>
                                         )}
