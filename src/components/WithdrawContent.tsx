@@ -378,21 +378,6 @@ export default function WithdrawContent({
                 </Button>
             </form>
 
-            {/* Success Message */}
-            {withdrawMutation.isSuccess && withdrawMutation.data?.data && (
-                <div className="mt-4 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-                    <p className="text-sm text-green-800 dark:text-green-300 font-medium mb-2">
-                        {t('wallet.withdrawSuccess')}
-                    </p>
-                    <p className="text-xs text-green-700 dark:text-green-400">
-                        Transaction Hash: {withdrawMutation.data.data.transaction_hash}
-                    </p>
-                    <p className="text-xs text-green-700 dark:text-green-400">
-                        History ID: {withdrawMutation.data.data.history_id}
-                    </p>
-                </div>
-            )}
-
             {/* KYC Verification Modal */}
             <Modal
                 isOpen={showKycModal}
