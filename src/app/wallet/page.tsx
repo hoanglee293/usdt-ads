@@ -917,7 +917,7 @@ export default function WalletPage() {
                                             <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                                                 {t('wallet.transferReward.currentRewardBalance')}
                                             </div>
-                                            <div className="text-xl font-bold text-yellow-600 dark:text-yellow-400">
+                                            <div className="text-sm font-bold text-yellow-600 dark:text-yellow-400">
                                                 {formatBalance(balanceResponse.data.balance_reward)}
                                             </div>
                                         </div>
@@ -934,7 +934,7 @@ export default function WalletPage() {
                                             <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                                                 {t('wallet.balanceLabel')}
                                             </div>
-                                            <div className="text-xl font-bold text-pink-500 dark:text-[#FE645F]">
+                                            <div className="text-sm font-bold text-pink-500 dark:text-[#FE645F]">
                                                 {formatBalance(balanceResponse.data.balance)}
                                             </div>
                                         </div>
