@@ -88,8 +88,8 @@
       "time": "THỜI GIAN",
       "type": "TYPE",
       "amount": "SỐ TIỀN",
-      "fromAddress": "FROM ADDRESS",
-      "toAddress": "TO ADDRESS",
+      "fromAddress": "FROM",
+      "toAddress": "TO",
       "transactionId": "TRANSACTION ID",
       "status": "STATUS",
       "hash": "HASH"
@@ -170,6 +170,8 @@
     "withdrawSuccess": "Rút tiền thành công!",
     "withdrawError": "Không thể rút tiền",
     "minimumWithdrawError": "Số tiền tối thiểu để rút là $10. Số tiền hiện tại là ${amount}",
+    "withdrawConfirmTitle": "Xác nhận rút tiền",
+    "withdrawConfirmMessage": "Phần thưởng sau khi rút sẽ được chuyển vào ví Reward",
     "you": "BẠN"
   },
   "smartRef": {

@@ -88,8 +88,8 @@
       "time": "时间",
       "type": "类型",
       "amount": "金额",
-      "fromAddress": "发送地址",
-      "toAddress": "接收地址",
+      "fromAddress": "发送",
+      "toAddress": "接收",
       "transactionId": "交易ID",
       "status": "状态",
       "hash": "哈希"
@@ -170,6 +170,8 @@
     "withdrawSuccess": "提款成功！",
     "withdrawError": "提款失败",
     "minimumWithdrawError": "最低提款金额为$10。当前金额: ${amount}",
+    "withdrawConfirmTitle": "确认提款",
+    "withdrawConfirmMessage": "提款后的奖励将转入奖励钱包",
     "you": "您"
   },
   "smartRef": {

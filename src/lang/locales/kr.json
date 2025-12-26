@@ -88,8 +88,8 @@
       "time": "시간",
       "type": "유형",
       "amount": "금액",
-      "fromAddress": "보낸 주소",
-      "toAddress": "받은 주소",
+      "fromAddress": "보낸",
+      "toAddress": "받은",
       "transactionId": "거래 ID",
       "status": "상태",
       "hash": "해시"
@@ -170,6 +170,8 @@
     "withdrawSuccess": "출금 성공!",
     "withdrawError": "출금에 실패했습니다",
     "minimumWithdrawError": "최소 출금 금액은 $10입니다. 현재 금액: ${amount}",
+    "withdrawConfirmTitle": "출금 확인",
+    "withdrawConfirmMessage": "출금 후 보상은 리워드 지갑으로 전송됩니다",
     "you": "당신"
   },
   "smartRef": {

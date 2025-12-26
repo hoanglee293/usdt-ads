@@ -88,8 +88,8 @@
       "time": "TIME",
       "type": "TYPE",
       "amount": "AMOUNT",
-      "fromAddress": "FROM ADDRESS",
-      "toAddress": "TO ADDRESS",
+      "fromAddress": "FROM",
+      "toAddress": "TO",
       "transactionId": "TRANSACTION ID",
       "status": "STATUS",
       "hash": "HASH"
@@ -123,7 +123,7 @@
       "transferring": "Transferring...",
       "history": "Transfer History",
       "historyEmpty": "No transfer history",
-      "currentRewardBalance": "Reward Balance",
+      "currentRewardBalance": "Current Reward Balance",
       "newRewardBalance": "New Reward Balance",
       "tabTransfer": "Transfer",
       "tabHistory": "History",
@@ -170,6 +170,8 @@
     "withdrawSuccess": "Withdrawal successful!",
     "withdrawError": "Failed to withdraw",
     "minimumWithdrawError": "Minimum withdrawal amount is $10. Current amount is ${amount}",
+    "withdrawConfirmTitle": "Confirm Withdrawal",
+    "withdrawConfirmMessage": "Rewards after withdrawal will be transferred to Reward wallet",
     "you": "YOU"
   },
   "smartRef": {

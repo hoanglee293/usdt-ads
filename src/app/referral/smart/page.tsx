@@ -23,6 +23,7 @@ import { useLang } from "@/lang";
 import toast from "react-hot-toast";
 import { useProfile } from "@/hooks/useProfile";
 import { useIsMobile } from "@/ui/use-mobile";
+import Modal from "@/components/Modal";
 
 export default function DirectReferralPage() {
     const { t } = useLang();
@@ -33,6 +34,7 @@ export default function DirectReferralPage() {
     const [showReferralStructure, setShowReferralStructure] = useState(true)
     const [activeTab, setActiveTab] = useState("level-referral") // 'level-referral', 'referred-users'
     const [selectedLevel, setSelectedLevel] = useState<number | undefined>(undefined)
+    const [showWithdrawConfirm, setShowWithdrawConfirm] = useState(false)
 
     // Fetch Smart Ref Info
     const { data: smartRefInfo = {} as any, isLoading: isLoadingInfo } = useQuery({
@@ -87,6 +89,11 @@ export default function DirectReferralPage() {
             return;
         }
 
+        setShowWithdrawConfirm(true);
+    }
+
+    const handleConfirmWithdraw = () => {
+        setShowWithdrawConfirm(false);
         withdrawMutation.mutate();
     }
 
@@ -512,6 +519,35 @@ export default function DirectReferralPage() {
                     )}
                 </div>
             </div>
+
+            {/* Withdraw Confirmation Modal */}
+            <Modal
+                isOpen={showWithdrawConfirm}
+                onClose={() => setShowWithdrawConfirm(false)}
+                title={t('ref.withdrawConfirmTitle') || 'Xác nhận rút tiền'}
+                showCloseButton={true}
+            >
+                <div className="space-y-4">
+                    <p className="text-gray-700 dark:text-gray-300">
+                        {t('ref.withdrawConfirmMessage') || 'Phần thưởng sau khi rút sẽ được chuyển vào ví Reward'}
+                    </p>
+                    <div className="flex gap-3 justify-end">
+                        <button
+                            onClick={() => setShowWithdrawConfirm(false)}
+                            className="px-4 py-2 bg-gray-200 dark:bg-gray-700 cursor-pointer outline-none border-none text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                        >
+                            {t('common.cancel') || 'Hủy'}
+                        </button>
+                        <button
+                            onClick={handleConfirmWithdraw}
+                            disabled={withdrawMutation.isPending}
+                            className="px-4 py-2 bg-pink-600 dark:bg-pink-500 cursor-pointer outline-none border-none text-white rounded-md hover:bg-pink-700 dark:hover:bg-pink-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                            {withdrawMutation.isPending ? (t('common.loading') || 'Đang tải...') : (t('common.confirm') || 'Xác nhận')}
+                        </button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     )
 }

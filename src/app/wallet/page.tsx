@@ -918,7 +918,7 @@ export default function WalletPage() {
                                                 {t('wallet.transferReward.currentRewardBalance')}
                                             </div>
                                             <div className="text-sm font-bold text-yellow-600 dark:text-yellow-400">
-                                                {formatBalance(balanceResponse.data.balance_reward)}
+                                                {formatBalance(balanceResponse.data.balance_reward)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                             </div>
                                         </div>
 
@@ -935,7 +935,7 @@ export default function WalletPage() {
                                                 {t('wallet.balanceLabel')}
                                             </div>
                                             <div className="text-sm font-bold text-pink-500 dark:text-[#FE645F]">
-                                                {formatBalance(balanceResponse.data.balance)}
+                                                {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                             </div>
                                         </div>
                                     </div>

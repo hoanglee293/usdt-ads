@@ -108,8 +108,8 @@
     },
     "copyLabels": {
       "walletAddress": "ウォレットアドレス",
-      "fromAddress": "送信元アドレス",
-      "toAddress": "送信先アドレス",
+      "fromAddress": "送信元",
+      "toAddress": "送信先",
       "transactionId": "取引ID"
     },
     "transferReward": {
@@ -123,7 +123,7 @@
       "transferring": "転送中...",
       "history": "転送履歴",
       "historyEmpty": "転送履歴がありません",
-      "currentRewardBalance": "リワード残高",
+      "currentRewardBalance": "現在のリワード残高",
       "newRewardBalance": "転送後のリワード残高",
       "tabTransfer": "転送",
       "tabHistory": "履歴",
@@ -170,6 +170,8 @@
     "withdrawSuccess": "出金成功！",
     "withdrawError": "出金に失敗しました",
     "minimumWithdrawError": "最低出金額は$10です。現在の金額: ${amount}",
+    "withdrawConfirmTitle": "出金の確認",
+    "withdrawConfirmMessage": "出金後の報酬はリワードウォレットに転送されます",
     "you": "あなた"
   },
   "smartRef": {
