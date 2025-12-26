@@ -70,7 +70,7 @@ export default function MyProfileLayout({
 
   return (
     <div className='w-full min-h-svh flex py-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
-      <Tabs value={activeTab} onValueChange={handleTabChange} className='decoration-theme-black !bg-gray-100/60 dark:!bg-gray-800/50 shadow-md rounded-lg px-4 py-6 sm:px-6 md:px-8 border-none w-full max-w-4xl mx-auto flex flex-col gap-[5vh]'>
+      <Tabs value={activeTab} onValueChange={handleTabChange} className='decoration-theme-black !bg-gray-100/60 dark:!bg-gray-800/50 shadow-md rounded-lg px-4 py-6 sm:px-6 md:px-8 border-none w-full max-w-4xl mx-auto flex flex-col gap-6 md:gap-[5vh]'>
         <TabsList className='grid grid-cols-2 mb-2 bg-transparent p-0 gap-4 sm:gap-6 md:gap-10 w-full sm:w-fit mx-auto'>
           <TabsTrigger 
             value='my-profile' 

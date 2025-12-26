@@ -78,30 +78,30 @@ const MobileUserSection: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <User className="w-7 h-7 text-theme-black-100 dark:text-theme-gray-100" />
           </div>
         )}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 bg-gray-200 dark:bg-gray-600 rounded-lg p-2">
           <div className="flex items-center justify-between gap-2">
             <p className="font-semibold text-sm text-theme-black-100 dark:text-theme-gray-100 truncate">
               {profile.display_name}
             </p>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                router.push('/my-profile/kyc');
-                onClose();
-              }}
-              className={`text-xs font-inter font-semibold border-none outline-none cursor-pointer bg-transparent hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 rounded-lg px-2 py-1 flex-shrink-0 ${
-                profile.verify ? 'text-green-500' : 'text-red-500'
-              }`}
-            >
-              {profile.verify ? t('user.verified') : t('user.notVerified')}
-            </button>
+            
           </div>
           <p className="text-xs opacity-90 text-gray-500 dark:text-theme-gray-100/70 truncate">
             {profile.email}
           </p>
         </div>
+        <button
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push('/my-profile/kyc');
+                onClose();
+              }}
+              className={`text-xs font-inter h-8 font-semibold border-none outline-none cursor-pointer bg-gray-200 dark:bg-gray-600 hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 rounded-lg px-2 py-1 flex-shrink-0 ${profile.verify ? 'text-green-500' : 'text-red-500'
+                }`}
+            >
+              {profile.verify ? t('user.verified') : t('user.notVerified')}
+            </button>
       </div>
-      
+
       {/* Logout Button */}
       <button
         onClick={onLogoutClick}
@@ -236,11 +236,10 @@ export default function Header() {
                           setLang(langOption.code);
                           setIsLangMenuOpen(false);
                         }}
-                        className={`w-full px-4 py-2.5 sm:py-3 cursor-pointer border-none text-sm sm:text-base font-inter font-medium text-left hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 transition-colors flex items-center gap-3 ${
-                          lang === langOption.code
+                        className={`w-full px-4 py-2.5 sm:py-3 cursor-pointer border-none text-sm sm:text-base font-inter font-medium text-left hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 transition-colors flex items-center gap-3 ${lang === langOption.code
                             ? 'text-pink-500 dark:text-pink-400 bg-pink-50 dark:bg-theme-gray-100/30'
                             : 'text-theme-black-100 dark:text-theme-gray-100 bg-white dark:bg-theme-gray-200'
-                        }`}
+                          }`}
                       >
                         <span className="text-lg sm:text-xl">{langFlags[langOption.code] || '🌐'}</span>
                         <span className="flex-1">{t(`languages.${langOption.code}`)}</span>
@@ -274,7 +273,7 @@ export default function Header() {
             <>
               {/* Backdrop */}
               {isMenuOpen && (
-                <div 
+                <div
                   className="fixed inset-0 bg-black/50 dark:bg-black/70 z-40"
                   onClick={() => setIsMenuOpen(false)}
                 />
@@ -305,14 +304,19 @@ export default function Header() {
                     <div className="p-2 sm:py-2">
                       {/* Separator */}
                       <div className="border-t border-gray-200 dark:border-theme-gray-100 my-1"></div>
-                      
+                      <Link href="/whitepaper" className='flex items-center gap-1.5 sm:gap-2 w-[-webkit-fill-available] px-2 mx-3 rounded-lg sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border-none outline-none bg-gray-200 dark:bg-gray-600' onClick={() => setIsMenuOpen(false)}>
+                        <Book className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500 dark:text-pink-400" />
+                        <span className='text-sm font-inter font-medium text-theme-black-100 dark:text-theme-gray-100'>Whitepaper</span>
+                      </Link>
+                      <div className="border-t border-gray-200 dark:border-theme-gray-100 my-1"></div>
+
                       {/* Language Switcher Section */}
                       <div className="px-3 sm:px-4 py-3">
                         <button
                           onClick={() => setIsLangSectionOpen(!isLangSectionOpen)}
-                          className="w-full flex items-center justify-between px-3 py-2.5 cursor-pointer border-none text-xs font-inter font-semibold text-gray-500  uppercase hover:bg-theme-gray-100 rounded-lg transition-colors touch-manipulation dark:text-gray-700"
+                          className="w-full flex items-center justify-between px-3 py-2.5 cursor-pointer border-none text-xs font-inter font-semibold text-gray-500  uppercase hover:bg-theme-gray-100 rounded-lg transition-colors touch-manipulation dark:text-gray-700 bg-gray-200 dark:bg-gray-600 h-10"
                         >
-                          <span>{t('header.language') || 'Language'}</span>
+                          <span className='text-theme-black-100 dark:text-theme-gray-100'>{t('header.language') || 'Language'}</span>
                           {isLangSectionOpen ? (
                             <ChevronUp className="w-4 h-4 text-gray-500" />
                           ) : (
@@ -327,11 +331,10 @@ export default function Header() {
                                 onClick={() => {
                                   setLang(langOption.code);
                                 }}
-                                className={`w-full px-3 py-1.5 mb-1 cursor-pointer border-none text-sm font-inter font-medium text-left hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 transition-colors flex items-center gap-3 rounded-lg touch-manipulation ${
-                                  lang === langOption.code
+                                className={`w-full px-3 py-1.5 mb-1 cursor-pointer border-none text-sm font-inter font-medium text-left hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 transition-colors flex items-center gap-3 rounded-lg touch-manipulation ${lang === langOption.code
                                     ? 'text-pink-500 dark:text-pink-400 bg-pink-50'
                                     : 'text-theme-black-100 dark:text-theme-gray-100'
-                                }`}
+                                  }`}
                               >
                                 <span className="text-lg text-theme-black-100">{langFlags[langOption.code] || '🌐'}</span>
                                 <span className="flex-1 text-theme-black-100">{t(`languages.${langOption.code}`)}</span>
@@ -343,14 +346,14 @@ export default function Header() {
                           </div>
                         )}
                       </div>
-                      
+
                       {/* Separator */}
                       <div className="border-t border-gray-200 dark:border-theme-gray-100 my-1"></div>
-                      
+
                       {/* Theme Toggle Section */}
                       <button
                         onClick={toggleTheme}
-                        className="w-[-webkit-fill-available] px-2 mx-3 rounded-lg sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border-none outline-none bg-gray-200 dark:bg-theme-gray-200 font-inter font-medium text-left hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 active:bg-theme-gray-100 dark:active:bg-theme-gray-100/30 transition-colors touch-manipulation flex items-center gap-3 text-theme-black-100 dark:text-theme-gray-100"
+                        className="w-[-webkit-fill-available] px-2 mx-3 rounded-lg sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border-none outline-none bg-gray-200 dark:bg-gray-600 font-inter font-medium text-left hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 active:bg-theme-gray-100 dark:active:bg-theme-gray-100/30 transition-colors touch-manipulation flex items-center gap-3 text-theme-black-100 dark:text-theme-gray-100"
                       >
                         {theme === 'dark' ? (
                           <>
@@ -364,10 +367,10 @@ export default function Header() {
                           </>
                         )}
                       </button>
-                      
+
                       {/* Separator */}
                       <div className="border-t border-gray-200 dark:border-theme-gray-100 my-1"></div>
-                      
+
                       {/* User Profile Section - Import UserDropdown content */}
                       <MobileUserSection onClose={() => setIsMenuOpen(false)} />
                     </div>
@@ -387,11 +390,11 @@ export default function Header() {
           {!isMobile && <UserDropdown />}
         </div>
       </div>
-      
+
       {/* Bottom Navigation Bar - Mobile Only */}
       {isMobile && (
         <div className="fixed bottom-0 left-0 right-0 z-40 bg-transparent border-t border-gray-200 dark:border-theme-gray-100 safe-area-bottom">
-          <div className="flex items-center justify-around px-1 py-1.5 shadow-lg bg-theme-pink-100/80 dark:bg-[#1B1B1B] rounded-t-3xl">
+          <div className="flex items-center justify-around px-1 py-1.5 shadow-lg bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-t-3xl z-50">
             {listMenu.filter(item => item.href !== '/whitepaper').map((item) => {
               const IconComponent = item.icon;
               const isActive = pathname === item.href;
@@ -402,20 +405,17 @@ export default function Header() {
                   className="flex-1 flex flex-col items-center justify-center py-1.5 px-0 min-w-0"
                 >
                   <div
-                    className={`w-full flex flex-col items-center justify-center gap-1 py-1.5 px-0 rounded-lg transition-all touch-manipulation ${
-                      isActive
+                    className={`w-full flex flex-col items-center justify-center gap-1 py-1.5 px-0 rounded-lg transition-all touch-manipulation ${isActive
                         ? 'text-pink-500 dark:text-pink-400'
-                        : 'text-theme-black-100 dark:text-theme-gray-100'
-                    }`}
-                  >
-                    <IconComponent 
-                      className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform ${
-                        isActive ? 'scale-110' : 'scale-100'
+                        : 'text-theme-gray-100'
                       }`}
+                  >
+                    <IconComponent
+                      className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform ${isActive ? 'scale-110' : 'scale-100'
+                        }`}
                     />
-                    <span className={`text-[10px] sm:text-xs font-inter font-medium truncate w-full text-center ${
-                      isActive ? 'font-semibold' : 'font-medium'
-                    }`}>
+                    <span className={`text-[10px] sm:text-xs font-inter font-medium truncate w-full text-center ${isActive ? 'font-semibold' : 'font-medium'
+                      }`}>
                       {item.name}
                     </span>
                   </div>

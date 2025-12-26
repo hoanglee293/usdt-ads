@@ -106,7 +106,7 @@ const UserDropdown: React.FC = () => {
           <div className="p-2 max-h-96 overflow-y-auto">
             {/* Email */}
             <div className="flex items-center gap-4 cursor-pointer " >
-              <div className="flex items-center gap-4 hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 p-2 rounded-lg" onClick={() => { router.push('/my-profile'); setIsOpen(false) }}>
+              <div className="flex items-center gap-4 hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/40 p-2 rounded-xl bg-theme-pink-100/50 dark:bg-gray-500/30" onClick={() => { router.push('/my-profile'); setIsOpen(false) }}>
                 {profile.avatar ? (
                   <img
                     src={profile.avatar}
@@ -126,7 +126,7 @@ const UserDropdown: React.FC = () => {
                   <p className="text-sm opacity-90 text-gray-500 dark:text-theme-gray-100/70">{profile.email}</p>
                 </div>
               </div>
-              <button onClick={() => { router.push('/my-profile/kyc'); setIsOpen(false) }} className={`text-sm font-inter font-semibold border-none outline-none cursor-pointer bg-transparent hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 rounded-lg px-2 py-1 ${profile.verify ? 'text-green-500' : 'text-red-500'}`}>{profile.verify ? t('user.verified') : t('user.notVerified')}</button>
+              <button onClick={() => { router.push('/my-profile/kyc'); setIsOpen(false) }} className={`text-sm font-inter font-semibold border-none outline-none cursor-pointer bg-theme-pink-100/50 dark:bg-gray-500/30 hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 rounded-lg px-2 py-1 ${profile.verify ? 'text-green-500' : 'text-red-500'}`}>{profile.verify ? t('user.verified') : t('user.notVerified')}</button>
             </div>
           </div>
           {/* Footer */}

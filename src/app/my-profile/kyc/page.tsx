@@ -276,7 +276,7 @@ export default function KycPage() {
                                 <img
                                     src={frontImagePreview}
                                     alt='Front ID Card'
-                                    className='w-full h-40 sm:h-48 md:h-52 object-contain border border-theme-gray-100 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800'
+                                    className='w-full h-40 sm:h-48 md:h-52 object-cover border border-theme-gray-100 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800'
                                 />
                                 <button
                                     type='button'
@@ -317,7 +317,7 @@ export default function KycPage() {
                                 <img
                                     src={backImagePreview}
                                     alt='Back ID Card'
-                                    className='w-full h-40 sm:h-48 md:h-52 object-contain border border-theme-gray-100 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800'
+                                    className='w-full h-40 sm:h-48 md:h-52 object-cover border border-theme-gray-100 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800'
                                 />
                                 <button
                                     type='button'

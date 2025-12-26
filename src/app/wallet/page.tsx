@@ -652,7 +652,7 @@ export default function WalletPage() {
                         options={networkOptions}
                         placeholder={t('wallet.selectNetworkPlaceholder')}
                         disabled={isLoadingNetworks}
-                        className=" max-w-[10rem] sm:max-w-48 text-sm"
+                        className=" max-w-auto sm:max-w-48 text-sm"
                     />
                 </div>
 
