@@ -158,10 +158,10 @@ export default function MakeMoneyPage() {
             type: stakingType,
             amount: Number(debouncedStakingAmount)
         }),
-        enabled: !!debouncedStakingAmount && 
-                 !isNaN(Number(debouncedStakingAmount)) && 
-                 Number(debouncedStakingAmount) > 0 &&
-                 !!stakingType,
+        enabled: !!debouncedStakingAmount &&
+            !isNaN(Number(debouncedStakingAmount)) &&
+            Number(debouncedStakingAmount) > 0 &&
+            !!stakingType,
         refetchOnWindowFocus: false,
         staleTime: 1 * 1000, // Cache 3 giây
         retry: false,
@@ -175,10 +175,10 @@ export default function MakeMoneyPage() {
             amount: Number(stakingAmount)
         }),
         enabled: isStakingConfirmModalOpen &&
-                 !!stakingAmount && 
-                 !isNaN(Number(stakingAmount)) && 
-                 Number(stakingAmount) > 0 &&
-                 !!stakingType,
+            !!stakingAmount &&
+            !isNaN(Number(stakingAmount)) &&
+            Number(stakingAmount) > 0 &&
+            !!stakingType,
         refetchOnWindowFocus: false,
         staleTime: 3 * 1000, // Cache 30 giây
         retry: false,
@@ -299,7 +299,7 @@ export default function MakeMoneyPage() {
                 ? `${apiMessage} ${t('makeMoney.reward')}: ${rewardAmount} USDT`
                 : `${t('makeMoney.claim')} ${t('common.success')}! ${t('makeMoney.reward')}: ${rewardAmount} USDT`
             toast.success(successMessage)
-            
+
             // Invalidate tất cả các queries liên quan
             queryClient.invalidateQueries({ queryKey: ['current-staking'] })
             queryClient.invalidateQueries({ queryKey: ['current-staking-with-missions'] })
@@ -324,7 +324,7 @@ export default function MakeMoneyPage() {
                 // Nếu staking đã kết thúc hoặc không còn active, clear dữ liệu để tránh hiển thị dữ liệu cũ
                 queryClient.setQueryData(['current-staking-with-missions'], null)
                 queryClient.setQueryData(['mission-now'], null)
-                
+
                 // Thử refetch để kiểm tra xem còn staking active không
                 // Nếu API trả về 404, query sẽ tự động set data thành undefined
                 try {
@@ -335,7 +335,7 @@ export default function MakeMoneyPage() {
                         queryClient.setQueryData(['current-staking-with-missions'], null)
                     }
                 }
-                
+
                 try {
                     await refetchMissionNow()
                 } catch (error: any) {
@@ -742,9 +742,9 @@ export default function MakeMoneyPage() {
         const seconds = totalSeconds % 60
 
         if (minutes > 0) {
-            return `${minutes} phút ${seconds} giây`
+            return `${minutes} ${t('makeMoney.minute')} ${seconds} ${t('makeMoney.second')}`
         }
-        return `${seconds} giây`
+        return `${seconds} ${t('makeMoney.second')}`
     }
 
     // Check if claim is available based on end date
@@ -899,8 +899,6 @@ export default function MakeMoneyPage() {
                                     <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#FE645F]'>{(currentStaking.real_reward || 0).toFixed(3)} USDT</p>
                                 </div>
                             </div>
-
-
                         </div>
                         {/* Tasks & Missions - Hiển thị khi có dữ liệu staking-with-missions hoặc mission-now */}
                         {stakingWithMissionsResponse?.data ? (
@@ -931,11 +929,213 @@ export default function MakeMoneyPage() {
                                     </div>
                                 </div>
 
+                                {currentStaking && (
+                                    <div className='mb-6 sm:mb-8'>
+                                        <div className='max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6 shadow-md'>
+                                            {(() => {
+                                                const startDate = new Date(currentStaking.date_start)
+                                                const endDate = new Date(currentStaking.date_end)
+
+                                                // Normalize dates to just date part (remove time)
+                                                const startDateOnly = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())
+                                                const endDateOnly = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate())
+
+                                                const year = startDate.getFullYear()
+                                                const month = startDate.getMonth()
+
+                                                // Get first day of month and number of days
+                                                const firstDay = new Date(year, month, 1)
+                                                const lastDay = new Date(year, month + 1, 0)
+                                                const daysInMonth = lastDay.getDate()
+                                                const startingDayOfWeek = firstDay.getDay() // 0 = Sunday, 1 = Monday, etc.
+
+                                                // Vietnamese day names
+                                                const dayNames = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7']
+                                                const monthNames = [
+                                                    t('makeMoney.months.1'), t('makeMoney.months.2'), t('makeMoney.months.3'), t('makeMoney.months.4'),
+                                                    t('makeMoney.months.5'), t('makeMoney.months.6'), t('makeMoney.months.7'), t('makeMoney.months.8'),
+                                                    t('makeMoney.months.9'), t('makeMoney.months.10'), t('makeMoney.months.11'), t('makeMoney.months.12')
+                                                ]
+
+                                                // Get missions from stakingWithMissionsResponse
+                                                const missionsList = stakingWithMissionsResponse?.data?.missions || []
+
+                                                // Helper to format date as YYYY-MM-DD
+                                                const formatDateString = (y: number, m: number, d: number): string => {
+                                                    return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
+                                                }
+
+                                                // Helper to find mission by date
+                                                const findMissionByDate = (day: number): Mission | undefined => {
+                                                    const dateString = formatDateString(year, month, day)
+                                                    return missionsList.find(mission => mission.date === dateString)
+                                                }
+
+                                                // Helper to check if date is in range
+                                                const isDateInRange = (day: number): boolean => {
+                                                    const currentDate = new Date(year, month, day)
+                                                    return currentDate >= startDateOnly && currentDate <= endDateOnly
+                                                }
+
+                                                const isStartDate = (day: number): boolean => {
+                                                    return year === startDateOnly.getFullYear() &&
+                                                        month === startDateOnly.getMonth() &&
+                                                        day === startDateOnly.getDate()
+                                                }
+
+                                                const isEndDate = (day: number): boolean => {
+                                                    return year === endDateOnly.getFullYear() &&
+                                                        month === endDateOnly.getMonth() &&
+                                                        day === endDateOnly.getDate()
+                                                }
+
+                                                // Create calendar days array
+                                                const calendarDays: (number | null)[] = []
+                                                // Add empty cells for days before month starts
+                                                for (let i = 0; i < startingDayOfWeek; i++) {
+                                                    calendarDays.push(null)
+                                                }
+                                                // Add all days of the month
+                                                for (let day = 1; day <= daysInMonth; day++) {
+                                                    calendarDays.push(day)
+                                                }
+
+                                                return (
+                                                    <div>
+                                                        <h3 className='text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 text-center'>
+                                                            {monthNames[month]} {year}
+                                                        </h3>
+                                                        <div className='overflow-x-auto'>
+                                                            <table className='w-full border-collapse'>
+                                                                <thead>
+                                                                    <tr>
+                                                                        {dayNames.map((day, index) => (
+                                                                            <th
+                                                                                key={index}
+                                                                                className='px-1 py-2 sm:px-2 sm:py-3 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600'
+                                                                            >
+                                                                                {day}
+                                                                            </th>
+                                                                        ))}
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {Array.from({ length: Math.ceil(calendarDays.length / 7) }, (_, weekIndex) => (
+                                                                        <tr key={weekIndex}>
+                                                                            {Array.from({ length: 7 }, (_, dayIndex) => {
+                                                                                const day = calendarDays[weekIndex * 7 + dayIndex]
+                                                                                const mission = day !== null ? findMissionByDate(day) : undefined
+                                                                                const isStart = day !== null && isStartDate(day)
+                                                                                const isEnd = day !== null && isEndDate(day)
+                                                                                const inRange = day !== null && isDateInRange(day)
+
+                                                                                // Determine background color based on mission status
+                                                                                const getBackgroundColor = () => {
+                                                                                    if (day === null) return 'bg-gray-50 dark:bg-gray-800/30'
+                                                                                    if (isStart || isEnd) return 'bg-gray-400 dark:bg-gray-500'
+                                                                                    if (mission) {
+                                                                                        // Ngày có mission: màu theo status
+                                                                                        return mission.status === 'success'
+                                                                                            ? '!bg-green-100 !dark:bg-green-900/30'
+                                                                                            : '!bg-orange-100 !dark:bg-orange-900/30'
+                                                                                    }
+                                                                                    if (inRange) {
+                                                                                        // Khoảng thời gian staking nhưng chưa có dữ liệu
+                                                                                        return 'bg-gray-400 dark:bg-gray-500'
+                                                                                    }
+                                                                                    return 'bg-white dark:bg-gray-800'
+                                                                                }
+
+                                                                                const bgColor = getBackgroundColor()
+                                                                                const hasMission = mission !== undefined
+                                                                                const isSuccess = mission?.status === 'success'
+                                                                                const isOut = mission?.status === 'out'
+
+                                                                                // Determine text color
+                                                                                const getTextColor = () => {
+                                                                                    if (isStart || isEnd) return 'text-white'
+                                                                                    if (hasMission) {
+                                                                                        return isSuccess
+                                                                                            ? 'text-green-700 dark:text-green-300'
+                                                                                            : 'text-orange-700 dark:text-orange-300'
+                                                                                    }
+                                                                                    if (inRange) return 'text-white'
+                                                                                    return 'text-gray-700 dark:text-gray-300'
+                                                                                }
+
+                                                                                const textColor = getTextColor()
+
+                                                                                return (
+                                                                                    <td
+                                                                                        key={dayIndex}
+                                                                                        className={`px-1 py-1 sm:px-2 h-12 text-center border align-top`}
+                                                                                    >
+                                                                                        {day !== null ? (
+                                                                                            <div className={`flex py-1 flex-col h-full justify-center items-center gap-0.5 sm:gap-1 ${mission?.status === 'success'
+                                                                                                ? 'border-green-500 border-solid'
+                                                                                                : mission?.status === 'out'
+                                                                                                    ? 'border-red-500 border-solid'
+                                                                                                    : ''} rounded-lg`}>
+                                                                                                <span className={`text-xs sm:text-sm font-semibold ${textColor}`}>
+                                                                                                    {day}
+                                                                                                </span>
+                                                                                                {mission && (
+                                                                                                    <div className='text-[9px] sm:text-[10px] leading-tight'>
+                                                                                                        {/* <div className={`font-medium ${textColor}`}>
+                                                                                            {mission.turn}/{currentStaking?.turn_setting || 0}
+                                                                                        </div> */}
+                                                                                                        {mission.reward !== undefined && (
+                                                                                                            <div className={`mt-0.5 font-semibold ${isSuccess
+                                                                                                                    ? 'text-green-600 dark:text-green-400'
+                                                                                                                    : 'text-orange-600 dark:text-orange-400'
+                                                                                                                }`}>
+                                                                                                                + ${mission.reward.toFixed(2)}
+                                                                                                            </div>
+                                                                                                        )}
+                                                                                                    </div>
+                                                                                                )}
+                                                                                            </div>
+                                                                                        ) : (
+                                                                                            ''
+                                                                                        )}
+                                                                                    </td>
+                                                                                )
+                                                                            })}
+                                                                        </tr>
+                                                                    ))}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div className='mt-4 flex flex-wrap gap-3 sm:gap-4 justify-center text-xs sm:text-sm'>
+                                                            <div className='flex items-center gap-2'>
+                                                                <div className='w-4 h-4 bg-gray-400 dark:bg-gray-500 rounded'></div>
+                                                                <span className='text-gray-700 dark:text-gray-300'>{t('makeMoney.stakingPeriod')}</span>
+                                                            </div>
+                                                            {missionsList.length > 0 && (
+                                                                <>
+                                                                    <div className='flex items-center gap-2'>
+                                                                        <div className='w-4 h-4 bg-green-500 rounded'></div>
+                                                                        <span className='text-gray-700 dark:text-gray-300'>{t('makeMoney.completed')}</span>
+                                                                    </div>
+                                                                    <div className='flex items-center gap-2'>
+                                                                        <div className='w-4 h-4 bg-red-500 dark:bg-red-500 rounded'></div>
+                                                                        <span className='text-gray-700 dark:text-gray-300'>{t('makeMoney.notCompleted')}</span>
+                                                                    </div>
+                                                                </>
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                )
+                                            })()}
+                                        </div>
+                                    </div>
+                                )}
+
                                 {/* Missions History Table */}
                                 {missions.length > 0 && (
                                     <div className='w-full md:max-w-3xl mx-auto mb-3 sm:my-8'>
                                         <h3 className='text-lg sm:text-xl font-bold text-theme-red-100 dark:text-[#FE645F] mb-3 sm:mb-4 mt-6 sm:mt-8'>
-                                            {t('makeMoney.missionsHistory') || 'Lịch sử nhiệm vụ'}
+                                            {t('makeMoney.missionsHistory')}
                                         </h3>
 
                                         {/* Mobile Card Layout */}
@@ -944,8 +1144,8 @@ export default function MakeMoneyPage() {
                                                 <div
                                                     key={mission.id}
                                                     className={`bg-white dark:bg-gray-800 rounded-lg border ${mission.status === 'success'
-                                                            ? 'border-green-200 dark:border-green-700'
-                                                            : 'border-orange-200 dark:border-orange-700'
+                                                        ? 'border-green-200 dark:border-green-700'
+                                                        : 'border-orange-200 dark:border-orange-700'
                                                         } p-3 shadow-sm`}
                                                 >
                                                     <div className="flex items-center justify-between mb-2">
@@ -953,25 +1153,25 @@ export default function MakeMoneyPage() {
                                                             {t('wallet.tableHeaders.stt')} {index + 1}
                                                         </span>
                                                         <span className={`px-2 py-1 rounded-full text-xs font-medium ${mission.status === 'success'
-                                                                ? 'bg-green-500 text-white'
-                                                                : 'bg-orange-500 text-white'
+                                                            ? 'bg-green-500 text-white'
+                                                            : 'bg-orange-500 text-white'
                                                             }`}>
                                                             {mission.status === 'success'
-                                                                ? t('makeMoney.completed') || 'Hoàn thành'
-                                                                : t('makeMoney.notCompleted') || 'Chưa đạt'}
+                                                                ? t('makeMoney.completed')
+                                                                : t('makeMoney.notCompleted')}
                                                         </span>
                                                     </div>
                                                     <div className="space-y-2">
                                                         <div className="flex items-center justify-between">
                                                             <span className="text-xs text-gray-600 dark:text-gray-300">
-                                                                {t('makeMoney.date') || 'Ngày'}:</span>
+                                                                {t('makeMoney.date')}:</span>
                                                             <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
                                                                 {formatDateOnly(mission.date)}
                                                             </span>
                                                         </div>
                                                         <div className="flex items-center justify-between">
                                                             <span className="text-xs text-gray-600 dark:text-gray-300">
-                                                                {t('makeMoney.videosWatched') || 'Video đã xem'}:</span>
+                                                                {t('makeMoney.videosWatched')}:</span>
                                                             <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">
                                                                 {mission.turn} / {currentStaking?.turn_setting || 0}
                                                             </span>
@@ -992,10 +1192,10 @@ export default function MakeMoneyPage() {
                                                                 {t('wallet.tableHeaders.stt')}
                                                             </th>
                                                             <th className={`${tableHeaderStyles} w-[30%]`}>
-                                                                {t('makeMoney.date') || 'Ngày'}
+                                                                {t('makeMoney.date')}
                                                             </th>
                                                             <th className={`${tableHeaderStyles} w-[35%]`}>
-                                                                {t('makeMoney.videosWatched') || 'Video đã xem'}
+                                                                {t('makeMoney.videosWatched')}
                                                             </th>
                                                             <th className={`${tableHeaderStyles} w-[37%] text-right rounded-r-lg`}>
                                                                 {t('makeMoney.statusColumn')}
@@ -1027,12 +1227,12 @@ export default function MakeMoneyPage() {
                                                                 <td className={`${tableCellStyles} w-[37%] border-x-0 border-r text-right rounded-r-lg border-theme-gray-100 border-solid`}>
                                                                     <div className="flex items-center gap-2 justify-end">
                                                                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${mission.status === 'success'
-                                                                                ? 'bg-green-500 text-white'
-                                                                                : 'bg-orange-500 text-white'
+                                                                            ? 'bg-green-500 text-white'
+                                                                            : 'bg-orange-500 text-white'
                                                                             }`}>
                                                                             {mission.status === 'success'
-                                                                                ? t('makeMoney.completed') || 'Hoàn thành'
-                                                                                : t('makeMoney.notCompleted') || 'Chưa đạt'}
+                                                                                ? t('makeMoney.completed')
+                                                                                : t('makeMoney.notCompleted')}
                                                                         </span>
                                                                     </div>
                                                                 </td>
@@ -1140,7 +1340,6 @@ export default function MakeMoneyPage() {
                                         )}
                                     </div>
                                     <div className='flex items-center gap-2'>
-                                        <img src="/logo.png" alt="logo" className='w-8 h-8 object-cover' />
                                         {isLoadingBalance ? (
                                             <Skeleton className="h-6 w-40" />
                                         ) : balanceResponse?.data ? (
@@ -1152,7 +1351,6 @@ export default function MakeMoneyPage() {
                                                 0.00 {selectedCoinInfo?.coin_symbol || 'USDT'}
                                             </span>
                                         )}
-                                        <img src="/logo.png" alt="logo" className='w-8 h-8 object-cover' />
                                     </div>
                                     {balanceResponse?.data && (balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
                                         <span className='text-xs text-gray-600 dark:text-gray-300 mt-1'>
@@ -1283,11 +1481,11 @@ export default function MakeMoneyPage() {
                                     type="button"
                                     onClick={() => {
                                         const maxAmount = Math.min(usdtBalance, 3500)
-                                        setStakingAmount(maxAmount.toFixed(2))
+                                        setStakingAmount((Math.floor(maxAmount * 100) / 100).toFixed(2))
                                     }}
-                                    className='text-sm min-w-[50px] bg-transparent border-none outline-none cursor-pointer font-medium text-theme-red-200 dark:text-[#FE645F] hover:underline'
+                                    className='text-sm min-w-[50px] underline-offset-2 bg-transparent border-none outline-none cursor-pointer font-medium text-theme-red-200 dark:text-[#FE645F] hover:underline'
                                 >
-                                    {t('makeMoney.useMax') || 'Max'}
+                                    {t('makeMoney.useMax')}
                                 </button>
                             </div>
                             <div className='flex items-center justify-between mt-2'>
@@ -1351,7 +1549,7 @@ export default function MakeMoneyPage() {
                             <Button
                                 onClick={handleJoinStaking}
                                 disabled={joinStakingMutation.isPending || !stakingAmount || parseFloat(stakingAmount || '0') <= 0}
-                                className='flex-1 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
+                                className='flex-1 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'
                             >
                                 {joinStakingMutation.isPending ? (
                                     <>
@@ -1397,7 +1595,7 @@ export default function MakeMoneyPage() {
                             </div>
                             <div className='p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700'>
                                 <div className='flex items-center justify-between'>
-                                    <span className='text-sm font-medium text-blue-600 dark:text-blue-400'>Phần trăm lợi nhuận :</span>
+                                    <span className='text-sm font-medium text-blue-600 dark:text-blue-400'>{t('makeMoney.profitPercent')}:</span>
                                     <span className='text-base font-semibold text-blue-700 dark:text-blue-300'>
                                         0.2%
                                     </span>
@@ -1410,14 +1608,14 @@ export default function MakeMoneyPage() {
                                 variant="outline"
                                 onClick={() => setIsBaseConfirmModalOpen(false)}
                                 disabled={joinBaseMutation.isPending}
-                                className='flex-1 bg-transparent border border-solid border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
+                                className='flex-1 bg-transparent border border-solid border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer '
                             >
                                 {t('makeMoney.cancel')}
                             </Button>
                             <Button
                                 onClick={handleConfirmJoinBase}
                                 disabled={joinBaseMutation.isPending}
-                                className='flex-1 bg-gray-100 dark:bg-gray-700 text-theme-red-200 dark:text-[#FE645F] cursor-pointer hover:bg-pink-100 dark:hover:bg-pink-900/30 rounded-full border-none hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
+                                className='flex-1 bg-gray-100 dark:bg-gray-700 text-theme-red-200 dark:text-[#FE645F] hover:bg-pink-100 dark:hover:bg-pink-900/30 rounded-full border-none hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer '
                             >
                                 {joinBaseMutation.isPending ? (
                                     <>
@@ -1532,14 +1730,14 @@ export default function MakeMoneyPage() {
                                 variant="outline"
                                 onClick={() => setIsStakingConfirmModalOpen(false)}
                                 disabled={joinStakingMutation.isPending}
-                                className='flex-1 bg-transparent border border-solid border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
+                                className='flex-1 bg-transparent border border-solid border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer '
                             >
                                 {t('makeMoney.cancel')}
                             </Button>
                             <Button
                                 onClick={handleConfirmJoinStaking}
                                 disabled={joinStakingMutation.isPending}
-                                className='flex-1 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed'
+                                className='flex-1 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer '
                             >
                                 {joinStakingMutation.isPending ? (
                                     <>

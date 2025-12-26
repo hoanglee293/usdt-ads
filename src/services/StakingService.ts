@@ -90,6 +90,7 @@ export interface Mission {
   date: string;                  // Date format: "YYYY-MM-DD"
   turn: number;                  // Số lượt xem video đã hoàn thành trong ngày
   status: "success" | "out";     // Trạng thái nhiệm vụ: success (hoàn thành), out (chưa đạt)
+  reward?: number;               // Phần thưởng của ngày (optional)
 }
 
 export interface CurrentStakingWithMissionsResponse {

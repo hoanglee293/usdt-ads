@@ -565,7 +565,6 @@ export default function WalletPage() {
                                 )}
                             </div>
                             <div className='flex items-center gap-2'>
-                                <img src="/logo.png" alt="logo" className='w-8 h-8 object-cover' />
                                 {isLoadingBalance ? (
                                     <Skeleton className="h-6 w-40" />
                                 ) : balanceResponse?.data ? (
@@ -577,7 +576,6 @@ export default function WalletPage() {
                                         0.00 {selectedCoinInfo?.coin_symbol || 'USDT'}
                                     </span>
                                 )}
-                                <img src="/logo.png" alt="logo" className='w-8 h-8 object-cover' />
                             </div>
                             {balanceResponse?.data && (balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
                                 <span className='text-xs text-gray-600 dark:text-gray-300 mt-1'>
