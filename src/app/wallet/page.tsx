@@ -834,7 +834,7 @@ export default function WalletPage() {
                                                                 <td className={`${tableCellStyles} w-[5%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
                                                                     {transaction.id}
                                                                 </td>
-                                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                                <td className={`${tableCellStyles} w-[10%] border-x-0 border-theme-gray-100 border-solid`}>
                                                                     {transaction.time}
                                                                 </td>
                                                                 <td className={`${tableCellStyles} w-[8%] border-x-0 border-theme-gray-100 border-solid`}>
@@ -843,7 +843,7 @@ export default function WalletPage() {
                                                                 <td className={`${tableCellStyles} w-[10%] border-x-0 border-theme-gray-100 border-solid`}>
                                                                     {transaction.amount}
                                                                 </td>
-                                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                                <td className={`${tableCellStyles} w-[14%] border-x-0 border-theme-gray-100 border-solid`}>
                                                                     <div className='flex items-center gap-2'>
                                                                         <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
                                                                             {formatAddress(transaction.transactionId)}
@@ -918,7 +918,7 @@ export default function WalletPage() {
                                                 {t('wallet.transferReward.currentRewardBalance')}
                                             </div>
                                             <div className="text-xl font-bold text-yellow-600 dark:text-yellow-400">
-                                                {formatBalance(balanceResponse.data.balance_reward)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                                {formatBalance(balanceResponse.data.balance_reward)}
                                             </div>
                                         </div>
 
@@ -935,7 +935,7 @@ export default function WalletPage() {
                                                 {t('wallet.balanceLabel')}
                                             </div>
                                             <div className="text-xl font-bold text-pink-500 dark:text-[#FE645F]">
-                                                {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                                {formatBalance(balanceResponse.data.balance)}
                                             </div>
                                         </div>
                                     </div>
@@ -967,76 +967,173 @@ export default function WalletPage() {
                             {isLoadingTransferRewardHistory ? (
                                 <div className="space-y-3">
                                     {[1, 2, 3].map((i) => (
-                                        <Skeleton key={i} className="h-20 w-full rounded-lg" />
+                                        <Skeleton key={i} className={isMobile ? "h-20 w-full rounded-lg" : "h-12 w-full rounded-lg"} />
                                     ))}
                                 </div>
                             ) : transferRewardHistoryResponse?.data && transferRewardHistoryResponse.data.length > 0 ? (
-                                <div className="space-y-3 max-h-[300px] sm:max-h-[400px] overflow-y-auto overflow-x-hidden scrollbar-thin pr-2 -mr-2 scroll-smooth">
-                                    {transferRewardHistoryResponse.data.map((item: TransferRewardHistoryItem) => {
-                                        const date = new Date(item.created_at)
-                                        const locale = lang === 'kr' ? 'ko-KR' : lang === 'en' ? 'en-US' : 'vi-VN'
-                                        const formattedDate = date.toLocaleDateString(locale, {
-                                            day: '2-digit',
-                                            month: '2-digit',
-                                            year: 'numeric',
-                                            hour: '2-digit',
-                                            minute: '2-digit'
-                                        })
+                                isMobile ? (
+                                    // Mobile: Card Layout
+                                    <div className="space-y-3 max-h-[300px] sm:max-h-[400px] overflow-y-auto overflow-x-hidden scrollbar-thin pr-2 -mr-2 scroll-smooth">
+                                        {transferRewardHistoryResponse.data.map((item: TransferRewardHistoryItem) => {
+                                            const date = new Date(item.created_at)
+                                            const locale = lang === 'kr' ? 'ko-KR' : lang === 'en' ? 'en-US' : 'vi-VN'
+                                            const formattedDate = date.toLocaleDateString(locale, {
+                                                day: '2-digit',
+                                                month: '2-digit',
+                                                year: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit'
+                                            })
 
-                                        const getStatusColor = (status: string) => {
-                                            switch (status) {
-                                                case 'success':
-                                                    return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
-                                                case 'pending':
-                                                    return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400'
-                                                case 'error':
-                                                    return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
-                                                default:
-                                                    return 'bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-400'
+                                            const getStatusColor = (status: string) => {
+                                                switch (status) {
+                                                    case 'success':
+                                                        return 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
+                                                    case 'pending':
+                                                        return 'bg-yellow-100 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-400'
+                                                    case 'error':
+                                                        return 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
+                                                    default:
+                                                        return 'bg-gray-100 dark:bg-gray-900/30 text-gray-700 dark:text-gray-400'
+                                                }
                                             }
-                                        }
 
-                                        const getStatusText = (status: string) => {
-                                            switch (status) {
-                                                case 'success':
-                                                    return t('wallet.transferReward.statusSuccess')
-                                                case 'pending':
-                                                    return t('wallet.transferReward.statusPending')
-                                                case 'error':
-                                                    return t('wallet.transferReward.statusError')
-                                                default:
-                                                    return status
+                                            const getStatusText = (status: string) => {
+                                                switch (status) {
+                                                    case 'success':
+                                                        return t('wallet.transferReward.statusSuccess')
+                                                    case 'pending':
+                                                        return t('wallet.transferReward.statusPending')
+                                                    case 'error':
+                                                        return t('wallet.transferReward.statusError')
+                                                    default:
+                                                        return status
+                                                }
                                             }
-                                        }
 
-                                        return (
-                                            <div
-                                                key={item.id}
-                                                className="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-md px-6 py-3"
-                                            >
-                                                <div className="flex items-center justify-between mb-2">
-                                                    <span className="text-sm text-gray-500 dark:text-gray-400">#{item.id}</span>
-                                                    <div className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(item.status)}`}>
-                                                        {getStatusText(item.status)}
-                                                    </div>
-                                                </div>
-                                                <div className="flex items-center justify-between">
-                                                    <div>
-                                                        <div className="text-base font-semibold text-red-500 dark:text-[#FE645F]">
-                                                            {formatBalance(item.amount)} {selectedCoinInfo?.coin_symbol || 'USDT'}
-                                                        </div>
-                                                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                                            {formattedDate}
+                                            return (
+                                                <div
+                                                    key={item.id}
+                                                    className="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-md px-6 py-3"
+                                                >
+                                                    <div className="flex items-center justify-between mb-2">
+                                                        <span className="text-sm text-gray-500 dark:text-gray-400">#{item.id}</span>
+                                                        <div className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(item.status)}`}>
+                                                            {getStatusText(item.status)}
                                                         </div>
                                                     </div>
-                                                    <div className="text-xs text-gray-600 dark:text-gray-400">
-                                                        {item.from} → {item.to}
+                                                    <div className="flex items-center justify-between">
+                                                        <div>
+                                                            <div className="text-base font-semibold text-red-500 dark:text-[#FE645F]">
+                                                                {formatBalance(item.amount)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                                            </div>
+                                                            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                                                                {formattedDate}
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-xs text-gray-600 dark:text-gray-400">
+                                                            {item.from} → {item.to}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        )
-                                    })}
-                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                ) : (
+                                    // Desktop: Table Layout
+                                    <div className="block overflow-hidden rounded-md bg-transparent border border-none">
+                                        {/* Fixed Header */}
+                                        <div className="overflow-hidden rounded-t-md">
+                                            <table className={tableStyles}>
+                                                <thead>
+                                                    <tr>
+                                                        <th className={`${tableHeaderStyles} w-[8%] text-left rounded-l-lg !text-xs`}>ID</th>
+                                                        <th className={`${tableHeaderStyles} w-[20%] !text-xs`}>{t('wallet.tableHeaders.time')}</th>
+                                                        <th className={`${tableHeaderStyles} w-[15%] !text-xs`}>{t('wallet.transferReward.amount')}</th>
+                                                        <th className={`${tableHeaderStyles} w-[25%] !text-xs`}>{t('wallet.tableHeaders.fromAddress')} → {t('wallet.tableHeaders.toAddress')}</th>
+                                                        <th className={`${tableHeaderStyles} w-[12%] text-center rounded-r-lg !text-xs`}>{t('wallet.transferReward.status')}</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+
+                                        {/* Scrollable Body */}
+                                        <div className={tableContainerStyles}>
+                                            <table className={tableStyles}>
+                                                <tbody>
+                                                    {transferRewardHistoryResponse.data.map((item: TransferRewardHistoryItem) => {
+                                                        const date = new Date(item.created_at)
+                                                        const locale = lang === 'kr' ? 'ko-KR' : lang === 'en' ? 'en-US' : 'vi-VN'
+                                                        const formattedDate = date.toLocaleDateString(locale, {
+                                                            day: '2-digit',
+                                                            month: '2-digit',
+                                                            year: 'numeric',
+                                                            hour: '2-digit',
+                                                            minute: '2-digit'
+                                                        })
+
+                                                        const getStatusColor = (status: string) => {
+                                                            switch (status) {
+                                                                case 'success':
+                                                                    return 'bg-green-500 text-white'
+                                                                case 'pending':
+                                                                    return 'bg-yellow-500 text-white'
+                                                                case 'error':
+                                                                    return 'bg-red-500 text-white'
+                                                                default:
+                                                                    return 'bg-gray-500 text-white'
+                                                            }
+                                                        }
+
+                                                        const getStatusText = (status: string) => {
+                                                            switch (status) {
+                                                                case 'success':
+                                                                    return t('wallet.transferReward.statusSuccess')
+                                                                case 'pending':
+                                                                    return t('wallet.transferReward.statusPending')
+                                                                case 'error':
+                                                                    return t('wallet.transferReward.statusError')
+                                                                default:
+                                                                    return status
+                                                            }
+                                                        }
+
+                                                        return (
+                                                            <tr
+                                                                key={item.id}
+                                                                className="group transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
+                                                            >
+                                                                <td className={`${tableCellStyles} w-[8%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid !text-xs`}>
+                                                                    #{item.id}
+                                                                </td>
+                                                                <td className={`${tableCellStyles} w-[20%] border-x-0 border-theme-gray-100 border-solid !text-xs`}>
+                                                                    {formattedDate}
+                                                                </td>
+                                                                <td className={`${tableCellStyles} w-[15%] border-x-0 border-theme-gray-100 border-solid !text-xs`}>
+                                                                    <span className="text-red-500 dark:text-[#FE645F] font-semibold !text-xs">
+                                                                        {formatBalance(item.amount)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                                                    </span>
+                                                                </td>
+                                                                <td className={`${tableCellStyles} w-[25%] border-x-0 border-theme-gray-100 border-solid !text-xs`}>
+                                                                    <span className="text-gray-600 dark:text-gray-400 !text-xs">
+                                                                        {item.from} → {item.to}
+                                                                    </span>
+                                                                </td>
+                                                                <td className={`${tableCellStyles} w-[12%] text-center rounded-r-lg border-l-0 border-theme-gray-100 border-solid !text-xs`}>
+                                                                    <span
+                                                                        className={`px-2 py-1 font-medium flex justify-center items-center rounded-full text-xs ${getStatusColor(item.status)}`}
+                                                                    >
+                                                                        {getStatusText(item.status)}
+                                                                    </span>
+                                                                </td>
+                                                            </tr>
+                                                        )
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                )
                             ) : (
                                 <div className="text-center py-12">
                                     <Wallet className="w-12 h-12 mx-auto text-gray-400 dark:text-gray-500 mb-2" />

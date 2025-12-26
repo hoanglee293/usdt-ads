@@ -123,7 +123,7 @@
       "transferring": "転送中...",
       "history": "転送履歴",
       "historyEmpty": "転送履歴がありません",
-      "currentRewardBalance": "現在のリワード残高",
+      "currentRewardBalance": "リワード残高",
       "newRewardBalance": "転送後のリワード残高",
       "tabTransfer": "転送",
       "tabHistory": "履歴",

@@ -405,22 +405,37 @@ export default function MakeMoneyPage() {
     }, [coinsResponse, selectedCoin])
 
     // Update current time every second to check claim availability
+    // Only update when there's an active staking to avoid unnecessary re-renders
     useEffect(() => {
+        // Only set up interval if there's an active staking that needs countdown
+        // This prevents unnecessary re-renders when there's no active staking
+        const needsCountdown = currentStaking && (
+            currentStaking.status === 'running' || 
+            currentStaking.status === 'pending-claim'
+        )
+        
+        if (!needsCountdown) {
+            return
+        }
+
         const interval = setInterval(() => {
             setCurrentTime(new Date())
         }, 1000) // Update every second for accurate countdown
 
         return () => clearInterval(interval)
-    }, [])
+    }, [currentStaking])
 
     // Handle errors from queries and show notifications
+    // Note: Removed 't' from dependencies to prevent infinite re-renders
+    // 't' function is recreated on every render, but we only need it inside the effect
     useEffect(() => {
         if (isCoinsError && coinsError) {
             const error: any = coinsError
             const message = error?.response?.data?.message || t('makeMoney.errors.loadCoinsError')
             toast.error(message)
         }
-    }, [isCoinsError, coinsError, t])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isCoinsError, coinsError])
 
     useEffect(() => {
         if (isBalanceError && balanceError) {
@@ -428,7 +443,8 @@ export default function MakeMoneyPage() {
             const message = error?.response?.data?.message || t('makeMoney.errors.loadBalanceError')
             toast.error(message)
         }
-    }, [isBalanceError, balanceError, t])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isBalanceError, balanceError])
 
     useEffect(() => {
         if (isCurrentStakingError && currentStakingError) {
@@ -443,6 +459,7 @@ export default function MakeMoneyPage() {
             const message = error?.response?.data?.message || t('makeMoney.errors.loadStakingError')
             toast.error(message)
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isCurrentStakingError, currentStakingError, queryClient])
 
     useEffect(() => {
@@ -451,7 +468,8 @@ export default function MakeMoneyPage() {
             const message = error?.response?.data?.message || t('makeMoney.errors.loadHistoriesError')
             toast.error(message)
         }
-    }, [isHistoriesError, historiesError, t])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isHistoriesError, historiesError])
 
     useEffect(() => {
         if (isStakingWithMissionsError && stakingWithMissionsError) {
@@ -464,7 +482,8 @@ export default function MakeMoneyPage() {
             const message = error?.response?.data?.message || t('makeMoney.errors.loadMissionError')
             toast.error(message)
         }
-    }, [isStakingWithMissionsError, stakingWithMissionsError, t, queryClient])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isStakingWithMissionsError, stakingWithMissionsError, queryClient])
 
     useEffect(() => {
         if (isMissionError && missionError) {
@@ -477,7 +496,8 @@ export default function MakeMoneyPage() {
             const message = error?.response?.data?.message || t('makeMoney.errors.loadMissionError')
             toast.error(message)
         }
-    }, [isMissionError, missionError, t, queryClient])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isMissionError, missionError, queryClient])
 
     // ==================== Computed Values ====================
 
@@ -619,7 +639,6 @@ export default function MakeMoneyPage() {
 
     // Format number
     const formatNumber = (num: number): string => {
-        console.log(num)
         // Round to 2 decimal places using toFixed to avoid floating point issues
         const rounded = parseFloat(num.toFixed(2))
         return new Intl.NumberFormat('en-US', {
@@ -920,9 +939,12 @@ export default function MakeMoneyPage() {
                                                 {currentStaking?.devices_setting || 0}
                                             </p>
                                         </div>
-                                        <p className='text-[10px] sm:text-xs text-green-500 dark:text-green-400'>
-                                            {t('makeMoney.devicesDescription')}
-                                        </p>
+                                        <div className='flex items-center justify-between mb-1 sm:mb-2'>
+                                            <p className='text-xs sm:text-sm text-green-600 dark:text-green-400 font-medium'>{t('makeMoney.devicesDescription')}</p>
+                                            <p className='text-xs sm:text-sm font-semibold text-green-900 dark:text-green-300'>
+                                                 10
+                                            </p>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -1299,7 +1321,7 @@ export default function MakeMoneyPage() {
                             <Button
                                 onClick={() => claimMissionMutation.mutate()}
                                 disabled={claimMissionMutation.isPending || !canClaimReward(currentStaking)}
-                                className='w-full sm:w-[200px] text-center bg-theme-red-200 text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-9 sm:h-10 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer'
+                                className='w-full sm:w-[200px] text-center bg-theme-red-200 text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-9 sm:h-10 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer text-white'
                             >
                                 {claimMissionMutation.isPending ? (
                                     <>

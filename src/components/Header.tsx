@@ -184,9 +184,9 @@ export default function Header() {
   }, [isMenuOpen, isLangMenuOpen]);
 
   return (
-    <div className="fixed top-0 md:top-4 md:bg-transparent bg-transparent left-0 right-0 z-50 flex justify-between items-center h-14 md:h-16 px-3 sm:px-4 md:px-6 2xl:gap-24 gap-4 md:gap-16">
+    <div className="fixed top-1.5 md:top-4 md:bg-transparent bg-transparent left-1 right-0 z-50  flex justify-between items-center h-14 md:h-16 px-3 sm:px-4 md:px-6 2xl:gap-24 gap-4 md:gap-16">
       {/* Logo Section */}
-      <Link href="/" className='flex items-center gap-2 md:gap-3 font-inter'>
+      <Link href="/" className='flex items-center gap-1.5 md:gap-3 font-inter'>
         <img
           src="/logo.png"
           alt="logo"
@@ -221,7 +221,7 @@ export default function Header() {
                 className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 cursor-pointer rounded-full bg-transparent hover:bg-pink-100 dark:hover:bg-theme-gray-200 active:bg-pink-200 dark:active:bg-theme-gray-200/50 transition-colors border-none touch-manipulation"
                 aria-label="Language"
               >
-                <span className="text-base sm:text-lg">{langFlags[lang] || '🌐'}</span>
+                <span className="text-base sm:text-lg dark:text-white text-black">{langFlags[lang] || '🌐'}</span>
                 <span className="text-xs sm:text-sm font-inter font-medium text-pink-500 dark:text-pink-400 uppercase">
                   {lang}
                 </span>
@@ -289,7 +289,7 @@ export default function Header() {
                           alt="logo"
                           className='w-10 h-10 sm:w-12 sm:h-12 object-contain'
                         />
-                        <span className='tracking-[-0.02em] leading-[150%] inline-block   text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] font-bold text-sm'>
+                        <span className='tracking-[-0.02em] leading-[150%] inline-block   text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] font-bold text-sm font-inter'>
                           USDT ADS
                         </span>
                       </Link>
@@ -405,16 +405,18 @@ export default function Header() {
                   className="flex-1 flex flex-col items-center justify-center py-1.5 px-0 min-w-0"
                 >
                   <div
-                    className={`w-full flex flex-col items-center justify-center gap-1 py-1.5 px-0 rounded-lg transition-all touch-manipulation text-white ${isActive
-                        ? 'underline underline-offset-4 decoration-pink-500 dark:decoration-pink-400'
-                        : ''
+                    className={`w-full flex flex-col items-center justify-center gap-1 py-2 px-2 rounded-lg transition-all touch-manipulation text-white ${isActive
+                        ? 'bg-white/20 dark:bg-white/10 shadow-lg shadow-pink-500/50 backdrop-blur-sm border border-white/30'
+                        : 'opacity-80'
                       }`}
                   >
                     <IconComponent
-                      className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform ${isActive ? 'scale-110' : 'scale-100'
+                      className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform ${isActive ? 'scale-125 drop-shadow-lg' : 'scale-100'
                         }`}
                     />
-                    <span className={`text-[10px] sm:text-xs font-inter font-medium truncate w-full text-center ${isActive ? 'font-semibold' : 'font-medium'
+                    <span className={`text-[10px] sm:text-xs font-inter truncate w-full text-center transition-all ${isActive 
+                        ? 'font-bold text-white drop-shadow-2xl' 
+                        : 'font-medium opacity-90'
                       }`}>
                       {item.name}
                     </span>
