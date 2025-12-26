@@ -1050,8 +1050,8 @@ export default function WalletPage() {
                                                         <th className={`${tableHeaderStyles} w-[8%] text-left rounded-l-lg !text-xs`}>ID</th>
                                                         <th className={`${tableHeaderStyles} w-[20%] !text-xs`}>{t('wallet.tableHeaders.time')}</th>
                                                         <th className={`${tableHeaderStyles} w-[15%] !text-xs`}>{t('wallet.transferReward.amount')}</th>
-                                                        <th className={`${tableHeaderStyles} w-[25%] !text-xs`}>{t('wallet.tableHeaders.fromAddress')} → {t('wallet.tableHeaders.toAddress')}</th>
-                                                        <th className={`${tableHeaderStyles} w-[12%] text-center rounded-r-lg !text-xs`}>{t('wallet.transferReward.status')}</th>
+                                                        <th className={`${tableHeaderStyles} w-[20%] !text-xs`}>{t('wallet.tableHeaders.fromAddress')} → {t('wallet.tableHeaders.toAddress')}</th>
+                                                        <th className={`${tableHeaderStyles} w-[17%] text-right rounded-r-lg !text-xs`}>{t('wallet.transferReward.status')}</th>
                                                     </tr>
                                                 </thead>
                                             </table>
@@ -1114,17 +1114,17 @@ export default function WalletPage() {
                                                                         {formatBalance(item.amount)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                                                     </span>
                                                                 </td>
-                                                                <td className={`${tableCellStyles} w-[25%] border-x-0 border-theme-gray-100 border-solid !text-xs`}>
+                                                                <td className={`${tableCellStyles} w-[20%] border-x-0 border-theme-gray-100 border-solid !text-xs`}>
                                                                     <span className="text-gray-600 dark:text-gray-400 !text-xs">
                                                                         {item.from} → {item.to}
                                                                     </span>
                                                                 </td>
-                                                                <td className={`${tableCellStyles} w-[12%] text-center rounded-r-lg border-l-0 border-theme-gray-100 border-solid !text-xs`}>
-                                                                    <span
-                                                                        className={`px-2 py-1 font-medium flex justify-center items-center rounded-full text-xs ${getStatusColor(item.status)}`}
+                                                                <td className={`${tableCellStyles} w-[17%] text-right rounded-r-lg border-l-0 border-theme-gray-100 border-solid !text-xs`}>
+                                                                    <div
+                                                                        className={`px-2 py-1 w-fit font-medium justify-center items-center rounded-full text-xs ml-auto ${getStatusColor(item.status)}`}
                                                                     >
                                                                         {getStatusText(item.status)}
-                                                                    </span>
+                                                                    </div>
                                                                 </td>
                                                             </tr>
                                                         )

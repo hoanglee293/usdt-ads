@@ -88,8 +88,8 @@
       "time": "THỜI GIAN",
       "type": "TYPE",
       "amount": "SỐ TIỀN",
-      "fromAddress": "FROM",
-      "toAddress": "TO",
+      "fromAddress": "TỪ",
+      "toAddress": "ĐẾN",
       "transactionId": "TRANSACTION ID",
       "status": "STATUS",
       "hash": "HASH"

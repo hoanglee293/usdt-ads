@@ -88,8 +88,8 @@
       "time": "시간",
       "type": "유형",
       "amount": "금액",
-      "fromAddress": "보낸",
-      "toAddress": "받은",
+      "fromAddress": "송금",
+      "toAddress": "수취",
       "transactionId": "거래 ID",
       "status": "상태",
       "hash": "해시"

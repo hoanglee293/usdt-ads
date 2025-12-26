@@ -108,8 +108,8 @@
     },
     "copyLabels": {
       "walletAddress": "ウォレットアドレス",
-      "fromAddress": "送信元",
-      "toAddress": "送信先",
+      "fromAddress": "送金元",
+      "toAddress": "送金先",
       "transactionId": "取引ID"
     },
     "transferReward": {

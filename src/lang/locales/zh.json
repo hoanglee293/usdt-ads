@@ -88,8 +88,8 @@
       "time": "时间",
       "type": "类型",
       "amount": "金额",
-      "fromAddress": "发送",
-      "toAddress": "接收",
+      "fromAddress": "转账",
+      "toAddress": "收款",
       "transactionId": "交易ID",
       "status": "状态",
       "hash": "哈希"
