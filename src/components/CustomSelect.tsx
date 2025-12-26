@@ -85,7 +85,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
                     }
                 `
             }} />
-            <div className='relative w-full'>
+            <div className='relative w-fit'>
                 <select
                     id={id}
                     value={value}

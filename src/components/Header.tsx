@@ -186,7 +186,7 @@ export default function Header() {
   return (
     <div className="fixed top-0 md:top-4 md:bg-transparent bg-transparent left-0 right-0 z-50 flex justify-between items-center h-14 md:h-16 px-3 sm:px-4 md:px-6 2xl:gap-24 gap-4 md:gap-16">
       {/* Logo Section */}
-      <Link href="/" className='flex items-center gap-1.5 sm:gap-2 md:gap-3'>
+      <Link href="/" className='flex items-center gap-2 md:gap-3 font-inter'>
         <img
           src="/logo.png"
           alt="logo"
@@ -307,7 +307,7 @@ export default function Header() {
                       <div className="border-t border-gray-200 dark:border-theme-gray-100 my-1"></div>
                       
                       {/* Language Switcher Section */}
-                      <div className="px-3 sm:px-4 py-2">
+                      <div className="px-3 sm:px-4 py-3">
                         <button
                           onClick={() => setIsLangSectionOpen(!isLangSectionOpen)}
                           className="w-full flex items-center justify-between px-3 py-2.5 cursor-pointer border-none text-xs font-inter font-semibold text-gray-500  uppercase hover:bg-theme-gray-100 rounded-lg transition-colors touch-manipulation dark:text-gray-700"
@@ -350,7 +350,7 @@ export default function Header() {
                       {/* Theme Toggle Section */}
                       <button
                         onClick={toggleTheme}
-                        className="w-[-webkit-fill-available] px-2 mx-3 rounded-lg sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border-none outline-none bg-transparent font-inter font-medium text-left hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 active:bg-theme-gray-100 dark:active:bg-theme-gray-100/30 transition-colors touch-manipulation flex items-center gap-3 text-theme-black-100 dark:text-theme-gray-100"
+                        className="w-[-webkit-fill-available] px-2 mx-3 rounded-lg sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border-none outline-none bg-gray-200 dark:bg-theme-gray-200 font-inter font-medium text-left hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 active:bg-theme-gray-100 dark:active:bg-theme-gray-100/30 transition-colors touch-manipulation flex items-center gap-3 text-theme-black-100 dark:text-theme-gray-100"
                       >
                         {theme === 'dark' ? (
                           <>
@@ -386,14 +386,12 @@ export default function Header() {
           {/* UserDropdown - Desktop Only */}
           {!isMobile && <UserDropdown />}
         </div>
-
-
       </div>
       
       {/* Bottom Navigation Bar - Mobile Only */}
       {isMobile && (
-        <div className="fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-theme-gray-200 border-t border-gray-200 dark:border-theme-gray-100 safe-area-bottom">
-          <div className="flex items-center justify-around px-1 py-1.5 shadow-lg">
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-transparent border-t border-gray-200 dark:border-theme-gray-100 safe-area-bottom">
+          <div className="flex items-center justify-around px-1 py-1.5 shadow-lg bg-theme-pink-100/80 dark:bg-[#1B1B1B] rounded-t-3xl">
             {listMenu.filter(item => item.href !== '/whitepaper').map((item) => {
               const IconComponent = item.icon;
               const isActive = pathname === item.href;

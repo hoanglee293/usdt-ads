@@ -541,14 +541,14 @@ export default function WalletPage() {
     }
 
     return (
-        <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
+        <div className='w-full min-h-svh flex py-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
             <div className='w-full max-w-7xl'>
                 {/* Balance Section */}
                 <div className='flex flex-col items-center justify-center mb-4 sm:mb-6'>
                     {isMobile ? (
                         // Mobile: Stack vertically, compact
                         <div className='flex flex-col items-center w-full'>
-                            <div className='flex items-center gap-2 mb-2'>
+                            {/* <div className='flex items-center gap-2 mb-2'>
                                 <span className='text-xs font-medium text-theme-red-100 dark:text-[#FE645F]'>{t('wallet.coin')}:</span>
                                 {isLoadingCoins ? (
                                     <Skeleton className="h-7 w-20" />
@@ -563,7 +563,7 @@ export default function WalletPage() {
                                         className="lg:w-20 text-xs"
                                     />
                                 )}
-                            </div>
+                            </div> */}
                             <div className='flex items-center gap-2'>
                                 {isLoadingBalance ? (
                                     <Skeleton className="h-6 w-40" />

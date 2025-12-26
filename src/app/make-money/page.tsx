@@ -840,14 +840,14 @@ export default function MakeMoneyPage() {
     const tableCellStyles = "px-2 py-3 sm:px-3 text-xs sm:text-sm lg:text-base text-theme-gray-200 dark:text-gray-300 bg-transparent border-y border-black dark:border-gray-700 group-hover:bg-gray-100 dark:group-hover:bg-gray-800 font-light"
 
     return (
-        <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
+        <div className='w-full min-h-svh flex py-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
             <div className='w-full max-w-7xl'>
                 {/* Header Section */}
                 {currentStaking && (
                     <div className='flex flex-col items-center justify-center'>
                         <div className='flex items-end justify-center mb-2 sm:mb-4 gap-2 sm:gap-4'>
                             <div className='flex flex-col items-center mx-2 sm:mx-4'>
-                                <h1 className='text-xl sm:text-2xl md:text-3xl font-semibold   text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]'>{currentStaking && currentStaking?.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}</h1>
+                                <h1 className='text-2xl md:text-3xl font-semibold   text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]'>{currentStaking && currentStaking?.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}</h1>
                             </div>
                         </div>
                     </div>
@@ -904,7 +904,7 @@ export default function MakeMoneyPage() {
                         {stakingWithMissionsResponse?.data ? (
                             <>
                                 {/* Video Views & Devices Info */}
-                                <div className='grid grid-cols-2 gap-2 sm:gap-3 md:gap-10 w-full md:max-w-3xl mx-auto mb-3 sm:mb-4'>
+                                <div className='grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3 md:gap-10 w-full md:max-w-3xl mx-auto mb-3 sm:mb-4'>
                                     <div className='p-2 sm:p-3 md:p-4 bg-blue-50 dark:bg-blue-900/55 rounded-lg border border-blue-200 dark:border-blue-700'>
                                         <div className='flex items-center justify-between mb-1 sm:mb-2'>
                                             <p className='text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium'>{t('makeMoney.videoViews')}</p>
@@ -931,7 +931,7 @@ export default function MakeMoneyPage() {
 
                                 {currentStaking && (
                                     <div className='mb-6 sm:mb-8'>
-                                        <div className='max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4 sm:p-6 shadow-md'>
+                                        <div className='max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 py-4 sm:p-6 shadow-md'>
                                             {(() => {
                                                 const startDate = new Date(currentStaking.date_start)
                                                 const endDate = new Date(currentStaking.date_end)
@@ -1053,13 +1053,13 @@ export default function MakeMoneyPage() {
 
                                                                                 // Determine text color
                                                                                 const getTextColor = () => {
-                                                                                    if (isStart || isEnd) return 'text-white'
+                                                                                    if (isStart || isEnd) return 'dark:text-white text-theme-black-100'
                                                                                     if (hasMission) {
                                                                                         return isSuccess
                                                                                             ? 'text-green-700 dark:text-green-300'
                                                                                             : 'text-orange-700 dark:text-orange-300'
                                                                                     }
-                                                                                    if (inRange) return 'text-white'
+                                                                                    if (inRange) return 'dark:text-white text-theme-black-100'
                                                                                     return 'text-gray-700 dark:text-gray-300'
                                                                                 }
 
@@ -1068,7 +1068,7 @@ export default function MakeMoneyPage() {
                                                                                 return (
                                                                                     <td
                                                                                         key={dayIndex}
-                                                                                        className={`px-1 py-1 sm:px-2 h-12 text-center border align-top`}
+                                                                                        className={`px-[1px] py-1 sm:px-2 h-12 text-center border align-top`}
                                                                                     >
                                                                                         {day !== null ? (
                                                                                             <div className={`flex py-1 flex-col h-full justify-center items-center gap-0.5 sm:gap-1 ${mission?.status === 'success'
@@ -1089,7 +1089,7 @@ export default function MakeMoneyPage() {
                                                                                                                     ? 'text-green-600 dark:text-green-400'
                                                                                                                     : 'text-orange-600 dark:text-orange-400'
                                                                                                                 }`}>
-                                                                                                                + ${mission.reward.toFixed(2)}
+                                                                                                                + ${mission.reward.toFixed(0)}
                                                                                                             </div>
                                                                                                         )}
                                                                                                     </div>
@@ -1323,7 +1323,7 @@ export default function MakeMoneyPage() {
                             {isMobile ? (
                                 // Mobile: Stack vertically, compact
                                 <div className='flex flex-col items-center w-full'>
-                                    <div className='flex items-center gap-2 mb-2'>
+                                    {/* <div className='flex items-center gap-2 mb-2'>
                                         <span className='text-xs font-medium text-theme-red-100 dark:text-[#FE645F]'>{t('wallet.coin')}:</span>
                                         {isLoadingCoins ? (
                                             <Skeleton className="h-7 w-20" />
@@ -1338,7 +1338,7 @@ export default function MakeMoneyPage() {
                                                 className="w-24 h-8 text-xs"
                                             />
                                         )}
-                                    </div>
+                                    </div> */}
                                     <div className='flex items-center gap-2'>
                                         {isLoadingBalance ? (
                                             <Skeleton className="h-6 w-40" />

@@ -102,7 +102,7 @@ export default function DirectReferralPage() {
         : (smartRefDetail.data || []);
 
     return (
-        <div className="w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1">
+        <div className="w-full min-h-svh flex py-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1">
             <div className="w-full max-w-7xl space-y-6">
                 {/* Title Section */}
                 <div className="flex items-center justify-center gap-3 sm:gap-4 mb-10">
