@@ -405,9 +405,9 @@ export default function Header() {
                   className="flex-1 flex flex-col items-center justify-center py-1.5 px-0 min-w-0"
                 >
                   <div
-                    className={`w-full flex flex-col items-center justify-center gap-1 py-1.5 px-0 rounded-lg transition-all touch-manipulation ${isActive
-                        ? 'text-pink-500 dark:text-pink-400'
-                        : 'text-theme-gray-100'
+                    className={`w-full flex flex-col items-center justify-center gap-1 py-1.5 px-0 rounded-lg transition-all touch-manipulation text-white ${isActive
+                        ? 'underline underline-offset-4 decoration-pink-500 dark:decoration-pink-400'
+                        : ''
                       }`}
                   >
                     <IconComponent
