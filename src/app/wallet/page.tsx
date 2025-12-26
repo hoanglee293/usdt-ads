@@ -595,7 +595,7 @@ export default function WalletPage() {
                         // Desktop: Original layout
                         <div className='flex items-end justify-center mb-3'>
                             <div className='flex flex-col items-center mx-4'>
-                                <div className='flex items-center gap-2 mb-4'>
+                                {/* <div className='flex items-center gap-2 mb-4'>
                                     <span className='text-sm font-medium text-theme-red-100 dark:text-[#FE645F]'>{t('wallet.selectCoin')}:</span>
                                     {isLoadingCoins ? (
                                         <Skeleton className="h-8 w-24" />
@@ -610,7 +610,7 @@ export default function WalletPage() {
                                             className="w-24 text-sm"
                                         />
                                     )}
-                                </div>
+                                </div> */}
                                 {isLoadingBalance ? (
                                     <Skeleton className="h-8 w-48" />
                                 ) : balanceResponse?.data ? (
