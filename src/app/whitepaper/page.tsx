@@ -278,7 +278,7 @@ export default function WhitepaperPage() {
                 <li className="indent-4">{t('whitepaper.section5.commission.level1')}</li>
                 <li className="indent-4">{t('whitepaper.section5.commission.level2')}</li>
               </ul>
-              <span className="text-sm sm:text-base text-theme-red-200 dark:text-gray-300 font-semibold italic">Tổng hoa hồng thu nhập lên tới 15% số tiền staking của mỗi 1 người mới được mời</span>
+              <span className="text-sm sm:text-base text-theme-red-200 font-semibold italic">Tổng hoa hồng thu nhập lên tới 15% số tiền staking của mỗi 1 người mới được mời</span>
             </div>
 
             <h3 className="text-xl sm:text-2xl font-semibold text-theme-black-100 dark:text-white mt-4 sm:mt-6 mb-3 sm:mb-4">
@@ -333,7 +333,7 @@ export default function WhitepaperPage() {
               </table>
             </div>
             <div className="bg-gray-50 dark:bg-gray-800 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 space-y-2">
-              <div className="text-base sm:text-xl text-theme-red-200 dark:text-gray-300 font-semibold italic">Tổng giải thưởng lên đến 1510 USDT</div>
+              <div className="text-base sm:text-xl text-theme-red-200 font-semibold italic">Tổng giải thưởng lên đến 1510 USDT</div>
               <p className="text-xs sm:text-sm text-theme-black-100 dark:text-gray-300 italic">
                 <strong>{t('whitepaper.section5.milestones.condition').split(': ')[0]}:</strong> {t('whitepaper.section5.milestones.condition').split(': ')[1]}
               </p>
