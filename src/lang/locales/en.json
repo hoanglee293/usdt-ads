@@ -318,6 +318,14 @@
       "11": "November",
       "12": "December"
     },
+    "downloadCalendar": "Download",
+    "shareCalendar": "Share",
+    "capturingCalendar": "Capturing image...",
+    "calendarDownloaded": "Calendar image downloaded",
+    "calendarShared": "Calendar image shared",
+    "calendarCaptureError": "Error capturing calendar image",
+    "shareCalendarTitle": "Staking Calendar",
+    "shareCalendarText": "My staking calendar",
     "errors": {
       "loadCoinsError": "Unable to load coin list",
       "loadBalanceError": "Unable to load balance",

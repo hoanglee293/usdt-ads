@@ -318,6 +318,14 @@
       "11": "11月",
       "12": "12月"
     },
+    "downloadCalendar": "ダウンロード",
+    "shareCalendar": "共有",
+    "capturingCalendar": "画像を撮影中...",
+    "calendarDownloaded": "カレンダー画像をダウンロードしました",
+    "calendarShared": "カレンダー画像を共有しました",
+    "calendarCaptureError": "カレンダー画像の撮影中にエラーが発生しました",
+    "shareCalendarTitle": "ステーキングカレンダー",
+    "shareCalendarText": "私のステーキングカレンダー",
     "errors": {
       "loadCoinsError": "コインリストを読み込めません",
       "loadBalanceError": "残高を読み込めません",

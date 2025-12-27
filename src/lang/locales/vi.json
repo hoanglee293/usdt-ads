@@ -318,6 +318,14 @@
       "11": "Tháng 11",
       "12": "Tháng 12"
     },
+    "downloadCalendar": "Tải xuống",
+    "shareCalendar": "Chia sẻ",
+    "capturingCalendar": "Đang chụp ảnh...",
+    "calendarDownloaded": "Đã tải xuống hình ảnh lịch",
+    "calendarShared": "Đã chia sẻ hình ảnh",
+    "calendarCaptureError": "Có lỗi xảy ra khi chụp ảnh",
+    "shareCalendarTitle": "Lịch Staking",
+    "shareCalendarText": "Lịch staking của tôi",
     "errors": {
       "loadCoinsError": "Không thể tải danh sách coin",
       "loadBalanceError": "Không thể tải số dư",

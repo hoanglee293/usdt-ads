@@ -14,7 +14,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        orbitron: ['var(--font-orbitron)', 'sans-serif'],
+        orbitron: ['var(-- )', 'sans-serif'],
         inter: ['var(--font-inter)', 'sans-serif'],
       },
       backgroundImage: {

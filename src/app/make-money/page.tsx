@@ -1,6 +1,7 @@
 'use client'
 import React, { useState, useMemo, useEffect, useRef } from 'react'
-import { Loader2, Calendar, DollarSign, Target, Clock, CheckCircle2, XCircle, ChevronLeft, ChevronRight } from 'lucide-react'
+import html2canvas from 'html2canvas'
+import { Loader2, Calendar, DollarSign, Target, Clock, CheckCircle2, XCircle, ChevronLeft, ChevronRight, Download, Share2 } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { Button } from '@/ui/button'
 import { Input } from '@/ui/input'
@@ -40,6 +41,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 export default function MakeMoneyPage() {
     const queryClient = useQueryClient()
     const tableRef = useRef<HTMLDivElement>(null)
+    const calendarRef = useRef<HTMLDivElement>(null)
     const isMobile = useIsMobile()
     const { t } = useLang()
 
@@ -873,6 +875,101 @@ export default function MakeMoneyPage() {
         setUsdtCoinId(coinId) // Sync with usdtCoinId for balance query
     }
 
+    // Capture calendar as image and download
+    const handleDownloadCalendar = async () => {
+        if (!calendarRef.current) {
+            toast.error(t('makeMoney.calendarCaptureError') || 'Không thể chụp ảnh lịch')
+            return
+        }
+
+        try {
+            // Detect dark mode
+            const isDarkMode = document.documentElement.classList.contains('dark')
+            const backgroundColor = isDarkMode ? '#1f2937' : '#ffffff' // gray-800 for dark, white for light
+
+            const canvas = await html2canvas(calendarRef.current, {
+                backgroundColor: backgroundColor,
+                scale: 2,
+                logging: false,
+                useCORS: true,
+            })
+
+            const imageUrl = canvas.toDataURL('image/png')
+            
+            // Generate filename with current date
+            const date = new Date()
+            const dateStr = date.toISOString().split('T')[0]
+            const filename = `staking-calendar-${dateStr}.png`
+
+            // Create download link
+            const link = document.createElement('a')
+            link.download = filename
+            link.href = imageUrl
+            document.body.appendChild(link)
+            link.click()
+            document.body.removeChild(link)
+
+            toast.success(t('makeMoney.calendarDownloaded') || 'Đã tải xuống hình ảnh lịch')
+        } catch (error) {
+            console.error('Error capturing calendar:', error)
+            toast.error(t('makeMoney.calendarCaptureError') || 'Có lỗi xảy ra khi chụp ảnh')
+        }
+    }
+
+    // Share calendar image
+    const handleShareCalendar = async () => {
+        if (!calendarRef.current) {
+            toast.error(t('makeMoney.calendarCaptureError') || 'Không thể chụp ảnh lịch')
+            return
+        }
+
+        try {
+            // Detect dark mode
+            const isDarkMode = document.documentElement.classList.contains('dark')
+            const backgroundColor = isDarkMode ? '#1f2937' : '#ffffff' // gray-800 for dark, white for light
+
+            const canvas = await html2canvas(calendarRef.current, {
+                backgroundColor: backgroundColor,
+                scale: 2,
+                logging: false,
+                useCORS: true,
+            })
+
+            canvas.toBlob(async (blob) => {
+                if (!blob) {
+                    toast.error(t('makeMoney.calendarCaptureError') || 'Có lỗi xảy ra khi chụp ảnh')
+                    return
+                }
+
+                const file = new File([blob], 'staking-calendar.png', { type: 'image/png' })
+
+                // Check if Web Share API is available
+                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            files: [file],
+                            title: t('makeMoney.shareCalendarTitle') || 'Staking Calendar',
+                            text: t('makeMoney.shareCalendarText') || 'Lịch staking của tôi',
+                        })
+                        toast.success(t('makeMoney.calendarShared') || 'Đã chia sẻ hình ảnh')
+                    } catch (shareError: any) {
+                        // User cancelled or error occurred, fallback to download
+                        if (shareError.name !== 'AbortError') {
+                            console.error('Share error:', shareError)
+                            handleDownloadCalendar()
+                        }
+                    }
+                } else {
+                    // Fallback to download if share is not available
+                    handleDownloadCalendar()
+                }
+            }, 'image/png')
+        } catch (error) {
+            console.error('Error sharing calendar:', error)
+            toast.error(t('makeMoney.calendarCaptureError') || 'Có lỗi xảy ra khi chia sẻ')
+        }
+    }
+
     const stakingTypeOptions = [
         { value: '1d', label: t('makeMoney.oneDay') },
         { value: '7d', label: t('makeMoney.sevenDays') },
@@ -977,7 +1074,7 @@ export default function MakeMoneyPage() {
 
                                 {currentStaking && (
                                     <div className='mb-6 sm:mb-8'>
-                                        <div className='max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 py-4 sm:p-6 shadow-md'>
+                                        <div ref={calendarRef} className='max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 py-4 sm:p-6 shadow-md'>
                                             {(() => {
                                                 const startDate = new Date(currentStaking.date_start)
                                                 const endDate = new Date(currentStaking.date_end)
@@ -1065,12 +1162,28 @@ export default function MakeMoneyPage() {
                                                             <h3 className='text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-200'>
                                                                 {monthNames[month]} {year}
                                                             </h3>
-                                                            <button
-                                                                onClick={() => setCurrentMonthIndex(currentMonthIndex + 1)}
-                                                                className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 cursor-pointer'
-                                                            >
-                                                                <ChevronRight className='w-5 h-5' />
-                                                            </button>
+                                                            <div className='flex items-center gap-2'>
+                                                                <button
+                                                                    onClick={() => setCurrentMonthIndex(currentMonthIndex + 1)}
+                                                                    className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 cursor-pointer'
+                                                                >
+                                                                    <ChevronRight className='w-5 h-5' />
+                                                                </button>
+                                                                <button
+                                                                    onClick={handleDownloadCalendar}
+                                                                    className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-blue-100 dark:bg-blue-900/50 hover:bg-blue-200 dark:hover:bg-blue-900/70 text-blue-700 dark:text-blue-300 cursor-pointer'
+                                                                    title={t('makeMoney.downloadCalendar') || 'Tải xuống'}
+                                                                >
+                                                                    <Download className='w-5 h-5' />
+                                                                </button>
+                                                                <button
+                                                                    onClick={handleShareCalendar}
+                                                                    className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-green-100 dark:bg-green-900/50 hover:bg-green-200 dark:hover:bg-green-900/70 text-green-700 dark:text-green-300 cursor-pointer'
+                                                                    title={t('makeMoney.shareCalendar') || 'Chia sẻ'}
+                                                                >
+                                                                    <Share2 className='w-5 h-5' />
+                                                                </button>
+                                                            </div>
                                                         </div>
 
                                                         {/* Calendar */}

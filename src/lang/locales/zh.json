@@ -318,6 +318,14 @@
       "11": "11月",
       "12": "12月"
     },
+    "downloadCalendar": "下载",
+    "shareCalendar": "分享",
+    "capturingCalendar": "正在拍摄图片...",
+    "calendarDownloaded": "日历图片已下载",
+    "calendarShared": "日历图片已分享",
+    "calendarCaptureError": "拍摄日历图片时出错",
+    "shareCalendarTitle": "质押日历",
+    "shareCalendarText": "我的质押日历",
     "errors": {
       "loadCoinsError": "无法加载币种列表",
       "loadBalanceError": "无法加载余额",

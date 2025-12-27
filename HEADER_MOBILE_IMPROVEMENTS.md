@@ -51,7 +51,7 @@
     alt="logo" 
     className='w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 object-contain' 
   />
-  <span className='tracking-[-0.02em] leading-[150%] inline-block font-orbitron text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] font-bold text-xs sm:text-sm md:text-base'>
+  <span className='tracking-[-0.02em] leading-[150%] inline-block   text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] font-bold text-xs sm:text-sm md:text-base'>
     USDT ADS
   </span>
 </div>
@@ -218,7 +218,7 @@ export default function Header() {
           alt="logo" 
           className='w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 object-contain' 
         />
-        <span className='tracking-[-0.02em] leading-[150%] inline-block font-orbitron text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] font-bold text-xs sm:text-sm md:text-base'>
+        <span className='tracking-[-0.02em] leading-[150%] inline-block   text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] font-bold text-xs sm:text-sm md:text-base'>
           USDT ADS
         </span>
       </div>

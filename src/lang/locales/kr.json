@@ -318,6 +318,14 @@
       "11": "11월",
       "12": "12월"
     },
+    "downloadCalendar": "다운로드",
+    "shareCalendar": "공유",
+    "capturingCalendar": "이미지 캡처 중...",
+    "calendarDownloaded": "캘린더 이미지가 다운로드되었습니다",
+    "calendarShared": "캘린더 이미지가 공유되었습니다",
+    "calendarCaptureError": "캘린더 이미지 캡처 중 오류가 발생했습니다",
+    "shareCalendarTitle": "스테이킹 캘린더",
+    "shareCalendarText": "내 스테이킹 캘린더",
     "errors": {
       "loadCoinsError": "코인 목록을 불러올 수 없습니다",
       "loadBalanceError": "잔액을 불러올 수 없습니다",
