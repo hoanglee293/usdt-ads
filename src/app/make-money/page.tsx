@@ -311,7 +311,6 @@ export default function MakeMoneyPage() {
             // Refetch trực tiếp tất cả các queries để đảm bảo dữ liệu được cập nhật ngay lập tức
             await Promise.all([
                 refetchBalance(),
-                refetchCurrentStaking(),
                 refetchHistories(),
             ])
 
@@ -319,15 +318,32 @@ export default function MakeMoneyPage() {
             const updatedStaking = data.data.staking_lock
             if (updatedStaking && updatedStaking.status === 'running') {
                 // Nếu staking vẫn đang running, refetch để cập nhật dữ liệu mới
-                refetchStakingWithMissions()
-                refetchMissionNow()
+                await Promise.all([
+                    refetchCurrentStaking(),
+                    refetchStakingWithMissions(),
+                    refetchMissionNow(),
+                ])
             } else {
                 // Nếu staking đã kết thúc hoặc không còn active, clear dữ liệu để tránh hiển thị dữ liệu cũ
+                queryClient.setQueryData(['current-staking'], null)
                 queryClient.setQueryData(['current-staking-with-missions'], null)
                 queryClient.setQueryData(['mission-now'], null)
 
                 // Thử refetch để kiểm tra xem còn staking active không
                 // Nếu API trả về 404, query sẽ tự động set data thành undefined
+                try {
+                    const currentStakingResult = await refetchCurrentStaking()
+                    // Nếu refetch thành công nhưng không có data, clear query
+                    if (!currentStakingResult.data) {
+                        queryClient.setQueryData(['current-staking'], null)
+                    }
+                } catch (error: any) {
+                    // 404 là expected khi không còn staking active
+                    if (error?.response?.status === 404) {
+                        queryClient.setQueryData(['current-staking'], null)
+                    }
+                }
+
                 try {
                     await refetchStakingWithMissions()
                 } catch (error: any) {
@@ -452,7 +468,8 @@ export default function MakeMoneyPage() {
             const error: any = currentStakingError
             // 404 is expected when no active staking exists, reset related data
             if (error?.response?.status === 404) {
-                // Reset missions data vì không còn staking active
+                // Reset all staking-related data vì không còn staking active
+                queryClient.setQueryData(['current-staking'], null)
                 queryClient.setQueryData(['current-staking-with-missions'], null)
                 queryClient.setQueryData(['mission-now'], null)
                 return
@@ -664,7 +681,11 @@ export default function MakeMoneyPage() {
 
     // Get reward amount - ưu tiên real_reward, fallback về estimated_reward hoặc tính toán
     const getRewardAmount = (staking: StakingPackage): number => {
-        return (staking?.total_reward || 0) - (staking?.amount || 0)
+        // Cuối cùng tính từ total_reward - amount (nếu total_reward bao gồm cả principal)
+        if (staking.total_reward != null) {
+            return staking.total_reward - staking.amount
+        }
+        return 0
     }
 
     // Get status badge
