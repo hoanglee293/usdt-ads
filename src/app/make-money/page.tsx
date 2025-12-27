@@ -1052,12 +1052,6 @@ export default function MakeMoneyPage() {
                                                                                 const getBackgroundColor = () => {
                                                                                     if (day === null) return 'bg-gray-50 dark:bg-gray-800/30'
                                                                                     if (isStart || isEnd) return 'bg-gray-400 dark:bg-gray-500'
-                                                                                    if (mission) {
-                                                                                        // Ngày có mission: màu theo status
-                                                                                        return mission.status === 'success'
-                                                                                            ? '!bg-green-100 !dark:bg-green-900/30'
-                                                                                            : '!bg-orange-100 !dark:bg-orange-900/30'
-                                                                                    }
                                                                                     if (inRange) {
                                                                                         // Khoảng thời gian staking nhưng chưa có dữ liệu
                                                                                         return 'bg-gray-400 dark:bg-gray-500'
