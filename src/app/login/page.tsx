@@ -121,7 +121,7 @@ const page = () => {
 
                         <div className='flex justify-between items-center'>
                             <div onClick={() => router.push('/forgot-password')} className='text-sm text-theme-black-100 dark:text-white hover:text-theme-black-100 dark:hover:text-gray-200 font-semibold cursor-pointer'>{t('login.forgotPassword')}</div>
-                            <div onClick={() => router.push('/register')} className='text-sm text-theme-red dark:text-theme-red-100 hover:text-theme-red-100 dark:hover:text-theme-red-200/80 font-semibold cursor-pointer'>{t('login.register')}</div>
+                            <div onClick={() => router.push('/register')} className='text-sm text-theme-red-200 hover:text-theme-red-100 dark:hover:text-theme-red-200/80 font-semibold cursor-pointer'>{t('login.register')}</div>
                         </div>
 
                         <button

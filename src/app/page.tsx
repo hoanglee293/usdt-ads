@@ -145,6 +145,7 @@ export default function HomePage() {
               />
             </div>
           </div>
+          <button onClick={() => router.push('/whitepaper')} className='w-full cursor-pointer sm:w-auto px-6 sm:px-10  border-none outline-none py-1 sm:py-1.5 bg-[#a976fb] text-white font-bold text-xs sm:text-sm md:text-base rounded-full hover:opacity-90 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 uppercase tracking-wide mb-4'>Tìm hiểu thêm</button>
 
           {/* Main Title */}
           <h1

@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useMemo, useEffect, useRef } from 'react'
-import { Loader2, Calendar, DollarSign, Target, Clock, CheckCircle2, XCircle } from 'lucide-react'
+import { Loader2, Calendar, DollarSign, Target, Clock, CheckCircle2, XCircle, ChevronLeft, ChevronRight } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { Button } from '@/ui/button'
 import { Input } from '@/ui/input'
@@ -52,6 +52,7 @@ export default function MakeMoneyPage() {
     const [isBaseConfirmModalOpen, setIsBaseConfirmModalOpen] = useState<boolean>(false)
     const [isStakingConfirmModalOpen, setIsStakingConfirmModalOpen] = useState<boolean>(false)
     const [currentTime, setCurrentTime] = useState<Date>(new Date())
+    const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0) // Index của tháng hiện tại trong danh sách các tháng
 
     // ==================== React Query Hooks ====================
 
@@ -484,6 +485,11 @@ export default function MakeMoneyPage() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isStakingWithMissionsError, stakingWithMissionsError, queryClient])
+
+    // Reset currentMonthIndex when currentStaking changes
+    useEffect(() => {
+        setCurrentMonthIndex(0)
+    }, [currentStaking?.id])
 
     useEffect(() => {
         if (isMissionError && missionError) {
@@ -959,15 +965,6 @@ export default function MakeMoneyPage() {
                                                 const startDateOnly = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())
                                                 const endDateOnly = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate())
 
-                                                const year = startDate.getFullYear()
-                                                const month = startDate.getMonth()
-
-                                                // Get first day of month and number of days
-                                                const firstDay = new Date(year, month, 1)
-                                                const lastDay = new Date(year, month + 1, 0)
-                                                const daysInMonth = lastDay.getDate()
-                                                const startingDayOfWeek = firstDay.getDay() // 0 = Sunday, 1 = Monday, etc.
-
                                                 // Vietnamese day names
                                                 const dayNames = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7']
                                                 const monthNames = [
@@ -984,16 +981,30 @@ export default function MakeMoneyPage() {
                                                     return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
                                                 }
 
-                                                // Helper to find mission by date
-                                                const findMissionByDate = (day: number): Mission | undefined => {
-                                                    const dateString = formatDateString(year, month, day)
-                                                    return missionsList.find(mission => mission.date === dateString)
-                                                }
+                                                // Calculate current month to display based on startDate and currentMonthIndex
+                                                // currentMonthIndex = 0 means startDate's month, negative means previous months, positive means next months
+                                                const displayDate = new Date(startDateOnly)
+                                                displayDate.setMonth(displayDate.getMonth() + currentMonthIndex)
+                                                
+                                                const year = displayDate.getFullYear()
+                                                const month = displayDate.getMonth()
 
                                                 // Helper to check if date is in range
                                                 const isDateInRange = (day: number): boolean => {
                                                     const currentDate = new Date(year, month, day)
                                                     return currentDate >= startDateOnly && currentDate <= endDateOnly
+                                                }
+
+                                                // Get first day of month and number of days
+                                                const firstDay = new Date(year, month, 1)
+                                                const lastDay = new Date(year, month + 1, 0)
+                                                const daysInMonth = lastDay.getDate()
+                                                const startingDayOfWeek = firstDay.getDay() // 0 = Sunday, 1 = Monday, etc.
+
+                                                // Helper to find mission by date
+                                                const findMissionByDate = (day: number): Mission | undefined => {
+                                                    const dateString = formatDateString(year, month, day)
+                                                    return missionsList.find(mission => mission.date === dateString)
                                                 }
 
                                                 const isStartDate = (day: number): boolean => {
@@ -1019,11 +1030,29 @@ export default function MakeMoneyPage() {
                                                     calendarDays.push(day)
                                                 }
 
+
                                                 return (
                                                     <div>
-                                                        <h3 className='text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-200 mb-4 text-center'>
-                                                            {monthNames[month]} {year}
-                                                        </h3>
+                                                        {/* Month Navigation */}
+                                                        <div className='flex items-center justify-between mb-4'>
+                                                            <button
+                                                                onClick={() => setCurrentMonthIndex(currentMonthIndex - 1)}
+                                                                className='flex items-center outline-none border-none justify-center w-10 h-10 rounded-lg transition-colors bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 cursor-pointer'
+                                                            >
+                                                                <ChevronLeft className='w-5 h-5' />
+                                                            </button>
+                                                            <h3 className='text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-200'>
+                                                                {monthNames[month]} {year}
+                                                            </h3>
+                                                            <button
+                                                                onClick={() => setCurrentMonthIndex(currentMonthIndex + 1)}
+                                                                className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 cursor-pointer'
+                                                            >
+                                                                <ChevronRight className='w-5 h-5' />
+                                                            </button>
+                                                        </div>
+
+                                                        {/* Calendar */}
                                                         <div className='overflow-x-auto'>
                                                             <table className='w-full border-collapse'>
                                                                 <thead>
@@ -1119,6 +1148,8 @@ export default function MakeMoneyPage() {
                                                                 </tbody>
                                                             </table>
                                                         </div>
+
+                                                        {/* Legend */}
                                                         <div className='mt-4 flex flex-wrap gap-3 sm:gap-4 justify-center text-xs sm:text-sm'>
                                                             <div className='flex items-center gap-2'>
                                                                 <div className='w-4 h-4 bg-gray-400 dark:bg-gray-500 rounded'></div>

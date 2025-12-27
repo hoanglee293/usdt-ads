@@ -1,4 +1,5 @@
 'use client'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
 interface AuthLayoutPanelProps {
@@ -22,6 +23,7 @@ const AuthLayoutPanel: React.FC<AuthLayoutPanelProps> = ({
     showHeading = false,
     borderColor
 }) => {
+    const router = useRouter()
     // Determine border color based on variant if not provided
     const getBorderColor = () => {
         if (borderColor) return borderColor
@@ -41,7 +43,7 @@ const AuthLayoutPanel: React.FC<AuthLayoutPanelProps> = ({
 
     // Get content container class - use login style for all variants
     const getContentContainerClass = () => {
-        return 'flex justify-center mb-[10vh] items-center flex-col gap-[1vh] w-full px-4 min-w-0 relative z-10 bg-white/70 dark:bg-black/30 py-6'
+        return 'flex justify-center mb-[10vh] items-center flex-col gap-[1vh] w-full px-4 min-w-0 relative z-10 bg-white/70 dark:bg-black/70 py-6'
     }
 
     return (
@@ -65,12 +67,12 @@ const AuthLayoutPanel: React.FC<AuthLayoutPanelProps> = ({
                     </h2>
                 )}
                 {description1 && (
-                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium flex-shrink-0'>
+                    <p className='xl:text-lg text-sm text-center text-theme-black-100 dark:text-gray-300 font-medium flex-shrink-0'>
                         {description1}
                     </p>
                 )}
                 {description2 && (
-                    <p className='text-lg text-center text-theme-black-100 dark:text-gray-300 font-medium flex-shrink-0'>
+                    <p className='xl:text-lg text-sm text-center text-theme-black-100 dark:text-gray-300 font-medium flex-shrink-0'>
                         {description2}
                     </p>
                 )}

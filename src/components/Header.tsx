@@ -210,9 +210,9 @@ export default function Header() {
         </div>
       )}
 
-      <div className='flex items-center gap-3 sm:gap-4 md:gap-6 lg:gap-10'>
+      <div className='flex items-center gap-3 sm:gap-4 xl:gap-10'>
         {/* Right Side Icons */}
-        <div className='flex items-center gap-3 sm:gap-4 md:gap-6 lg:gap-10'>
+        <div className='flex items-center gap-3 sm:gap-4 md:gap-6 xl:gap-10'>
           {/* Language Switcher - Desktop Only */}
           {!isMobile && (
             <div className="relative" ref={langMenuRef}>

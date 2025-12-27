@@ -6,7 +6,7 @@ import { useLang } from '@/lang/useLang'
 
 export default function WhitepaperPage() {
   const { t } = useLang()
-  
+
   return (
     <div className="w-full min-h-svh flex sm:py-12 py-20 lg:pt-28 justify-center items-start px-2 sm:px-4 md:px-6 bg-[#FFFCF9] dark:bg-black flex-1">
       <div className="max-w-4xl mx-auto">
@@ -107,7 +107,7 @@ export default function WhitepaperPage() {
                 <div className="flex justify-between items-center mb-3 sm:mb-6 px-4 sm:px-[10vw]">
                   {/* Left Arrow Up */}
                   <div className="flex flex-col items-center">
-                    <ArrowUp className="w-6 h-6 sm:w-8 sm:h-8 text-[#FE645F] dark:text-[#C68AFE]" />    
+                    <ArrowUp className="w-6 h-6 sm:w-8 sm:h-8 text-[#FE645F] dark:text-[#C68AFE]" />
                   </div>
                   {/* Right Arrow Down */}
                   <div className="flex flex-col items-center">
@@ -274,10 +274,11 @@ export default function WhitepaperPage() {
               <p className="text-sm sm:text-base text-theme-black-100 dark:text-gray-300 mb-2 sm:mb-3">
                 <strong>{t('whitepaper.section5.commission.description').split(': ')[0]}:</strong> {t('whitepaper.section5.commission.description').split(': ')[1]}
               </p>
-              <ul className="list-disc list-inside space-y-1.5 sm:space-y-2 text-sm sm:text-base text-theme-black-100 dark:text-gray-300 ml-4">
+              <ul className="list-disc list-inside space-y-1.5 sm:space-y-2 text-sm sm:text-base text-theme-black-100 dark:text-gray-300 ml-4 mb-2">
                 <li className="indent-4">{t('whitepaper.section5.commission.level1')}</li>
                 <li className="indent-4">{t('whitepaper.section5.commission.level2')}</li>
               </ul>
+              <span className="text-sm sm:text-base text-theme-red-200 dark:text-gray-300 font-semibold italic">Tổng hoa hồng thu nhập lên tới 15% số tiền staking của mỗi 1 người mới được mời</span>
             </div>
 
             <h3 className="text-xl sm:text-2xl font-semibold text-theme-black-100 dark:text-white mt-4 sm:mt-6 mb-3 sm:mb-4">
@@ -331,7 +332,8 @@ export default function WhitepaperPage() {
                 </tbody>
               </table>
             </div>
-            <div className="bg-gray-50 dark:bg-gray-800 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6">
+            <div className="bg-gray-50 dark:bg-gray-800 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 space-y-2">
+              <div className="text-base sm:text-xl text-theme-red-200 dark:text-gray-300 font-semibold italic">Tổng giải thưởng lên đến 1510 USDT</div>
               <p className="text-xs sm:text-sm text-theme-black-100 dark:text-gray-300 italic">
                 <strong>{t('whitepaper.section5.milestones.condition').split(': ')[0]}:</strong> {t('whitepaper.section5.milestones.condition').split(': ')[1]}
               </p>

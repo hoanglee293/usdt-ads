@@ -191,7 +191,7 @@ const ChangePasswordContent = () => {
 
                             <div className='flex justify-start items-center gap-2'>
                                 <span 
-                                    className='text-sm text-theme-black-100 dark:text-gray-300 hover:text-purple-600 dark:hover:text-purple-400 font-medium cursor-pointer'
+                                    className='text-sm text-theme-red-200 hover:text-purple-600 dark:hover:text-purple-400 font-medium cursor-pointer'
                                     onClick={() => router.push('/login')}
                                 >
                                     {t('changePassword.backToLogin')}

@@ -639,8 +639,8 @@
       "commission": {
         "title": "5.1. Referral Commission",
         "description": "Transaction commission: You will receive a % commission from the USDT amount of users you invite to participate",
-        "level1": "Receive 10% from Level 1 user deposit amount (directly below you)",
-        "level2": "Receive 5% from Level 2 user deposit amount (referred by Level 1)"
+        "level1": "Receive 25% from Level 1 user deposit amount (directly below you)",
+        "level2": "Receive 4% from Level 2 user deposit amount (referred by Level 1)"
       },
       "milestones": {
         "title": "5.2. Referral Milestone Rewards exclusively for influential partners",
