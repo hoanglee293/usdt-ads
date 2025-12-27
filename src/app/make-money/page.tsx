@@ -1090,7 +1090,7 @@ export default function MakeMoneyPage() {
                                                                                         className={`px-[1px] py-1 sm:px-2 h-12 text-center border align-top`}
                                                                                     >
                                                                                         {day !== null ? (
-                                                                                            <div className={`flex py-1 flex-col h-full justify-center items-center gap-0.5 sm:gap-1 ${mission?.status === 'success'
+                                                                                            <div className={`flex py-1 flex-col h-full justify-center items-center gap-0.5 sm:gap-1 ${bgColor} ${mission?.status === 'success'
                                                                                                 ? 'border-green-500 border-solid'
                                                                                                 : mission?.status === 'out'
                                                                                                     ? 'border-red-500 border-solid'
