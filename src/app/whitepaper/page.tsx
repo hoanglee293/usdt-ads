@@ -246,7 +246,7 @@ export default function WhitepaperPage() {
                   </tr>
                 </tbody>
               </table>
-              <span className="text-sm sm:text-base text-theme-red-200 font-semibold italic">{t('whitepaper.section3.packages.maxParticipationNote')}</span>
+              <span className="text-sm sm:text-base text-theme-red-200 font-semibold italic">{t('whitepaper.section3.maxParticipationNote')}</span>
             </div>
 
             <h3 className="text-xl sm:text-2xl font-semibold text-theme-black-100 dark:text-white mt-4 sm:mt-6 mb-3 sm:mb-4">
