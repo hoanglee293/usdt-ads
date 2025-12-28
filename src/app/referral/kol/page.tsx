@@ -5,6 +5,7 @@ import { Button } from '@/ui/button'
 import toast from 'react-hot-toast'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getMemberRefInfo, createMemberRefWithdraw } from '@/services/RefService'
+import { registerKol, checkKolStatus, KolRegisterRequest } from '@/services/AuthService'
 import { useProfile } from '@/hooks/useProfile'
 import { useLang } from '@/lang/useLang'
 import { useRouter } from 'next/navigation'
@@ -30,13 +31,33 @@ export default function SmartRefPage() {
     const router = useRouter()
     const { profile, loading: profileLoading } = useProfile()
     const { t } = useLang()
-    const [showKolModal, setShowKolModal] = useState(true)
+    const [showKolModal, setShowKolModal] = useState(false)
+    
+    // KOL Registration Form State
+    const [kolFormData, setKolFormData] = useState<KolRegisterRequest>({
+        name: '',
+        facebook_url: '',
+        x_url: '',
+        group_telegram_url: '',
+        youtube_url: '',
+        website_url: '',
+    })
+    const [formErrors, setFormErrors] = useState<Record<string, string>>({})
 
+
+    // Check KOL Status (only if user is not KOL)
+    const { data: kolStatus, isLoading: kolStatusLoading } = useQuery({
+        queryKey: ['kolStatus'],
+        queryFn: checkKolStatus,
+        enabled: !profileLoading && profile !== null && !profile.kol,
+        retry: false,
+    })
 
     // Fetch Member Ref Info
     const { data: memberRefInfo = {} as any, isLoading: isLoadingInfo } = useQuery({
         queryKey: ['memberRefInfo'],
         queryFn: getMemberRefInfo,
+        enabled: !profileLoading && profile !== null && (profile.kol || kolStatus?.status === 'success'),
     })
 
     const memberRefData = memberRefInfo?.data || {}
@@ -124,8 +145,76 @@ export default function SmartRefPage() {
         withdrawMutation.mutate()
     }
 
+    // KOL Registration Mutation
+    const kolRegisterMutation = useMutation({
+        mutationFn: registerKol,
+        onSuccess: (data) => {
+            toast.success(t('kol.registerSuccess'))
+            queryClient.invalidateQueries({ queryKey: ['kolStatus'] })
+            queryClient.invalidateQueries({ queryKey: ['profile'] })
+        },
+        onError: (error: any) => {
+            const message = error?.message || error?.response?.data?.message || t('kol.registerError')
+            toast.error(message)
+        },
+    })
+
+    // Validate KOL Form
+    const validateKolForm = (): boolean => {
+        const errors: Record<string, string> = {}
+        
+        if (!kolFormData.name || kolFormData.name.trim().length === 0) {
+            errors.name = t('kol.nameRequired')
+        }
+        
+        const urls = [
+            kolFormData.facebook_url,
+            kolFormData.x_url,
+            kolFormData.group_telegram_url,
+            kolFormData.youtube_url,
+            kolFormData.website_url,
+        ].filter(url => url && url.trim().length > 0)
+        
+        if (urls.length === 0) {
+            errors.urls = t('kol.atLeastOneUrlRequired')
+        }
+        
+        // Validate URL format
+        const urlPattern = /^https?:\/\/.+/i
+        urls.forEach(url => {
+            if (url && !urlPattern.test(url)) {
+                errors.urls = t('kol.invalidUrlFormat')
+            }
+        })
+        
+        setFormErrors(errors)
+        return Object.keys(errors).length === 0
+    }
+
+    // Handle KOL Form Submit
+    const handleKolFormSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+        
+        if (!validateKolForm()) {
+            return
+        }
+        
+        // Clean up empty URLs
+        const cleanedData: KolRegisterRequest = {
+            name: kolFormData.name.trim(),
+        }
+        
+        if (kolFormData.facebook_url?.trim()) cleanedData.facebook_url = kolFormData.facebook_url.trim()
+        if (kolFormData.x_url?.trim()) cleanedData.x_url = kolFormData.x_url.trim()
+        if (kolFormData.group_telegram_url?.trim()) cleanedData.group_telegram_url = kolFormData.group_telegram_url.trim()
+        if (kolFormData.youtube_url?.trim()) cleanedData.youtube_url = kolFormData.youtube_url.trim()
+        if (kolFormData.website_url?.trim()) cleanedData.website_url = kolFormData.website_url.trim()
+        
+        kolRegisterMutation.mutate(cleanedData)
+    }
+
     // Show loading state while profile is loading
-    if (profileLoading) {
+    if (profileLoading || (profile && !profile.kol && kolStatusLoading)) {
         return (
             <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-center px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
                 <div className='text-center'>
@@ -135,35 +224,171 @@ export default function SmartRefPage() {
             </div>
         )
     }
-    console.log(profile)
 
-    // Show modal and message if user doesn't have KOL permission
-    if (!profileLoading && profile && !profile.kol) {
+    // Show KOL registration form if user is not KOL and status is "not-register"
+    if (!profileLoading && profile && !profile.kol && kolStatus?.status === 'not-register') {
         return (
-            <>
-                <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-center px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
-                    <div className='text-center max-w-2xl mx-auto'>
-                        <div className='bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-lg p-6 sm:p-8'>
-                            <h2 className='text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4'>
-                                {t('smartRef.kolPermissionTitle')}
-                            </h2>
-                            <p className='text-gray-600 dark:text-gray-300 mb-6'>
-                                {t('smartRef.kolPermissionMessage')}
-                            </p>
-                            <Button
-                                onClick={() => setShowKolModal(true)}
-                                className="bg-gradient-to-r from-[#FE645F] to-[#C68AFE] text-white border-none hover:opacity-90"
+            <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
+                <div className='w-full max-w-2xl mx-auto'>
+                    <div className=' bg-transparent rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-lg p-6 sm:p-8'>
+                        <h2 className='text-3xl font-semibold dark:text-white text-gray-800 dark:md:text-white mb-2'>
+                            {t('kol.registerTitle')}
+                        </h2>
+                        <p className='text-gray-600 dark:text-gray-300 mb-6 text-sm'>
+                            {t('kol.registerDescription')}
+                        </p>
+                        
+                        <form onSubmit={handleKolFormSubmit} className='w-full flex flex-col gap-4 mt-6 px-0'>
+                            {/* Name Field */}
+                            <div className='space-y-1'>
+                                <label htmlFor="kol-name" className='block text-sm font-bold text-gray-700 dark:text-white'>
+                                    {t('kol.name')} <span className='text-theme-red dark:text-theme-red-200'>{t('login.required')}</span>
+                                </label>
+                                <input
+                                    id="kol-name"
+                                    type="text"
+                                    value={kolFormData.name}
+                                    onChange={(e) => setKolFormData({ ...kolFormData, name: e.target.value })}
+                                    placeholder={t('kol.namePlaceholder')}
+                                    className='w-full pr-4 py-2.5 pl-4 border border-solid border-gray-400 focus:border-solid focus:border-gray-300 dark:focus:border-gray-600 dark:border-gray-700 rounded-full outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
+                                    disabled={kolRegisterMutation.isPending}
+                                />
+                                {formErrors.name && (
+                                    <p className="text-red-500 text-sm mt-1">{formErrors.name}</p>
+                                )}
+                            </div>
+
+                            {/* Facebook URL */}
+                            <div className='space-y-1'>
+                                <label htmlFor="kol-facebook" className='block text-sm font-bold text-gray-700 dark:text-white'>
+                                    {t('kol.facebookUrl')}
+                                </label>
+                                <input
+                                    id="kol-facebook"
+                                    type="url"
+                                    value={kolFormData.facebook_url || ''}
+                                    onChange={(e) => setKolFormData({ ...kolFormData, facebook_url: e.target.value })}
+                                    placeholder={t('kol.urlPlaceholder')}
+                                    className='w-full pr-4 py-2.5 pl-4 border border-solid border-gray-400 focus:border-solid focus:border-gray-300 dark:focus:border-gray-600 dark:border-gray-700 rounded-full outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
+                                    disabled={kolRegisterMutation.isPending}
+                                />
+                            </div>
+
+                            {/* X (Twitter) URL */}
+                            <div className='space-y-1'>
+                                <label htmlFor="kol-x" className='block text-sm font-bold text-gray-700 dark:text-white'>
+                                    {t('kol.xUrl')}
+                                </label>
+                                <input
+                                    id="kol-x"
+                                    type="url"
+                                    value={kolFormData.x_url || ''}
+                                    onChange={(e) => setKolFormData({ ...kolFormData, x_url: e.target.value })}
+                                    placeholder={t('kol.urlPlaceholder')}
+                                    className='w-full pr-4 py-2.5 pl-4 border border-solid border-gray-400 focus:border-solid focus:border-gray-300 dark:focus:border-gray-600 dark:border-gray-700 rounded-full outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
+                                    disabled={kolRegisterMutation.isPending}
+                                />
+                            </div>
+
+                            {/* Telegram Group URL */}
+                            <div className='space-y-1'>
+                                <label htmlFor="kol-telegram" className='block text-sm font-bold text-gray-700 dark:text-white'>
+                                    {t('kol.telegramUrl')}
+                                </label>
+                                <input
+                                    id="kol-telegram"
+                                    type="url"
+                                    value={kolFormData.group_telegram_url || ''}
+                                    onChange={(e) => setKolFormData({ ...kolFormData, group_telegram_url: e.target.value })}
+                                    placeholder={t('kol.urlPlaceholder')}
+                                    className='w-full pr-4 py-2.5 pl-4 border border-solid border-gray-400 focus:border-solid focus:border-gray-300 dark:focus:border-gray-600 dark:border-gray-700 rounded-full outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
+                                    disabled={kolRegisterMutation.isPending}
+                                />
+                            </div>
+
+                            {/* YouTube URL */}
+                            <div className='space-y-1'>
+                                <label htmlFor="kol-youtube" className='block text-sm font-bold text-gray-700 dark:text-white'>
+                                    {t('kol.youtubeUrl')}
+                                </label>
+                                <input
+                                    id="kol-youtube"
+                                    type="url"
+                                    value={kolFormData.youtube_url || ''}
+                                    onChange={(e) => setKolFormData({ ...kolFormData, youtube_url: e.target.value })}
+                                    placeholder={t('kol.urlPlaceholder')}
+                                    className='w-full pr-4 py-2.5 pl-4 border border-solid border-gray-400 focus:border-solid focus:border-gray-300 dark:focus:border-gray-600 dark:border-gray-700 rounded-full outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
+                                    disabled={kolRegisterMutation.isPending}
+                                />
+                            </div>
+
+                            {/* Website URL */}
+                            <div className='space-y-1'>
+                                <label htmlFor="kol-website" className='block text-sm font-bold text-gray-700 dark:text-white'>
+                                    {t('kol.websiteUrl')}
+                                </label>
+                                <input
+                                    id="kol-website"
+                                    type="url"
+                                    value={kolFormData.website_url || ''}
+                                    onChange={(e) => setKolFormData({ ...kolFormData, website_url: e.target.value })}
+                                    placeholder={t('kol.urlPlaceholder')}
+                                    className='w-full pr-4 py-2.5 pl-4 border border-solid border-gray-400 focus:border-solid focus:border-gray-300 dark:focus:border-gray-600 dark:border-gray-700 rounded-full outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
+                                    disabled={kolRegisterMutation.isPending}
+                                />
+                            </div>
+
+                            {formErrors.urls && (
+                                <p className="text-red-500 text-sm">{formErrors.urls}</p>
+                            )}
+
+                            <button
+                                type="submit"
+                                disabled={kolRegisterMutation.isPending}
+                                className='w-fix mx-auto outline-none border-none cursor-pointer py-2 px-6 mt-6 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-base uppercase'
                             >
-                                {t('smartRef.kolPermissionTitle')}
-                            </Button>
-                        </div>
+                                {kolRegisterMutation.isPending ? (
+                                    <>
+                                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        {t('kol.submitting')}
+                                    </>
+                                ) : (
+                                    t('kol.submit')
+                                )}
+                            </button>
+                        </form>
                     </div>
                 </div>
-            </>
+            </div>
         )
     }
 
-    return (
+    // Show pending message if KOL registration is pending
+    if (!profileLoading && profile && !profile.kol && kolStatus?.status === 'pending') {
+        return (
+            <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-center px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
+                <div className='text-center max-w-2xl mx-auto'>
+                    <div className='bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-lg p-6 sm:p-8'>
+                        <h2 className='text-xl sm:text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4'>
+                            {t('kol.pendingTitle')}
+                        </h2>
+                        <p className='text-gray-600 dark:text-gray-300 mb-6'>
+                            {t('kol.pendingMessage')}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        )
+    }
+
+    // Show Smart Ref page if user is KOL or status is success
+    // This covers: profile.kol === true OR (profile.kol === false && kolStatus?.status === 'success')
+    if (!profileLoading && profile && (profile.kol || kolStatus?.status === 'success')) {
+        // Smart Ref page content
+        return (
         <div className='w-full min-h-svh flex pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
             <div className='w-full max-w-7xl space-y-6'>
                 {/* Title Section */}
@@ -359,6 +584,17 @@ export default function SmartRefPage() {
                         {t('smartRef.disclaimer')}
                     </p>
                 </div>
+            </div>
+        </div>
+        )
+    }
+
+    // Fallback: Show loading or empty state
+    return (
+        <div className='w-full min-h-svh flex pt-16 sm:pt-20 md:pt-28 justify-center items-center px-3 sm:px-4 md:px-6 py-4 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
+            <div className='text-center'>
+                <div className='animate-spin rounded-full h-12 w-12 border-b-2 border-[#FE645F] mx-auto'></div>
+                <p className='mt-4 text-gray-600 dark:text-gray-400'>{t('common.loading')}</p>
             </div>
         </div>
     )

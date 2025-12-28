@@ -380,4 +380,73 @@ export const getKycStatus = async (): Promise<KycStatusResponse> => {
     throw error;
   }
 }
+
+// KOL Registration API Types
+export interface KolRegisterRequest {
+  name: string;
+  facebook_url?: string;
+  x_url?: string;
+  group_telegram_url?: string;
+  youtube_url?: string;
+  website_url?: string;
+}
+
+export interface KolRegister {
+  id: number;
+  name: string;
+  facebook_url: string | null;
+  x_url: string | null;
+  group_telegram_url: string | null;
+  youtube_url: string | null;
+  website_url: string | null;
+  status: "pending" | "approved" | "rejected";
+}
+
+export interface KolRegisterResponse {
+  statusCode: 201;
+  message: string;
+  kol_register: KolRegister;
+}
+
+export interface KolRegisterErrorResponse {
+  statusCode: 400;
+  message: string;
+}
+
+export interface KolStatusResponse {
+  statusCode: 200;
+  status: "success" | "pending" | "not-register";
+}
+
+export interface KolStatusErrorResponse {
+  statusCode: 500;
+  message: string;
+}
+
+// KOL Registration API Functions
+export const registerKol = async (data: KolRegisterRequest): Promise<KolRegisterResponse> => {
+  try {
+    const response = await axiosClient.post<KolRegisterResponse>('/users/register-kol', data);
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data) {
+      throw error.response.data as KolRegisterErrorResponse;
+    }
+    console.error(error);
+    throw error;
+  }
+}
+
+export const checkKolStatus = async (): Promise<KolStatusResponse> => {
+  try {
+    const response = await axiosClient.get<KolStatusResponse>('/users/check-register-kol');
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data) {
+      throw error.response.data as KolStatusErrorResponse;
+    }
+    console.error(error);
+    throw error;
+  }
+}
   
