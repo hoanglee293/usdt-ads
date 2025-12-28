@@ -22,7 +22,7 @@
   },
   "header": {
     "makeMoney": "수익 참여",
-    "whitepaper": "화이트페이퍼",
+    "whitepaper": "이용 약관",
     "rewards": "보상 받기",
     "wallet": "입금/출금",
     "referral": "추천",
@@ -114,7 +114,7 @@
     },
     "transferReward": {
       "title": "리워드 지갑 전환",
-      "transferToMain": "리워드를 메인 지갑으로 전환",
+      "transferToMain": "리워드 지갑에서 메인 지갑으로 자금 전환",
       "transferButton": "전환",
       "transferSuccess": "전환 성공!",
       "transferError": "전환 실패",
@@ -175,7 +175,7 @@
     "you": "당신"
   },
   "smartRef": {
-    "title": "추천 수수료",
+    "title": "인플루언서 보상",
     "progressText": "추천 완료: {current}/{total}명",
     "milestoneLabel": "추천 마일스톤",
     "peopleCount": "{count}명",
@@ -197,7 +197,7 @@
   },
   "kol": {
     "registerTitle": "KOL 등록",
-    "registerDescription": "정보를 입력하여 Key Opinion Leader가 되세요",
+    "registerDescription": "양식에 정보를 입력하세요 (최소 하나의 소셜 미디어 채널)",
     "name": "이름",
     "nameRequired": "이름은 필수입니다",
     "namePlaceholder": "이름을 입력하세요",
@@ -545,7 +545,7 @@
     "generateCodeJwtTokenMissingOrInvalid": "JWT 토큰이 없거나 유효하지 않습니다"
   },
   "home": {
-    "title": "USDA로 쉽게 수익 창출",
+    "title": "USDA와 함께 수동적 수입 창출",
     "subtitle": "광고 시청 – 자동 보상 받기 – 블록체인으로 투명하게",
     "joinNow": "지금 참여",
     "introTitle": "USDA 소개",
@@ -578,13 +578,13 @@
         "description": "\"AI 폰\" 배치를 재투자하여 광고 시청 효율성을 높입니다."
       },
       "communityDevelopment": {
-        "title": "커뮤니티 개발 및 USDA 코인",
-        "description": "사용자 확장, 코인 에어드롭 보상, 생태계 발전을 위한 투자자 유치."
+        "title": "커뮤니티 개발",
+        "description": "사용자 네트워크 확장, 생태계 발전을 위한 투자자 유치."
       }
     }
   },
   "whitepaper": {
-    "title": "백서",
+    "title": "이용 약관",
     "section1": {
       "title": "1. 소개",
       "intro": "이것은 USDT 스테이킹 메커니즘과 광고 시청 작업 완료를 통해 사용자와 기업을 연결하는 선도적인 금융-광고 플랫폼입니다. 기존 투자 모델과 달리, 여러 기기에서 동시에 사용자의 광고 시청 행동에서 실제 가치를 창출하여 지속 가능한 수익을 제공합니다. 플랫폼은 사용자가 임대할 수 있는 실제 기기 팜을 제공하여 광고 조회수 측면에서 높은 효율성을 제공하고 참가자의 시간을 절약합니다.",

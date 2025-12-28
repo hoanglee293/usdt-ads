@@ -22,7 +22,7 @@
   },
   "header": {
     "makeMoney": "収益に参加",
-    "whitepaper": "ホワイトペーパー",
+    "whitepaper": "利用規約",
     "rewards": "報酬を受け取る",
     "wallet": "入金/出金",
     "referral": "紹介",
@@ -114,7 +114,7 @@
     },
     "transferReward": {
       "title": "リワードウォレット転送",
-      "transferToMain": "リワードをメインウォレットに転送",
+      "transferToMain": "リワードウォレットからメインウォレットへ資金を転送",
       "transferButton": "転送",
       "transferSuccess": "転送成功！",
       "transferError": "転送失敗",
@@ -175,7 +175,7 @@
     "you": "あなた"
   },
   "smartRef": {
-    "title": "紹介コミッション",
+    "title": "インフルエンサー報酬",
     "progressText": "紹介: {current}/{total} 人",
     "milestoneLabel": "紹介マイルストーン",
     "peopleCount": "{count} 人",
@@ -197,7 +197,7 @@
   },
   "kol": {
     "registerTitle": "KOL登録",
-    "registerDescription": "情報を入力してKey Opinion Leaderになる",
+    "registerDescription": "フォームに情報を入力してください（少なくとも1つのソーシャルメディアチャンネル）",
     "name": "名前",
     "nameRequired": "名前は必須です",
     "namePlaceholder": "名前を入力してください",
@@ -544,7 +544,7 @@
     "generateCodeJwtTokenMissingOrInvalid": "JWTトークンが欠落しているか無効です"
   },
   "home": {
-    "title": "USDAで簡単にお金を稼ぐ",
+    "title": "USDAで受動的収入を創出",
     "subtitle": "広告を見る – 自動報酬を受け取る – ブロックチェーンで透明性",
     "joinNow": "今すぐ参加",
     "introTitle": "USDAについて",
@@ -577,13 +577,13 @@
         "description": "\"AI電話\"のバッチに再投資して、広告視聴効率を向上させます。"
       },
       "communityDevelopment": {
-        "title": "コミュニティ開発とUSDAコイン",
-        "description": "ユーザーを拡大し、エアドロップコイン報酬を提供し、投資家を引き付けてエコシステムを開発します。"
+        "title": "コミュニティ開発",
+        "description": "ユーザーネットワークを拡大し、投資家を引き付けてエコシステムを開発します。"
       }
     }
   },
   "whitepaper": {
-    "title": "ホワイトペーパー",
+    "title": "利用規約",
     "section1": {
       "title": "1. 紹介",
       "intro": "これは、USDTステーキングメカニズムと広告視聴タスクの完了を通じて、ユーザーと企業を結ぶ先駆的な金融・広告プラットフォームです。従来の投資モデルとは異なり、複数のデバイスで同時にユーザーの広告視聴行動から実際の価値を創出し、持続可能なリターンを提供します。プラットフォームは、ユーザーがレンタルできる実際のデバイスファームを提供し、広告視聴数の高い効率性をもたらし、参加者の時間を節約します。",

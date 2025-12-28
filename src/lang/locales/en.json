@@ -22,7 +22,7 @@
   },
   "header": {
     "makeMoney": "Join to Earn",
-    "whitepaper": "White Paper",
+    "whitepaper": "Terms of Use",
     "rewards": "Get Rewards",
     "wallet": "Deposit/Withdraw",
     "referral": "Referral",
@@ -114,7 +114,7 @@
     },
     "transferReward": {
       "title": "Transfer Reward Wallet",
-      "transferToMain": "Transfer Reward to Main Wallet",
+      "transferToMain": "Transfer money from reward wallet to main wallet",
       "transferButton": "Transfer",
       "transferSuccess": "Transfer successful!",
       "transferError": "Transfer failed",
@@ -175,7 +175,7 @@
     "you": "YOU"
   },
   "smartRef": {
-    "title": "REFERRAL COMMISSION",
+    "title": "Influencer Rewards",
     "progressText": "Referred: {current}/{total} people",
     "milestoneLabel": "Referral Milestone",
     "peopleCount": "{count} people",
@@ -197,7 +197,7 @@
   },
   "kol": {
     "registerTitle": "Register as KOL",
-    "registerDescription": "Fill in your information to become a Key Opinion Leader",
+    "registerDescription": "Fill in your information in the form (at least one social media channel)",
     "name": "Name",
     "nameRequired": "Name is required",
     "namePlaceholder": "Enter your name",
@@ -544,7 +544,7 @@
     "generateCodeJwtTokenMissingOrInvalid": "JWT token missing/invalid"
   },
   "home": {
-    "title": "Earn Money Easily with USDA",
+    "title": "Create passive income with USDA",
     "subtitle": "Watch ads – Get automatic rewards – Transparent with Blockchain",
     "joinNow": "JOIN NOW",
     "introTitle": "About USDA",
@@ -577,13 +577,13 @@
         "description": "Reinvest in batches of \"AI Phones\" to increase ad viewing efficiency."
       },
       "communityDevelopment": {
-        "title": "COMMUNITY DEVELOPMENT & USDA COIN",
-        "description": "Expand users, Airdrop coin rewards, attract investors to develop the ecosystem."
+        "title": "COMMUNITY DEVELOPMENT",
+        "description": "Expand user network, attract investors to develop the ecosystem."
       }
     }
   },
   "whitepaper": {
-    "title": "Whitepaper",
+    "title": "Terms of Use",
     "section1": {
       "title": "1. Introduction",
       "intro": "This is a pioneering finance-advertising platform connecting Users and Businesses through USDT staking mechanisms and completing advertising viewing tasks. Unlike traditional investment models, we create real value from users' ad viewing behavior across multiple devices simultaneously to deliver sustainable returns. The platform provides real device farms for users to rent, bringing high efficiency in ad views and saving time for participants.",

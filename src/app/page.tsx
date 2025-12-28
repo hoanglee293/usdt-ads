@@ -145,12 +145,12 @@ export default function HomePage() {
               />
             </div>
           </div>
-          <button onClick={() => router.push('/whitepaper')} className='w-full cursor-pointer sm:w-auto px-6 sm:px-10  border-none outline-none py-1 sm:py-1.5 bg-[#a976fb] text-white font-bold text-xs sm:text-sm md:text-base rounded-full hover:opacity-90 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 uppercase tracking-wide mb-4'>Tìm hiểu thêm</button>
+          <button onClick={() => router.push('/whitepaper')} className='w-fit mx-auto cursor-pointer sm:w-auto px-6 sm:px-10  border-none outline-none py-1 sm:py-1.5 bg-[#a976fb] text-white font-bold text-xs sm:text-sm md:text-base rounded-full hover:opacity-90 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 uppercase tracking-wide mb-4'>Tìm hiểu thêm</button>
 
           {/* Main Title */}
           <h1
             ref={titleRef}
-            className={`text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 md:mb-6 text-gradient-secondary leading-tight overflow-visible animate-fade-in-up px-2 ${titleInView ? 'in-view' : ''}`}
+            className={`text-2xl sm:text-3xl uppercase mt-5 md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 md:mb-6 text-gradient-secondary leading-tight overflow-visible animate-fade-in-up px-2 ${titleInView ? 'in-view' : ''}`}
           >
             {t('home.title')}
           </h1>
@@ -166,11 +166,27 @@ export default function HomePage() {
           {/* CTA Button */}
           <div
             ref={ctaRef}
-            onClick={() => router.push('/make-money')}
             className={`animate-fade-in-up-more-delayed w-full sm:w-auto cursor-pointer ${ctaInView ? 'in-view' : ''}`}
           >
-            <button className="w-full cursor-pointer sm:w-auto px-8 sm:px-12 md:px-20 border-none outline-none py-2.5 sm:py-2 md:py-3 bg-gradient-secondary text-white font-bold text-xs sm:text-sm md:text-base lg:text-lg rounded-full hover:opacity-90 transition-all shadow-lg hover:shadow-xl transform hover:scale-105   uppercase tracking-wide">
-              {t('home.joinNow')}
+            <button 
+              onClick={() => router.push('/make-money')}
+              className="uiverse w-full px-8 py-2.5 sm:w-full text-xs sm:text-sm md:text-base lg:text-lg uppercase tracking-wide"
+            >
+              <div className="wrapper">
+                <span>{t('home.joinNow')}</span>
+                <div className="circle circle-12"></div>
+                <div className="circle circle-11"></div>
+                <div className="circle circle-10"></div>
+                <div className="circle circle-9"></div>
+                <div className="circle circle-8"></div>
+                <div className="circle circle-7"></div>
+                <div className="circle circle-6"></div>
+                <div className="circle circle-5"></div>
+                <div className="circle circle-4"></div>
+                <div className="circle circle-3"></div>
+                <div className="circle circle-2"></div>
+                <div className="circle circle-1"></div>
+              </div>
             </button>
           </div>
         </div>
@@ -180,13 +196,13 @@ export default function HomePage() {
           {/* Mobile/Tablet: Stack vertically or 2 columns */}
           {/* Desktop: 3x3 Grid */}
           <div className="relative">
-            {/* Mobile Layout: Stack vertically */}
-            <div className="block md:hidden space-y-8 sm:space-y-10">
-              {/* Center Title - Mobile */}
-              <div className="text-center w-full mb-6 sm:mb-8">
+            {/* Mobile Layout: 2x2 Grid */}
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 md:hidden">
+              {/* Center Title - Mobile - Full Width */}
+              <div className="col-span-2 text-center mb-4 sm:mb-6">
                 <h2
                   ref={centerTitleRef}
-                  className={`text-xl sm:text-2xl font-bold text-gradient-secondary animate-scale-in ${centerTitleInView ? 'in-view' : ''}`}
+                  className={`text-xl sm:text-2xl uppercase font-bold text-gradient-secondary animate-scale-in ${centerTitleInView ? 'in-view' : ''}`}
                 >
                   {t('home.introTitle')}
                 </h2>
@@ -207,10 +223,10 @@ export default function HomePage() {
                     />
                   </div>
                 </div>
-                <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 sm:px-6 py-2 text-white shadow-lg w-full max-w-sm text-center">
+                <div className="bg-gradient-to-br from-[#fe645f] to-[#c4cf2b] rounded-full px-3 sm:px-4 py-2 text-white shadow-lg w-full text-center min-h-28 flex items-center justify-center flex-col gap-2">
                   <span className="font-bold text-xs sm:text-sm   underline underline-offset-4">{t('home.features.technology.title')}</span>
                   <span className="text-xs sm:text-sm font-inter leading-relaxed">
-                    : {t('home.features.technology.description')}
+                    {t('home.features.technology.description')}
                   </span>
                 </div>
               </div>
@@ -228,10 +244,10 @@ export default function HomePage() {
                     className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-float-fast ${feature2ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
                   />
                 </div>
-                <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 sm:px-6 py-2 text-white shadow-lg w-full max-w-sm text-center">
+                <div className="bg-gradient-to-br from-[#e7807d] to-[#59e7a5] rounded-full px-3 sm:px-4 py-2 text-white shadow-lg w-full text-center min-h-28 flex items-center justify-center flex-col gap-2">
                   <span className="font-bold text-xs sm:text-sm   underline underline-offset-4">{t('home.features.device.title')}</span>
                   <span className="text-xs sm:text-sm font-inter leading-relaxed">
-                    : {t('home.features.device.description')}
+                    {t('home.features.device.description')}
                   </span>
                 </div>
               </div>
@@ -251,10 +267,10 @@ export default function HomePage() {
                     />
                   </div>
                 </div>
-                <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 sm:px-6 py-2 text-white shadow-lg w-full max-w-sm text-center">
+                <div className="bg-gradient-to-br from-[#97c762] to-[#582ce8] rounded-full px-3 sm:px-4 py-2 text-white shadow-lg w-full text-center min-h-28 flex items-center justify-center flex-col gap-2">
                   <span className="font-bold text-xs sm:text-sm   underline underline-offset-4">{t('home.features.blockchain.title')}</span>
                   <span className="text-xs sm:text-sm font-inter leading-relaxed">
-                    : {t('home.features.blockchain.description')}
+                    {t('home.features.blockchain.description')}
                   </span>
                 </div>
               </div>
@@ -272,10 +288,10 @@ export default function HomePage() {
                     className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-bounce-gentle ${feature4ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
                   />
                 </div>
-                <div className="bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-full px-4 sm:px-6 py-2 text-white shadow-lg w-full max-w-sm text-center">
+                <div className="bg-gradient-to-br from-[#5fdcfe] to-[#c50f92] rounded-full px-3 sm:px-4 py-2 text-white shadow-lg w-full text-center min-h-28 flex items-center justify-center flex-col gap-2">
                   <span className="font-bold text-xs sm:text-sm   underline underline-offset-4">{t('home.features.community.title')}</span>
                   <span className="text-xs sm:text-sm font-inter leading-relaxed">
-                    : {t('home.features.community.description')}
+                    {t('home.features.community.description')}
                   </span>
                 </div>
               </div>
@@ -391,18 +407,36 @@ export default function HomePage() {
         {/* Section Title */}
         <h2
           ref={sectionTitleRef}
-          className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gradient-secondary w-full text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16   animate-fade-in-up px-2 ${sectionTitleInView ? 'in-view' : ''}`}
+          className={`text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gradient-secondary w-full text-center mb-8 sm:mb-10 md:mb-12 lg:mb-16 uppercase  animate-fade-in-up px-2 ${sectionTitleInView ? 'in-view' : ''}`}
         >
           {t('home.howItWorks.title')}
         </h2>
 
         {/* Three Panels Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 md:gap-8 lg:gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 lg:gap-10">
           {/* Panel 1: Advertising Revenue */}
           <div
             ref={panel1Ref}
-            className={`bg-white dark:bg-gray-800 border-2 dark:border border-solid border-[#FA4E4D] dark:border-[#FE645F] rounded-xl p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 flex flex-col gap-2 items-center text-center hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-purple-500/20 transition-shadow animate-fade-in-up ${panel1InView ? 'in-view' : ''}`}
+            className={`relative rounded-xl hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-purple-500/20 transition-all animate-fade-in-up ${panel1InView ? 'in-view' : ''}`}
+            style={{
+              background: '#100720',
+              borderRadius: '1rem',
+            }}
           >
+            <div 
+              className="absolute inset-0 rounded-xl"
+              style={{
+                backgroundImage: 'radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%)',
+                filter: 'blur(15px)',
+                zIndex: 0,
+                position: 'absolute',
+                left: 0,
+                top: 0,
+                width: '100%',
+                height: '100%',
+              }}
+            />
+            <div className="relative z-10 p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 dark:!bg-black bg-white rounded-2xl flex flex-col gap-2 items-center text-center">
             {/* Icon with Dollar Sign */}
             <div className="relative mb-4 sm:mb-6">
               <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
@@ -432,21 +466,40 @@ export default function HomePage() {
             </div>
 
             {/* Title */}
-            <h3 className="text-base sm:text-lg md:text-xl font-bold text-gradient-secondary mb-3 sm:mb-4">
+            <h3 className="text-base sm:text-lg md:text-xl font-bold text-theme-black-100 dark:text-white mb-3 sm:mb-4">
               {t('home.howItWorks.advertisingRevenue.title')}
             </h3>
 
             {/* Description */}
-            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 dark:text-gray-300 leading-relaxed font-medium">
+            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 dark:text-white leading-relaxed font-medium">
               {t('home.howItWorks.advertisingRevenue.description')}
             </p>
+            </div>
           </div>
 
           {/* Panel 2: Invest in Device System */}
           <div
             ref={panel2Ref}
-            className={`bg-white dark:bg-gray-800 border-2 dark:border border-solid border-[#FA4E4D] dark:border-[#FE645F] rounded-xl p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 flex flex-col gap-2 items-center text-center hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-purple-500/20 transition-shadow animate-fade-in-up-delayed ${panel2InView ? 'in-view' : ''}`}
+            className={`relative z-20  hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-purple-500/20 transition-all animate-fade-in-up-delayed ${panel2InView ? 'in-view' : ''}`}
+            style={{
+              background: '#100720',
+              borderRadius: '1rem',
+            }}
           >
+            <div 
+              className="absolute inset-0 rounded-xl"
+              style={{
+                backgroundImage: 'radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%)',
+                filter: 'blur(15px)',
+                zIndex: 0,
+                position: 'absolute',
+                left: 0,
+                top: 0,
+                width: '100%',
+                height: '100%',
+              }}
+            />
+            <div className="relative z-10 p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 dark:!bg-black bg-white rounded-2xl flex flex-col gap-2 items-center text-center">
             {/* Icon with Computer and Phone */}
             <div className="relative mb-4 sm:mb-6">
               <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center relative">
@@ -470,21 +523,40 @@ export default function HomePage() {
             </div>
 
             {/* Title */}
-            <h3 className="text-base sm:text-lg md:text-xl font-bold text-gradient-secondary mb-3 sm:mb-4">
+            <h3 className="text-base sm:text-lg md:text-xl font-bold text-theme-black-100 dark:text-white mb-3 sm:mb-4">
               {t('home.howItWorks.investDeviceSystem.title')}
             </h3>
 
             {/* Description */}
-            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 dark:text-gray-300 leading-relaxed font-medium">
+            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 dark:text-white leading-relaxed font-medium">
               {t('home.howItWorks.investDeviceSystem.description')}
             </p>
+            </div>
           </div>
 
           {/* Panel 3: Community Development & USDA Coin */}
           <div
             ref={panel3Ref}
-            className={`bg-white dark:bg-gray-800 border-2 dark:border border-solid border-[#FA4E4D] dark:border-[#FE645F] rounded-xl p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 flex flex-col gap-2 items-center text-center hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-purple-500/20 transition-shadow animate-fade-in-up-more-delayed sm:col-span-2 md:col-span-1 ${panel3InView ? 'in-view' : ''}`}
+            className={`relative hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-purple-500/20 transition-all animate-fade-in-up-more-delayed sm:col-span-2 md:col-span-1 ${panel3InView ? 'in-view' : ''}`}
+            style={{
+              background: '#100720',
+              borderRadius: '1rem',
+            }}
           >
+            <div 
+              className="absolute inset-0 rounded-xl"
+              style={{
+                backgroundImage: 'radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%)',
+                filter: 'blur(15px)',
+                zIndex: 0,
+                position: 'absolute',
+                left: 0,
+                top: 0,
+                width: '100%',
+                height: '100%',
+              }}
+            />
+            <div className="relative z-10 p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 dark:!bg-black bg-white rounded-2xl flex flex-col gap-2 items-center text-center">
             {/* Icon with Network/Community */}
             <div className="relative mb-4 sm:mb-6">
               <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center relative">
@@ -513,14 +585,15 @@ export default function HomePage() {
             </div>
 
             {/* Title */}
-            <h3 className="text-base sm:text-lg md:text-xl font-bold text-gradient-secondary mb-3 sm:mb-4">
+            <h3 className="text-base sm:text-lg md:text-xl font-bold text-theme-black-100 dark:text-white mb-3 sm:mb-4">
               {t('home.howItWorks.communityDevelopment.title')}
             </h3>
 
             {/* Description */}
-            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 dark:text-gray-300 leading-relaxed font-medium">
+            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 dark:text-white leading-relaxed font-medium">
               {t('home.howItWorks.communityDevelopment.description')}
             </p>
+            </div>
           </div>
         </div>
       </div>

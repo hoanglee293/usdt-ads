@@ -181,7 +181,7 @@ export default function DepositContent({
 
                         {/* Public Key / Address */}
                         <div className="w-full space-y-2 max-w-xl mx-auto">
-                            <div className="flex items-center gap-12 p-3 bg-theme-pink-100/40 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-md">
+                            <div className="flex items-center gap-12 p-3 bg-theme-pink-100/40 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md">
                                 <label className="text-sm font-medium text-theme-red-100 dark:text-[#FE645F] block">
                                     {t('wallet.walletAddress', { symbol: networkSymbol || '' })} :
                                 </label>
@@ -255,7 +255,7 @@ export default function DepositContent({
                                             {transaction.time}
                                         </div>
                                     </div>
-                                    <div className="pt-3 border-t border-gray-200 dark:border-gray-700 space-y-2">
+                                    <div className="pt-0 md:pt-3 border-t border-gray-200 dark:border-gray-700 space-y-2">
                                         <div className="flex items-center gap-2">
                                             <span className="text-xs font-medium text-gray-600 dark:text-gray-300 min-w-[60px]">
                                                 {t('wallet.addressLabels.txId')}:

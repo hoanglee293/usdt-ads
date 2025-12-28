@@ -21,8 +21,8 @@
     "zh": "Tiếng Trung"
   },
   "header": {
-    "makeMoney": "Tham gia kiếm tiền",
-    "whitepaper": "White Paper",
+    "makeMoney": "USDT Earn",
+    "whitepaper": "Điều khoản sử dụng",
     "rewards": "Nhận phần thưởng",
     "wallet": "Nạp/Rút tiền",
     "referral": "Giới thiệu",
@@ -114,7 +114,7 @@
     },
     "transferReward": {
       "title": "Chuyển đổi",
-      "transferToMain": "Chuyển đổi tiền ví Reward đến ví Main",
+      "transferToMain": "Chuyển đổi tiền từ ví thưởng đến ví chính",
       "transferButton": "Chuyển đổi",
       "transferSuccess": "Chuyển đổi thành công!",
       "transferError": "Chuyển đổi thất bại",
@@ -175,7 +175,7 @@
     "you": "BẠN"
   },
   "smartRef": {
-    "title": "HOA HỒNG GIỚI THIỆU",
+    "title": "Phần thưởng Influencer",
     "progressText": "Đã giới thiệu: {current}/{total} người",
     "milestoneLabel": "Mốc giới thiệu",
     "peopleCount": "{count} người",
@@ -197,7 +197,7 @@
   },
   "kol": {
     "registerTitle": "Đăng ký KOL",
-    "registerDescription": "Điền thông tin của bạn để trở thành Key Opinion Leader",
+    "registerDescription": "Điền thông tin của bạn vào form (tối thiểu một kênh social media)",
     "name": "Tên",
     "nameRequired": "Tên là bắt buộc",
     "namePlaceholder": "Nhập tên của bạn",
@@ -545,7 +545,7 @@
     "generateCodeJwtTokenMissingOrInvalid": "JWT token thiếu/không hợp lệ"
   },
   "home": {
-    "title": "Kiếm tiền dễ dàng với USDA",
+    "title": "Tạo nguồn thu nhập thụ động cùng với USDA",
     "subtitle": "Xem video quảng cáo – Nhận thưởng tự động – Minh bạch nhờ Blockchain",
     "joinNow": "THAM GIA NGAY",
     "introTitle": "Giới thiệu USDA",
@@ -570,7 +570,7 @@
     "howItWorks": {
       "title": "Cách hoạt động của USDA",
       "advertisingRevenue": {
-        "title": "THU NHẬP QUẢNG CÁO",
+        "title": "THU NHẬP TỪ QUẢNG CÁO",
         "description": "Người dùng xem quảng cáo → nhận tiền → chia sẻ doanh thu với đối tác."
       },
       "investDeviceSystem": {
@@ -578,13 +578,13 @@
         "description": "Tái đầu tư hàng loạt \"AI Phone\" để tăng hiệu quả xem quảng cáo."
       },
       "communityDevelopment": {
-        "title": "PHÁT TRIỂN CỘNG ĐỒNG & USDA COIN",
-        "description": "Mở rộng người dùng, Airdrop thưởng coin, thu hút nhà đầu tư để phát triển hệ sinh thái."
+        "title": "PHÁT TRIỂN CỘNG ĐỒNG",
+        "description": "Mở rộng mạng lưới người dùng, thu hút nhà đầu tư để phát triển hệ sinh thái."
       }
     }
   },
   "whitepaper": {
-    "title": "Whitepaper",
+    "title": "Điều khoản sử dụng",
     "section1": {
       "title": "1. Giới Thiệu",
       "intro": "Đây là nền tảng tài chính - quảng cáo tiên phong kết nối Người dùng và Doanh nghiệp thông qua cơ chế staking USDT và hoàn thành nhiệm vụ xem quảng cáo. Khác với các mô hình đầu tư truyền thống, tạo ra giá trị thực từ chính hành vi xem quảng cáo của người dùng trên nhiều thiết bị 1 lúc để mang lại lợi nhuận bền vững. Việc nền tảng cung cấp dàn thiết bị thật để cho người dùng thuê sử dụng mang lại hiệu suất cao về số lượt xem quảng cáo và tiết kiệm thời gian cho người tham gia.",

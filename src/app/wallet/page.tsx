@@ -541,7 +541,7 @@ export default function WalletPage() {
     }
 
     return (
-        <div className='w-full min-h-svh flex py-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
+        <div className='w-full min-h-svh flex py-24 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
             <div className='w-full max-w-7xl'>
                 {/* Balance Section */}
                 <div className='flex flex-col items-center justify-center mb-4 sm:mb-6'>
@@ -584,9 +584,10 @@ export default function WalletPage() {
                             )}
                             {balanceResponse?.data && (
                                 <div
-                                    className='text-xs sm:text-sm text-yellow-500 cursor-pointer font-semibold bg-yellow-500/10 rounded-full px-3 sm:px-4 py-2 mt-4 hover:bg-yellow-500/20 transition-colors'
+                                    className='text-xs sm:text-sm text-white cursor-pointer font-semibold bg-gradient-primary rounded-full px-3 sm:px-4 py-2 mt-4 hover:bg-yellow-500/20 transition-colors flex items-center justify-center gap-2'
                                     onClick={() => setShowTransferRewardModal(true)}
                                 >
+                                    <img src="/dolar-get.png" alt="" className='w-10 h-10' />
                                     {t('wallet.transferReward.transferToMain')}
                                 </div>
                             )}
@@ -663,7 +664,7 @@ export default function WalletPage() {
                             <Button
                                 onClick={handleDeposit}
                                 disabled={!hasWallet || !selectedNetwork}
-                                className='w-full cursor-pointer font-semibold uppercase sm:max-w-80 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 inline-flex text-white rounded-full border-none h-11 sm:h-12 text-base sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
+                                className='w-full cursor-pointer font-semibold uppercase sm:max-w-80 bg-gradient-primary inline-flex text-white rounded-full border-none h-11 sm:h-12 text-base sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
                             >
                                 {t('wallet.depositButton')}
                             </Button>

@@ -109,7 +109,7 @@ export default function DirectReferralPage() {
         : (smartRefDetail.data || []);
 
     return (
-        <div className="w-full min-h-svh flex py-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1">
+        <div className="w-full min-h-svh flex py-24 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1">
             <div className="w-full max-w-7xl space-y-6">
                 {/* Title Section */}
                 <div className="flex items-center justify-center gap-3 sm:gap-4 mb-10">
@@ -142,7 +142,7 @@ export default function DirectReferralPage() {
                 {/* Stats Cards */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
                     {/* Total Branches Card */}
-                    <div className="bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 rounded-lg p-4 sm:px-6 sm:py-4 gap-2 text-white shadow-lg flex flex-col justify-between order-1 sm:order-1">
+                    <div className="bg-gradient-primary rounded-lg p-4 sm:px-6 sm:py-4 gap-2 text-white shadow-lg flex flex-col justify-between order-1 sm:order-1">
                         <h3 className="text-sm font-medium opacity-90">
                             {t('ref.totalBranches') || 'Total Branches'}
                         </h3>
@@ -152,7 +152,7 @@ export default function DirectReferralPage() {
                     </div>
 
                     {/* Total Can Withdraw Card */}
-                    <div className="bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 rounded-lg p-4 sm:px-6 sm:py-4 gap-2 text-white shadow-lg flex flex-col justify-between order-3 sm:order-2 col-span-2 sm:col-span-1">
+                    <div className="bg-gradient-primary rounded-lg p-4 sm:px-6 sm:py-4 gap-2 text-white shadow-lg flex flex-col justify-between order-3 sm:order-2 col-span-2 sm:col-span-1">
                         <h3 className="text-sm font-medium opacity-90">
                             {t('ref.totalCanWithdraw') || 'Total Can Withdraw'}
                         </h3>
@@ -163,7 +163,7 @@ export default function DirectReferralPage() {
                             <button
                                 onClick={handleWithdraw}
                                 disabled={withdrawMutation.isPending || isLoadingInfo || (smartRefInfo.data?.total_can_withdraw || 0) < 10}
-                                className="px-3 bg-white dark:bg-gray-700 text-pink-600 dark:text-pink-400 hover:bg-gray-100 dark:hover:bg-gray-600 border-none font-medium rounded-full py-2 transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-3 border border-solid border-theme-gray-100/50 dark:text-white dark:bg-gray-700 text-white hover:bg-gray-100 dark:hover:bg-gray-600 font-medium rounded-full py-2 transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Wallet className="w-4 h-4" />
                                 {withdrawMutation.isPending ? (t('common.loading') || 'Loading...') : (t('ref.withdraw') || 'Withdraw')}
@@ -173,7 +173,7 @@ export default function DirectReferralPage() {
                     </div>
 
                     {/* Total Invitees Card */}
-                    <div className="bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 rounded-lg p-4 sm:px-6 sm:py-4 gap-2 text-white shadow-lg flex flex-col justify-between order-2 sm:order-3">
+                    <div className="bg-gradient-primary rounded-lg p-4 sm:px-6 sm:py-4 gap-2 text-white shadow-lg flex flex-col justify-between order-2 sm:order-3">
                         <h3 className="text-sm font-medium opacity-90">
                             {t('ref.totalInvitees') || 'Total Invitees'}
                         </h3>

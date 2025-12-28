@@ -22,7 +22,7 @@
   },
   "header": {
     "makeMoney": "加入赚取",
-    "whitepaper": "白皮书",
+    "whitepaper": "使用条款",
     "rewards": "获得奖励",
     "wallet": "存款/提款",
     "referral": "推荐",
@@ -108,7 +108,7 @@
     },
     "transferReward": {
       "title": "转移奖励钱包",
-      "transferToMain": "将奖励转移到主钱包",
+      "transferToMain": "从奖励钱包转移资金到主钱包",
       "transferButton": "转移",
       "transferSuccess": "转移成功！",
       "transferError": "转移失败",
@@ -175,7 +175,7 @@
     "you": "您"
   },
   "smartRef": {
-    "title": "推荐佣金",
+    "title": "网红奖励",
     "progressText": "已推荐: {current}/{total} 人",
     "milestoneLabel": "推荐里程碑",
     "peopleCount": "{count} 人",
@@ -197,7 +197,7 @@
   },
   "kol": {
     "registerTitle": "注册KOL",
-    "registerDescription": "填写您的信息以成为关键意见领袖",
+    "registerDescription": "在表格中填写您的信息（至少一个社交媒体渠道）",
     "name": "姓名",
     "nameRequired": "姓名是必填项",
     "namePlaceholder": "请输入您的姓名",
@@ -544,7 +544,7 @@
     "generateCodeJwtTokenMissingOrInvalid": "JWT令牌缺失/无效"
   },
   "home": {
-    "title": "使用USDA轻松赚钱",
+    "title": "与USDA一起创造被动收入",
     "subtitle": "观看广告 – 获得自动奖励 – 区块链透明",
     "joinNow": "立即加入",
     "introTitle": "关于USDA",
@@ -577,13 +577,13 @@
         "description": "重新投资\"AI手机\"批次以提高广告观看效率。"
       },
       "communityDevelopment": {
-        "title": "社区发展和USDA币",
-        "description": "扩大用户，空投币奖励，吸引投资者发展生态系统。"
+        "title": "社区发展",
+        "description": "扩大用户网络，吸引投资者发展生态系统。"
       }
     }
   },
   "whitepaper": {
-    "title": "白皮书",
+    "title": "使用条款",
     "section1": {
       "title": "1. 介绍",
       "intro": "这是一个连接用户和企业的开创性金融-广告平台，通过USDT质押机制和完成广告观看任务。与传统投资模式不同，我们从用户在多个设备上同时观看广告的行为中创造实际价值，以提供可持续的回报。平台提供真实的设备农场供用户租用，在广告观看次数方面带来高效率，并为参与者节省时间。",

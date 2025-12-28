@@ -199,6 +199,14 @@ const config: Config = {
           'padding': '0.25rem 0.25rem',
           'display': 'inline-block',
         },
+        '.text-gradient-primary-2': {
+          'background': 'linear-gradient(90deg, #509ef4 0%, #ee8dd9 49.03%, #834df9 100%)',
+          'background-clip': 'text',
+          '-webkit-background-clip': 'text',
+          '-webkit-text-fill-color': 'transparent',
+          'padding': '0.25rem 0.25rem',
+          'display': 'inline-block',
+        },
         '.radial-gradient': {
           'background': 'radial-gradient(139.32% 65.26% at 50% 0%, #aa5ffe 34.83%, #fdb7fe59, rgba(253, 183, 254, 0) 100%)',
           'background-blend-mode': 'multiply',
@@ -207,7 +215,10 @@ const config: Config = {
         '.bg-gradient-secondary': {
           'background': 'linear-gradient(90deg, #EA2EC6 0%, #F63753 49.03%, #7056F2 100%)',
         },
-      });
+        '.bg-gradient-primary': {
+          'background': 'linear-gradient(90deg, #3c80cb 0%, #c174b1 49.03%, #3b1c7f 100%)',
+        },
+      });  
     }),
   ],
 };

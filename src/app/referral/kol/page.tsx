@@ -234,7 +234,7 @@ export default function SmartRefPage() {
                         <h2 className='text-3xl font-semibold dark:text-white text-gray-800 dark:md:text-white mb-2'>
                             {t('kol.registerTitle')}
                         </h2>
-                        <p className='text-gray-600 dark:text-gray-300 mb-6 text-sm'>
+                        <p className='text-yellow-600 italic mb-6 text-sm'>
                             {t('kol.registerDescription')}
                         </p>
                         
@@ -393,7 +393,7 @@ export default function SmartRefPage() {
             <div className='w-full max-w-7xl space-y-6'>
                 {/* Title Section */}
                 <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6'>
-                    <h1 className='text-2xl md:text-4xl font-bold text-center text-gradient-secondary '>
+                    <h1 className='text-2xl md:text-4xl font-bold text-center text-gradient-primary-2 uppercase'>
                         {t('smartRef.title')}
                     </h1>
                 </div>
@@ -443,7 +443,7 @@ export default function SmartRefPage() {
                 </div>
 
                 <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 bg-theme-pink-100 md:px-8 px-6 !mt-0 py-2 md:py-3 md:!w-fit mx-auto rounded-full'>
-                    <h2 className='text-sm sm:text-2xl md:text-4xl font-bold text-center text-gradient-secondary '>
+                    <h2 className='text-sm sm:text-2xl md:text-4xl font-bold text-center text-gradient-primary-2 uppercase'>
                         {t('smartRef.totalRewardsUpTo', { total: totalRewardsFromMilestones })}
                     </h2>
                 </div>

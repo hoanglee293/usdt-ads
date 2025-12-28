@@ -306,7 +306,7 @@ export default function Header() {
                       <div className="border-t border-gray-200 dark:border-theme-gray-100 my-1"></div>
                       <Link href="/whitepaper" className='flex items-center gap-1.5 sm:gap-2 w-[-webkit-fill-available] px-2 mx-3 rounded-lg sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border-none outline-none bg-gray-200 dark:bg-gray-600' onClick={() => setIsMenuOpen(false)}>
                         <Book className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500 dark:text-pink-400" />
-                        <span className='text-sm font-inter font-medium text-theme-black-100 dark:text-theme-gray-100'>Whitepaper</span>
+                        <span className='text-sm font-inter font-medium text-theme-black-100 dark:text-theme-gray-100'>{t('header.whitepaper')}</span>
                       </Link>
                       <div className="border-t border-gray-200 dark:border-theme-gray-100 my-1"></div>
 
