@@ -640,7 +640,8 @@
         "title": "3.2. Incomplete Task Mechanism",
         "description": "Users who purchase a package but don't watch ads will lose that day's interest.",
         "example": "Example: 30-day package only completed 28 days → lose 1%/20% interest (0.5% / 1 day)"
-      }
+      },
+      "maxParticipationNote": "The maximum amount one person can participate is $3,500 to ensure fairness and expansion of participants, increasing value for the platform. If an individual participates with too large an amount, it will unbalance the volume of real traffic participating in the platform"
     },
     "section5": {
       "title": "5. Referral Program (Affiliate)",
@@ -648,7 +649,8 @@
         "title": "5.1. Referral Commission",
         "description": "Transaction commission: You will receive a % commission from the USDT amount of users you invite to participate",
         "level1": "Receive 25% from Level 1 user deposit amount (directly below you)",
-        "level2": "Receive 4% from Level 2 user deposit amount (referred by Level 1)"
+        "level2": "Receive 4% from Level 2 user deposit amount (referred by Level 1)",
+        "totalCommissionNote": "Total commission income up to 15% of the staking amount of each newly invited person"
       },
       "milestones": {
         "title": "5.2. Referral Milestone Rewards exclusively for influential partners",
@@ -657,7 +659,8 @@
           "regularReward": "Regular Reward",
           "vipReward": "VIP Reward"
         },
-        "condition": "Condition: Invited person must deposit at least once, complete work once, and complete KYC"
+        "condition": "Condition: Invited person must deposit at least once, complete work once, and complete KYC",
+        "totalRewardsNote": "Total rewards up to 1510 USDT"
       }
     },
     "section6": {

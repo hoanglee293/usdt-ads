@@ -429,10 +429,10 @@ export default function MakeMoneyPage() {
         // Only set up interval if there's an active staking that needs countdown
         // This prevents unnecessary re-renders when there's no active staking
         const needsCountdown = currentStaking && (
-            currentStaking.status === 'running' || 
+            currentStaking.status === 'running' ||
             currentStaking.status === 'pending-claim'
         )
-        
+
         if (!needsCountdown) {
             return
         }
@@ -895,7 +895,7 @@ export default function MakeMoneyPage() {
             })
 
             const imageUrl = canvas.toDataURL('image/png')
-            
+
             // Generate filename with current date
             const date = new Date()
             const dateStr = date.toISOString().split('T')[0]
@@ -1066,7 +1066,7 @@ export default function MakeMoneyPage() {
                                         <div className='flex items-center justify-between mb-1 sm:mb-2'>
                                             <p className='text-xs sm:text-sm text-green-600 dark:text-green-400 font-medium'>{t('makeMoney.devicesDescription')}</p>
                                             <p className='text-xs sm:text-sm font-semibold text-green-900 dark:text-green-300'>
-                                                 10
+                                                10
                                             </p>
                                         </div>
                                     </div>
@@ -1103,7 +1103,7 @@ export default function MakeMoneyPage() {
                                                 // currentMonthIndex = 0 means startDate's month, negative means previous months, positive means next months
                                                 const displayDate = new Date(startDateOnly)
                                                 displayDate.setMonth(displayDate.getMonth() + currentMonthIndex)
-                                                
+
                                                 const year = displayDate.getFullYear()
                                                 const month = displayDate.getMonth()
 
@@ -1151,6 +1151,12 @@ export default function MakeMoneyPage() {
 
                                                 return (
                                                     <div>
+                                                        <div className='p-2 sm:px-3 sm:py-2 bg-theme-red-200 rounded-full flex items-center gap-2 sm:gap-3 md:justify-center w-fit mx-auto mb-4 justify-start shadow-md flex-wrap'>
+                                                            <p className='text-xs sm:text-sm text-white pl-1'>{t('makeMoney.earnedAmount')}:</p>
+                                                            <div className='flex gap-1 sm:gap-2 items-center flex-wrap'>
+                                                                <p className='text-xs sm:text-sm font-semibold text-white'>{(currentStaking.real_reward || 0).toFixed(2)} USDT</p>
+                                                            </div>
+                                                        </div>
                                                         {/* Month Navigation */}
                                                         <div className='flex items-center justify-between mb-4'>
                                                             <button
@@ -1262,8 +1268,8 @@ export default function MakeMoneyPage() {
                                                                                         </div> */}
                                                                                                         {mission.reward !== undefined && (
                                                                                                             <div className={`mt-0.5 font-semibold ${isSuccess
-                                                                                                                    ? 'text-green-600 dark:text-green-400'
-                                                                                                                    : 'text-orange-600 dark:text-orange-400'
+                                                                                                                ? 'text-green-600 dark:text-green-400'
+                                                                                                                : 'text-orange-600 dark:text-orange-400'
                                                                                                                 }`}>
                                                                                                                 + ${mission.reward.toFixed(0)}
                                                                                                             </div>

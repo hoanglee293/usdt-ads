@@ -198,7 +198,7 @@ export default function WhitepaperPage() {
               {t('whitepaper.section3.packages.title')}
             </h3>
             <div className="overflow-x-auto mb-4 sm:mb-6">
-              <table className="w-full border-collapse border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-lg overflow-hidden text-xs sm:text-sm">
+              <table className="w-full border-collapse border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-lg overflow-hidden text-xs sm:text-sm mb-3">
                 <thead>
                   <tr className="bg-gradient-to-r from-[#FE645F] to-[#C68AFE] text-white">
                     <th className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">{t('whitepaper.section3.packages.table.package')}</th>
@@ -246,6 +246,7 @@ export default function WhitepaperPage() {
                   </tr>
                 </tbody>
               </table>
+              <span className="text-sm sm:text-base text-theme-red-200 font-semibold italic">{t('whitepaper.section3.packages.maxParticipationNote')}</span>
             </div>
 
             <h3 className="text-xl sm:text-2xl font-semibold text-theme-black-100 dark:text-white mt-4 sm:mt-6 mb-3 sm:mb-4">
@@ -278,7 +279,7 @@ export default function WhitepaperPage() {
                 <li className="indent-4">{t('whitepaper.section5.commission.level1')}</li>
                 <li className="indent-4">{t('whitepaper.section5.commission.level2')}</li>
               </ul>
-              <span className="text-sm sm:text-base text-theme-red-200 font-semibold italic">Tổng hoa hồng thu nhập lên tới 15% số tiền staking của mỗi 1 người mới được mời</span>
+              <span className="text-sm sm:text-base text-theme-red-200 font-semibold italic">{t('whitepaper.section5.commission.totalCommissionNote')}</span>
             </div>
 
             <h3 className="text-xl sm:text-2xl font-semibold text-theme-black-100 dark:text-white mt-4 sm:mt-6 mb-3 sm:mb-4">
@@ -333,7 +334,7 @@ export default function WhitepaperPage() {
               </table>
             </div>
             <div className="bg-gray-50 dark:bg-gray-800 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 space-y-2">
-              <div className="text-base sm:text-xl text-theme-red-200 font-semibold italic">Tổng giải thưởng lên đến 1510 USDT</div>
+              <div className="text-base sm:text-xl text-theme-red-200 font-semibold italic">{t('whitepaper.section5.milestones.totalRewardsNote')}</div>
               <p className="text-xs sm:text-sm text-theme-black-100 dark:text-gray-300 italic">
                 <strong>{t('whitepaper.section5.milestones.condition').split(': ')[0]}:</strong> {t('whitepaper.section5.milestones.condition').split(': ')[1]}
               </p>
