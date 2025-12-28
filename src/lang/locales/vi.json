@@ -217,7 +217,8 @@
     "alreadyPending": "Yêu cầu đăng ký KOL của bạn đang chờ duyệt",
     "pendingTitle": "Đang chờ duyệt",
     "pendingMessage": "Yêu cầu đăng ký KOL của bạn đang được xem xét. Vui lòng chờ phê duyệt.",
-    "notRegistered": "Bạn chưa đăng ký KOL"
+    "notRegistered": "Bạn chưa đăng ký KOL",
+    "registerButton": "Đăng ký KOL"
   },
   "staking": {
     "joinBaseSuccess": "Tham gia gói Base thành công!",

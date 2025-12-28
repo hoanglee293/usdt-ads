@@ -170,7 +170,7 @@ export default function HomePage() {
           >
             <button 
               onClick={() => router.push('/make-money')}
-              className="uiverse w-full px-8 py-2.5 sm:w-full text-xs sm:text-sm md:text-base lg:text-lg uppercase tracking-wide"
+              className="uiverse w-full min-w-2xl sm:w-full text-xs sm:text-sm md:text-base lg:text-lg uppercase tracking-wide"
             >
               <div className="wrapper">
                 <span>{t('home.joinNow')}</span>

@@ -73,7 +73,7 @@ export default function Modal({
             {/* Modal Content */}
             <div
                 className={cn(
-                    'relative z-50 w-full bg-white dark:bg-theme-gray-200 rounded-lg shadow-xl',
+                    'relative z-50 w-full bg-white dark:bg-slate-900 rounded-lg shadow-xl',
                     'transform transition-all duration-300',
                     maxWidth,
                     isAnimating ? 'scale-100 opacity-100 translate-y-0' : 'scale-95 opacity-0 translate-y-4',
@@ -109,7 +109,7 @@ export default function Modal({
                 )}
 
                 {/* Content */}
-                <div className="px-6 py-4 max-h-[70vh] overflow-y-auto">
+                <div className="px-6 py-4 max-h-[80vh] overflow-y-auto">
                     {children}
                 </div>
             </div>

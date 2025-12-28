@@ -217,7 +217,8 @@
     "alreadyPending": "Your KOL registration request is pending review",
     "pendingTitle": "Registration Pending",
     "pendingMessage": "Your KOL registration request is being reviewed. Please wait for approval.",
-    "notRegistered": "You have not registered as KOL yet"
+    "notRegistered": "You have not registered as KOL yet",
+    "registerButton": "Register as KOL"
   },
   "staking": {
     "joinBaseSuccess": "Successfully joined Base package!",

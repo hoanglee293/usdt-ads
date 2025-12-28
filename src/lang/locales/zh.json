@@ -217,7 +217,8 @@
     "alreadyPending": "您的KOL注册请求正在等待审核",
     "pendingTitle": "注册审核中",
     "pendingMessage": "您的KOL注册请求正在审核中。请等待批准。",
-    "notRegistered": "您尚未注册为KOL"
+    "notRegistered": "您尚未注册为KOL",
+    "registerButton": "注册KOL"
   },
   "staking": {
     "joinBaseSuccess": "成功加入基础套餐！",

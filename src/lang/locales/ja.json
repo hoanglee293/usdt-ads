@@ -217,7 +217,8 @@
     "alreadyPending": "KOL登録リクエストは審査待ちです",
     "pendingTitle": "登録審査中",
     "pendingMessage": "KOL登録リクエストが審査中です。承認をお待ちください。",
-    "notRegistered": "まだKOLとして登録していません"
+    "notRegistered": "まだKOLとして登録していません",
+    "registerButton": "KOL登録"
   },
   "staking": {
     "joinBaseSuccess": "ベースパッケージへの参加に成功しました！",
