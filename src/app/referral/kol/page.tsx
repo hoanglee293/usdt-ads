@@ -336,8 +336,8 @@ export default function SmartRefPage() {
                         </div>
                     )}
 
-                    <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 bg-theme-pink-100 md:px-8 px-6 !mt-0 py-2 md:py-3 md:!w-fit mx-auto rounded-full'>
-                        <h2 className='text-sm sm:text-2xl md:text-4xl font-bold text-center text-gradient-primary-2 uppercase'>
+                    <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 bg-gradient-primary  md:px-10 px-6 !mt-0 py-2 md:py-3 md:!w-fit mx-auto rounded-full'>
+                        <h2 className='text-sm sm:text-2xl md:text-3xl font-bold text-center text-white uppercase '>
                             {t('smartRef.totalRewardsUpTo', { total: totalRewardsFromMilestones })}
                         </h2>
                     </div>
