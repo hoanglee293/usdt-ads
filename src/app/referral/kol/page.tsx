@@ -302,7 +302,7 @@ export default function SmartRefPage() {
                         <div className="max-w-3xl mx-auto flex justify-center">
                             <Button
                                 onClick={() => setShowKolModal(true)}
-                                className='mb-10 outline-none border-none bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4'
+                                className='mb-10 outline-none border-none cursor-pointer hover:shadow-xl transform hover:scale-105 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4'
                                 size='lg'
                             >
                                 {t('kol.registerButton') || 'Đăng ký KOL'}
