@@ -271,6 +271,7 @@
     "missionsHistory": "Missions History",
     "date": "Date",
     "videosWatched": "Videos Watched",
+    "videosWatchedToday": "Videos watched today",
     "remaining": "Remaining",
     "canWatchNext": "Can watch next after",
     "canWatchNow": "Can watch video now",
@@ -548,6 +549,7 @@
     "title": "Create passive income with USDA",
     "subtitle": "Watch ads – Get automatic rewards – Transparent with Blockchain",
     "joinNow": "JOIN NOW",
+    "learnMore": "Learn more",
     "introTitle": "About USDA",
     "features": {
       "technology": {

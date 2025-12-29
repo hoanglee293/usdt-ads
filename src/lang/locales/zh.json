@@ -271,6 +271,7 @@
     "missionsHistory": "任务历史",
     "date": "日期",
     "videosWatched": "已观看视频数",
+    "videosWatchedToday": "今日已观看视频数",
     "remaining": "剩余",
     "canWatchNext": "之后可以观看下一个",
     "canWatchNow": "现在可以观看视频",
@@ -548,6 +549,7 @@
     "title": "与USDA一起创造被动收入",
     "subtitle": "观看广告 – 获得自动奖励 – 区块链透明",
     "joinNow": "立即加入",
+    "learnMore": "了解更多",
     "introTitle": "关于USDA",
     "features": {
       "technology": {

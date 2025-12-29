@@ -573,7 +573,7 @@ export default function MakeMoneyPage() {
     const missionProgress = useMemo(() => {
         if (!missionNowResponse?.data) return null;
 
-        const { turn_setting, turn_day, time_watch_new, time_gap } = missionNowResponse.data;
+        const { turn_setting, turn_day, time_watch_new, time_gap, devices } = missionNowResponse.data;
 
         // Calculate next watch time
         let canWatchNext = true;
@@ -596,6 +596,8 @@ export default function MakeMoneyPage() {
             nextWatchTime,
             timeRemaining,
             isCompleted: turn_day >= turn_setting,
+            devices: devices,
+            completedDevices: turn_day * devices,
         };
     }, [missionNowResponse, currentTime]);
 
@@ -1049,10 +1051,16 @@ export default function MakeMoneyPage() {
                                 {/* Video Views & Devices Info */}
                                 <div className='grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3 md:gap-10 w-full md:max-w-3xl mx-auto mb-3 sm:mb-4'>
                                     <div className='p-2 sm:p-3 md:p-4 bg-blue-50 dark:bg-blue-900/55 rounded-lg border border-blue-200 dark:border-blue-700'>
-                                        <div className='flex items-center justify-between mb-1 sm:mb-2'>
+                                        <div className='flex items-center justify-between mb-1 sm:mb-2 gap-3'>
                                             <p className='text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium'>{t('makeMoney.videoViewsDescription')}</p>
                                             <p className='text-xs sm:text-sm font-semibold text-blue-900 dark:text-blue-300'>
                                                 {currentStaking?.turn_setting * (currentStaking?.devices_setting || 0) || 0}
+                                            </p>
+                                        </div>
+                                        <div className='flex items-center justify-between mb-1 sm:mb-2'>
+                                            <p className='text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium'>{t('makeMoney.videosWatchedToday')}</p>
+                                            <p className='text-xs sm:text-sm font-semibold text-blue-900 dark:text-blue-300'>
+                                                {missionProgress?.completedDevices ?? 0}
                                             </p>
                                         </div>
                                     </div>

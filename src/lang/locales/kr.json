@@ -271,6 +271,7 @@
     "missionsHistory": "미션 내역",
     "date": "날짜",
     "videosWatched": "시청한 비디오 수",
+    "videosWatchedToday": "오늘 시청한 비디오 수",
     "remaining": "남음",
     "canWatchNext": "다음 시청 가능 시간",
     "canWatchNow": "지금 비디오 시청 가능",
@@ -549,6 +550,7 @@
     "title": "USDA와 함께 수동적 수입 창출",
     "subtitle": "광고 시청 – 자동 보상 받기 – 블록체인으로 투명하게",
     "joinNow": "지금 참여",
+    "learnMore": "더 알아보기",
     "introTitle": "USDA 소개",
     "features": {
       "technology": {

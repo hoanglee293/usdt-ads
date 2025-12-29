@@ -271,6 +271,7 @@
     "missionsHistory": "Lịch sử nhiệm vụ",
     "date": "Ngày",
     "videosWatched": "Video đã xem",
+    "videosWatchedToday": "Số video đã xem trong ngày",
     "remaining": "Còn lại",
     "canWatchNext": "Có thể xem tiếp sau",
     "canWatchNow": "Có thể xem video ngay",
@@ -549,6 +550,7 @@
     "title": "Tạo nguồn thu nhập thụ động cùng với USDA",
     "subtitle": "Xem video quảng cáo – Nhận thưởng tự động – Minh bạch nhờ Blockchain",
     "joinNow": "THAM GIA NGAY",
+    "learnMore": "Tìm hiểu thêm",
     "introTitle": "Giới thiệu USDA",
     "features": {
       "technology": {

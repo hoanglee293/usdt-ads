@@ -271,6 +271,7 @@
     "missionsHistory": "ミッション履歴",
     "date": "日付",
     "videosWatched": "視聴した動画数",
+    "videosWatchedToday": "今日視聴した動画数",
     "remaining": "残り",
     "canWatchNext": "次回視聴可能",
     "canWatchNow": "今すぐ動画を視聴できます",
@@ -548,6 +549,7 @@
     "title": "USDAで受動的収入を創出",
     "subtitle": "広告を見る – 自動報酬を受け取る – ブロックチェーンで透明性",
     "joinNow": "今すぐ参加",
+    "learnMore": "詳細を見る",
     "introTitle": "USDAについて",
     "features": {
       "technology": {

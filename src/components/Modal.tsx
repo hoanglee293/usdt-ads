@@ -88,7 +88,7 @@ export default function Modal({
                         className="absolute right-4 top-4 cursor-pointer rounded-sm opacity-70 hover:opacity-100 transition-opacity border-none bg-transparent focus:ring-gray-400 z-10 p-1 group"
                         aria-label="Close"
                     >
-                        <X className="h-5 w-5 text-white group-hover:text-gray-300" />
+                        <X className="h-5 w-5 dark:text-white text-black hover:text-gray-700 group-hover:dark:text-gray-300" />
                     </button>
                 )}
 
