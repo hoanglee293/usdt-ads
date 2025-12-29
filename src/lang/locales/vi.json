@@ -446,7 +446,7 @@
   },
   "register": {
     "getStarted": "Bắt đầu với chúng tôi",
-    "description1": "USDT Ads giúp bạn kiếm tiền online chỉ với vài phút mỗi ngày.",
+    "description1": "AdsWorld giúp bạn kiếm tiền online chỉ với vài phút mỗi ngày.",
     "description2": "Tham gia staking và nhiệm vụ để tăng thu nhập của bạn lên gấp nhiều lần.",
     "createAccount": "Tạo tài khoản",
     "username": "Tên đăng nhập",
@@ -477,7 +477,7 @@
   },
   "forgotPassword": {
     "getStarted": "Bắt đầu với chúng tôi",
-    "description1": "USDT Ads giúp bạn kiếm tiền online chỉ với vài phút mỗi ngày.",
+    "description1": "AdsWorld giúp bạn kiếm tiền online chỉ với vài phút mỗi ngày.",
     "description2": "Tham gia staking và nhiệm vụ để tăng thu nhập của bạn lên gấp nhiều lần.",
     "title": "Quên mật khẩu",
     "email": "Email",
@@ -494,7 +494,7 @@
   },
   "changePassword": {
     "getStarted": "Bắt đầu với chúng tôi",
-    "description1": "USDT Ads giúp bạn kiếm tiền online chỉ với vài phút mỗi ngày.",
+    "description1": "AdsWorld giúp bạn kiếm tiền online chỉ với vài phút mỗi ngày.",
     "description2": "Tham gia staking và nhiệm vụ để tăng thu nhập của bạn lên gấp nhiều lần.",
     "title": "Đổi mật khẩu",
     "currentPassword": "Mật khẩu hiện tại",
@@ -525,7 +525,7 @@
   },
   "verifyMail": {
     "getStarted": "Bắt đầu với chúng tôi",
-    "description1": "USDT Ads giúp bạn kiếm tiền online chỉ với vài phút mỗi ngày.",
+    "description1": "AdsWorld giúp bạn kiếm tiền online chỉ với vài phút mỗi ngày.",
     "description2": "Tham gia staking và nhiệm vụ để tăng thu nhập của bạn lên gấp nhiều lần.",
     "title": "Xác thực Email",
     "code": "Mã xác thực",
@@ -547,11 +547,11 @@
     "generateCodeJwtTokenMissingOrInvalid": "JWT token thiếu/không hợp lệ"
   },
   "home": {
-    "title": "Tạo nguồn thu nhập thụ động cùng với USDA",
+    "title": "Tạo nguồn thu nhập thụ động cùng với AdsWorld",
     "subtitle": "Xem video quảng cáo – Nhận thưởng tự động – Minh bạch nhờ Blockchain",
     "joinNow": "THAM GIA NGAY",
     "learnMore": "Tìm hiểu thêm",
-    "introTitle": "Giới thiệu USDA",
+    "introTitle": "Giới thiệu AdsWorld",
     "features": {
       "technology": {
         "title": "Công nghệ",
@@ -571,7 +571,7 @@
       }
     },
     "howItWorks": {
-      "title": "Cách hoạt động của USDA",
+      "title": "Cách hoạt động của AdsWorld",
       "advertisingRevenue": {
         "title": "THU NHẬP TỪ QUẢNG CÁO",
         "description": "Người dùng xem quảng cáo → nhận tiền → chia sẻ doanh thu với đối tác."
@@ -598,7 +598,7 @@
         "item3": "Thiếu minh bạch - Người dùng không biết nguồn thu nhập thực sự đến từ đâu để chi trả cho người tham gia làm việc"
       },
       "solution": {
-        "title": "Giải Pháp USDA",
+        "title": "Giải Pháp AdsWorld",
         "item1": "Thu nhập kép - Lợi nhuận từ cả staking USDT và hoàn thành công việc xem quảng cáo",
         "item2": "Giá trị thực - Doanh nghiệp tiếp cận khách hàng thực tăng lượt traffic cho doanh nghiệp, người dùng được trả tiền cho giá trị họ tạo ra",
         "item3": "Bảo mật đa tầng - KYC, mã hóa dữ liệu và ứng dụng di động chống spam",
@@ -636,7 +636,7 @@
         },
         "step3": {
           "title": "Bước 3: Hoàn Thành Nhiệm Vụ",
-          "item1": "Sử dụng ứng dụng USDA để xem video quảng cáo",
+          "item1": "Sử dụng ứng dụng AdsWorld để xem video quảng cáo",
           "item2": "Hệ thống chống spam và gian lận",
           "item3": "Tiến độ được cập nhật thời gian thực"
         },

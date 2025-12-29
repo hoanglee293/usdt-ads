@@ -33,7 +33,7 @@ const AuthLayoutPanel: React.FC<AuthLayoutPanelProps> = ({
     // Get title text
     const getTitle = () => {
         if (title) return title
-        return 'USDT ADS'
+        return 'AdsWorld'
     }
 
     // Get title styling - use login style for all variants

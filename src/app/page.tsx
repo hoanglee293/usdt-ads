@@ -57,7 +57,7 @@ export default function HomePage() {
     rootMargin: '0px'
   });
 
-  // How USDA Works Section Observers
+  // How AdsWorld Works Section Observers
   const { elementRef: sectionTitleRef, isIntersecting: sectionTitleInView } = useIntersectionObserver<HTMLHeadingElement>({
     threshold: 0.1,
     rootMargin: '0px'
@@ -140,7 +140,7 @@ export default function HomePage() {
             <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 relative">
               <img
                 src="/logo.png"
-                alt="USDA Logo"
+                alt="AdsWorld Logo"
                 className={`relative w-full h-full object-contain transition-all duration-500 animate-bounce-gentle ${logoInView ? 'in-view' : ''}`}
               />
             </div>
@@ -402,7 +402,7 @@ export default function HomePage() {
 
       </div>
 
-      {/* How USDA Works Section */}
+      {/* How AdsWorld Works Section */}
       <div className="w-full max-w-7xl mx-auto mt-12 sm:mt-16 md:mt-24 lg:mt-32 xl:mt-40 px-4 sm:px-6">
         {/* Section Title */}
         <h2
@@ -534,7 +534,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Panel 3: Community Development & USDA Coin */}
+          {/* Panel 3: Community Development & AdsWorld Coin */}
           <div
             ref={panel3Ref}
             className={`relative hover:shadow-lg dark:hover:shadow-xl dark:hover:shadow-purple-500/20 transition-all animate-fade-in-up-more-delayed sm:col-span-2 md:col-span-1 ${panel3InView ? 'in-view' : ''}`}

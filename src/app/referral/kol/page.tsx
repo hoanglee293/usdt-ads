@@ -299,18 +299,18 @@ export default function SmartRefPage() {
 
                     {/* Show register button if status is not-register */}
                     {isNotRegister && (
-                         <div className=" max-w-[190px] mx-auto flex justify-center">
-                         <Button
-                             onClick={() => setShowKolModal(true)}
-                             className='mb-10 relative w-full mx-auto outline-none border-none cursor-pointer hover:shadow-xl transform hover:scale-105 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4 group'
-                             size='lg'
-                         >
-                             <span className="flex items-center gap-2 absolute right-0 top-1/2 transform -translate-y-1/2">
-                                 {t('kol.registerButton') || 'Đăng ký KOL'}
-                                 <MousePointer2 className="w-8 h-8 text-gradient-primary-2 animate-bounce group-hover:animate-pulse" />
-                             </span>
-                         </Button>
-                     </div>
+                        <div className=" max-w-[190px] mx-auto flex justify-center">
+                            <Button
+                                onClick={() => setShowKolModal(true)}
+                                className='mb-10 relative w-full mx-auto outline-none border-none cursor-pointer hover:shadow-xl transform hover:scale-105 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4 group'
+                                size='lg'
+                            >
+                                <span className="flex items-center gap-2 absolute right-0 top-1/2 transform -translate-y-1/2">
+                                    {t('kol.registerButton') || 'Đăng ký KOL'}
+                                    <MousePointer2 className="w-8 h-8 text-gradient-primary-2 animate-bounce group-hover:animate-pulse" />
+                                </span>
+                            </Button>
+                        </div>
                     )}
 
                     {/* Progress Bar */}

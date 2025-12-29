@@ -445,7 +445,7 @@
   },
   "register": {
     "getStarted": "始めましょう",
-    "description1": "USDT Adsは、毎日数分だけでオンラインでお金を稼ぐのに役立ちます。",
+    "description1": "AdsWorldは、毎日数分だけでオンラインでお金を稼ぐのに役立ちます。",
     "description2": "ステーキングとミッションに参加して、収入を何倍にも増やしましょう。",
     "createAccount": "アカウントを作成",
     "username": "ユーザー名",
@@ -476,7 +476,7 @@
   },
   "forgotPassword": {
     "getStarted": "始めましょう",
-    "description1": "USDT Adsは、毎日数分だけでオンラインでお金を稼ぐのに役立ちます。",
+    "description1": "AdsWorldは、毎日数分だけでオンラインでお金を稼ぐのに役立ちます。",
     "description2": "ステーキングとミッションに参加して、収入を何倍にも増やしましょう。",
     "title": "パスワードをお忘れですか",
     "email": "メールアドレス",
@@ -493,7 +493,7 @@
   },
   "changePassword": {
     "getStarted": "始めましょう",
-    "description1": "USDT Adsは、毎日数分だけでオンラインでお金を稼ぐのに役立ちます。",
+    "description1": "AdsWorldは、毎日数分だけでオンラインでお金を稼ぐのに役立ちます。",
     "description2": "ステーキングとミッションに参加して、収入を何倍にも増やしましょう。",
     "title": "パスワードを変更",
     "currentPassword": "現在のパスワード",
@@ -524,7 +524,7 @@
   },
   "verifyMail": {
     "getStarted": "始めましょう",
-    "description1": "USDT Adsは、毎日数分だけでオンラインでお金を稼ぐのに役立ちます。",
+    "description1": "AdsWorldは、毎日数分だけでオンラインでお金を稼ぐのに役立ちます。",
     "description2": "ステーキングとミッションに参加して、収入を何倍にも増やしましょう。",
     "title": "メールを確認",
     "code": "コード",
@@ -546,11 +546,11 @@
     "generateCodeJwtTokenMissingOrInvalid": "JWTトークンが欠落しているか無効です"
   },
   "home": {
-    "title": "USDAで受動的収入を創出",
+    "title": "AdsWorldで受動的収入を創出",
     "subtitle": "広告を見る – 自動報酬を受け取る – ブロックチェーンで透明性",
     "joinNow": "今すぐ参加",
     "learnMore": "詳細を見る",
-    "introTitle": "USDAについて",
+    "introTitle": "AdsWorldについて",
     "features": {
       "technology": {
         "title": "テクノロジー",
@@ -570,7 +570,7 @@
       }
     },
     "howItWorks": {
-      "title": "USDAの仕組み",
+      "title": "AdsWorldの仕組み",
       "advertisingRevenue": {
         "title": "広告収入",
         "description": "ユーザーが広告を見る → お金を受け取る → パートナーと収益を共有する。"
@@ -597,7 +597,7 @@
         "item3": "透明性の欠如 - ユーザーは参加者の作業に対する実際の収入源がどこから来るのかわかりません"
       },
       "solution": {
-        "title": "USDAソリューション",
+        "title": "AdsWorldソリューション",
         "item1": "二重収入 - USDTステーキングと広告視聴タスクの完了の両方から利益",
         "item2": "実際の価値 - 企業は実際の顧客に到達し、ビジネスのトラフィックを増加させ、ユーザーは自分が創出した価値に対して報酬を受け取ります",
         "item3": "多層セキュリティ - KYC、データ暗号化、モバイルアプリのスパム防止",
@@ -635,7 +635,7 @@
         },
         "step3": {
           "title": "ステップ3: タスク完了",
-          "item1": "USDAアプリを使用して広告動画を視聴",
+          "item1": "AdsWorldアプリを使用して広告動画を視聴",
           "item2": "スパムと詐欺防止システム",
           "item3": "リアルタイムで進捗が更新されます"
         },

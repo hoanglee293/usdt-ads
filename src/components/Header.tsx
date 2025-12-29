@@ -193,7 +193,7 @@ export default function Header() {
           className='w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 object-contain'
         />
         <span className='tracking-[-0.02em] leading-[150%] inline-block   text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] font-bold text-sm md:text-base'>
-          USDT ADS
+          AdsWorld
         </span>
       </Link>
 
@@ -290,7 +290,7 @@ export default function Header() {
                           className='w-10 h-10 sm:w-12 sm:h-12 object-contain'
                         />
                         <span className='tracking-[-0.02em] leading-[150%] inline-block   text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] font-bold text-sm font-inter'>
-                          USDT ADS
+                          AdsWorld
                         </span>
                       </Link>
                       <button

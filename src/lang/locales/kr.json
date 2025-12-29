@@ -446,7 +446,7 @@
   },
   "register": {
     "getStarted": "우리와 함께 시작하세요",
-    "description1": "USDT Ads는 하루 몇 분만 투자하여 온라인으로 수익을 창출할 수 있도록 도와줍니다.",
+    "description1": "AdsWorld는 하루 몇 분만 투자하여 온라인으로 수익을 창출할 수 있도록 도와줍니다.",
     "description2": "스테이킹과 미션에 참여하여 수입을 여러 배로 늘리세요.",
     "createAccount": "계정 만들기",
     "username": "사용자 이름",
@@ -477,7 +477,7 @@
   },
   "forgotPassword": {
     "getStarted": "우리와 함께 시작하세요",
-    "description1": "USDT Ads는 하루 몇 분만 투자하여 온라인으로 수익을 창출할 수 있도록 도와줍니다.",
+    "description1": "AdsWorld는 하루 몇 분만 투자하여 온라인으로 수익을 창출할 수 있도록 도와줍니다.",
     "description2": "스테이킹과 미션에 참여하여 수입을 여러 배로 늘리세요.",
     "title": "비밀번호 찾기",
     "email": "이메일",
@@ -494,7 +494,7 @@
   },
   "changePassword": {
     "getStarted": "우리와 함께 시작하세요",
-    "description1": "USDT Ads는 하루 몇 분만 투자하여 온라인으로 수익을 창출할 수 있도록 도와줍니다.",
+    "description1": "AdsWorld는 하루 몇 분만 투자하여 온라인으로 수익을 창출할 수 있도록 도와줍니다.",
     "description2": "스테이킹과 미션에 참여하여 수입을 여러 배로 늘리세요.",
     "title": "비밀번호 변경",
     "currentPassword": "현재 비밀번호",
@@ -525,7 +525,7 @@
   },
   "verifyMail": {
     "getStarted": "우리와 함께 시작하세요",
-    "description1": "USDT Ads는 하루 몇 분만 투자하여 온라인으로 수익을 창출할 수 있도록 도와줍니다.",
+    "description1": "AdsWorld는 하루 몇 분만 투자하여 온라인으로 수익을 창출할 수 있도록 도와줍니다.",
     "description2": "스테이킹과 미션에 참여하여 수입을 여러 배로 늘리세요.",
     "title": "이메일 인증",
     "code": "코드",
@@ -547,11 +547,11 @@
     "generateCodeJwtTokenMissingOrInvalid": "JWT 토큰이 없거나 유효하지 않습니다"
   },
   "home": {
-    "title": "USDA와 함께 수동적 수입 창출",
+    "title": "AdsWorld와 함께 수동적 수입 창출",
     "subtitle": "광고 시청 – 자동 보상 받기 – 블록체인으로 투명하게",
     "joinNow": "지금 참여",
     "learnMore": "더 알아보기",
-    "introTitle": "USDA 소개",
+    "introTitle": "AdsWorld 소개",
     "features": {
       "technology": {
         "title": "기술",
@@ -571,7 +571,7 @@
       }
     },
     "howItWorks": {
-      "title": "USDA 작동 방식",
+      "title": "AdsWorld 작동 방식",
       "advertisingRevenue": {
         "title": "광고 수익",
         "description": "사용자가 광고를 시청 → 돈을 받음 → 파트너와 수익 공유."
@@ -598,7 +598,7 @@
         "item3": "투명성 부족 - 사용자는 참가자 작업에 대한 실제 소득 출처를 알 수 없습니다"
       },
       "solution": {
-        "title": "USDA 솔루션",
+        "title": "AdsWorld 솔루션",
         "item1": "이중 소득 - USDT 스테이킹과 광고 시청 작업 완료 모두에서 수익",
         "item2": "실제 가치 - 기업은 실제 고객에 도달하여 비즈니스 트래픽을 증가시키고, 사용자는 자신이 창출한 가치에 대해 보상을 받습니다",
         "item3": "다층 보안 - KYC, 데이터 암호화 및 모바일 앱 스팸 방지",
@@ -636,7 +636,7 @@
         },
         "step3": {
           "title": "3단계: 작업 완료",
-          "item1": "USDA 앱을 사용하여 광고 동영상 시청",
+          "item1": "AdsWorld 앱을 사용하여 광고 동영상 시청",
           "item2": "스팸 및 사기 방지 시스템",
           "item3": "실시간 진행 상황 업데이트"
         },

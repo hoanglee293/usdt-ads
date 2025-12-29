@@ -445,7 +445,7 @@
   },
   "register": {
     "getStarted": "开始使用",
-    "description1": "USDT Ads帮助您每天只需几分钟即可在线赚钱。",
+    "description1": "AdsWorld帮助您每天只需几分钟即可在线赚钱。",
     "description2": "加入质押和任务，让您的收入成倍增长。",
     "createAccount": "创建账户",
     "username": "用户名",
@@ -476,7 +476,7 @@
   },
   "forgotPassword": {
     "getStarted": "开始使用",
-    "description1": "USDT Ads帮助您每天只需几分钟即可在线赚钱。",
+    "description1": "AdsWorld帮助您每天只需几分钟即可在线赚钱。",
     "description2": "加入质押和任务，让您的收入成倍增长。",
     "title": "忘记密码",
     "email": "电子邮件",
@@ -493,7 +493,7 @@
   },
   "changePassword": {
     "getStarted": "开始使用",
-    "description1": "USDT Ads帮助您每天只需几分钟即可在线赚钱。",
+    "description1": "AdsWorld帮助您每天只需几分钟即可在线赚钱。",
     "description2": "加入质押和任务，让您的收入成倍增长。",
     "title": "更改密码",
     "currentPassword": "当前密码",
@@ -524,7 +524,7 @@
   },
   "verifyMail": {
     "getStarted": "开始使用",
-    "description1": "USDT Ads帮助您每天只需几分钟即可在线赚钱。",
+    "description1": "AdsWorld帮助您每天只需几分钟即可在线赚钱。",
     "description2": "加入质押和任务，让您的收入成倍增长。",
     "title": "验证电子邮件",
     "code": "代码",
@@ -546,11 +546,11 @@
     "generateCodeJwtTokenMissingOrInvalid": "JWT令牌缺失/无效"
   },
   "home": {
-    "title": "与USDA一起创造被动收入",
+    "title": "与AdsWorld一起创造被动收入",
     "subtitle": "观看广告 – 获得自动奖励 – 区块链透明",
     "joinNow": "立即加入",
     "learnMore": "了解更多",
-    "introTitle": "关于USDA",
+    "introTitle": "关于AdsWorld",
     "features": {
       "technology": {
         "title": "技术",
@@ -570,7 +570,7 @@
       }
     },
     "howItWorks": {
-      "title": "USDA如何运作",
+      "title": "AdsWorld如何运作",
       "advertisingRevenue": {
         "title": "广告收入",
         "description": "用户观看广告 → 获得金钱 → 与合作伙伴分享收入。"
@@ -597,7 +597,7 @@
         "item3": "缺乏透明度 - 用户不知道支付参与者工作的实际收入来源"
       },
       "solution": {
-        "title": "USDA解决方案",
+        "title": "AdsWorld解决方案",
         "item1": "双重收入 - 从USDT质押和完成广告观看任务中获利",
         "item2": "实际价值 - 企业接触真实客户，为企业增加流量，用户因他们创造的价值而获得报酬",
         "item3": "多层安全 - KYC、数据加密和移动应用程序防垃圾邮件保护",
@@ -635,7 +635,7 @@
         },
         "step3": {
           "title": "步骤3: 完成任务",
-          "item1": "使用USDA应用程序观看广告视频",
+          "item1": "使用AdsWorld应用程序观看广告视频",
           "item2": "防垃圾邮件和欺诈系统",
           "item3": "进度实时更新"
         },

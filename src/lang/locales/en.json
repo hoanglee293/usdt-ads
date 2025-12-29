@@ -445,7 +445,7 @@
   },
   "register": {
     "getStarted": "Get Started With Us",
-    "description1": "USDT Ads helps you earn money online with just a few minutes each day.",
+    "description1": "AdsWorld helps you earn money online with just a few minutes each day.",
     "description2": "Join staking and missions to multiply your income many times over.",
     "createAccount": "Create Account",
     "username": "Username",
@@ -476,7 +476,7 @@
   },
   "forgotPassword": {
     "getStarted": "Get Started With Us",
-    "description1": "USDT Ads helps you earn money online with just a few minutes each day.",
+    "description1": "AdsWorld helps you earn money online with just a few minutes each day.",
     "description2": "Join staking and missions to multiply your income many times over.",
     "title": "Forgot Password",
     "email": "Email",
@@ -493,7 +493,7 @@
   },
   "changePassword": {
     "getStarted": "Get Started With Us",
-    "description1": "USDT Ads helps you earn money online with just a few minutes each day.",
+    "description1": "AdsWorld helps you earn money online with just a few minutes each day.",
     "description2": "Join staking and missions to multiply your income many times over.",
     "title": "Change Password",
     "currentPassword": "Current Password",
@@ -524,7 +524,7 @@
   },
   "verifyMail": {
     "getStarted": "Get Started With Us",
-    "description1": "USDT Ads helps you earn money online with just a few minutes each day.",
+    "description1": "AdsWorld helps you earn money online with just a few minutes each day.",
     "description2": "Join staking and missions to multiply your income many times over.",
     "title": "Verify Email",
     "code": "Code",
@@ -546,11 +546,11 @@
     "generateCodeJwtTokenMissingOrInvalid": "JWT token missing/invalid"
   },
   "home": {
-    "title": "Create passive income with USDA",
+    "title": "Create passive income with AdsWorld",
     "subtitle": "Watch ads – Get automatic rewards – Transparent with Blockchain",
     "joinNow": "JOIN NOW",
     "learnMore": "Learn more",
-    "introTitle": "About USDA",
+    "introTitle": "About AdsWorld",
     "features": {
       "technology": {
         "title": "Technology",
@@ -570,7 +570,7 @@
       }
     },
     "howItWorks": {
-      "title": "How USDA Works",
+      "title": "How AdsWorld Works",
       "advertisingRevenue": {
         "title": "ADVERTISING REVENUE",
         "description": "Users watch ads → receive money → share revenue with partners."
@@ -597,7 +597,7 @@
         "item3": "Lack of transparency - Users don't know where the real income comes from to pay participants for their work"
       },
       "solution": {
-        "title": "USDA Solution",
+        "title": "AdsWorld Solution",
         "item1": "Dual income - Profits from both USDT staking and completing ad viewing tasks",
         "item2": "Real value - Businesses reach real customers, increasing traffic for businesses, users get paid for the value they create",
         "item3": "Multi-layered security - KYC, data encryption, and mobile app anti-spam protection",
@@ -635,7 +635,7 @@
         },
         "step3": {
           "title": "Step 3: Complete Tasks",
-          "item1": "Use USDA app to watch ad videos",
+          "item1": "Use AdsWorld app to watch ad videos",
           "item2": "Anti-spam and fraud system",
           "item3": "Progress updated in real-time"
         },
