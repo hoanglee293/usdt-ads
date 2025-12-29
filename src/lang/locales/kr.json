@@ -552,7 +552,7 @@
     "joinNow": "지금 참여",
     "learnMore": "더 알아보기",
     "participants": {
-      "prefix": "",
+      "prefix": "총",
       "suffix": "명이 참여 중입니다"
     },
     "introTitle": "AdsWorld 소개",

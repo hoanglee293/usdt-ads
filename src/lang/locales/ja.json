@@ -551,7 +551,7 @@
     "joinNow": "今すぐ参加",
     "learnMore": "詳細を見る",
     "participants": {
-      "prefix": "",
+      "prefix": "合計",
       "suffix": "人が参加しています"
     },
     "introTitle": "AdsWorldについて",

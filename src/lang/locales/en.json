@@ -551,7 +551,7 @@
     "joinNow": "JOIN NOW",
     "learnMore": "Learn more",
     "participants": {
-      "prefix": "",
+      "prefix": "Currently",
       "suffix": "people are participating"
     },
     "introTitle": "About AdsWorld",
