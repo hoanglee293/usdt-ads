@@ -945,7 +945,7 @@ export default function WalletPage() {
                                         <Button
                                             onClick={() => setShowTransferConfirmModal(true)}
                                             disabled={transferRewardMutation.isPending || !balanceResponse?.data || balanceResponse.data.balance_reward <= 0}
-                                            className="w-fit bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none h-10 cursor-pointer text-base font-semibold hover:opacity-90 disabled:opacity-50"
+                                            className="w-fit bg-gradient-primary px-6 text-white rounded-full border-none h-10 cursor-pointer text-base font-semibold hover:opacity-90 disabled:opacity-50"
                                         >
                                             {t('wallet.transferReward.transferButton')}
                                         </Button>

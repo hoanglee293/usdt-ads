@@ -405,13 +405,13 @@ export default function Header() {
                   className="flex-1 flex flex-col items-center justify-center py-1.5 px-0 min-w-0"
                 >
                   <div
-                    className={`w-full flex flex-col items-center justify-center gap-1 py-2 px-2 rounded-lg transition-all touch-manipulation text-white ${isActive
+                    className={`w-full flex flex-col items-center justify-center gap-2 py-1 px-2 rounded-lg transition-all touch-manipulation text-white ${isActive
                         ? 'bg-white/20 dark:bg-white/10 shadow-lg shadow-pink-500/50 backdrop-blur-sm border border-white/30'
                         : 'opacity-80'
                       }`}
                   >
                     <IconComponent
-                      className={`w-5 h-5 sm:w-6 sm:h-6 transition-transform ${isActive ? 'scale-125 drop-shadow-lg' : 'scale-100'
+                      className={`w-7 h-7 sm:w-8 sm:h-8 transition-transform ${isActive ? 'scale-125 drop-shadow-lg' : 'scale-100'
                         }`}
                     />
                     <span className={`text-[10px] sm:text-xs font-inter truncate w-full text-center transition-all ${isActive 

@@ -39,7 +39,8 @@ const config: Config = {
           red: {
             DEFAULT: '#D40000',
             100: '#D61F00',
-            200: '#FE645F'
+            200: '#FE645F',
+            300: '#f68884',
           },
           pink: {
             DEFAULT: '#ffeaea',
@@ -192,7 +193,7 @@ const config: Config = {
           'display': 'inline-block',
         },
         '.text-gradient-secondary': {
-          'background': 'linear-gradient(90deg, #EA2EC6 0%, #F63753 49.03%, #7056F2 100%)',
+          'background': 'linear-gradient(90deg, #f783e1 0%, #61c2f5 49.03%, #9382e8 100%)',
           'background-clip': 'text',
           '-webkit-background-clip': 'text',
           '-webkit-text-fill-color': 'transparent',

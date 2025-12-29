@@ -219,7 +219,7 @@ export default function HomePage() {
                       ref={feature1ImageRef}
                       src="/block-chain.png"
                       alt="tech"
-                      className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-float ${feature1ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
+                      className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-float ${feature1ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-100 scale-90'}`}
                     />
                   </div>
                 </div>
@@ -241,7 +241,7 @@ export default function HomePage() {
                     ref={feature2ImageRef}
                     src="/phone.png"
                     alt="tech"
-                    className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-float-fast ${feature2ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
+                    className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-float-fast ${feature2ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-100 scale-90'}`}
                   />
                 </div>
                 <div className="bg-gradient-to-br from-[#e7807d] to-[#59e7a5] rounded-full px-3 sm:px-4 py-2 text-white shadow-lg w-full text-center min-h-28 flex items-center justify-center flex-col gap-2">
@@ -263,7 +263,7 @@ export default function HomePage() {
                       ref={feature3ImageRef}
                       src="/ai-block-chain.png"
                       alt="tech"
-                      className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-pulse-glow ${feature3ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
+                      className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-pulse-glow ${feature3ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-100 scale-90'}`}
                     />
                   </div>
                 </div>
@@ -285,7 +285,7 @@ export default function HomePage() {
                     ref={feature4ImageRef}
                     src="/socical.png"
                     alt="tech"
-                    className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-bounce-gentle ${feature4ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-70 scale-90'}`}
+                    className={`w-20 h-20 sm:w-24 sm:h-24 object-contain transition-all duration-500 animate-bounce-gentle ${feature4ImageInView ? 'in-view opacity-100 scale-100' : 'opacity-100 scale-90'}`}
                   />
                 </div>
                 <div className="bg-gradient-to-br from-[#5fdcfe] to-[#c50f92] rounded-full px-3 sm:px-4 py-2 text-white shadow-lg w-full text-center min-h-28 flex items-center justify-center flex-col gap-2">

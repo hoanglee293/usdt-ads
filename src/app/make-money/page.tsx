@@ -1614,13 +1614,13 @@ export default function MakeMoneyPage() {
                             </div>
 
                             {/* Gói Staking - Luôn hiển thị */}
-                            <div className='py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 border border-green-200 flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 min-h-[180px] sm:min-h-[200px] md:min-h-[230px] rounded-xl'>
+                            <div className='py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-gradient-primary border border-green-200 flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 min-h-[180px] sm:min-h-[200px] md:min-h-[230px] rounded-xl'>
                                 <h3 className='text-2xl sm:text-3xl md:text-4xl text-center font-semibold text-white mb-1 sm:mb-2'>{t('makeMoney.stakingTitle')}</h3>
                                 <span className='text-xs sm:text-sm text-white mb-1 sm:mb-2'>{t('makeMoney.oneDay')} / {t('makeMoney.sevenDays')} / {t('makeMoney.thirtyDays')}</span>
                                 <Button
                                     onClick={() => setIsStakingModalOpen(true)}
                                     disabled={isStakingDisabled}
-                                    className='w-full bg-white dark:bg-gray-700 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-theme-red-200 dark:text-[#FE645F] text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
+                                    className='w-full bg-[#21ceb3] cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-white text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
                                 >
                                     {t('makeMoney.joinStaking')}
                                 </Button>
