@@ -31,6 +31,11 @@ export default function HomePage() {
     rootMargin: '0px'
   });
 
+  const { elementRef: participantRef, isIntersecting: participantInView } = useIntersectionObserver<HTMLDivElement>({
+    threshold: 0.1,
+    rootMargin: '0px'
+  });
+
   // Features Grid Observers - Giảm threshold cho mobile
   const { elementRef: feature1Ref, isIntersecting: feature1InView } = useIntersectionObserver<HTMLDivElement>({
     threshold: 0.1,
@@ -168,7 +173,7 @@ export default function HomePage() {
             ref={ctaRef}
             className={`animate-fade-in-up-more-delayed w-full sm:w-auto cursor-pointer ${ctaInView ? 'in-view' : ''}`}
           >
-            <button 
+            <button
               onClick={() => router.push('/make-money')}
               className="uiverse w-full min-w-2xl sm:w-full text-xs sm:text-sm md:text-base lg:text-lg uppercase tracking-wide"
             >
@@ -189,7 +194,29 @@ export default function HomePage() {
               </div>
             </button>
           </div>
+          {/* Participant Counter */}
+          <div
+            ref={participantRef}
+            className={`flex items-center justify-center mt-4 sm:mt-6 animate-fade-in-up-delayed ${participantInView ? 'in-view' : ''}`}
+          >
+            <div className={`relative px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-gradient-to-r from-[#FE645F]/20 via-[#C68AFE]/20 to-[#FE645F]/20 backdrop-blur-sm border border-[#FE645F]/30 dark:border-[#C68AFE]/30 shadow-lg ${participantInView ? 'animate-shake-horizontal-infinite' : ''}`}>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="relative">
+                  <div className="w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500 animate-pulse-glow"></div>
+                  <div className="absolute inset-0 w-2 h-2 sm:w-3 sm:h-3 rounded-full bg-green-500 animate-ping opacity-75"></div>
+                </div>
+                <p className="text-xs sm:text-sm md:text-base font-medium text-theme-black-100 dark:text-white">
+                  {t('home.participants.prefix') && <span>{t('home.participants.prefix')} </span>}
+                  <span className="text-gradient-secondary font-bold">15.482</span>
+                  <span className="ml-1"> {t('home.participants.suffix')}</span>
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
+
+
+
 
         {/* Central Section with Features */}
         <div className="relative w-full pb-12 sm:pb-16 md:pb-20 px-2 sm:px-4">
@@ -423,7 +450,7 @@ export default function HomePage() {
               borderRadius: '1rem',
             }}
           >
-            <div 
+            <div
               className="absolute inset-0 rounded-xl"
               style={{
                 backgroundImage: 'radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%)',
@@ -437,43 +464,43 @@ export default function HomePage() {
               }}
             />
             <div className="relative z-10 p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 dark:!bg-black bg-white rounded-2xl flex flex-col gap-2 items-center text-center">
-            {/* Icon with Dollar Sign */}
-            <div className="relative mb-4 sm:mb-6">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
-                <div className="relative">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
-                    <Megaphone
-                      className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24"
-                      style={{
-                        stroke: 'url(#icon-gradient)',
-                      }}
-                      strokeWidth={1.5}
-                      fill="none"
-                    />
-                  </div>
-                  {/* Sound waves */}
-                  <div className="absolute -right-1 sm:-right-2 top-1/2 -translate-y-1/2 flex gap-0.5 sm:gap-1">
-                    <div className="w-0.5 sm:w-1 h-3 sm:h-4 bg-gradient-to-b from-[#FE645F] to-[#C68AFE] rounded-full"></div>
-                    <div className="w-0.5 sm:w-1 h-4 sm:h-6 bg-gradient-to-b from-[#FE645F] to-[#C68AFE] rounded-full"></div>
-                    <div className="w-0.5 sm:w-1 h-3 sm:h-4 bg-gradient-to-b from-[#FE645F] to-[#C68AFE] rounded-full"></div>
-                  </div>
-                  {/* Dollar sign badge */}
-                  <div className="absolute -top-1 sm:-top-2 -left-1 sm:-left-2 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE] flex items-center justify-center shadow-md">
-                    <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-white" strokeWidth={3} />
+              {/* Icon with Dollar Sign */}
+              <div className="relative mb-4 sm:mb-6">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
+                  <div className="relative">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
+                      <Megaphone
+                        className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24"
+                        style={{
+                          stroke: 'url(#icon-gradient)',
+                        }}
+                        strokeWidth={1.5}
+                        fill="none"
+                      />
+                    </div>
+                    {/* Sound waves */}
+                    <div className="absolute -right-1 sm:-right-2 top-1/2 -translate-y-1/2 flex gap-0.5 sm:gap-1">
+                      <div className="w-0.5 sm:w-1 h-3 sm:h-4 bg-gradient-to-b from-[#FE645F] to-[#C68AFE] rounded-full"></div>
+                      <div className="w-0.5 sm:w-1 h-4 sm:h-6 bg-gradient-to-b from-[#FE645F] to-[#C68AFE] rounded-full"></div>
+                      <div className="w-0.5 sm:w-1 h-3 sm:h-4 bg-gradient-to-b from-[#FE645F] to-[#C68AFE] rounded-full"></div>
+                    </div>
+                    {/* Dollar sign badge */}
+                    <div className="absolute -top-1 sm:-top-2 -left-1 sm:-left-2 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE] flex items-center justify-center shadow-md">
+                      <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-white" strokeWidth={3} />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Title */}
-            <h3 className="text-base sm:text-lg md:text-xl font-bold text-theme-black-100 dark:text-white mb-3 sm:mb-4">
-              {t('home.howItWorks.advertisingRevenue.title')}
-            </h3>
+              {/* Title */}
+              <h3 className="text-base sm:text-lg md:text-xl font-bold text-theme-black-100 dark:text-white mb-3 sm:mb-4">
+                {t('home.howItWorks.advertisingRevenue.title')}
+              </h3>
 
-            {/* Description */}
-            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 dark:text-white leading-relaxed font-medium">
-              {t('home.howItWorks.advertisingRevenue.description')}
-            </p>
+              {/* Description */}
+              <p className="text-xs sm:text-sm md:text-base text-theme-black-100 dark:text-white leading-relaxed font-medium">
+                {t('home.howItWorks.advertisingRevenue.description')}
+              </p>
             </div>
           </div>
 
@@ -486,7 +513,7 @@ export default function HomePage() {
               borderRadius: '1rem',
             }}
           >
-            <div 
+            <div
               className="absolute inset-0 rounded-xl"
               style={{
                 backgroundImage: 'radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%)',
@@ -500,37 +527,37 @@ export default function HomePage() {
               }}
             />
             <div className="relative z-10 p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 dark:!bg-black bg-white rounded-2xl flex flex-col gap-2 items-center text-center">
-            {/* Icon with Computer and Phone */}
-            <div className="relative mb-4 sm:mb-6">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center relative">
-                <Monitor
-                  className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 absolute"
-                  style={{
-                    stroke: 'url(#icon-gradient)',
-                  }}
-                  strokeWidth={1.5}
-                  fill="none"
-                />
-                <Smartphone
-                  className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 absolute -right-1 sm:-right-2 -bottom-1 sm:-bottom-2"
-                  style={{
-                    stroke: 'url(#icon-gradient)',
-                  }}
-                  strokeWidth={1.5}
-                  fill="none"
-                />
+              {/* Icon with Computer and Phone */}
+              <div className="relative mb-4 sm:mb-6">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center relative">
+                  <Monitor
+                    className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 absolute"
+                    style={{
+                      stroke: 'url(#icon-gradient)',
+                    }}
+                    strokeWidth={1.5}
+                    fill="none"
+                  />
+                  <Smartphone
+                    className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 absolute -right-1 sm:-right-2 -bottom-1 sm:-bottom-2"
+                    style={{
+                      stroke: 'url(#icon-gradient)',
+                    }}
+                    strokeWidth={1.5}
+                    fill="none"
+                  />
+                </div>
               </div>
-            </div>
 
-            {/* Title */}
-            <h3 className="text-base sm:text-lg md:text-xl font-bold text-theme-black-100 dark:text-white mb-3 sm:mb-4">
-              {t('home.howItWorks.investDeviceSystem.title')}
-            </h3>
+              {/* Title */}
+              <h3 className="text-base sm:text-lg md:text-xl font-bold text-theme-black-100 dark:text-white mb-3 sm:mb-4">
+                {t('home.howItWorks.investDeviceSystem.title')}
+              </h3>
 
-            {/* Description */}
-            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 dark:text-white leading-relaxed font-medium">
-              {t('home.howItWorks.investDeviceSystem.description')}
-            </p>
+              {/* Description */}
+              <p className="text-xs sm:text-sm md:text-base text-theme-black-100 dark:text-white leading-relaxed font-medium">
+                {t('home.howItWorks.investDeviceSystem.description')}
+              </p>
             </div>
           </div>
 
@@ -543,7 +570,7 @@ export default function HomePage() {
               borderRadius: '1rem',
             }}
           >
-            <div 
+            <div
               className="absolute inset-0 rounded-xl"
               style={{
                 backgroundImage: 'radial-gradient(circle farthest-corner at 10% 20%, rgba(255,94,247,1) 17.8%, rgba(2,245,255,1) 100.2%)',
@@ -557,42 +584,42 @@ export default function HomePage() {
               }}
             />
             <div className="relative z-10 p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 dark:!bg-black bg-white rounded-2xl flex flex-col gap-2 items-center text-center">
-            {/* Icon with Network/Community */}
-            <div className="relative mb-4 sm:mb-6">
-              <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center relative">
-                <div className="relative">
-                  <Users
-                    className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20"
-                    style={{
-                      stroke: 'url(#icon-gradient)',
-                    }}
-                    strokeWidth={1.5}
-                    fill="none"
-                  />
-                  {/* Network dots */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE]"></div>
-                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE]"></div>
-                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE]"></div>
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE]"></div>
-                  </div>
-                  {/* Dollar sign badge */}
-                  <div className="absolute -bottom-0.5 sm:-bottom-1 left-1/2 -translate-x-1/2 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE] flex items-center justify-center shadow-md">
-                    <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-white" strokeWidth={3} />
+              {/* Icon with Network/Community */}
+              <div className="relative mb-4 sm:mb-6">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center relative">
+                  <div className="relative">
+                    <Users
+                      className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20"
+                      style={{
+                        stroke: 'url(#icon-gradient)',
+                      }}
+                      strokeWidth={1.5}
+                      fill="none"
+                    />
+                    {/* Network dots */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE]"></div>
+                      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE]"></div>
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE]"></div>
+                      <div className="absolute right-0 top-1/2 -translate-y-1/2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE]"></div>
+                    </div>
+                    {/* Dollar sign badge */}
+                    <div className="absolute -bottom-0.5 sm:-bottom-1 left-1/2 -translate-x-1/2 w-6 h-6 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-[#FE645F] to-[#C68AFE] flex items-center justify-center shadow-md">
+                      <DollarSign className="w-3 h-3 sm:w-4 sm:h-4 md:w-5 md:h-5 text-white" strokeWidth={3} />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
 
-            {/* Title */}
-            <h3 className="text-base sm:text-lg md:text-xl font-bold text-theme-black-100 dark:text-white mb-3 sm:mb-4">
-              {t('home.howItWorks.communityDevelopment.title')}
-            </h3>
+              {/* Title */}
+              <h3 className="text-base sm:text-lg md:text-xl font-bold text-theme-black-100 dark:text-white mb-3 sm:mb-4">
+                {t('home.howItWorks.communityDevelopment.title')}
+              </h3>
 
-            {/* Description */}
-            <p className="text-xs sm:text-sm md:text-base text-theme-black-100 dark:text-white leading-relaxed font-medium">
-              {t('home.howItWorks.communityDevelopment.description')}
-            </p>
+              {/* Description */}
+              <p className="text-xs sm:text-sm md:text-base text-theme-black-100 dark:text-white leading-relaxed font-medium">
+                {t('home.howItWorks.communityDevelopment.description')}
+              </p>
             </div>
           </div>
         </div>

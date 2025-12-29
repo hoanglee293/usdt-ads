@@ -550,6 +550,10 @@
     "subtitle": "观看广告 – 获得自动奖励 – 区块链透明",
     "joinNow": "立即加入",
     "learnMore": "了解更多",
+    "participants": {
+      "prefix": "有",
+      "suffix": "人正在参与"
+    },
     "introTitle": "关于AdsWorld",
     "features": {
       "technology": {

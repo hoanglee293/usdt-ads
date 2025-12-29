@@ -551,6 +551,10 @@
     "subtitle": "광고 시청 – 자동 보상 받기 – 블록체인으로 투명하게",
     "joinNow": "지금 참여",
     "learnMore": "더 알아보기",
+    "participants": {
+      "prefix": "",
+      "suffix": "명이 참여 중입니다"
+    },
     "introTitle": "AdsWorld 소개",
     "features": {
       "technology": {

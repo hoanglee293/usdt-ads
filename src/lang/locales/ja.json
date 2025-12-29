@@ -550,6 +550,10 @@
     "subtitle": "広告を見る – 自動報酬を受け取る – ブロックチェーンで透明性",
     "joinNow": "今すぐ参加",
     "learnMore": "詳細を見る",
+    "participants": {
+      "prefix": "",
+      "suffix": "人が参加しています"
+    },
     "introTitle": "AdsWorldについて",
     "features": {
       "technology": {

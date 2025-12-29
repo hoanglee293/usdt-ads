@@ -551,6 +551,10 @@
     "subtitle": "Xem video quảng cáo – Nhận thưởng tự động – Minh bạch nhờ Blockchain",
     "joinNow": "THAM GIA NGAY",
     "learnMore": "Tìm hiểu thêm",
+    "participants": {
+      "prefix": "Có",
+      "suffix": "người đang tham gia"
+    },
     "introTitle": "Giới thiệu AdsWorld",
     "features": {
       "technology": {

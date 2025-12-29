@@ -161,6 +161,17 @@ const config: Config = {
             transform: 'scale(1.15)'
           },
         },
+        'shake-horizontal': {
+          '0%, 100%': { 
+            transform: 'translateX(0)' 
+          },
+          '10%, 30%, 50%, 70%, 90%': { 
+            transform: 'translateX(-4px)' 
+          },
+          '20%, 40%, 60%, 80%': { 
+            transform: 'translateX(4px)' 
+          },
+        },
       },
       animation: {
         'fade-in-up': 'fade-in-up 0.6s ease-out forwards',
@@ -178,6 +189,8 @@ const config: Config = {
         'bounce-gentle': 'bounce-gentle 1.5s ease-in-out infinite',
         'pulse-glow': 'pulse-glow 1.5s ease-in-out infinite',
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'shake-horizontal': 'shake-horizontal 3s ease-in-out',
+        'shake-horizontal-infinite': 'shake-horizontal 3s ease-in-out infinite',
       },
     },
   },
