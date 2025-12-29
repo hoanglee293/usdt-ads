@@ -1,6 +1,6 @@
 'use client'
 import React, { useMemo, useState } from 'react'
-import { Copy, Play, Link2 } from 'lucide-react'
+import { Copy, Play, Link2, MousePointer2 } from 'lucide-react'
 import { Button } from '@/ui/button'
 import toast from 'react-hot-toast'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -299,13 +299,16 @@ export default function SmartRefPage() {
 
                     {/* Show register button if status is not-register */}
                     {isNotRegister && (
-                        <div className="max-w-3xl mx-auto flex justify-center">
+                        <div className="md:max-w-3xl max-w-[180px] mx-auto flex justify-center">
                             <Button
                                 onClick={() => setShowKolModal(true)}
-                                className='mb-10 outline-none border-none cursor-pointer hover:shadow-xl transform hover:scale-105 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4'
+                                className='mb-10 relative w-full mx-auto outline-none border-none cursor-pointer hover:shadow-xl transform hover:scale-105 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4 group'
                                 size='lg'
                             >
-                                {t('kol.registerButton') || 'Đăng ký KOL'}
+                                <span className="flex items-center gap-2 absolute right-2 top-1/2 transform -translate-y-1/2">
+                                    {t('kol.registerButton') || 'Đăng ký KOL'}
+                                    <MousePointer2 className="w-8 h-8 text-gradient-primary-2 animate-bounce group-hover:animate-pulse" />
+                                </span>
                             </Button>
                         </div>
                     )}
@@ -336,10 +339,24 @@ export default function SmartRefPage() {
                         </div>
                     )}
 
-                    <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 bg-gradient-primary  md:px-10 px-6 !mt-0 py-2 md:py-3 md:!w-fit mx-auto rounded-full'>
-                        <h2 className='text-sm sm:text-2xl md:text-3xl font-bold text-center text-white uppercase '>
-                            {t('smartRef.totalRewardsUpTo', { total: totalRewardsFromMilestones })}
-                        </h2>
+                    <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 !mt-0 md:!w-fit mx-auto'>
+                        <button className="uiverse w-full min-w-2xl sm:w-full text-xs sm:text-sm md:text-base lg:text-lg uppercase tracking-wide">
+                            <div className="wrapper">
+                                <span>{t('smartRef.totalRewardsUpTo', { total: totalRewardsFromMilestones })}</span>
+                                <div className="circle circle-12"></div>
+                                <div className="circle circle-11"></div>
+                                <div className="circle circle-10"></div>
+                                <div className="circle circle-9"></div>
+                                <div className="circle circle-8"></div>
+                                <div className="circle circle-7"></div>
+                                <div className="circle circle-6"></div>
+                                <div className="circle circle-5"></div>
+                                <div className="circle circle-4"></div>
+                                <div className="circle circle-3"></div>
+                                <div className="circle circle-2"></div>
+                                <div className="circle circle-1"></div>
+                            </div>
+                        </button>
                     </div>
 
                     {/* SVG Gradient Definition for custom icon */}
