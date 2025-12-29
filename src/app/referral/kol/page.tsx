@@ -299,7 +299,7 @@ export default function SmartRefPage() {
 
                     {/* Show register button if status is not-register */}
                     {isNotRegister && (
-                        <div className="md:max-w-3xl max-w-[180px] mx-auto flex justify-center">
+                        <div className="max-w-[180px] mx-auto flex justify-center">
                             <Button
                                 onClick={() => setShowKolModal(true)}
                                 className='mb-10 relative w-full mx-auto outline-none border-none cursor-pointer hover:shadow-xl transform hover:scale-105 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4 group'
