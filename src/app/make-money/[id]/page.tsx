@@ -21,7 +21,7 @@ export default function StakingHistoryDetailPage() {
     const router = useRouter()
     const calendarRef = useRef<HTMLDivElement>(null)
     const isMobile = useIsMobile()
-    const { t } = useLang()
+    const { t, lang } = useLang()
     const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0)
 
     const stakingId = params?.id ? Number(params.id) : null
@@ -75,11 +75,37 @@ export default function StakingHistoryDetailPage() {
     // Format date (date only, no time)
     const formatDateOnly = (dateString: string): string => {
         const date = new Date(dateString)
-        return date.toLocaleDateString('vi-VN', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
+        
+        // Map language codes to locale strings
+        const localeMap: Record<string, string> = {
+            'kr': 'ko-KR',
+            'en': 'en-US',
+            'vi': 'vi-VN',
+            'ja': 'ja-JP',
+            'zh': 'zh-CN'
+        }
+        
+        const locale = localeMap[lang] || 'vi-VN'
+        
+        // For Korean, use custom format: "2025년 3월 8일 15시 30분"
+        if (lang === 'kr') {
+            const year = date.getFullYear()
+            const month = date.getMonth() + 1
+            const day = date.getDate()
+            const hours = date.getHours()
+            const minutes = date.getMinutes()
+            return `${year}년 ${month}월 ${day}일`
+        }
+        
+        // For other languages, use locale-appropriate format with date and time
+        const dateStr = date.toLocaleDateString(locale, {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
         })
+        
+        // Remove comma from date string (e.g., "4 tháng 12, 2025" -> "4 tháng 12 2025")
+        return dateStr.replace(/,/g, '')
     }
 
     // Format number
