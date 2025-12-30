@@ -45,7 +45,7 @@ export default function MakeMoneyPage() {
     const tableRef = useRef<HTMLDivElement>(null)
     const calendarRef = useRef<HTMLDivElement>(null)
     const isMobile = useIsMobile()
-    const { t } = useLang()
+    const { t, lang } = useLang()
 
     // Form state
     const [stakingType, setStakingType] = useState<'1d' | '7d' | '30d'>('1d')
@@ -775,14 +775,40 @@ export default function MakeMoneyPage() {
         return status === 'ended'
     }
 
-    // Format date (date only, no time)
+    // Format date based on language
     const formatDateOnly = (dateString: string): string => {
         const date = new Date(dateString)
-        return date.toLocaleDateString('vi-VN', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
+        
+        // Map language codes to locale strings
+        const localeMap: Record<string, string> = {
+            'kr': 'ko-KR',
+            'en': 'en-US',
+            'vi': 'vi-VN',
+            'ja': 'ja-JP',
+            'zh': 'zh-CN'
+        }
+        
+        const locale = localeMap[lang] || 'vi-VN'
+        
+        // For Korean, use custom format: "2025년 3월 8일 15시 30분"
+        if (lang === 'kr') {
+            const year = date.getFullYear()
+            const month = date.getMonth() + 1
+            const day = date.getDate()
+            const hours = date.getHours()
+            const minutes = date.getMinutes()
+            return `${year}년 ${month}월 ${day}일`
+        }
+        
+        // For other languages, use locale-appropriate format with date and time
+        const dateStr = date.toLocaleDateString(locale, {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
         })
+        
+        // Remove comma from date string (e.g., "4 tháng 12, 2025" -> "4 tháng 12 2025")
+        return dateStr.replace(/,/g, '')
     }
 
     // Format time remaining for countdown
@@ -1281,7 +1307,7 @@ export default function MakeMoneyPage() {
                                                                                                                 ? 'text-green-600 dark:text-green-400'
                                                                                                                 : 'text-orange-600 dark:text-orange-400'
                                                                                                                 }`}>
-                                                                                                                +{mission.reward.toFixed(2)}$
+                                                                                                                +${mission.reward.toFixed(2)}
                                                                                                             </div>
                                                                                                         )}
                                                                                                     </div>

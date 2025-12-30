@@ -207,7 +207,7 @@ export default function HomePage() {
                 </div>
                 <p className="text-xs sm:text-sm md:text-base font-medium text-theme-black-100 dark:text-white">
                   {t('home.participants.prefix') && <span>{t('home.participants.prefix')} </span>}
-                  <span className="text-gradient-secondary font-bold">15.482</span>
+                  <span className="text-gradient-secondary font-bold">15,482</span>
                   <span className="ml-1"> {t('home.participants.suffix')}</span>
                 </p>
               </div>
@@ -229,7 +229,7 @@ export default function HomePage() {
               <div className="col-span-2 text-center mb-4 sm:mb-6">
                 <h2
                   ref={centerTitleRef}
-                  className={`text-xl sm:text-2xl uppercase font-bold text-gradient-secondary animate-scale-in ${centerTitleInView ? 'in-view' : ''}`}
+                  className={`text-xl sm:text-2xl uppercase font-bold text-gradient-secondary animate-scale-in korean-text ${centerTitleInView ? 'in-view' : ''}`}
                 >
                   {t('home.introTitle')}
                 </h2>
@@ -374,7 +374,7 @@ export default function HomePage() {
               <div className="text-center col-start-2 row-start-2 flex justify-center items-center w-full">
                 <h2
                   ref={centerTitleRef}
-                  className={`text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gradient-secondary max-w-80 animate-scale-in ${centerTitleInView ? 'in-view' : ''}`}
+                  className={`text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gradient-secondary max-w-80 animate-scale-in korean-text ${centerTitleInView ? 'in-view' : ''}`}
                 >
                   {t('home.introTitle')}
                 </h2>

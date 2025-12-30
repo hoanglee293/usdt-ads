@@ -126,9 +126,6 @@ export default function WhitepaperPage() {
                   <div className="px-3 py-1.5 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-800 dark:text-indigo-300 rounded-lg font-semibold">
                     {t('whitepaper.section2.cycle.step6')}
                   </div>
-                  <svg className="w-5 h-5 sm:w-6 sm:h-6 text-[#C68AFE] dark:text-[#FE645F]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M11 17l-5-5m0 0l5-5m-5 5h12" />
-                  </svg>
                 </div>
               </div>
             </div>
@@ -210,37 +207,37 @@ export default function WhitepaperPage() {
                 <tbody>
                   <tr className="bg-theme-pink-100">
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packageFree')}</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$10</td>
+                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">10 USDT</td>
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">5</td>
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">20</td>
                   </tr>
                   <tr className="bg-theme-pink-100">
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packageBasic')}</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$10-$250</td>
+                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">10-250 USDT</td>
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">100</td>
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">20</td>
                   </tr>
                   <tr className="bg-theme-pink-100">
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packageMid1')}</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$251-$750</td>
+                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">251-750 USDT</td>
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">400</td>
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">40</td>
                   </tr>
                   <tr className="bg-theme-pink-100">
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packageMid2')}</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$751 - $1,250</td>
+                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">751 - 1,250 USDT</td>
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">900</td>
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">60</td>
                   </tr>
                   <tr className="bg-theme-pink-100">
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packageMid3')}</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$1,251 - $2,000</td>
+                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">1,251 - 2,000 USDT</td>
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">2,000</td>
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">100</td>
                   </tr>
                   <tr className="bg-theme-pink-100">
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packagePremium')}</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$2,001 - $3,500</td>
+                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">2,001 - 3,500 USDT</td>
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">10,000</td>
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">500</td>
                   </tr>
@@ -291,44 +288,44 @@ export default function WhitepaperPage() {
                   <tr className="bg-gradient-to-r from-[#FE645F] to-[#C68AFE] text-white">
                     <th className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">{t('whitepaper.section5.milestones.table.people')}</th>
                     <th className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">{t('whitepaper.section5.milestones.table.regularReward')}</th>
-                    <th className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">{t('whitepaper.section5.milestones.table.vipReward')}</th>
+                    <th className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">{t('whitepaper.section5.milestones.table.vipReward')}</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="bg-theme-pink-100">
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">5</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$10</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$25</td>
+                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">10 USDT</td>
+                    <td className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3">25 USDT</td>
                   </tr>
                   <tr className="bg-theme-pink-100">
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">10</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$15</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$30</td>
+                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">15 USDT</td>
+                    <td className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3">30 USDT</td>
                   </tr>
                   <tr className="bg-theme-pink-100">
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">20</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$30</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$60</td>
+                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">30 USDT</td>
+                    <td className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3">60 USDT</td>
                   </tr>
                   <tr className="bg-theme-pink-100">
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">35</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$50</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$100</td>
+                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">50 USDT</td>
+                    <td className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3">100 USDT</td>
                   </tr>
                   <tr className="bg-theme-pink-100">
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">50</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$75</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$150</td>
+                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">75 USDT</td>
+                    <td className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3">150 USDT</td>
                   </tr>
                   <tr className="bg-theme-pink-100">
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">75</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$100</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$200</td>
+                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">100 USDT</td>
+                    <td className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3">200 USDT</td>
                   </tr>
                   <tr className="bg-theme-pink-100">
                     <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">100</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$150</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">$300</td>
+                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">150 USDT</td>
+                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 font-semibold">300 USDT</td>
                   </tr>
                 </tbody>
               </table>

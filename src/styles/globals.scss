@@ -437,3 +437,9 @@ linear;
     transform: translate(60px, -32px) translateZ(0);
   }
 }
+
+/* Korean text word-break fix - prevents breaking within Korean words */
+.korean-text {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}

@@ -473,7 +473,7 @@ export default function StakingHistoryDetailPage() {
                                                                                                 ? 'text-green-600 dark:text-green-400'
                                                                                                 : 'text-orange-600 dark:text-orange-400'
                                                                                                 }`}>
-                                                                                                +{mission.reward.toFixed(2)}$
+                                                                                                +${mission.reward.toFixed(2)}
                                                                                             </div>
                                                                                         )}
                                                                                     </div>

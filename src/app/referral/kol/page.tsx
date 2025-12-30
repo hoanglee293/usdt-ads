@@ -445,7 +445,7 @@ export default function SmartRefPage() {
 
                                 {/* Reward Amount */}
                                 <p className='text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200'>
-                                    {milestone.reward} $
+                                    {milestone.reward} USDT
                                 </p>
 
                                 {/* Reward Label */}
