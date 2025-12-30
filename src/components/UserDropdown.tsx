@@ -101,32 +101,32 @@ const UserDropdown: React.FC = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-80 bg-white dark:bg-theme-gray-200 rounded-lg shadow-xl border border-gray-200 dark:border-theme-gray-100 overflow-hidden z-50">
+        <div className="absolute right-0 mt-2 w-96 bg-white dark:bg-theme-gray-200 rounded-lg shadow-xl border border-gray-200 dark:border-theme-gray-100 overflow-hidden z-50">
           {/* Content */}
           <div className="p-2 max-h-96 overflow-y-auto">
             {/* Email */}
-            <div className="flex items-center gap-4 cursor-pointer " >
-              <div className="flex items-center gap-4 hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/40 p-2 rounded-xl bg-theme-pink-100/50 dark:bg-gray-500/30" onClick={() => { router.push('/my-profile'); setIsOpen(false) }}>
+            <div className="flex items-center gap-4 cursor-pointer min-w-0" >
+              <div className="flex items-center gap-4 hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/40 p-2 rounded-xl bg-theme-pink-100/50 dark:bg-gray-500/30 min-w-0 flex-1 overflow-hidden" onClick={() => { router.push('/my-profile'); setIsOpen(false) }}>
                 {profile.avatar ? (
                   <img
                     src={profile.avatar}
                     alt={profile.display_name}
-                    className="w-10 h-10 rounded-full border-2 border-white dark:border-theme-gray-100 object-cover"
+                    className="w-10 h-10 rounded-full border-2 border-white dark:border-theme-gray-100 object-cover flex-shrink-0"
                   />
                 ) : (
-                  <div className="w-10 h-10 rounded-full border-2 border-white dark:border-theme-gray-100 flex items-center justify-center bg-theme-gray-100 dark:bg-theme-gray-100/30">
+                  <div className="w-10 h-10 rounded-full border-2 border-white dark:border-theme-gray-100 flex items-center justify-center bg-theme-gray-100 dark:bg-theme-gray-100/30 flex-shrink-0">
                     <User className="w-7 h-7 text-theme-black-100 dark:text-theme-gray-100" />
 
                   </div>
                 )}
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <p className="font-semibold text-lg text-theme-black-100 dark:text-theme-gray-100">{profile.display_name}</p>
+                <div className="flex-1 min-w-0 overflow-hidden">
+                  <div className="flex items-center justify-between min-w-0">
+                    <p className="font-semibold text-lg text-theme-black-100 dark:text-theme-gray-100 truncate min-w-0" title={profile.display_name}>{profile.display_name}</p>
                   </div>
-                  <p className="text-sm opacity-90 text-gray-500 dark:text-theme-gray-100/70">{profile.email}</p>
+                  <p className="text-sm opacity-90 text-gray-500 dark:text-theme-gray-100/70 truncate min-w-0" title={profile.email}>{profile.email}</p>
                 </div>
               </div>
-              <button onClick={() => { router.push('/my-profile/kyc'); setIsOpen(false) }} className={`text-sm font-inter font-semibold border-none outline-none cursor-pointer bg-theme-pink-100/50 dark:bg-gray-500/30 hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 rounded-lg px-2 py-1 ${profile.verify ? 'text-green-500' : 'text-red-500'}`}>{profile.verify ? t('user.verified') : t('user.notVerified')}</button>
+              <button onClick={() => { router.push('/my-profile/kyc'); setIsOpen(false) }} className={`text-sm font-inter font-semibold border-none outline-none cursor-pointer bg-theme-pink-100/50 dark:bg-gray-500/30 hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 rounded-lg px-2 py-1 flex-shrink-0 ${profile.verify ? 'text-green-500' : 'text-red-500'}`}>{profile.verify ? t('user.verified') : t('user.notVerified')}</button>
             </div>
           </div>
           {/* Footer */}

@@ -78,14 +78,14 @@ const MobileUserSection: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <User className="w-7 h-7 text-theme-black-100 dark:text-theme-gray-100" />
           </div>
         )}
-        <div className="flex-1 min-w-0 bg-gray-200 dark:bg-gray-600 rounded-lg p-2">
-          <div className="flex items-center justify-between gap-2">
-            <p className="font-semibold text-sm text-theme-black-100 dark:text-theme-gray-100 truncate">
+        <div className="flex-1 min-w-0 bg-gray-200 dark:bg-gray-600 rounded-lg p-2 overflow-hidden">
+          <div className="flex items-center justify-between gap-2 min-w-0">
+            <p className="font-semibold text-sm text-theme-black-100 dark:text-theme-gray-100 truncate min-w-0 flex-1" title={profile.display_name}>
               {profile.display_name}
             </p>
             
           </div>
-          <p className="text-xs opacity-90 text-gray-500 dark:text-theme-gray-100/70 truncate">
+          <p className="text-xs opacity-90 text-gray-500 dark:text-theme-gray-100/70 truncate min-w-0" title={profile.email}>
             {profile.email}
           </p>
         </div>
