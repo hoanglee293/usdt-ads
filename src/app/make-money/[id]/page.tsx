@@ -514,7 +514,7 @@ export default function StakingHistoryDetailPage() {
                                 )
                             })()}
                         </div>
-                        <div className='flex items-center gap-2 justify-end mt-3'>
+                        <div className='flex items-center gap-2 justify-end mt-3 max-w-3xl mx-auto'>
                             <button
                             onClick={handleDownloadCalendar}
                             className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-blue-100 dark:bg-blue-900/50 hover:bg-blue-200 dark:hover:bg-blue-900/70 text-blue-700 dark:text-blue-300 cursor-pointer'

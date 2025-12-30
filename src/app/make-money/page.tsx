@@ -2048,18 +2048,18 @@ export default function MakeMoneyPage() {
                                             {allPackages.map((pkg, index) => (
                                                 <tr 
                                                     key={pkg.id} 
-                                                    onClick={() => router.push(`/make-money/${pkg.id}`)}
+                                                    onClick={() => pkg.status !== 'running' ? router.push(`/make-money/${pkg.id}`) : undefined}
                                                     className="group transition-colors cursor-pointer hover:opacity-90"
                                                 >
-                                                    <td className={`${tableCellStyles} w-[5%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
+                                                    <td className={`${tableCellStyles} ${pkg.status === 'running' && "group-hover:!bg-transparent cursor-not-allowed"} w-[5%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
                                                         {index + 1}
                                                     </td>
-                                                    <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                    <td className={`${tableCellStyles} ${pkg.status === 'running' && "group-hover:!bg-transparent cursor-not-allowed"} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
                                                         <span className="px-3 py-1 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-full text-sm font-medium">
                                                             {getTypeDurationLabel(pkg.type)}
                                                         </span>
                                                     </td>
-                                                    <td className={`${tableCellStyles} w-[10%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                    <td className={`${tableCellStyles} ${pkg.status === 'running' && "group-hover:!bg-transparent cursor-not-allowed"} w-[10%] border-x-0 border-theme-gray-100 border-solid`}>
                                                         <span className={`px-3 py-1 rounded-full text-sm font-semibold ${pkg.amount > 10
                                                             ? 'bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white'
                                                             : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
@@ -2067,25 +2067,25 @@ export default function MakeMoneyPage() {
                                                             {pkg.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}
                                                         </span>
                                                     </td>
-                                                    <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid font-semibold text-red-600 dark:text-[#FE645F]`}>
+                                                    <td className={`${tableCellStyles} ${pkg.status === 'running' && "group-hover:!bg-transparent cursor-not-allowed"} w-[12%] border-x-0 border-theme-gray-100 border-solid font-semibold text-red-600 dark:text-[#FE645F]`}>
                                                         {formatNumber(pkg.amount)} USDT
                                                     </td>
-                                                    <td className={`${tableCellStyles} w-[15%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                    <td className={`${tableCellStyles} ${pkg.status === 'running' && "group-hover:!bg-transparent cursor-not-allowed"} w-[15%] border-x-0 border-theme-gray-100 border-solid`}>
                                                         {formatParticipationTime(pkg.date_start)}
                                                     </td>
-                                                    <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid font-semibold`}>
+                                                    <td className={`${tableCellStyles} ${pkg.status === 'running' && "group-hover:!bg-transparent cursor-not-allowed"} w-[12%] border-x-0 border-theme-gray-100 border-solid font-semibold`}>
                                                         {pkg.status === 'running' ? (
                                                             <span className="text-gray-500 dark:text-gray-400">--</span>
                                                         ) : (
                                                             <span className="text-green-600 dark:text-green-400">{formatNumber(getRewardAmount(pkg))} USDT</span>
                                                         )}
                                                     </td>
-                                                    <td className={`${tableCellStyles} w-[12%] border-x-0 border-r rounded-r-lg border-theme-gray-100 border-solid`}>
+                                                    <td className={`${tableCellStyles} ${pkg.status === 'running' && "group-hover:!bg-transparent cursor-not-allowed"} w-[12%] border-x-0 border-r rounded-r-lg border-theme-gray-100 border-solid`}>
                                                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${pkg.status === 'running'
                                                             ? 'bg-gray-400 text-white'
                                                             : pkg.status === 'pending-claim'
                                                                 ? 'bg-yellow-500 text-white'
-                                                                : 'bg-gray-500 text-white'
+                                                                : 'bg-green-500 text-white'
                                                             }`}>
                                                             {getStatusText(pkg.status)}
                                                         </span>
