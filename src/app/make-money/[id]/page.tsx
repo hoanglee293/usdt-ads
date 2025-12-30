@@ -468,7 +468,7 @@ export default function StakingHistoryDetailPage() {
                                                                                 </span>
                                                                                 {mission && (
                                                                                     <div className='text-[9px] sm:text-[10px] leading-tight'>
-                                                                                        {mission.reward !== undefined && (
+                                                                                        {mission.reward != null && (
                                                                                             <div className={`mt-0.5 font-semibold ${isSuccess
                                                                                                 ? 'text-green-600 dark:text-green-400'
                                                                                                 : 'text-orange-600 dark:text-orange-400'
