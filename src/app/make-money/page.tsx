@@ -10,6 +10,7 @@ import { Skeleton } from '@/ui/skeleton'
 import Modal from '@/components/Modal'
 import { useIsMobile } from '@/ui/use-mobile'
 import { useLang } from '@/lang/useLang'
+import { useRouter } from 'next/navigation'
 import {
     getListCoins,
     getBalance,
@@ -40,6 +41,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 export default function MakeMoneyPage() {
     const queryClient = useQueryClient()
+    const router = useRouter()
     const tableRef = useRef<HTMLDivElement>(null)
     const calendarRef = useRef<HTMLDivElement>(null)
     const isMobile = useIsMobile()
@@ -985,7 +987,7 @@ export default function MakeMoneyPage() {
     const tableCellStyles = "px-2 py-3 sm:px-3 text-xs sm:text-sm lg:text-base text-theme-gray-200 dark:text-gray-300 bg-transparent border-y border-black dark:border-gray-700 group-hover:bg-gray-100 dark:group-hover:bg-gray-800 font-light"
 
     return (
-        <div className='w-full min-h-svh flex py-16 sm:pt-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
+        <div className='w-full min-h-svh flex py-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
             <div className='w-full max-w-7xl'>
                 {/* Header Section */}
                 {currentStaking && (
@@ -1962,7 +1964,11 @@ export default function MakeMoneyPage() {
                             {/* Mobile Card Layout */}
                             <div className="block sm:hidden space-y-3">
                                 {allPackages.map((pkg, index) => (
-                                    <div key={pkg.id} className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] p-3 shadow-sm">
+                                    <div 
+                                        key={pkg.id} 
+                                        onClick={() => router.push(`/make-money/${pkg.id}`)}
+                                        className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] p-3 shadow-sm cursor-pointer hover:opacity-90 transition-opacity"
+                                    >
                                         <div className="flex items-center justify-between mb-2">
                                             <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">{t('makeMoney.packageNumber')}{index + 1}</span>
                                             <span className={`px-2 py-1 rounded-full text-xs font-medium ${pkg.status === 'running'
@@ -2040,7 +2046,11 @@ export default function MakeMoneyPage() {
                                     <table className={tableStyles}>
                                         <tbody>
                                             {allPackages.map((pkg, index) => (
-                                                <tr key={pkg.id} className="group transition-colors">
+                                                <tr 
+                                                    key={pkg.id} 
+                                                    onClick={() => router.push(`/make-money/${pkg.id}`)}
+                                                    className="group transition-colors cursor-pointer hover:opacity-90"
+                                                >
                                                     <td className={`${tableCellStyles} w-[5%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
                                                         {index + 1}
                                                     </td>

@@ -352,6 +352,7 @@
     "calendarCaptureError": "Có lỗi xảy ra khi chụp ảnh",
     "shareCalendarTitle": "Lịch Staking",
     "shareCalendarText": "Lịch staking của tôi",
+    "backToMakeMoney": "Quay lại",
     "errors": {
       "loadCoinsError": "Không thể tải danh sách coin",
       "loadBalanceError": "Không thể tải số dư",
@@ -362,7 +363,9 @@
       "stakingRunning": "Bạn đang có gói staking đang chạy",
       "invalidAmount": "Vui lòng nhập số tiền hợp lệ",
       "amountExceeded": "Số tiền không được vượt quá $3,500",
-      "balanceInsufficient": "Số dư không đủ"
+      "balanceInsufficient": "Số dư không đủ",
+      "stakingNotFound": "Không tìm thấy gói staking",
+      "invalidStakingId": "ID gói staking không hợp lệ"
     }
   },
   "profile": {

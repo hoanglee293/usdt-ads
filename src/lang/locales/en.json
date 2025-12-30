@@ -352,6 +352,7 @@
     "calendarCaptureError": "Error capturing calendar image",
     "shareCalendarTitle": "Staking Calendar",
     "shareCalendarText": "My staking calendar",
+    "backToMakeMoney": "Back",
     "errors": {
       "loadCoinsError": "Unable to load coin list",
       "loadBalanceError": "Unable to load balance",
@@ -362,7 +363,9 @@
       "stakingRunning": "You have a running staking package",
       "invalidAmount": "Please enter a valid amount",
       "amountExceeded": "Amount cannot exceed $3,500",
-      "balanceInsufficient": "Insufficient balance"
+      "balanceInsufficient": "Insufficient balance",
+      "stakingNotFound": "Staking package not found",
+      "invalidStakingId": "Invalid staking package ID"
     }
   },
   "profile": {

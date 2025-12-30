@@ -118,6 +118,30 @@ export interface CalculateStakingResponse {
   };
 }
 
+export interface StakingLockDetail {
+  id: number;
+  type: "base" | "1d" | "7d" | "30d";
+  date_start: string;           // ISO 8601 datetime
+  date_end: string;             // ISO 8601 datetime
+  amount: number;
+  amount_gift: number;
+  total_usd: number;
+  turn_setting: number;
+  devices_setting: number;
+  status: "running" | "pending-claim" | "ended";
+  estimated_reward: number;     // Phần thưởng ước tính ban đầu
+  real_reward: number;          // Phần thưởng thực tế đã nhận
+}
+
+export interface StakingLockWithMissionsResponse {
+  statusCode: 200;
+  message: string;
+  data: {
+    staking_lock: StakingLockDetail;
+    missions: Mission[];
+  };
+}
+
 // ==================== API Functions ====================
 
 /**
@@ -265,6 +289,36 @@ export const calculateStaking = async (
     return response.data;
   } catch (error) {
     console.error('Error calculating staking:', error);
+    throw error;
+  }
+}
+
+/**
+ * Lấy lịch sử nhiệm vụ của một gói staking cụ thể
+ * @param slId - ID của gói staking lock
+ * @returns Promise<StakingLockWithMissionsResponse>
+ */
+export const getStakingHistoryMissions = async (
+  slId: number
+): Promise<StakingLockWithMissionsResponse> => {
+  try {
+    // Validation
+    if (!slId || slId <= 0) {
+      throw new Error('Invalid staking lock ID');
+    }
+
+    const response = await axiosClient.get(`/incomes/join-histories/${slId}/missions`);
+    return response.data;
+  } catch (error: any) {
+    // 404 is expected when staking lock not found
+    if (error?.response?.status === 404) {
+      throw error;
+    }
+    // 400 is expected when invalid ID
+    if (error?.response?.status === 400) {
+      throw error;
+    }
+    console.error('Error fetching staking history missions:', error);
     throw error;
   }
 }

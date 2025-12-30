@@ -352,6 +352,7 @@
     "calendarCaptureError": "カレンダー画像の撮影中にエラーが発生しました",
     "shareCalendarTitle": "ステーキングカレンダー",
     "shareCalendarText": "私のステーキングカレンダー",
+    "backToMakeMoney": "戻る",
     "errors": {
       "loadCoinsError": "コインリストを読み込めません",
       "loadBalanceError": "残高を読み込めません",
@@ -362,7 +363,9 @@
       "stakingRunning": "実行中のステーキングパッケージがあります",
       "invalidAmount": "有効な金額を入力してください",
       "amountExceeded": "金額は$3,500を超えることはできません",
-      "balanceInsufficient": "残高不足"
+      "balanceInsufficient": "残高不足",
+      "stakingNotFound": "ステーキングパッケージが見つかりません",
+      "invalidStakingId": "無効なステーキングパッケージIDです"
     }
   },
   "profile": {

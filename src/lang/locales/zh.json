@@ -352,6 +352,7 @@
     "calendarCaptureError": "拍摄日历图片时出错",
     "shareCalendarTitle": "质押日历",
     "shareCalendarText": "我的质押日历",
+    "backToMakeMoney": "返回",
     "errors": {
       "loadCoinsError": "无法加载币种列表",
       "loadBalanceError": "无法加载余额",
@@ -362,7 +363,9 @@
       "stakingRunning": "您有一个正在运行的质押套餐",
       "invalidAmount": "请输入有效金额",
       "amountExceeded": "金额不能超过$3,500",
-      "balanceInsufficient": "余额不足"
+      "balanceInsufficient": "余额不足",
+      "stakingNotFound": "未找到质押套餐",
+      "invalidStakingId": "无效的质押套餐ID"
     }
   },
   "profile": {
