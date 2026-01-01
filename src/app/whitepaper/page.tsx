@@ -298,18 +298,18 @@ export default function WhitepaperPage() {
                   <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FE645F]"></div>
                 </div>
               ) : (
-                <table className="w-full border-collapse border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-xs sm:text-sm">
+                <table className="w-full table-fixed border-collapse border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-xs sm:text-sm">
                   <thead>
                     <tr className="bg-gradient-to-r from-[#FE645F] to-[#C68AFE] text-white">
-                      <th className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">{t('whitepaper.section5.milestones.table.people')}</th>
-                      <th className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3 text-left ">{t('whitepaper.section5.milestones.table.vipReward')}</th>
+                      <th className="w-1/2 border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">{t('whitepaper.section5.milestones.table.people')}</th>
+                      <th className="w-1/2 border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3 text-left ">{t('whitepaper.section5.milestones.table.vipReward')}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {rewardMilestones.map((milestone: any, index: number) => (
                       <tr key={index} className="bg-theme-pink-100">
-                        <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">{milestone.milestone}</td>
-                        <td className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3">{milestone.reward} USDT</td>
+                        <td className="w-1/2 border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">{milestone.milestone}</td>
+                        <td className="w-1/2 border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3">{milestone.reward} USDT</td>
                       </tr>
                     ))}
                   </tbody>
