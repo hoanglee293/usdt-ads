@@ -1256,10 +1256,10 @@ export default function MakeMoneyPage() {
                                                                                 // Determine background color based on mission status
                                                                                 const getBackgroundColor = () => {
                                                                                     if (day === null) return 'bg-gray-50 dark:bg-gray-800/30'
-                                                                                    if (isStart || isEnd) return 'bg-gray-400 dark:bg-gray-500'
+                                                                                    if (isStart || isEnd) return 'bg-gray-200 dark:bg-gray-500'
                                                                                     if (inRange) {
                                                                                         // Khoảng thời gian staking nhưng chưa có dữ liệu
-                                                                                        return 'bg-gray-400 dark:bg-gray-500'
+                                                                                        return 'bg-gray-200 dark:bg-gray-500'
                                                                                     }
                                                                                     return 'bg-white dark:bg-gray-800'
                                                                                 }
@@ -1307,7 +1307,7 @@ export default function MakeMoneyPage() {
                                                                                                                 ? 'text-green-600 dark:text-green-400'
                                                                                                                 : 'text-orange-600 dark:text-orange-400'
                                                                                                                 }`}>
-                                                                                                                +${mission.reward.toFixed(2)}
+                                                                                                                +{mission.reward.toFixed(2)}$
                                                                                                             </div>
                                                                                                         )}
                                                                                                     </div>
@@ -1574,7 +1574,7 @@ export default function MakeMoneyPage() {
                                     </div>
                                     {balanceResponse?.data && (balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
                                         <span className='text-xs text-gray-600 dark:text-gray-300 mt-1'>
-                                            ({t('makeMoney.gift')}: {formatBalance(balanceResponse.data.balance_gift)} | {t('makeMoney.reward')}: {formatBalance(balanceResponse.data.balance_reward)})
+                                            ({t('makeMoney.gift')}: {formatBalance(balanceResponse.data.balance_gift) } USDT | {t('makeMoney.reward')}: {formatBalance(balanceResponse.data.balance_reward)} USDT)
                                         </span>
                                     )}
                                 </div>

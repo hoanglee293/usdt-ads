@@ -453,9 +453,9 @@ export default function StakingHistoryDetailPage() {
 
                                                                 const getBackgroundColor = () => {
                                                                     if (day === null) return 'bg-gray-50 dark:bg-gray-800/30'
-                                                                    if (isStart || isEnd) return 'bg-gray-400 dark:bg-gray-500'
+                                                                    if (isStart || isEnd) return 'bg-gray-200 dark:bg-gray-500'
                                                                     if (inRange) {
-                                                                        return 'bg-gray-400 dark:bg-gray-500'
+                                                                        return 'bg-gray-200 dark:bg-gray-500'
                                                                     }
                                                                     return 'bg-white dark:bg-gray-800'
                                                                 }
@@ -499,7 +499,7 @@ export default function StakingHistoryDetailPage() {
                                                                                                 ? 'text-green-600 dark:text-green-400'
                                                                                                 : 'text-orange-600 dark:text-orange-400'
                                                                                                 }`}>
-                                                                                                +${mission.reward.toFixed(2)}
+                                                                                                +{mission.reward.toFixed(2)}$
                                                                                             </div>
                                                                                         )}
                                                                                     </div>

@@ -621,7 +621,7 @@
         "step4": "Watch Ads on App",
         "step5": "Revenue from Ads",
         "step6": "Platform Re-invests Technical Infrastructure",
-        "step7": "Businesses Pay for Ad Views"
+        "step7": "Businesses Pay for Ads Views"
       },
       "process": {
         "title": "2.2. Detailed Process",
@@ -635,7 +635,7 @@
           "title": "Step 2: Deposit & Choose Package",
           "item1": "Deposit USDT via personal wallet",
           "item2": "Choose from 4 flexible staking packages:",
-          "package1": "Free Package: $10 reward, 0.2%/day",
+          "package1": "Free Package: 10USDT reward, 0.2%/day",
           "package2": "Daily Package: 0.2%/day",
           "package3": "Weekly Package: 2.5%/week",
           "package4": "Monthly Package: 20%/month"
@@ -675,7 +675,7 @@
         "description": "Users who purchase a package but don't watch ads will lose that day's interest.",
         "example": "Example: 30-day package only completed 28 days → lose 1%/20% interest (0.5% / 1 day)"
       },
-      "maxParticipationNote": "The maximum amount one person can participate is $3,500 to ensure fairness and expansion of participants, increasing value for the platform. If an individual participates with too large an amount, it will unbalance the volume of real traffic participating in the platform"
+      "maxParticipationNote": "The maximum amount one person can participate is 3,500USDT to ensure fairness and expansion of participants, increasing value for the platform. If an individual participates with too large an amount, it will unbalance the volume of real traffic participating in the platform"
     },
     "section5": {
       "title": "5. Referral Program (Affiliate)",
@@ -691,7 +691,7 @@
         "table": {
           "people": "Number of People",
           "regularReward": "Regular Reward",
-          "vipReward": "VIP Reward"
+          "vipReward": "Influencer Reward"
         },
         "condition": "Condition: Invited person must deposit at least once, complete work once, and complete KYC",
         "totalRewardsNote": "Total rewards up to 1510 USDT"

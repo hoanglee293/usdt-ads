@@ -233,11 +233,11 @@ export default function DepositContent({
                         ) : (
                             transactions.map((transaction) => (
                                 <div key={transaction.id} className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-md p-4">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <span className="text-sm text-gray-500 dark:text-gray-400">#{transaction.id}</span>
+                                    <div className="flex items-center justify-between mb-4">
+                                        <span className="text-sm text-black dark:text-white">#{transaction.id}</span>
                                         <div className="flex items-center gap-2">
-                                            <div className="py-1 rounded-full text-xs min-w-20 flex justify-center font-medium bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400">
-                                                {transaction.type}
+                                            <div className="py-1 rounded-full text-xs min-w-16 flex justify-center font-medium bg-blue-100 dark:bg-blue-900/30 text-black dark:text-white">
+                                                {transaction.type} 
                                             </div>
                                             <div className={`py-1 rounded-full text-xs min-w-20 flex justify-center font-medium ${transaction.status === t('wallet.transactionStatus.complete')
                                                 ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
@@ -245,19 +245,18 @@ export default function DepositContent({
                                                 }`}>
                                                 {transaction.status}
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center justify-between gap-2 mb-3">
-                                        <div className="text-base font-semibold text-red-500 dark:text-[#FE645F]">
-                                            {transaction.amount}
-                                        </div>
-                                        <div className="text-xs text-yellow-600 dark:text-yellow-400 italic">
+                                            <div className="text-xs text-yellow-600 dark:text-yellow-400 italic">
                                             {transaction.time}
                                         </div>
+                                        </div>
                                     </div>
-                                    <div className="pt-0 md:pt-3 border-t border-gray-200 dark:border-gray-700 space-y-2">
+                                    <div className="flex items-center justify-between gap-2">
+                                        <div className="text-base font-semibold text-black dark:text-white">
+                                            {transaction.amount}
+                                        </div>
+                                        <div className="pt-0 md:pt-3 border-t border-gray-200 dark:border-gray-700 space-y-2">
                                         <div className="flex items-center gap-2">
-                                            <span className="text-xs font-medium text-gray-600 dark:text-gray-300 min-w-[60px]">
+                                            <span className="text-xs font-medium text-black dark:text-white min-w-[40px]">
                                                 {t('wallet.addressLabels.txId')}:
                                             </span>
                                             <div className="flex items-center gap-1.5 flex-1 min-w-0">
@@ -274,6 +273,8 @@ export default function DepositContent({
                                             </div>
                                         </div>
                                     </div>
+                                    </div>
+                                   
                                 </div>
                             ))
                         )}

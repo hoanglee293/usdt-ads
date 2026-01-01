@@ -619,10 +619,10 @@
         "step1": "Người dùng Nạp USDT",
         "step2": "KYC",
         "step3": "Chọn gói Staking",
-        "step4": "Xem QC trên App",
-        "step5": "Doanh thu từ QC",
+        "step4": "Xem quảng cáo trên App",
+        "step5": "Doanh thu từ quảng cáo",
         "step6": "Platform tái đầu tư hạ tầng kỹ thuật",
-        "step7": "Doanh nghiệp Trả phí xem QC"
+        "step7": "Doanh nghiệp Trả phí xem quảng cáo"
       },
       "process": {
         "title": "2.2. Quy Trình Chi Tiết",
@@ -636,7 +636,7 @@
           "title": "Bước 2: Nạp Tiền & Chọn Gói",
           "item1": "Nạp USDT qua ví cá nhân",
           "item2": "Lựa chọn 4 gói staking linh hoạt:",
-          "package1": "Gói Free: $10 thưởng, 0.2%/ngày",
+          "package1": "Gói Free: 10USDT thưởng, 0.2%/ngày",
           "package2": "Gói Ngày: 0.2%/ngày",
           "package3": "Gói Tuần: 2.5%/tuần",
           "package4": "Gói Tháng: 20%/tháng"
@@ -676,7 +676,7 @@
         "description": "User mua gói nhưng không xem quảng cáo sẽ mất lãi ngày hôm đó.",
         "example": "Ví dụ: Gói 30 ngày chỉ hoàn thành 28 ngày → mất 1%/20% lãi suất (0.5% / 1 ngày)"
       },
-      "maxParticipationNote": "Giá trị cao nhất 1 người có thể tham gia là 3500$ để đảm bảo tính công bằng và việc mở rộng người tham gia, làm tăng giá trị cho nền tảng, nếu 1 cá nhân tham gia với số tiền quá lớn sẽ làm mất cân bằng về khối lượng trafic người thật tham gia vào nền tảng"
+      "maxParticipationNote": "Giá trị cao nhất 1 người có thể tham gia là 3500USDT để đảm bảo tính công bằng và việc mở rộng người tham gia, làm tăng giá trị cho nền tảng, nếu 1 cá nhân tham gia với số tiền quá lớn sẽ làm mất cân bằng về khối lượng trafic người thật tham gia vào nền tảng"
     },
     "section5": {
       "title": "5. Chương Trình Giới Thiệu (Affiliate)",
@@ -692,7 +692,7 @@
         "table": {
           "people": "Số Người",
           "regularReward": "Thưởng Thường",
-          "vipReward": "Thưởng VIP"
+          "vipReward": "Thưởng người có ảnh hưởng"
         },
         "condition": "Điều kiện: Người được mời phải nạp tiền ít nhất 1 lần, hoàn thành công việc 1 lần và hoàn thành KYC",
         "totalRewardsNote": "Tổng giải thưởng lên đến 1510 USDT"

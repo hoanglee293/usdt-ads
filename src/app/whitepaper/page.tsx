@@ -2,10 +2,20 @@
 
 import { ArrowDown, ArrowUp } from 'lucide-react'
 import React from 'react'
+import { useQuery } from '@tanstack/react-query'
+import { getMemberRefInfo } from '@/services/RefService'
 import { useLang } from '@/lang/useLang'
 
 export default function WhitepaperPage() {
   const { t } = useLang()
+
+  // Fetch Member Ref Info to get milestone data
+  const { data: memberRefInfo = {} as any, isLoading: isLoadingMilestones } = useQuery({
+    queryKey: ['memberRefInfo'],
+    queryFn: getMemberRefInfo,
+  })
+
+  const rewardMilestones = memberRefInfo?.data?.reward_milestone || []
 
   return (
     <div className="w-full min-h-svh flex sm:py-12 py-20 lg:pt-28 justify-center items-start px-2 sm:px-4 md:px-6 bg-[#FFFCF9] dark:bg-black flex-1">
@@ -283,52 +293,28 @@ export default function WhitepaperPage() {
               {t('whitepaper.section5.milestones.title')}
             </h3>
             <div className="overflow-x-auto mb-4 sm:mb-6">
-              <table className="w-full border-collapse border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-xs sm:text-sm">
-                <thead>
-                  <tr className="bg-gradient-to-r from-[#FE645F] to-[#C68AFE] text-white">
-                    <th className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">{t('whitepaper.section5.milestones.table.people')}</th>
-                    <th className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">{t('whitepaper.section5.milestones.table.regularReward')}</th>
-                    <th className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">{t('whitepaper.section5.milestones.table.vipReward')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="bg-theme-pink-100">
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">5</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">10 USDT</td>
-                    <td className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3">25 USDT</td>
-                  </tr>
-                  <tr className="bg-theme-pink-100">
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">10</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">15 USDT</td>
-                    <td className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3">30 USDT</td>
-                  </tr>
-                  <tr className="bg-theme-pink-100">
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">20</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">30 USDT</td>
-                    <td className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3">60 USDT</td>
-                  </tr>
-                  <tr className="bg-theme-pink-100">
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">35</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">50 USDT</td>
-                    <td className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3">100 USDT</td>
-                  </tr>
-                  <tr className="bg-theme-pink-100">
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">50</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">75 USDT</td>
-                    <td className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3">150 USDT</td>
-                  </tr>
-                  <tr className="bg-theme-pink-100">
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">75</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">100 USDT</td>
-                    <td className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3">200 USDT</td>
-                  </tr>
-                  <tr className="bg-theme-pink-100">
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">100</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">150 USDT</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 font-semibold">300 USDT</td>
-                  </tr>
-                </tbody>
-              </table>
+              {isLoadingMilestones ? (
+                <div className="flex justify-center items-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#FE645F]"></div>
+                </div>
+              ) : (
+                <table className="w-full border-collapse border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-xs sm:text-sm">
+                  <thead>
+                    <tr className="bg-gradient-to-r from-[#FE645F] to-[#C68AFE] text-white">
+                      <th className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">{t('whitepaper.section5.milestones.table.people')}</th>
+                      <th className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3 text-left ">{t('whitepaper.section5.milestones.table.vipReward')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rewardMilestones.map((milestone: any, index: number) => (
+                      <tr key={index} className="bg-theme-pink-100">
+                        <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">{milestone.milestone}</td>
+                        <td className="border border-gray-300 dark:border-gray-600 font-semibold px-2 sm:px-4 py-2 sm:py-3">{milestone.reward} USDT</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
             </div>
             <div className="bg-gray-50 dark:bg-gray-800 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6 space-y-2">
               <div className="text-base sm:text-xl text-theme-red-200 font-semibold italic">{t('whitepaper.section5.milestones.totalRewardsNote')}</div>
