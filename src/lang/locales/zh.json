@@ -535,6 +535,8 @@
     "verifySuccess": "电子邮件验证成功！正在重定向到登录页面...",
     "invalidCode": "无效的验证代码。请重试。",
     "resendCode": "重新发送代码",
+    "warning": "警告",
+    "emailNotActivated": "电子邮件未激活。请激活您的电子邮件以继续。",
     "resendCodeSuccess": "验证代码已成功重新发送！",
     "resendCodeError": "无法重新发送代码。请稍后重试。",
     "resendAfter": "{seconds}秒后重新发送代码",

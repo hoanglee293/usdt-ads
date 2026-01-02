@@ -536,6 +536,8 @@
     "verifySuccess": "Xác thực email thành công! Đang chuyển đến trang đăng nhập...",
     "invalidCode": "Mã xác thực không hợp lệ. Vui lòng thử lại.",
     "resendCode": "Gửi lại mã",
+    "warning": "Cảnh báo",
+    "emailNotActivated": "Email chưa được kích hoạt. Vui lòng kích hoạt email để tiếp tục.",
     "resendCodeSuccess": "Mã xác thực đã được gửi lại thành công!",
     "resendCodeError": "Không thể gửi lại mã. Vui lòng thử lại sau.",
     "resendAfter": "Gửi lại mã sau {seconds}s",

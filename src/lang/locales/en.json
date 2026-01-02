@@ -535,6 +535,8 @@
     "verifySuccess": "Email verification successful! Redirecting to login page...",
     "invalidCode": "Invalid verification code. Please try again.",
     "resendCode": "Resend code",
+    "warning": "Warning",
+    "emailNotActivated": "Email is not activated. Please activate your email to continue.",
     "resendCodeSuccess": "Verification code has been resent successfully!",
     "resendCodeError": "Unable to resend code. Please try again later.",
     "resendAfter": "Resend code after {seconds}s",

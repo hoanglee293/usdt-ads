@@ -535,6 +535,8 @@
     "verifySuccess": "メール確認成功！ログインページにリダイレクトしています...",
     "invalidCode": "無効な確認コードです。もう一度お試しください。",
     "resendCode": "コードを再送信",
+    "warning": "警告",
+    "emailNotActivated": "メールアドレスが有効化されていません。続行するにはメールアドレスを有効化してください。",
     "resendCodeSuccess": "確認コードを正常に再送信しました！",
     "resendCodeError": "コードを再送信できません。後でもう一度お試しください。",
     "resendAfter": "{seconds}秒後にコードを再送信",

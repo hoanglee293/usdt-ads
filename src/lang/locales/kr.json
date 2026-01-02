@@ -536,6 +536,8 @@
     "verifySuccess": "이메일 인증 성공! 로그인 페이지로 이동 중...",
     "invalidCode": "유효하지 않은 인증 코드입니다. 다시 시도해 주세요.",
     "resendCode": "코드 다시 보내기",
+    "warning": "경고",
+    "emailNotActivated": "이메일이 활성화되지 않았습니다. 계속하려면 이메일을 활성화해 주세요.",
     "resendCodeSuccess": "인증 코드가 성공적으로 다시 전송되었습니다!",
     "resendCodeError": "코드를 다시 보낼 수 없습니다. 나중에 다시 시도해 주세요.",
     "resendAfter": "{seconds}초 후 다시 보내기",

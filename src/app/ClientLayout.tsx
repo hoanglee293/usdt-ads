@@ -12,7 +12,7 @@ import { useTheme } from "@/theme/useTheme";
 import Header from "@/components/Header";
 import { Toaster } from "react-hot-toast";
 import toast from "react-hot-toast";
-import { generateCodeVerifyEmail } from "@/services/AuthService";
+import { generateCodeVerifyEmail, handleLogout } from "@/services/AuthService";
 import { useLang } from "@/lang/useLang";
 
 interface ClientLayoutProps {
@@ -54,7 +54,7 @@ function ThemeAwareToaster() {
 function ClientLayoutContent({ children }: ClientLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const { isAuth, login, logout } = useAuth();
+  const { isAuth, logout } = useAuth();
   const { t } = useLang();
   const [showEmailVerifyModal, setShowEmailVerifyModal] = useState(false);
   const [emailVerifyMessage, setEmailVerifyMessage] = useState(
@@ -116,7 +116,7 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
       "Email is not activated. Please activate your email to continue.";
 
     if (status === 403 && message?.toLowerCase().includes("email is not activated") && pathname !== "/verify-mail") {
-      setEmailVerifyMessage(message);
+      setEmailVerifyMessage(t('verifyMail.emailNotActivated'));
       setShowEmailVerifyModal(true);
     }
   }, [isAuth, isLoginPage, pathname, profileError, isAuthInitialized]);
@@ -187,10 +187,13 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
           <div className="w-full max-w-lg rounded-2xl bg-white px-8 py-6 shadow-2xl dark:bg-neutral-900 border border-theme-orange-100 dark:border-solid">
             <div className="mb-4 text-2xl uppercase   font-semibold text-yellow-500">
-              Cảnh báo
+              {t('verifyMail.warning')}
             </div>
             <p className="mb-6 text-base text-gray-700 dark:text-gray-300">{emailVerifyMessage}</p>
             <div className="flex justify-end gap-3">
+              <button onClick={() => {handleLogout(); logout(); setShowEmailVerifyModal(false);}} className="rounded-lg bg-transparent border border-gray-500 border-solid cursor-pointer px-4 py-2 dark:text-white text-black hover:dark:bg-gray-500 hover:bg-gray-300">
+                {t('user.logout')}
+              </button>
               <button
                 onClick={() => {
                   handleResendCode();
@@ -198,7 +201,7 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
                 }}
                 className="rounded-lg bg-pink-500 cursor-pointer px-4 py-2 border-none outline-none text-base font-semibold text-white hover:bg-pink-600"
               >
-                Xác thực ngay
+                {t('verifyMail.resendCode')}
               </button>
             </div>
           </div>
