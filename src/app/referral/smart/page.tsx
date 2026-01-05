@@ -163,9 +163,9 @@ export default function DirectReferralPage() {
                             <button
                                 onClick={handleWithdraw}
                                 disabled={withdrawMutation.isPending || isLoadingInfo || (smartRefInfo.data?.total_can_withdraw || 0) < 10}
-                                className="px-3 border border-solid border-theme-gray-100/50 dark:text-white dark:bg-gray-700 text-black hover:bg-gray-100 dark:hover:bg-gray-600 font-medium rounded-full py-2 transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="px-3 border border-solid border-theme-gray-100/50 dark:text-white dark:bg-gray-700 text-black hover:bg-gray-100 dark:hover:bg-gray-600 font-medium rounded-full py-2 transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed group hover:text-theme-red-200 hover:border-theme-red-200"
                             >
-                                <Wallet className="w-4 h-4 dark:text-white text-black" />
+                                <Wallet className="w-4 h-4 dark:text-white text-black group-hover:text-theme-red-200 transition-colors" />
                                 {withdrawMutation.isPending ? (t('common.loading') || 'Loading...') : (t('ref.withdraw') || 'Withdraw')}
                             </button>
                         </div>
