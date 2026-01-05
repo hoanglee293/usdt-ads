@@ -119,7 +119,7 @@ const ProfilePage = () => {
       }
 
       await updateProfile(updateData)
-      toast.success('Cập nhật thông tin thành công!')
+      toast.success(t('profile.updateSuccess'))
       setEditingField(null)
     } catch (err: any) {
       const errorMessage = err?.message ||
@@ -138,9 +138,9 @@ const ProfilePage = () => {
   }
 
   const sexOptions = [
-    { value: 'man', label: 'Nam' },
-    { value: 'woman', label: 'Nữ' },
-    { value: 'other', label: 'Khác' },
+    { value: 'man', label: t('profile.genderMale') },
+    { value: 'woman', label: t('profile.genderFemale') },
+    { value: 'other', label: t('profile.genderOther') },
   ]
 
   // Handle Change Password Modal
@@ -225,7 +225,7 @@ const ProfilePage = () => {
       <div className='w-full flex justify-center items-center p-4 sm:p-6'>
         <div className='text-center'>
           <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-purple-600 dark:border-purple-400 mx-auto"></div>
-          <p className='mt-3 sm:mt-4 text-sm sm:text-base text-gray-600 dark:text-gray-400'>Đang tải thông tin...</p>
+          <p className='mt-3 sm:mt-4 text-sm sm:text-base text-gray-600 dark:text-gray-400'>{t('profile.loadingInfo')}</p>
         </div>
       </div>
     )
@@ -236,7 +236,7 @@ const ProfilePage = () => {
       <div className='w-full flex justify-center items-center p-4 sm:p-6'>
         <div className='text-center'>
           <p className='text-sm sm:text-base md:text-lg text-red-600 dark:text-red-400'>
-            {profileError?.message || 'Không thể tải thông tin profile'}
+            {profileError?.message || t('profile.cannotLoadProfile')}
           </p>
         </div>
       </div>
@@ -251,7 +251,7 @@ const ProfilePage = () => {
       {/* Display Name */}
       <div className='space-y-2'>
         <label htmlFor="display_name" className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
-          Tên hiển thị <span className='text-red-500 dark:text-red-400'>*</span>
+          {t('profile.displayName')} <span className='text-red-500 dark:text-red-400'>*</span>
         </label>
         <div className='relative'>
           {editingField === 'displayName' ? (
@@ -261,7 +261,7 @@ const ProfilePage = () => {
                 type="text"
                 value={tempDisplayName}
                 onChange={(e) => setTempDisplayName(e.target.value)}
-                placeholder='Nhập tên hiển thị'
+                placeholder={t('profile.displayNamePlaceholder')}
                 disabled={updateLoading}
                 className='w-full px-2 sm:px-4 sm:py-2 pr-20 sm:pr-24 border border-solid focus:border-gray-300 dark:focus:border-gray-600 border-theme-gray-100 dark:border-gray-700 rounded-full outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed bg-white dark:bg-gray-800 text-sm sm:text-base text-gray-900 dark:text-gray-200 placeholder-gray-400 dark:placeholder-gray-500'
                 autoFocus
@@ -272,7 +272,7 @@ const ProfilePage = () => {
                   onClick={() => handleSaveField('displayName')}
                   disabled={updateLoading}
                   className='h-10 w-10 sm:h-9 sm:w-9 flex items-center justify-center bg-green-500 dark:bg-green-600 text-white rounded-full border-none hover:bg-green-600 dark:hover:bg-green-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
-                  title='Lưu'
+                  title={t('common.save')}
                 >
                   <Check size={18} className='sm:w-5 sm:h-5' />
                 </button>
@@ -281,7 +281,7 @@ const ProfilePage = () => {
                   onClick={handleCancelEdit}
                   disabled={updateLoading}
                   className='h-10 w-10 sm:h-9 sm:w-9 flex items-center justify-center bg-red-500 dark:bg-red-600 text-white rounded-full border-none hover:bg-red-600 dark:hover:bg-red-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
-                  title='Hủy'
+                  title={t('common.cancel')}
                 >
                   <X size={18} className='sm:w-5 sm:h-5' />
                 </button>
@@ -301,7 +301,7 @@ const ProfilePage = () => {
                 onClick={() => handleEditField('displayName')}
                 disabled={updateLoading}
                 className='absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 p-1.5 text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/30 bg-transparent border-none rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed'
-                title='Chỉnh sửa'
+                title={t('common.edit')}
               >
                 <Pencil size={18} className='sm:w-5 sm:h-5' />
               </button>
@@ -313,7 +313,7 @@ const ProfilePage = () => {
         {/* Read-only fields */}
         <div className='space-y-2 flex-1'>
           <label className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
-            Email
+            {t('profile.email')}
           </label>
           <input
             type="email"
@@ -325,7 +325,7 @@ const ProfilePage = () => {
 
         <div className='space-y-2 flex-1'>
           <label className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
-            Tên đăng nhập
+            {t('profile.username')}
           </label>
           <input
             type="text"
@@ -340,7 +340,7 @@ const ProfilePage = () => {
         {/* Birthday */}
         <div className='space-y-2 flex-1'>
           <label htmlFor="birthday" className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
-            Ngày sinh
+            {t('profile.birthday')}
           </label>
           <div className='relative'>
             {editingField === 'birthday' ? (
@@ -351,7 +351,8 @@ const ProfilePage = () => {
                     value={tempBirthday}
                     onChange={(e) => setTempBirthday(e.target.value)}
                     disabled={updateLoading}
-                    placeholder='Chọn ngày sinh'
+                    placeholder={t('profile.birthdayPlaceholder')}
+                    disableFuture={true}
                   />
                 </div>
                 <div className='absolute right-1.5 sm:right-2 top-1/2 transform -translate-y-1/2 flex gap-1.5 sm:gap-2'>
@@ -360,7 +361,7 @@ const ProfilePage = () => {
                     onClick={() => handleSaveField('birthday')}
                     disabled={updateLoading}
                     className='h-10 w-10 sm:h-9 sm:w-9 flex items-center justify-center border-none bg-green-500 dark:bg-green-600 text-white rounded-full hover:bg-green-600 dark:hover:bg-green-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
-                    title='Lưu'
+                    title={t('common.save')}
                   >
                     <Check size={16} className='sm:w-4 sm:h-4' />
                   </button>
@@ -369,7 +370,7 @@ const ProfilePage = () => {
                     onClick={handleCancelEdit}
                     disabled={updateLoading}
                     className='h-10 w-10 sm:h-9 sm:w-9 flex items-center justify-center border-none bg-red-500 dark:bg-red-600 text-white rounded-full hover:bg-red-600 dark:hover:bg-red-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
-                    title='Hủy'
+                    title={t('common.cancel')}
                   >
                     <X size={16} className='sm:w-4 sm:h-4' />
                   </button>
@@ -383,7 +384,7 @@ const ProfilePage = () => {
                     value={birthday}
                     onChange={() => { }}
                     disabled={true}
-                    placeholder='Chọn ngày sinh'
+                    placeholder={t('profile.birthdayPlaceholder')}
                   />
                 </div>
                 <button
@@ -391,7 +392,7 @@ const ProfilePage = () => {
                   onClick={() => handleEditField('birthday')}
                   disabled={updateLoading}
                   className='absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 p-1.5 text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/30 rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed z-10 border-none bg-transparent'
-                  title='Chỉnh sửa'
+                  title={t('common.edit')}
                 >
                   <Pencil size={18} className='sm:w-5 sm:h-5' />
                 </button>
@@ -403,7 +404,7 @@ const ProfilePage = () => {
         {/* Sex */}
         <div className='space-y-2 flex-1'>
           <label htmlFor="sex" className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
-            Giới tính
+            {t('profile.gender')}
           </label>
           <div className='relative'>
             {editingField === 'sex' ? (
@@ -423,7 +424,7 @@ const ProfilePage = () => {
                     onClick={() => handleSaveField('sex')}
                     disabled={updateLoading}
                     className='h-10 w-10 sm:h-9 sm:w-9 flex items-center justify-center bg-green-500 dark:bg-green-600 text-white rounded-full border-none hover:bg-green-600 dark:hover:bg-green-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed'
-                    title='Lưu'
+                    title={t('common.save')}
                   >
                     <Check size={18} className='sm:w-5 sm:h-5' />
                   </button>
@@ -432,7 +433,7 @@ const ProfilePage = () => {
                     onClick={handleCancelEdit}
                     disabled={updateLoading}
                     className='h-10 w-10 sm:h-9 sm:w-9 flex items-center justify-center bg-red-500 dark:bg-red-600 text-white rounded-full hover:bg-red-600 dark:hover:bg-red-700 border-none transition-all disabled:opacity-50 disabled:cursor-not-allowed'
-                    title='Hủy'
+                    title={t('common.cancel')}
                   >
                     <X size={18} className='sm:w-5 sm:h-5' />
                   </button>
@@ -454,7 +455,7 @@ const ProfilePage = () => {
                   onClick={() => handleEditField('sex')}
                   disabled={updateLoading}
                   className='absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2 p-1.5 text-gray-500 dark:text-gray-400 hover:text-purple-600 dark:hover:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/30 bg-transparent border-none rounded-full transition-all disabled:opacity-50 disabled:cursor-not-allowed z-10'
-                  title='Chỉnh sửa'
+                  title={t('common.edit')}
                 >
                   <Pencil size={18} className='sm:w-5 sm:h-5' />
                 </button>
@@ -467,7 +468,7 @@ const ProfilePage = () => {
       {profile.phone && (
         <div className='space-y-2'>
           <label className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
-            Số điện thoại
+            {t('profile.phoneNumber')}
           </label>
           <input
             type="tel"
@@ -482,7 +483,7 @@ const ProfilePage = () => {
         {/* Referral */}
         <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-6'>
           <label htmlFor="sex" className='block text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300'>
-            Referral:
+            {t('profile.referral')}
           </label>
           <div className='relative text-sm sm:text-base'>
             <span className='text-gray-900 dark:text-gray-200 break-all'>{profile.ref}</span>
@@ -492,9 +493,9 @@ const ProfilePage = () => {
           type="button"
           onClick={handleOpenChangePasswordModal}
           className='out-line border-none px-6 py-2 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm uppercase cursor-pointer'
-          title='Đổi mật khẩu'
+          title={t('profile.changePasswordButton')}
         >
-          Đổi mật khẩu
+          {t('profile.changePasswordButton')}
         </button>
       </div>
 
@@ -597,7 +598,7 @@ const ProfilePage = () => {
               disabled={isChangingPassword}
               className="flex-1 px-4 py-2.5 border dark:border-gray-300 border-gray-600 text-gray-700 dark:text-gray-300 font-semibold rounded-full bg-transparent transition-all disabled:opacity-50 disabled:cursor-not-allowed outline-none border-solid hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 cursor-pointer"
             >
-              Hủy
+              {t('common.cancel')}
             </button>
             <button
               type="submit"

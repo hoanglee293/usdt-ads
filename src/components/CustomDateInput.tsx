@@ -9,6 +9,7 @@ interface CustomDateInputProps {
     disabled?: boolean
     className?: string
     placeholder?: string
+    disableFuture?: boolean
 }
 
 const CustomDateInput: React.FC<CustomDateInputProps> = ({
@@ -17,8 +18,12 @@ const CustomDateInput: React.FC<CustomDateInputProps> = ({
     onChange,
     disabled = false,
     className = '',
-    placeholder
+    placeholder,
+    disableFuture = false
 }) => {
+    // Get today's date in YYYY-MM-DD format for max attribute
+    const today = new Date().toISOString().split('T')[0]
+    
     return (
         <div className='relative'>
             <input
@@ -28,6 +33,7 @@ const CustomDateInput: React.FC<CustomDateInputProps> = ({
                 onChange={onChange}
                 disabled={disabled}
                 placeholder={placeholder}
+                max={disableFuture ? today : undefined}
                 className={`
                     w-full px-4 py-3 pr-10
                     border border-solid 

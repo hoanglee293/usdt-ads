@@ -370,12 +370,27 @@
   },
   "profile": {
     "loading": "Loading information...",
+    "loadingInfo": "Loading information...",
     "loadError": "Unable to load profile information",
+    "cannotLoadProfile": "Unable to load profile information",
     "updateError": "Unable to update information. Please try again.",
+    "updateSuccess": "Profile updated successfully!",
     "referral": "Referral:",
     "myProfile": "My Profile",
     "kyc": "KYC",
-    "displayNameCannotBeEmpty": "Display name cannot be empty"
+    "displayName": "Display Name",
+    "displayNamePlaceholder": "Enter display name",
+    "displayNameCannotBeEmpty": "Display name cannot be empty",
+    "email": "Email",
+    "username": "Username",
+    "birthday": "Birthday",
+    "birthdayPlaceholder": "Select birthday",
+    "gender": "Gender",
+    "genderMale": "Male",
+    "genderFemale": "Female",
+    "genderOther": "Other",
+    "phoneNumber": "Phone Number",
+    "changePasswordButton": "Change Password"
   },
   "kyc": {
     "title": "KYC Verification",
