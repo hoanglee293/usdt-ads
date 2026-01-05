@@ -193,7 +193,29 @@
     "disclaimer": "*Hệ thống trả thưởng giới thiệu theo mốc nếu User giới thiệu trực tiếp được được người tham gia khác KYC; tham gia và hoàn gói Staking ít nhất 1 lần",
     "kolPermissionTitle": "Yêu cầu quyền KOL",
     "kolPermissionMessage": "Vui lòng liên hệ với admin để được cấp quyền KOL để sử dụng tính năng này.",
-    "totalRewardsUpTo": "Tổng giải thưởng lên đến {total} USDT"
+    "totalRewardsUpTo": "Tổng giải thưởng lên đến {total} USDT",
+    "socialRewardButton": "Quà tặng cho người giới thiệu",
+    "socialRewardTitle": "Yêu cầu phần thưởng chia sẻ",
+    "socialRewardDescription": "Nhập link đường dẫn giới thiệu mà bạn đã chia sẻ trên mạng xã hội để yêu cầu phần thưởng",
+    "socialRewardLinkLabel": "Link đường dẫn giới thiệu",
+    "socialRewardLinkPlaceholder": "https://facebook.com/... hoặc https://twitter.com/...",
+    "socialRewardLinkRequired": "Vui lòng nhập link đường dẫn giới thiệu",
+    "invalidLinkFormat": "Định dạng link không hợp lệ. Vui lòng nhập link đầy đủ (bắt đầu với http:// hoặc https://)",
+    "socialRewardSuccess": "Yêu cầu phần thưởng đã được gửi thành công!",
+    "socialRewardError": "Không thể gửi yêu cầu phần thưởng",
+    "submitting": "Đang gửi...",
+    "submit": "Gửi yêu cầu",
+    "socialRewardHistory": "Lịch sử yêu cầu",
+    "noHistory": "Chưa có lịch sử yêu cầu",
+    "historyTable": {
+      "stt": "STT",
+      "link": "Link",
+      "status": "Trạng thái",
+      "date": "Ngày tạo",
+      "statusPending": "Chờ duyệt",
+      "statusApproved": "Đã duyệt",
+      "statusRejected": "Từ chối"
+    }
   },
   "kol": {
     "registerTitle": "Đăng ký KOL",

@@ -193,7 +193,29 @@
     "disclaimer": "*システムは、ユーザーが直接紹介した人がKYCを完了し、少なくとも1つのステーキングパッケージに参加して完了した場合、マイルストーンごとに紹介報酬を付与します",
     "kolPermissionTitle": "KOL権限が必要です",
     "kolPermissionMessage": "この機能を使用するには、管理者に連絡してKOL権限を付与してください。",
-    "totalRewardsUpTo": "総報酬最大{total} USDT"
+    "totalRewardsUpTo": "総報酬最大{total} USDT",
+    "socialRewardButton": "紹介者へのギフト",
+    "socialRewardTitle": "ソーシャルシェア報酬リクエスト",
+    "socialRewardDescription": "ソーシャルメディアで共有した紹介リンクを入力して報酬をリクエストしてください",
+    "socialRewardLinkLabel": "紹介リンク",
+    "socialRewardLinkPlaceholder": "https://facebook.com/... または https://twitter.com/...",
+    "socialRewardLinkRequired": "紹介リンクを入力してください",
+    "invalidLinkFormat": "リンク形式が無効です。完全なリンクを入力してください（http://またはhttps://で始まる）",
+    "socialRewardSuccess": "報酬リクエストが正常に送信されました！",
+    "socialRewardError": "報酬リクエストを送信できません",
+    "submitting": "送信中...",
+    "submit": "リクエストを送信",
+    "socialRewardHistory": "リクエスト履歴",
+    "noHistory": "リクエスト履歴がまだありません",
+    "historyTable": {
+      "stt": "番号",
+      "link": "リンク",
+      "status": "ステータス",
+      "date": "作成日",
+      "statusPending": "承認待ち",
+      "statusApproved": "承認済み",
+      "statusRejected": "拒否"
+    }
   },
   "kol": {
     "registerTitle": "KOL登録",

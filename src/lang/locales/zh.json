@@ -193,7 +193,29 @@
     "disclaimer": "*如果用户直接推荐的人已完成KYC；参与并完成至少1个质押套餐，系统将按里程碑奖励推荐",
     "kolPermissionTitle": "需要KOL权限",
     "kolPermissionMessage": "请联系管理员授予KOL权限以使用此功能。",
-    "totalRewardsUpTo": "总奖励最高{total} USDT"
+    "totalRewardsUpTo": "总奖励最高{total} USDT",
+    "socialRewardButton": "推荐人礼品",
+    "socialRewardTitle": "请求社交分享奖励",
+    "socialRewardDescription": "输入您在社交媒体上分享的推荐链接以请求奖励",
+    "socialRewardLinkLabel": "推荐链接",
+    "socialRewardLinkPlaceholder": "https://facebook.com/... 或 https://twitter.com/...",
+    "socialRewardLinkRequired": "请输入推荐链接",
+    "invalidLinkFormat": "链接格式无效。请输入完整链接（以http://或https://开头）",
+    "socialRewardSuccess": "奖励请求已成功提交！",
+    "socialRewardError": "无法提交奖励请求",
+    "submitting": "提交中...",
+    "submit": "提交请求",
+    "socialRewardHistory": "请求历史",
+    "noHistory": "暂无请求历史",
+    "historyTable": {
+      "stt": "序号",
+      "link": "链接",
+      "status": "状态",
+      "date": "创建日期",
+      "statusPending": "待审核",
+      "statusApproved": "已批准",
+      "statusRejected": "已拒绝"
+    }
   },
   "kol": {
     "registerTitle": "注册KOL",

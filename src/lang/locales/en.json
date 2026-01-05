@@ -193,7 +193,29 @@
     "disclaimer": "*The system rewards referrals by milestone if the User directly refers someone who has completed KYC; participated and completed at least 1 Staking package",
     "kolPermissionTitle": "KOL Permission Required",
     "kolPermissionMessage": "Please contact admin to grant KOL permission to use this feature.",
-    "totalRewardsUpTo": "Total rewards up to {total} USDT"
+    "totalRewardsUpTo": "Total rewards up to {total} USDT",
+    "socialRewardButton": "Referrer Gift",
+    "socialRewardTitle": "Request Social Sharing Reward",
+    "socialRewardDescription": "Enter the referral link you shared on social media to request a reward",
+    "socialRewardLinkLabel": "Referral Link",
+    "socialRewardLinkPlaceholder": "https://facebook.com/... or https://twitter.com/...",
+    "socialRewardLinkRequired": "Please enter the referral link",
+    "invalidLinkFormat": "Invalid link format. Please enter a full link (starting with http:// or https://)",
+    "socialRewardSuccess": "Reward request submitted successfully!",
+    "socialRewardError": "Unable to submit reward request",
+    "submitting": "Submitting...",
+    "submit": "Submit Request",
+    "socialRewardHistory": "Request History",
+    "noHistory": "No request history yet",
+    "historyTable": {
+      "stt": "No.",
+      "link": "Link",
+      "status": "Status",
+      "date": "Created Date",
+      "statusPending": "Pending",
+      "statusApproved": "Approved",
+      "statusRejected": "Rejected"
+    }
   },
   "kol": {
     "registerTitle": "Register as KOL",

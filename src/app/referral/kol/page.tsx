@@ -6,10 +6,12 @@ import toast from 'react-hot-toast'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { getMemberRefInfo, createMemberRefWithdraw } from '@/services/RefService'
 import { registerKol, checkKolStatus, KolRegisterRequest } from '@/services/AuthService'
+import axiosClient from '@/utils/axiosClient'
 import { useProfile } from '@/hooks/useProfile'
 import { useLang } from '@/lang/useLang'
 import { useRouter } from 'next/navigation'
 import Modal from '@/components/Modal'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/table'
 
 interface MilestoneItem {
     milestone: number
@@ -27,12 +29,23 @@ interface MilestoneDefinition {
     showLink?: boolean
 }
 
+interface SocialRewardHistoryItem {
+    id: number
+    link: string
+    status: 'pending' | 'approved' | 'rejected'
+    created_at: string
+    updated_at: string
+}
+
 export default function SmartRefPage() {
     const queryClient = useQueryClient()
     const router = useRouter()
     const { profile, loading: profileLoading } = useProfile()
-    const { t } = useLang()
+    const { t, lang } = useLang()
     const [showKolModal, setShowKolModal] = useState(false)
+    const [showSocialRewardModal, setShowSocialRewardModal] = useState(false)
+    const [socialRewardLink, setSocialRewardLink] = useState('')
+    const [socialRewardError, setSocialRewardError] = useState('')
 
     // KOL Registration Form State
     const [kolFormData, setKolFormData] = useState<KolRegisterRequest>({
@@ -227,6 +240,80 @@ export default function SmartRefPage() {
         })
     }
 
+    // Fetch Social Reward History
+    const { data: socialRewardHistory = [], isLoading: isLoadingHistory, refetch: refetchHistory } = useQuery({
+        queryKey: ['socialRewardHistory'],
+        queryFn: async () => {
+            try {
+                const response = await axiosClient.get('/referrals/social-reward-history')
+                return response.data?.data || []
+            } catch (error: any) {
+                // If API doesn't exist yet, return empty array
+                if (error?.response?.status === 404) {
+                    return []
+                }
+                console.error('Error fetching social reward history:', error)
+                return []
+            }
+        },
+        enabled: showSocialRewardModal,
+    })
+
+    // Social Reward Request Mutation
+    const socialRewardMutation = useMutation({
+        mutationFn: async (link: string) => {
+            // TODO: Replace with actual API endpoint when available
+            // For now, this is a placeholder that will need to be connected to the API
+            // Using axiosClient pattern similar to other services
+            const response = await axiosClient.post('/referrals/social-reward', { link })
+            return response.data
+        },
+        onSuccess: () => {
+            toast.success(t('smartRef.socialRewardSuccess') || 'Yêu cầu phần thưởng đã được gửi thành công!')
+            setSocialRewardLink('')
+            setSocialRewardError('')
+            // Refetch history after successful submission
+            refetchHistory()
+        },
+        onError: (error: any) => {
+            const message = error?.response?.data?.message || error?.message || t('smartRef.socialRewardError') || 'Không thể gửi yêu cầu phần thưởng'
+            toast.error(message)
+            setSocialRewardError(message)
+        },
+    })
+
+    // Validate Social Reward Link
+    const validateSocialRewardLink = (): boolean => {
+        if (!socialRewardLink || socialRewardLink.trim().length === 0) {
+            setSocialRewardError(t('smartRef.socialRewardLinkRequired') || 'Vui lòng nhập link đường dẫn giới thiệu')
+            return false
+        }
+
+        const urlPattern = /^https?:\/\/.+/i
+        if (!urlPattern.test(socialRewardLink.trim())) {
+            setSocialRewardError(t('smartRef.invalidLinkFormat') || 'Định dạng link không hợp lệ. Vui lòng nhập link đầy đủ (bắt đầu với http:// hoặc https://)')
+            return false
+        }
+
+        setSocialRewardError('')
+        return true
+    }
+
+    // Handle Social Reward Form Submit
+    const handleSocialRewardSubmit = (e: React.FormEvent) => {
+        e.preventDefault()
+
+        if (!validateSocialRewardLink()) {
+            return
+        }
+
+        if (socialRewardMutation.isPending) {
+            return
+        }
+
+        socialRewardMutation.mutate(socialRewardLink.trim())
+    }
+
     // Show loading state while profile is loading
     if (profileLoading || (profile && !profile.kol && kolStatusLoading)) {
         return (
@@ -305,7 +392,7 @@ export default function SmartRefPage() {
                                 className='mb-10 relative w-full mx-auto outline-none border-none cursor-pointer hover:shadow-xl transform hover:scale-105 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4 group'
                                 size='lg'
                             >
-                                <span className="flex items-center gap-2 absolute right-0 top-1/2 transform -translate-y-1/2">
+                                <span className="flex items-center absolute right-0 top-1/2 transform -translate-y-1/2">
                                     {t('kol.registerButton') || 'Đăng ký KOL'}
                                     <MousePointer2 className="w-8 h-8 text-gradient-primary-2 animate-bounce group-hover:animate-pulse" />
                                 </span>
@@ -313,9 +400,18 @@ export default function SmartRefPage() {
                         </div>
                     )}
 
+                    <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 !mt-0 w-full mx-auto lg:!mt-6'>
+                        <button
+                            onClick={() => setShowSocialRewardModal(true)}
+                            className='min-w-[300px] px-5 border border-solid border-theme-gray-100/50 text-gradient-primary-2 hover:bg-gray-100 dark:hover:bg-gray-600 font-medium rounded-full py-1.5 transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed group hover:text-theme-red-200 hover:border-theme-red-200 text-base sm:text-lg'
+                        >
+                            {t('smartRef.socialRewardButton') || 'Quà tặng cho người giới thiệu'}
+                        </button>
+                    </div>
+
                     {/* Progress Bar */}
                     {isSuccess && (
-                        <div className='bg-transparent rounded-lg border border-gray-200 dark:border-[#FE645F] p-4 sm:p-6 md:max-w-xl mx-auto'>
+                        <div className='bg-transparent rounded-lg border border-gray-200 dark:border-[#FE645F] p-4 sm:px-6 pt-0 md:max-w-xl mx-auto'>
                             {isLoadingInfo ? (
                                 <div className='w-full max-w-[20vw] mx-auto bg-gradient-to-br from-[#FE645F] to-[#C68AFE] rounded-full h-8 sm:h-10 animate-pulse' />
                             ) : (
@@ -500,6 +596,140 @@ export default function SmartRefPage() {
                         </>
                     )}
                 </div>
+
+                {/* Social Reward Request Modal */}
+                <Modal
+                    isOpen={showSocialRewardModal}
+                    onClose={() => {
+                        setShowSocialRewardModal(false)
+                        setSocialRewardLink('')
+                        setSocialRewardError('')
+                    }}
+                    maxWidth="max-w-2xl"
+                >
+                    <div className='w-full'>
+                        <h2 className='text-3xl font-semibold dark:text-white text-gray-800 dark:md:text-white mb-2'>
+                            {t('smartRef.socialRewardTitle') || 'Yêu cầu phần thưởng chia sẻ'}
+                        </h2>
+                        <p className='text-yellow-600 italic mb-6 text-sm'>
+                            {t('smartRef.socialRewardDescription') || 'Nhập link đường dẫn giới thiệu mà bạn đã chia sẻ trên mạng xã hội để yêu cầu phần thưởng'}
+                        </p>
+
+                        <form onSubmit={handleSocialRewardSubmit} className='w-full flex flex-col mt-6 px-0'>
+                            {/* Referral Link Input */}
+                            <div className='space-y-1'>
+                                <label htmlFor="social-reward-link" className='block text-sm font-bold text-gray-700 dark:text-white'>
+                                    {t('smartRef.socialRewardLinkLabel') || 'Link đường dẫn giới thiệu'} <span className='text-theme-red dark:text-theme-red-200'>{t('login.required') || '*'}</span>
+                                </label>
+                                <input
+                                    id="social-reward-link"
+                                    type="url"
+                                    value={socialRewardLink}
+                                    onChange={(e) => {
+                                        setSocialRewardLink(e.target.value)
+                                        if (socialRewardError) setSocialRewardError('')
+                                    }}
+                                    placeholder={t('smartRef.socialRewardLinkPlaceholder') || 'https://facebook.com/... hoặc https://twitter.com/...'}
+                                    className='w-full pr-4 py-2.5 pl-4 border border-solid border-gray-400 focus:border-solid focus:border-gray-300 dark:focus:border-gray-600 dark:border-gray-700 rounded-full outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
+                                    disabled={socialRewardMutation.isPending}
+                                />
+                                {socialRewardError && (
+                                    <p className="text-red-500 text-sm mt-1">{socialRewardError}</p>
+                                )}
+                            </div>
+
+                            <button
+                                type="submit"
+                                disabled={socialRewardMutation.isPending}
+                                className='w-fix mx-auto outline-none border-none cursor-pointer py-2 px-6 mt-6 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-base uppercase'
+                            >
+                                {socialRewardMutation.isPending ? (
+                                    <>
+                                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        </svg>
+                                        {t('smartRef.submitting') || 'Đang gửi...'}
+                                    </>
+                                ) : (
+                                    t('smartRef.submit') || 'Gửi yêu cầu'
+                                )}
+                            </button>
+                        </form>
+
+                        {/* History Table */}
+                        <div className=' border-t border-gray-200 dark:border-gray-700 pt-6'>
+                            <h3 className='text-xl font-semibold dark:text-white text-gray-800 mb-4'>
+                                {t('smartRef.socialRewardHistory') || 'Lịch sử yêu cầu'}
+                            </h3>
+                            
+                            {isLoadingHistory ? (
+                                <div className='flex justify-center items-center py-8'>
+                                    <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-[#FE645F]'></div>
+                                </div>
+                            ) : socialRewardHistory.length === 0 ? (
+                                <div className='text-center py-8 text-gray-500 dark:text-gray-400'>
+                                    {t('smartRef.noHistory') || 'Chưa có lịch sử yêu cầu'}
+                                </div>
+                            ) : (
+                                <div className='overflow-x-auto'>
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow className='border-b border-gray-200 dark:border-gray-700'>
+                                                <TableHead className='text-gray-700 dark:text-gray-300 font-semibold'>{t('smartRef.historyTable.stt') || 'STT'}</TableHead>
+                                                <TableHead className='text-gray-700 dark:text-gray-300 font-semibold'>{t('smartRef.historyTable.link') || 'Link'}</TableHead>
+                                                <TableHead className='text-gray-700 dark:text-gray-300 font-semibold'>{t('smartRef.historyTable.status') || 'Trạng thái'}</TableHead>
+                                                <TableHead className='text-gray-700 dark:text-gray-300 font-semibold'>{t('smartRef.historyTable.date') || 'Ngày tạo'}</TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {socialRewardHistory.map((item: SocialRewardHistoryItem, index: number) => (
+                                                <TableRow key={item.id} className='border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50'>
+                                                    <TableCell className='text-gray-600 dark:text-gray-400'>{index + 1}</TableCell>
+                                                    <TableCell className='text-gray-600 dark:text-gray-400'>
+                                                        <a 
+                                                            href={item.link} 
+                                                            target='_blank' 
+                                                            rel='noopener noreferrer'
+                                                            className='text-blue-600 dark:text-blue-400 hover:underline truncate max-w-[300px] block'
+                                                        >
+                                                            {item.link}
+                                                        </a>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                                            item.status === 'approved' 
+                                                                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
+                                                                : item.status === 'rejected'
+                                                                ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
+                                                                : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
+                                                        }`}>
+                                                            {item.status === 'approved' 
+                                                                ? t('smartRef.historyTable.statusApproved') || 'Đã duyệt'
+                                                                : item.status === 'rejected'
+                                                                ? t('smartRef.historyTable.statusRejected') || 'Từ chối'
+                                                                : t('smartRef.historyTable.statusPending') || 'Chờ duyệt'
+                                                            }
+                                                        </span>
+                                                    </TableCell>
+                                                    <TableCell className='text-gray-600 dark:text-gray-400'>
+                                                        {new Date(item.created_at).toLocaleDateString(lang === 'vi' ? 'vi-VN' : 'en-US', {
+                                                            year: 'numeric',
+                                                            month: '2-digit',
+                                                            day: '2-digit',
+                                                            hour: '2-digit',
+                                                            minute: '2-digit'
+                                                        })}
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </Modal>
 
                 {/* KOL Registration Modal */}
                 <Modal
