@@ -240,7 +240,31 @@
     "pendingTitle": "登録審査中",
     "pendingMessage": "KOL登録リクエストが審査中です。承認をお待ちください。",
     "notRegistered": "まだKOLとして登録していません",
-    "registerButton": "KOL登録"
+    "registerButton": "KOL登録",
+    "articleButton": "記事を送信",
+    "articleTitle": "KOL記事を送信",
+    "articleDescription": "ソーシャルメディアに投稿した記事のリンクを入力してください",
+    "articleUrlLabel": "記事リンク",
+    "articleUrlPlaceholder": "https://facebook.com/posts/... または https://twitter.com/...",
+    "articleUrlRequired": "記事リンクを入力してください",
+    "invalidUrlFormat": "リンク形式が無効です。完全なリンクを入力してください（http://またはhttps://で始まる）",
+    "articleSubmitSuccess": "記事の送信が成功しました！",
+    "articleSubmitError": "記事を送信できません",
+    "articleHistory": "記事履歴",
+    "noArticles": "まだ記事がありません",
+    "articleTable": {
+      "stt": "番号",
+      "link": "記事リンク",
+      "status": "ステータス",
+      "date": "送信日",
+      "statusPending": "承認待ち",
+      "statusApproved": "承認済み",
+      "statusRejected": "拒否"
+    },
+    "filterAll": "すべて",
+    "filterPending": "承認待ち",
+    "filterApproved": "承認済み",
+    "filterRejected": "拒否"
   },
   "staking": {
     "joinBaseSuccess": "ベースパッケージへの参加に成功しました！",

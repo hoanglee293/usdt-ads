@@ -176,6 +176,31 @@ export interface CreateSmartRefWithdrawResponse {
   data: SmartRefWithdrawData;
 }
 
+// ==================== KOL Articles Interfaces ====================
+
+export interface KolArticle {
+  id: number;
+  article_url: string;
+  status: "pending" | "approved" | "rejected";
+  created_at: string;
+}
+
+export interface SubmitKolArticleRequest {
+  article_url: string;
+}
+
+export interface SubmitKolArticleResponse {
+  statusCode: 201;
+  message: string;
+  kol_article: KolArticle;
+}
+
+export interface GetKolArticlesResponse {
+  statusCode: 200;
+  message: string;
+  data: KolArticle[];
+}
+
 // ==================== API Functions ====================
 
 /**
@@ -373,6 +398,43 @@ export const createSmartRefWithdraw = async (): Promise<CreateSmartRefWithdrawRe
     return response.data;
   } catch (error: any) {
     console.error("Error creating smart ref withdraw:", error);
+    throw error;
+  }
+};
+
+/**
+ * Submit KOL Article
+ * @param data - Article URL
+ * @returns Promise<SubmitKolArticleResponse>
+ */
+export const submitKolArticle = async (
+  data: SubmitKolArticleRequest
+): Promise<SubmitKolArticleResponse> => {
+  try {
+    const response = await axiosClient.post("/users/submit-kol-article", data);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error submitting KOL article:", error);
+    throw error;
+  }
+};
+
+/**
+ * Get User's KOL Articles
+ * @param status - Optional filter by status (pending, approved, rejected)
+ * @returns Promise<GetKolArticlesResponse>
+ */
+export const getKolArticles = async (
+  status?: string
+): Promise<GetKolArticlesResponse> => {
+  try {
+    const url = status
+      ? `/users/kol-articles?status=${status}`
+      : "/users/kol-articles";
+    const response = await axiosClient.get(url);
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching KOL articles:", error);
     throw error;
   }
 };

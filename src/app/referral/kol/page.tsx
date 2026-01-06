@@ -4,14 +4,14 @@ import { Copy, Play, Link2, MousePointer2 } from 'lucide-react'
 import { Button } from '@/ui/button'
 import toast from 'react-hot-toast'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { getMemberRefInfo, createMemberRefWithdraw } from '@/services/RefService'
+import { getMemberRefInfo, createMemberRefWithdraw, submitKolArticle, getKolArticles, KolArticle } from '@/services/RefService'
 import { registerKol, checkKolStatus, KolRegisterRequest } from '@/services/AuthService'
 import axiosClient from '@/utils/axiosClient'
 import { useProfile } from '@/hooks/useProfile'
 import { useLang } from '@/lang/useLang'
 import { useRouter } from 'next/navigation'
 import Modal from '@/components/Modal'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/ui/table'
+import { useRef } from 'react'
 
 interface MilestoneItem {
     milestone: number
@@ -29,23 +29,24 @@ interface MilestoneDefinition {
     showLink?: boolean
 }
 
-interface SocialRewardHistoryItem {
-    id: number
-    link: string
-    status: 'pending' | 'approved' | 'rejected'
-    created_at: string
-    updated_at: string
-}
 
 export default function SmartRefPage() {
     const queryClient = useQueryClient()
     const router = useRouter()
     const { profile, loading: profileLoading } = useProfile()
     const { t, lang } = useLang()
+    const tableRef = useRef<HTMLDivElement>(null)
     const [showKolModal, setShowKolModal] = useState(false)
-    const [showSocialRewardModal, setShowSocialRewardModal] = useState(false)
-    const [socialRewardLink, setSocialRewardLink] = useState('')
-    const [socialRewardError, setSocialRewardError] = useState('')
+    const [showArticleModal, setShowArticleModal] = useState(false)
+    const [articleUrl, setArticleUrl] = useState('')
+    const [articleError, setArticleError] = useState('')
+    const [selectedStatus, setSelectedStatus] = useState<string | undefined>(undefined)
+
+    // Table styles
+    const tableContainerStyles = "max-h-[60vh] sm:max-h-[65.5vh] min-w-[40vw] overflow-y-auto overflow-x-auto -mx-3 sm:mx-0"
+    const tableStyles = "w-full table-fixed border-separate border-spacing-y-1"
+    const tableHeaderStyles = "px-2 py-2 sm:px-3 text-left text-xs sm:text-sm lg:text-base font-semibold text-theme-red-100 uppercase bg-transparent "
+    const tableCellStyles = "px-2 py-3 sm:px-3 text-xs sm:text-sm lg:text-base text-theme-gray-200 dark:text-gray-300 bg-transparent border-y border-black dark:border-gray-700 group-hover:bg-gray-100 dark:group-hover:bg-gray-800 font-light"
 
     // KOL Registration Form State
     const [kolFormData, setKolFormData] = useState<KolRegisterRequest>({
@@ -240,78 +241,62 @@ export default function SmartRefPage() {
         })
     }
 
-    // Fetch Social Reward History
-    const { data: socialRewardHistory = [], isLoading: isLoadingHistory, refetch: refetchHistory } = useQuery({
-        queryKey: ['socialRewardHistory'],
-        queryFn: async () => {
-            try {
-                const response = await axiosClient.get('/referrals/social-reward-history')
-                return response.data?.data || []
-            } catch (error: any) {
-                // If API doesn't exist yet, return empty array
-                if (error?.response?.status === 404) {
-                    return []
-                }
-                console.error('Error fetching social reward history:', error)
-                return []
-            }
-        },
-        enabled: showSocialRewardModal,
+    // Fetch KOL Articles
+    const { data: kolArticlesData, isLoading: isLoadingArticles, refetch: refetchArticles } = useQuery({
+        queryKey: ['kolArticles', selectedStatus],
+        queryFn: () => getKolArticles(selectedStatus),
+        enabled: showArticleModal && profile?.kol === true,
     })
 
-    // Social Reward Request Mutation
-    const socialRewardMutation = useMutation({
-        mutationFn: async (link: string) => {
-            // TODO: Replace with actual API endpoint when available
-            // For now, this is a placeholder that will need to be connected to the API
-            // Using axiosClient pattern similar to other services
-            const response = await axiosClient.post('/referrals/social-reward', { link })
-            return response.data
-        },
+    const kolArticles = kolArticlesData?.data || []
+
+    // KOL Article Submission Mutation
+    const articleMutation = useMutation({
+        mutationFn: submitKolArticle,
         onSuccess: () => {
-            toast.success(t('smartRef.socialRewardSuccess') || 'Yêu cầu phần thưởng đã được gửi thành công!')
-            setSocialRewardLink('')
-            setSocialRewardError('')
-            // Refetch history after successful submission
-            refetchHistory()
+            toast.success(t('kol.articleSubmitSuccess') || 'Gửi bài viết thành công!')
+            setArticleUrl('')
+            setArticleError('')
+            // Refetch articles after successful submission
+            refetchArticles()
         },
         onError: (error: any) => {
-            const message = error?.response?.data?.message || error?.message || t('smartRef.socialRewardError') || 'Không thể gửi yêu cầu phần thưởng'
+            const message = error?.response?.data?.message || error?.message || t('kol.articleSubmitError') || 'Không thể gửi bài viết'
             toast.error(message)
-            setSocialRewardError(message)
+            setArticleError(message)
         },
     })
 
-    // Validate Social Reward Link
-    const validateSocialRewardLink = (): boolean => {
-        if (!socialRewardLink || socialRewardLink.trim().length === 0) {
-            setSocialRewardError(t('smartRef.socialRewardLinkRequired') || 'Vui lòng nhập link đường dẫn giới thiệu')
+    // Validate Article URL
+    const validateArticleUrl = (): boolean => {
+        if (!articleUrl || articleUrl.trim().length === 0) {
+            setArticleError(t('kol.articleUrlRequired') || 'Vui lòng nhập link bài viết')
             return false
         }
 
         const urlPattern = /^https?:\/\/.+/i
-        if (!urlPattern.test(socialRewardLink.trim())) {
-            setSocialRewardError(t('smartRef.invalidLinkFormat') || 'Định dạng link không hợp lệ. Vui lòng nhập link đầy đủ (bắt đầu với http:// hoặc https://)')
+        if (!urlPattern.test(articleUrl.trim())) {
+            setArticleError(t('kol.invalidUrlFormat') || 'Định dạng link không hợp lệ. Vui lòng nhập link đầy đủ (bắt đầu với http:// hoặc https://)')
             return false
         }
 
-        setSocialRewardError('')
+        setArticleError('')
         return true
     }
 
-    // Handle Social Reward Form Submit
-    const handleSocialRewardSubmit = (e: React.FormEvent) => {
+    // Handle Article Form Submit
+    const handleArticleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
 
-        if (!validateSocialRewardLink()) {
+        if (!validateArticleUrl()) {
             return
         }
 
-        if (socialRewardMutation.isPending) {
+        if (articleMutation.isPending) {
             return
         }
 
-        socialRewardMutation.mutate(socialRewardLink.trim())
+        articleMutation.mutate({ article_url: articleUrl.trim() })
     }
 
     // Show loading state while profile is loading
@@ -400,14 +385,16 @@ export default function SmartRefPage() {
                         </div>
                     )}
 
-                    <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 !mt-0 w-full mx-auto lg:!mt-6'>
-                        <button
-                            onClick={() => setShowSocialRewardModal(true)}
-                            className='min-w-[300px] px-5 border border-solid border-theme-gray-100/50 text-gradient-primary-2 hover:bg-gray-100 dark:hover:bg-gray-600 font-medium rounded-full py-1.5 transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed group hover:text-theme-red-200 hover:border-theme-red-200 text-base sm:text-lg'
-                        >
-                            {t('smartRef.socialRewardButton') || 'Quà tặng cho người giới thiệu'}
-                        </button>
-                    </div>
+                    {isSuccess && (
+                        <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 mt-4 w-full mx-auto lg:mt-6'>
+                            <button
+                                onClick={() => setShowArticleModal(true)}
+                                className='min-w-[300px] px-5 border border-solid border-theme-gray-100/50 text-gradient-primary-2 hover:bg-gray-100 dark:hover:bg-gray-600 font-medium rounded-full py-1.5 transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed group hover:text-theme-red-200 hover:border-theme-red-200 text-base sm:text-lg'
+                            >
+                                {t('kol.articleButton') || 'Gửi bài viết'}
+                            </button>
+                        </div>
+                    )}
 
                     {/* Progress Bar */}
                     {isSuccess && (
@@ -597,135 +584,212 @@ export default function SmartRefPage() {
                     )}
                 </div>
 
-                {/* Social Reward Request Modal */}
+                {/* KOL Article Submission Modal */}
                 <Modal
-                    isOpen={showSocialRewardModal}
+                    isOpen={showArticleModal}
                     onClose={() => {
-                        setShowSocialRewardModal(false)
-                        setSocialRewardLink('')
-                        setSocialRewardError('')
+                        setShowArticleModal(false)
+                        setArticleUrl('')
+                        setArticleError('')
+                        setSelectedStatus(undefined)
                     }}
-                    maxWidth="max-w-2xl"
+                    maxWidth="max-w-3xl"
+                    className='min-w-[40vw]'
                 >
                     <div className='w-full'>
                         <h2 className='text-3xl font-semibold dark:text-white text-gray-800 dark:md:text-white mb-2'>
-                            {t('smartRef.socialRewardTitle') || 'Yêu cầu phần thưởng chia sẻ'}
+                            {t('kol.articleTitle') || 'Gửi bài viết KOL'}
                         </h2>
                         <p className='text-yellow-600 italic mb-6 text-sm'>
-                            {t('smartRef.socialRewardDescription') || 'Nhập link đường dẫn giới thiệu mà bạn đã chia sẻ trên mạng xã hội để yêu cầu phần thưởng'}
+                            {t('kol.articleDescription') || 'Nhập link bài viết bạn đã đăng trên mạng xã hội'}
                         </p>
 
-                        <form onSubmit={handleSocialRewardSubmit} className='w-full flex flex-col mt-6 px-0'>
-                            {/* Referral Link Input */}
+                        <form onSubmit={handleArticleSubmit} className='w-full flex flex-col mt-6 px-0'>
+                            {/* Article URL Input */}
                             <div className='space-y-1'>
-                                <label htmlFor="social-reward-link" className='block text-sm font-bold text-gray-700 dark:text-white'>
-                                    {t('smartRef.socialRewardLinkLabel') || 'Link đường dẫn giới thiệu'} <span className='text-theme-red dark:text-theme-red-200'>{t('login.required') || '*'}</span>
+                                <label htmlFor="article-url" className='block text-sm font-bold text-gray-700 dark:text-white'>
+                                    {t('kol.articleUrlLabel') || 'Link bài viết'} <span className='text-theme-red dark:text-theme-red-200'>{t('login.required') || '*'}</span>
                                 </label>
                                 <input
-                                    id="social-reward-link"
+                                    id="article-url"
                                     type="url"
-                                    value={socialRewardLink}
+                                    value={articleUrl}
                                     onChange={(e) => {
-                                        setSocialRewardLink(e.target.value)
-                                        if (socialRewardError) setSocialRewardError('')
+                                        setArticleUrl(e.target.value)
+                                        if (articleError) setArticleError('')
                                     }}
-                                    placeholder={t('smartRef.socialRewardLinkPlaceholder') || 'https://facebook.com/... hoặc https://twitter.com/...'}
+                                    placeholder={t('kol.articleUrlPlaceholder') || 'https://facebook.com/posts/... hoặc https://twitter.com/...'}
                                     className='w-full pr-4 py-2.5 pl-4 border border-solid border-gray-400 focus:border-solid focus:border-gray-300 dark:focus:border-gray-600 dark:border-gray-700 rounded-full outline-none transition-all bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400'
-                                    disabled={socialRewardMutation.isPending}
+                                    disabled={articleMutation.isPending}
                                 />
-                                {socialRewardError && (
-                                    <p className="text-red-500 text-sm mt-1">{socialRewardError}</p>
+                                {articleError && (
+                                    <p className="text-red-500 text-sm mt-1">{articleError}</p>
                                 )}
                             </div>
 
                             <button
                                 type="submit"
-                                disabled={socialRewardMutation.isPending}
+                                disabled={articleMutation.isPending}
                                 className='w-fix mx-auto outline-none border-none cursor-pointer py-2 px-6 mt-6 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:focus:ring-purple-400 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-base uppercase'
                             >
-                                {socialRewardMutation.isPending ? (
+                                {articleMutation.isPending ? (
                                     <>
                                         <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                         </svg>
-                                        {t('smartRef.submitting') || 'Đang gửi...'}
+                                        {t('kol.submitting') || 'Đang gửi...'}
                                     </>
                                 ) : (
-                                    t('smartRef.submit') || 'Gửi yêu cầu'
+                                    t('kol.submit') || 'Gửi bài viết'
                                 )}
                             </button>
                         </form>
 
+
                         {/* History Table */}
-                        <div className=' border-t border-gray-200 dark:border-gray-700 pt-6'>
+                        <div className='mt-6 border-t border-gray-200 dark:border-gray-700'>
                             <h3 className='text-xl font-semibold dark:text-white text-gray-800 mb-4'>
-                                {t('smartRef.socialRewardHistory') || 'Lịch sử yêu cầu'}
+                                {t('kol.articleHistory') || 'Lịch sử bài viết'}
                             </h3>
                             
-                            {isLoadingHistory ? (
+                            {isLoadingArticles ? (
                                 <div className='flex justify-center items-center py-8'>
                                     <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-[#FE645F]'></div>
                                 </div>
-                            ) : socialRewardHistory.length === 0 ? (
+                            ) : kolArticles.length === 0 ? (
                                 <div className='text-center py-8 text-gray-500 dark:text-gray-400'>
-                                    {t('smartRef.noHistory') || 'Chưa có lịch sử yêu cầu'}
+                                    {t('kol.noArticles') || 'Chưa có bài viết nào'}
                                 </div>
                             ) : (
-                                <div className='overflow-x-auto'>
-                                    <Table>
-                                        <TableHeader>
-                                            <TableRow className='border-b border-gray-200 dark:border-gray-700'>
-                                                <TableHead className='text-gray-700 dark:text-gray-300 font-semibold'>{t('smartRef.historyTable.stt') || 'STT'}</TableHead>
-                                                <TableHead className='text-gray-700 dark:text-gray-300 font-semibold'>{t('smartRef.historyTable.link') || 'Link'}</TableHead>
-                                                <TableHead className='text-gray-700 dark:text-gray-300 font-semibold'>{t('smartRef.historyTable.status') || 'Trạng thái'}</TableHead>
-                                                <TableHead className='text-gray-700 dark:text-gray-300 font-semibold'>{t('smartRef.historyTable.date') || 'Ngày tạo'}</TableHead>
-                                            </TableRow>
-                                        </TableHeader>
-                                        <TableBody>
-                                            {socialRewardHistory.map((item: SocialRewardHistoryItem, index: number) => (
-                                                <TableRow key={item.id} className='border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50'>
-                                                    <TableCell className='text-gray-600 dark:text-gray-400'>{index + 1}</TableCell>
-                                                    <TableCell className='text-gray-600 dark:text-gray-400'>
+                                <>
+                                    {/* Mobile Card Layout */}
+                                    <div className="block sm:hidden space-y-3">
+                                        {kolArticles.map((item: KolArticle, index: number) => (
+                                            <div 
+                                                key={item.id} 
+                                                className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] p-3 shadow-sm"
+                                            >
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                                                        {t('kol.articleTable.stt') || 'STT'}: {index + 1}
+                                                    </span>
+                                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                                                        item.status === 'approved' 
+                                                            ? 'bg-green-500 text-white' 
+                                                            : item.status === 'rejected'
+                                                            ? 'bg-red-500 text-white'
+                                                            : 'bg-yellow-500 text-white'
+                                                    }`}>
+                                                        {item.status === 'approved' 
+                                                            ? t('kol.articleTable.statusApproved') || 'Đã duyệt'
+                                                            : item.status === 'rejected'
+                                                            ? t('kol.articleTable.statusRejected') || 'Từ chối'
+                                                            : t('kol.articleTable.statusPending') || 'Chờ duyệt'
+                                                        }
+                                                    </span>
+                                                </div>
+
+                                                <div className="space-y-2">
+                                                    <div className="flex items-start justify-between">
+                                                        <span className="text-xs text-gray-600 dark:text-gray-300">{t('kol.articleTable.link') || 'Link bài viết'}:</span>
                                                         <a 
-                                                            href={item.link} 
+                                                            href={item.article_url} 
                                                             target='_blank' 
                                                             rel='noopener noreferrer'
-                                                            className='text-blue-600 dark:text-blue-400 hover:underline truncate max-w-[300px] block'
+                                                            className='text-xs text-blue-600 dark:text-blue-400 hover:underline truncate max-w-[60%] text-right ml-2'
                                                         >
-                                                            {item.link}
+                                                            {item.article_url}
                                                         </a>
-                                                    </TableCell>
-                                                    <TableCell>
-                                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                                            item.status === 'approved' 
-                                                                ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
-                                                                : item.status === 'rejected'
-                                                                ? 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'
-                                                                : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200'
-                                                        }`}>
-                                                            {item.status === 'approved' 
-                                                                ? t('smartRef.historyTable.statusApproved') || 'Đã duyệt'
-                                                                : item.status === 'rejected'
-                                                                ? t('smartRef.historyTable.statusRejected') || 'Từ chối'
-                                                                : t('smartRef.historyTable.statusPending') || 'Chờ duyệt'
-                                                            }
+                                                    </div>
+
+                                                    <div className="flex items-center justify-between pt-1 border-t border-gray-100 dark:border-gray-700">
+                                                        <span className="text-xs text-gray-600 dark:text-gray-300">{t('kol.articleTable.date') || 'Ngày gửi'}:</span>
+                                                        <span className="text-[10px] text-gray-700 dark:text-gray-300 text-right">
+                                                            {new Date(item.created_at).toLocaleDateString(lang === 'vi' ? 'vi-VN' : 'en-US', {
+                                                                year: 'numeric',
+                                                                month: '2-digit',
+                                                                day: '2-digit',
+                                                                hour: '2-digit',
+                                                                minute: '2-digit'
+                                                            })}
                                                         </span>
-                                                    </TableCell>
-                                                    <TableCell className='text-gray-600 dark:text-gray-400'>
-                                                        {new Date(item.created_at).toLocaleDateString(lang === 'vi' ? 'vi-VN' : 'en-US', {
-                                                            year: 'numeric',
-                                                            month: '2-digit',
-                                                            day: '2-digit',
-                                                            hour: '2-digit',
-                                                            minute: '2-digit'
-                                                        })}
-                                                    </TableCell>
-                                                </TableRow>
-                                            ))}
-                                        </TableBody>
-                                    </Table>
-                                </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Desktop Table Layout */}
+                                    <div className="hidden sm:block overflow-hidden rounded-md bg-transparent border border-none">
+                                        {/* Fixed Header */}
+                                        <div className="overflow-hidden rounded-t-md">
+                                            <table className={tableStyles}>
+                                                <thead>
+                                                    <tr>
+                                                        <th className={`${tableHeaderStyles} w-[5%] text-left rounded-l-lg`}>{t('kol.articleTable.stt') || 'STT'}</th>
+                                                        <th className={`${tableHeaderStyles} w-[40%]`}>{t('kol.articleTable.link') || 'Link bài viết'}</th>
+                                                        <th className={`${tableHeaderStyles} w-[20%]`}>{t('kol.articleTable.status') || 'Trạng thái'}</th>
+                                                        <th className={`${tableHeaderStyles} w-[35%] text-right rounded-r-lg`}>{t('kol.articleTable.date') || 'Ngày gửi'}</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
+                                        </div>
+
+                                        {/* Scrollable Body */}
+                                        <div className={tableContainerStyles} ref={tableRef}>
+                                            <table className={tableStyles}>
+                                                <tbody>
+                                                    {kolArticles.map((item: KolArticle, index: number) => (
+                                                        <tr 
+                                                            key={item.id} 
+                                                            className="group transition-colors cursor-pointer hover:opacity-90"
+                                                        >
+                                                            <td className={`${tableCellStyles} w-[5%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
+                                                                {index + 1}
+                                                            </td>
+                                                            <td className={`${tableCellStyles} w-[40%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                                <a 
+                                                                    href={item.article_url} 
+                                                                    target='_blank' 
+                                                                    rel='noopener noreferrer'
+                                                                    className='text-blue-600 dark:text-blue-400 hover:underline truncate max-w-full block'
+                                                                >
+                                                                    {item.article_url}
+                                                                </a>
+                                                            </td>
+                                                            <td className={`${tableCellStyles} w-[20%] border-x-0 border-theme-gray-100 border-solid`}>
+                                                                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                                                                    item.status === 'approved' 
+                                                                        ? 'bg-green-500 text-white' 
+                                                                        : item.status === 'rejected'
+                                                                        ? 'bg-red-500 text-white'
+                                                                        : 'bg-yellow-500 text-white'
+                                                                }`}>
+                                                                    {item.status === 'approved' 
+                                                                        ? t('kol.articleTable.statusApproved') || 'Đã duyệt'
+                                                                        : item.status === 'rejected'
+                                                                        ? t('kol.articleTable.statusRejected') || 'Từ chối'
+                                                                        : t('kol.articleTable.statusPending') || 'Chờ duyệt'
+                                                                    }
+                                                                </span>
+                                                            </td>
+                                                            <td className={`${tableCellStyles} w-[35%] border-x-0 border-r text-right rounded-r-lg border-theme-gray-100 border-solid`}>
+                                                                {new Date(item.created_at).toLocaleDateString(lang === 'vi' ? 'vi-VN' : 'en-US', {
+                                                                    year: 'numeric',
+                                                                    month: '2-digit',
+                                                                    day: '2-digit',
+                                                                    hour: '2-digit',
+                                                                    minute: '2-digit'
+                                                                })}
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </>
                             )}
                         </div>
                     </div>

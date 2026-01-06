@@ -240,7 +240,31 @@
     "pendingTitle": "Đang chờ duyệt",
     "pendingMessage": "Yêu cầu đăng ký KOL của bạn đang được xem xét. Vui lòng chờ phê duyệt.",
     "notRegistered": "Bạn chưa đăng ký KOL",
-    "registerButton": "Đăng ký KOL"
+    "registerButton": "Đăng ký KOL",
+    "articleButton": "Gửi bài viết",
+    "articleTitle": "Gửi bài viết KOL",
+    "articleDescription": "Nhập link bài viết bạn đã đăng trên mạng xã hội",
+    "articleUrlLabel": "Link bài viết",
+    "articleUrlPlaceholder": "https://facebook.com/posts/... hoặc https://twitter.com/...",
+    "articleUrlRequired": "Vui lòng nhập link bài viết",
+    "invalidUrlFormat": "Định dạng link không hợp lệ. Vui lòng nhập link đầy đủ (bắt đầu với http:// hoặc https://)",
+    "articleSubmitSuccess": "Gửi bài viết thành công!",
+    "articleSubmitError": "Không thể gửi bài viết",
+    "articleHistory": "Lịch sử bài viết",
+    "noArticles": "Chưa có bài viết nào",
+    "articleTable": {
+      "stt": "STT",
+      "link": "Link bài viết",
+      "status": "Trạng thái",
+      "date": "Ngày gửi",
+      "statusPending": "Chờ duyệt",
+      "statusApproved": "Đã duyệt",
+      "statusRejected": "Từ chối"
+    },
+    "filterAll": "Tất cả",
+    "filterPending": "Chờ duyệt",
+    "filterApproved": "Đã duyệt",
+    "filterRejected": "Từ chối"
   },
   "staking": {
     "joinBaseSuccess": "Tham gia gói Base thành công!",

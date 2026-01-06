@@ -240,7 +240,31 @@
     "pendingTitle": "注册审核中",
     "pendingMessage": "您的KOL注册请求正在审核中。请等待批准。",
     "notRegistered": "您尚未注册为KOL",
-    "registerButton": "注册KOL"
+    "registerButton": "注册KOL",
+    "articleButton": "提交文章",
+    "articleTitle": "提交KOL文章",
+    "articleDescription": "输入您在社交媒体上发布的文章链接",
+    "articleUrlLabel": "文章链接",
+    "articleUrlPlaceholder": "https://facebook.com/posts/... 或 https://twitter.com/...",
+    "articleUrlRequired": "请输入文章链接",
+    "invalidUrlFormat": "链接格式无效。请输入完整链接（以http://或https://开头）",
+    "articleSubmitSuccess": "文章提交成功！",
+    "articleSubmitError": "无法提交文章",
+    "articleHistory": "文章历史",
+    "noArticles": "暂无文章",
+    "articleTable": {
+      "stt": "序号",
+      "link": "文章链接",
+      "status": "状态",
+      "date": "提交日期",
+      "statusPending": "待审核",
+      "statusApproved": "已批准",
+      "statusRejected": "已拒绝"
+    },
+    "filterAll": "全部",
+    "filterPending": "待审核",
+    "filterApproved": "已批准",
+    "filterRejected": "已拒绝"
   },
   "staking": {
     "joinBaseSuccess": "成功加入基础套餐！",

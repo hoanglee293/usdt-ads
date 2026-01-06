@@ -240,7 +240,31 @@
     "pendingTitle": "Registration Pending",
     "pendingMessage": "Your KOL registration request is being reviewed. Please wait for approval.",
     "notRegistered": "You have not registered as KOL yet",
-    "registerButton": "Register as KOL"
+    "registerButton": "Register as KOL",
+    "articleButton": "Submit Article",
+    "articleTitle": "Submit KOL Article",
+    "articleDescription": "Enter the link of the article you posted on social media",
+    "articleUrlLabel": "Article Link",
+    "articleUrlPlaceholder": "https://facebook.com/posts/... or https://twitter.com/...",
+    "articleUrlRequired": "Please enter the article link",
+    "invalidUrlFormat": "Invalid link format. Please enter a full link (starting with http:// or https://)",
+    "articleSubmitSuccess": "Article submitted successfully!",
+    "articleSubmitError": "Unable to submit article",
+    "articleHistory": "Article History",
+    "noArticles": "No articles yet",
+    "articleTable": {
+      "stt": "No.",
+      "link": "Article Link",
+      "status": "Status",
+      "date": "Submitted Date",
+      "statusPending": "Pending",
+      "statusApproved": "Approved",
+      "statusRejected": "Rejected"
+    },
+    "filterAll": "All",
+    "filterPending": "Pending",
+    "filterApproved": "Approved",
+    "filterRejected": "Rejected"
   },
   "staking": {
     "joinBaseSuccess": "Successfully joined Base package!",
