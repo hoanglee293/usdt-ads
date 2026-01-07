@@ -6,6 +6,8 @@ import { Network, Box, Users, Smartphone, Megaphone, Monitor, DollarSign } from 
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver'
 import { useLang } from '@/lang/useLang'
 import { useRouter } from 'next/navigation'
+import { getUsers } from '@/services/AuthService'
+import { useQuery } from '@tanstack/react-query'
 
 export default function HomePage() {
   const { t } = useLang()
@@ -109,6 +111,11 @@ export default function HomePage() {
     rootMargin: '0px'
   });
 
+  const { data: users } = useQuery({
+    queryKey: ['users'],
+    queryFn: () => getUsers(),
+  });
+
   return (
     <div className="relative min-h-screen container mx-auto overflow-hidden bg-transparent dark:bg-black py-24 lg:py-32 xl:py-48 px-4 sm:px-6">
 
@@ -207,7 +214,7 @@ export default function HomePage() {
                 </div>
                 <p className="text-xs sm:text-sm md:text-base font-medium text-theme-black-100 dark:text-white">
                   {t('home.participants.prefix') && <span>{t('home.participants.prefix')} </span>}
-                  <span className="text-gradient-secondary font-bold">15,482</span>
+                  <span className="text-gradient-secondary font-bold">{(15343 + (users?.total_users ?? 0)).toLocaleString('en-US')}</span>
                   <span className="ml-1"> {t('home.participants.suffix')}</span>
                 </p>
               </div>
@@ -583,7 +590,7 @@ export default function HomePage() {
                 height: '100%',
               }}
             />
-            <div className="relative z-10 p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 dark:!bg-black bg-white rounded-2xl flex flex-col gap-2 items-center text-center">
+            <div className="relative h-full z-10 p-5 sm:p-6 md:px-5 md:py-10 lg:py-12 dark:!bg-black bg-white rounded-2xl flex flex-col gap-2 items-center text-center">
               {/* Icon with Network/Community */}
               <div className="relative mb-4 sm:mb-6">
                 <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center relative">

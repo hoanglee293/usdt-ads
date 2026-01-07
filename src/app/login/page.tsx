@@ -147,7 +147,7 @@ const page = () => {
                     {/* Dark Mode Toggle */}
                     <button
                         onClick={toggleTheme}
-                        className="p-1.5 sm:px-2.5 sm:pt-2.5 sm:pb-2 cursor-pointer rounded-full bg-gray-100 dark:bg-theme-gray-200/90 hover:bg-pink-100 dark:hover:bg-theme-gray-200 active:bg-pink-200 dark:active:bg-theme-gray-200/50 transition-colors border-none touch-manipulation shadow-lg backdrop-blur-md"
+                        className="pb-1.5 pt-[7px] px-2.5 sm:px-2.5 sm:pt-2.5 sm:pb-2 cursor-pointer rounded-full bg-gray-100 dark:bg-theme-gray-200/90 hover:bg-pink-100 dark:hover:bg-theme-gray-200 active:bg-pink-200 dark:active:bg-theme-gray-200/50 transition-colors border-none touch-manipulation shadow-lg backdrop-blur-md"
                         aria-label="Toggle dark mode"
                     >
                         {theme === 'dark' ? (

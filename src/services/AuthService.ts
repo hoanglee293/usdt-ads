@@ -488,3 +488,12 @@ export const checkKolStatus = async (): Promise<KolStatusResponse> => {
   }
 }
   
+export const getUsers = async (): Promise<any> => {
+  try {
+    const response = await axiosClient.get<any>('/users/total');
+    return response.data.data;
+  } catch (error: any) {
+    console.error(error);
+    throw error;
+  }
+}
