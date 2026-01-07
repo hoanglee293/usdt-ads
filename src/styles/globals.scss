@@ -13,6 +13,32 @@
   list-style: none;
 }
 
+/* Prevent iOS Safari zoom on input focus */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="number"],
+textarea,
+select {
+  font-size: 16px !important;
+}
+
+@media (min-width: 768px) {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="url"],
+  input[type="number"],
+  textarea,
+  select {
+    font-size: 14px !important;
+  }
+}
 
 
 /* Custom date input styling */
@@ -442,4 +468,20 @@ linear;
 .korean-text {
   word-break: keep-all;
   overflow-wrap: break-word;
+}
+
+/* Gradient text with fallback for unsupported browsers */
+.gradient-text {
+  background: linear-gradient(180deg, #fe645f, #c68afe);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: #ec4899; /* Fallback pink color */
+}
+
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .gradient-text {
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
 }

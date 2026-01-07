@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect, Suspense, useRef } from 'react'
-import { setNewPassword } from '@/services/AuthService'
+import { setNewPassword, checkCode } from '@/services/AuthService'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Eye, EyeOff } from 'lucide-react'
 import toast from 'react-hot-toast'
@@ -18,16 +18,72 @@ const ChangePasswordContent = () => {
     const [showPassword, setShowPassword] = useState(false)
     const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [checkingToken, setCheckingToken] = useState(true)
+    const [tokenValid, setTokenValid] = useState(false)
     const isMobile = useIsMobile()
     const { t } = useLang()
     const hasShownTokenError = useRef(false)
 
-    // Check if token exists
+    // Check if token exists and validate it
     useEffect(() => {
-        if (!token && !hasShownTokenError.current) {
-            hasShownTokenError.current = true
-            toast.error(t('changePassword.invalidTokenError'))
+        const validateToken = async () => {
+            if (!token) {
+                setCheckingToken(false)
+                if (!hasShownTokenError.current) {
+                    hasShownTokenError.current = true
+                    toast.error(t('changePassword.invalidTokenError'))
+                }
+                return
+            }
+
+            try {
+                setCheckingToken(true)
+                const response = await checkCode(token)
+                
+                // Check if code is valid and is a reset-password code
+                if (response && response.statusCode === 200) {
+                    if (response.code.type === 'reset-password' && response.code.life) {
+                        setTokenValid(true)
+                    } else if (!response.code.life) {
+                        // Code has expired
+                        setTokenValid(false)
+                        if (!hasShownTokenError.current) {
+                            hasShownTokenError.current = true
+                            toast.error(t('changePassword.codeExpired'))
+                        }
+                    } else {
+                        // Code is not a reset-password code
+                        setTokenValid(false)
+                        if (!hasShownTokenError.current) {
+                            hasShownTokenError.current = true
+                            toast.error(t('changePassword.invalidCode'))
+                        }
+                    }
+                }
+            } catch (err: any) {
+                setTokenValid(false)
+                const errorMessage = err?.message || 
+                    err?.response?.data?.message || 
+                    t('changePassword.invalidTokenError')
+                
+                if (!hasShownTokenError.current) {
+                    hasShownTokenError.current = true
+                    
+                    // Handle specific error messages
+                    if (errorMessage.includes('expired') || errorMessage.includes('expired')) {
+                        toast.error(t('changePassword.codeExpired'))
+                    } else if (errorMessage.includes('Invalid code') || errorMessage.includes('not found') || errorMessage.includes('does not belong')) {
+                        toast.error(t('changePassword.invalidCode'))
+                    } else {
+                        toast.error(errorMessage)
+                    }
+                }
+            } finally {
+                setCheckingToken(false)
+            }
         }
+
+        validateToken()
     }, [token, t])
 
     // Handle password submission
@@ -123,7 +179,12 @@ const ChangePasswordContent = () => {
                         {t('changePassword.title')}
                     </h2>
 
-                    {!token ? (
+                    {checkingToken ? (
+                        <div className='w-full mt-6 flex flex-col items-center justify-center'>
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mb-4"></div>
+                            <p className='text-gray-600 dark:text-gray-400'>{t('changePassword.validatingToken') || 'Validating token...'}</p>
+                        </div>
+                    ) : !token || !tokenValid ? (
                         <div className='w-full mt-6'>
                             <div className='w-full p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 text-yellow-700 dark:text-yellow-300 rounded-lg text-sm mb-4'>
                                 {t('changePassword.invalidTokenError')}

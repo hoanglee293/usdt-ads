@@ -1,12 +1,14 @@
 'use client'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { registerPassword, RegisterData } from '@/services/AuthService'
 import { useRouter } from 'next/navigation'
-import { Eye, EyeOff } from 'lucide-react'
+import { Eye, EyeOff, Moon, Sun } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useIsMobile } from '@/ui/use-mobile'
 import { useLang } from '@/lang/useLang'
+import { useTheme } from '@/theme/useTheme'
+import { langConfig } from '@/lang/index'
 import AuthLayoutPanel from '@/components/AuthLayoutPanel'
 
 const page = () => {
@@ -20,7 +22,19 @@ const page = () => {
     const { login } = useAuth()
     const router = useRouter()
     const isMobile = useIsMobile()
-    const { t } = useLang()
+    const { t, lang, setLang } = useLang()
+    const { theme, toggleTheme } = useTheme()
+    const [isLangMenuOpen, setIsLangMenuOpen] = useState(false)
+    const langMenuRef = useRef<HTMLDivElement>(null)
+
+    // Language flags mapping
+    const langFlags: Record<string, string> = {
+        'kr': '🇰🇷',
+        'en': '🇺🇸',
+        'vi': '🇻🇳',
+        'ja': '🇯🇵',
+        'zh': '🇨🇳',
+    }
 
     // Load referral code from localStorage on mount
     useEffect(() => {
@@ -31,6 +45,23 @@ const page = () => {
             }
         }
     }, [])
+
+    // Handle click outside to close language menu
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (langMenuRef.current && !langMenuRef.current.contains(event.target as Node)) {
+                setIsLangMenuOpen(false)
+            }
+        }
+
+        if (isLangMenuOpen) {
+            document.addEventListener('mousedown', handleClickOutside)
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [isLangMenuOpen])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
@@ -125,7 +156,59 @@ const page = () => {
                 description1={t('register.description1')}
                 description2={t('register.description2')}
             />
-            <div className={`w-full h-full flex justify-center items-center flex-col flex-1 px-8 bg-transparent ${isMobile ? 'radial-gradient pb-[20vh]' : ''}`}>
+            <div className={`w-full h-full flex justify-center items-center flex-col flex-1 px-8 bg-transparent relative ${isMobile ? 'radial-gradient pb-[20vh]' : ''}`}>
+                <div className="absolute top-4 right-4 sm:top-6 sm:right-16 flex items-center gap-3 sm:gap-4 z-50">
+                    {/* Language Switcher */}
+                    <div className="relative" ref={langMenuRef}>
+                        <button
+                            onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+                            className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 cursor-pointer rounded-full bg-gray-100 dark:bg-theme-gray-200/90 hover:bg-pink-100 dark:hover:bg-theme-gray-200 active:bg-pink-200 dark:active:bg-theme-gray-200/50 transition-colors border-none touch-manipulation shadow-lg backdrop-blur-md"
+                            aria-label="Language"
+                        >
+                            <span className="text-base sm:text-lg dark:text-white text-black">{langFlags[lang] || '🌐'}</span>
+                            <span className="text-xs sm:text-sm font-inter font-medium text-pink-500 dark:text-pink-400 uppercase">
+                                {lang}
+                            </span>
+                        </button>
+                        {isLangMenuOpen && (
+                            <div className="absolute right-0 top-[100%] mt-2 w-48 sm:w-52 bg-white dark:bg-theme-gray-200 rounded-lg shadow-xl border border-gray-200 dark:border-theme-gray-100 overflow-hidden z-50 animate-fade-in-down">
+                                <div className="py-1">
+                                    {langConfig.listLangs.map((langOption) => (
+                                        <button
+                                            key={langOption.code}
+                                            onClick={() => {
+                                                setLang(langOption.code)
+                                                setIsLangMenuOpen(false)
+                                            }}
+                                            className={`w-full px-4 py-2.5 sm:py-3 cursor-pointer border-none text-sm sm:text-base font-inter font-medium text-left hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 transition-colors flex items-center gap-3 ${lang === langOption.code
+                                                ? 'text-pink-500 dark:text-pink-400 bg-pink-50 dark:bg-theme-gray-100/30'
+                                                : 'text-theme-black-100 dark:text-theme-gray-100 bg-white dark:bg-theme-gray-200'
+                                                }`}
+                                        >
+                                            <span className="text-lg sm:text-xl">{langFlags[langOption.code] || '🌐'}</span>
+                                            <span className="flex-1">{t(`languages.${langOption.code}`)}</span>
+                                            {lang === langOption.code && (
+                                                <span className="text-pink-500 dark:text-pink-400 text-xs">✓</span>
+                                            )}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                    {/* Dark Mode Toggle */}
+                    <button
+                        onClick={toggleTheme}
+                        className="p-1.5 sm:px-2.5 sm:pt-2.5 sm:pb-2 cursor-pointer rounded-full bg-gray-100 dark:bg-theme-gray-200/90 hover:bg-pink-100 dark:hover:bg-theme-gray-200 active:bg-pink-200 dark:active:bg-theme-gray-200/50 transition-colors border-none touch-manipulation shadow-lg backdrop-blur-md"
+                        aria-label="Toggle dark mode"
+                    >
+                        {theme === 'dark' ? (
+                            <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500 dark:text-pink-400" />
+                        ) : (
+                            <Moon className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500" />
+                        )}
+                    </button>
+                </div>
                 <div className='w-full lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl flex flex-col items-center mt-[10vh] md:mt-0'>
                     <img src="/logo.png" alt="logo" className='w-20 h-20 object-contain mb-6' />
                     <h2 className='text-3xl font-semibold text-white md:text-gray-800 dark:md:text-white mb-2'>{t('register.createAccount')}</h2>

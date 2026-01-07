@@ -89,7 +89,7 @@ export default function WhitepaperPage() {
             <div className="bg-gradient-to-br from-gray-50 via-white to-gray-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-800 p-4 sm:p-6 md:p-8 rounded-xl mb-4 sm:mb-6 border-2 border-gray-200 dark:border-gray-700 shadow-xl">
               <div className="relative">
                 {/* Top Flow: User Journey (Left to Right) */}
-                <div className="flex items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-6 text-xs sm:text-sm md:text-base">
+                <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-3 sm:mb-6 text-xs sm:text-sm md:text-base">
                   <div className="px-3 py-1.5 bg-gradient-to-r from-[#FE645F] to-[#C68AFE] text-white rounded-lg font-semibold shadow-md">
                     {t('whitepaper.section2.cycle.step1')}
                   </div>

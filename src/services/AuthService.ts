@@ -109,6 +109,29 @@ export interface ResetPasswordErrorResponse {
   message: string;
 }
 
+// Check Code API Types
+export interface CodeInfo {
+  id: number;
+  value: string;
+  type: string;  // "active-email" | "reset-password" | etc.
+  place: string; // "email" | "sms" | "telegram"
+  code_time: string; // ISO 8601
+  life: boolean;
+  created_at: string; // ISO 8601
+  updated_at: string; // ISO 8601
+}
+
+export interface CheckCodeSuccessResponse {
+  statusCode: 200;
+  message: "Code is valid";
+  code: CodeInfo;
+}
+
+export interface CheckCodeErrorResponse {
+  statusCode: 400 | 401 | 403;
+  message: string;
+}
+
 // Change Password API Types
 export interface ChangePasswordRequest {
   current_password: string;
@@ -283,6 +306,21 @@ export const setNewPassword = async (code: string, password: string): Promise<Se
     // API returns error response with statusCode and message
     if (error.response?.data) {
       throw error.response.data as ResetPasswordErrorResponse;
+    }
+    console.error(error);
+    throw error;
+  }
+}
+
+export const checkCode = async (code: string): Promise<CheckCodeSuccessResponse> => {
+  try {
+    const response = await axiosClient.get<CheckCodeSuccessResponse>('/users/check-code', {
+      params: { code }
+    });
+    return response.data;
+  } catch (error: any) {
+    if (error.response?.data) {
+      throw error.response.data as CheckCodeErrorResponse;
     }
     console.error(error);
     throw error;

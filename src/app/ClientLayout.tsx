@@ -69,6 +69,7 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
     pathname === "/login" ||
     pathname === "/forgot-password" ||
     pathname === "/reset-password" ||
+    pathname.includes("/change-password") ||
     pathname === "/register" ||
     pathname === "/verify-mail";
 
