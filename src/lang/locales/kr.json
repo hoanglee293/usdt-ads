@@ -725,7 +725,8 @@
           "package": "패키지",
           "capital": "자본",
           "videosPerDay": "비디오/일",
-          "devices": "동시 시청 지원 기기 수"
+          "devices": "동시 시청 지원 기기 수",
+          "actualViewsRequired": "실제로 시청해야 하는 횟수"
         },
         "packageFree": "무료",
         "packageBasic": "기본 패키지",

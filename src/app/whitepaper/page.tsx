@@ -204,55 +204,186 @@ export default function WhitepaperPage() {
             <h3 className="text-xl sm:text-2xl font-semibold text-theme-black-100 dark:text-white mt-4 sm:mt-6 mb-3 sm:mb-4">
               {t('whitepaper.section3.packages.title')}
             </h3>
-            <div className="overflow-x-auto mb-4 sm:mb-6">
-              <table className="w-full border-collapse border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-lg overflow-hidden text-xs sm:text-sm mb-3">
-                <thead>
-                  <tr className="bg-gradient-to-r from-[#FE645F] to-[#C68AFE] text-white">
-                    <th className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">{t('whitepaper.section3.packages.table.package')}</th>
-                    <th className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">{t('whitepaper.section3.packages.table.capital')}</th>
-                    <th className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">{t('whitepaper.section3.packages.table.videosPerDay')}</th>
-                    <th className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 text-left font-semibold">{t('whitepaper.section3.packages.table.devices')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="bg-theme-pink-100">
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packageFree')}</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">10 USDT</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">5</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">20</td>
-                  </tr>
-                  <tr className="bg-theme-pink-100">
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packageBasic')}</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">10-250 USDT</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">100</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">20</td>
-                  </tr>
-                  <tr className="bg-theme-pink-100">
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packageMid1')}</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">251-750 USDT</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">400</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">40</td>
-                  </tr>
-                  <tr className="bg-theme-pink-100">
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packageMid2')}</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">751 - 1,250 USDT</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">900</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">60</td>
-                  </tr>
-                  <tr className="bg-theme-pink-100">
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packageMid3')}</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">1,251 - 2,000 USDT</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">2,000</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">100</td>
-                  </tr>
-                  <tr className="bg-theme-pink-100">
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packagePremium')}</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">2,001 - 3,500 USDT</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">10,000</td>
-                    <td className="border border-gray-300 dark:border-gray-600 px-2 sm:px-4 py-2 sm:py-3">500</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div className="mb-4 sm:mb-6">
+              {/* Mobile Card Layout */}
+              <div className="block sm:hidden space-y-3">
+                <div className="bg-gradient-to-r from-[#FE645F] to-[#C68AFE] text-white p-3 rounded-t-lg">
+                  <h4 className="font-semibold text-sm">{t('whitepaper.section3.packages.title')}</h4>
+                </div>
+                <div className="bg-theme-pink-100 border border-gray-300 dark:border-gray-600 rounded-lg p-4 space-y-2">
+                  <div className="font-semibold text-base mb-3">{t('whitepaper.section3.packages.packageFree')}</div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.capital')}:</span>
+                    <span className="text-sm font-medium">10 USDT</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.videosPerDay')}:</span>
+                    <span className="text-sm font-medium">20</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.devices')}:</span>
+                    <span className="text-sm font-medium">20</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.actualViewsRequired')}:</span>
+                    <span className="text-sm font-medium">1</span>
+                  </div>
+                </div>
+                <div className="bg-theme-pink-100 border border-gray-300 dark:border-gray-600 rounded-lg p-4 space-y-2">
+                  <div className="font-semibold text-base mb-3">{t('whitepaper.section3.packages.packageBasic')}</div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.capital')}:</span>
+                    <span className="text-sm font-medium">10-250 USDT</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.videosPerDay')}:</span>
+                    <span className="text-sm font-medium">100</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.devices')}:</span>
+                    <span className="text-sm font-medium">20</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.actualViewsRequired')}:</span>
+                    <span className="text-sm font-medium">5</span>
+                  </div>
+                </div>
+                <div className="bg-theme-pink-100 border border-gray-300 dark:border-gray-600 rounded-lg p-4 space-y-2">
+                  <div className="font-semibold text-base mb-3">{t('whitepaper.section3.packages.packageMid1')}</div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.capital')}:</span>
+                    <span className="text-sm font-medium">251-750 USDT</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.videosPerDay')}:</span>
+                    <span className="text-sm font-medium">400</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.devices')}:</span>
+                    <span className="text-sm font-medium">40</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.actualViewsRequired')}:</span>
+                    <span className="text-sm font-medium">10</span>
+                  </div>
+                </div>
+                <div className="bg-theme-pink-100 border border-gray-300 dark:border-gray-600 rounded-lg p-4 space-y-2">
+                  <div className="font-semibold text-base mb-3">{t('whitepaper.section3.packages.packageMid2')}</div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.capital')}:</span>
+                    <span className="text-sm font-medium">751 - 1,250 USDT</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.videosPerDay')}:</span>
+                    <span className="text-sm font-medium">900</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.devices')}:</span>
+                    <span className="text-sm font-medium">60</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.actualViewsRequired')}:</span>
+                    <span className="text-sm font-medium">15</span>
+                  </div>
+                </div>
+                <div className="bg-theme-pink-100 border border-gray-300 dark:border-gray-600 rounded-lg p-4 space-y-2">
+                  <div className="font-semibold text-base mb-3">{t('whitepaper.section3.packages.packageMid3')}</div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.capital')}:</span>
+                    <span className="text-sm font-medium">1,251 - 2,000 USDT</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.videosPerDay')}:</span>
+                    <span className="text-sm font-medium">2,000</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.devices')}:</span>
+                    <span className="text-sm font-medium">100</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.actualViewsRequired')}:</span>
+                    <span className="text-sm font-medium">20</span>
+                  </div>
+                </div>
+                <div className="bg-theme-pink-100 border border-gray-300 dark:border-gray-600 rounded-lg p-4 space-y-2">
+                  <div className="font-semibold text-base mb-3">{t('whitepaper.section3.packages.packagePremium')}</div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.capital')}:</span>
+                    <span className="text-sm font-medium">2,001 - 3,500 USDT</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.videosPerDay')}:</span>
+                    <span className="text-sm font-medium">10,000</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5 border-b border-gray-300 dark:border-gray-600">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.devices')}:</span>
+                    <span className="text-sm font-medium">500</span>
+                  </div>
+                  <div className="flex justify-between items-center py-1.5">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">{t('whitepaper.section3.packages.table.actualViewsRequired')}:</span>
+                    <span className="text-sm font-medium">20</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Desktop Table Layout */}
+              <div className="hidden sm:block overflow-x-auto">
+                <table className="w-full border-collapse border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-lg overflow-hidden text-xs sm:text-sm mb-3">
+                  <thead>
+                    <tr className="bg-gradient-to-r from-[#FE645F] to-[#C68AFE] text-white">
+                      <th className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3 text-left font-semibold w-[10%]">{t('whitepaper.section3.packages.table.package')}</th>
+                      <th className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3 text-left font-semibold w-[22%]">{t('whitepaper.section3.packages.table.capital')}</th>
+                      <th className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3 text-left font-semibold w-[18%]">{t('whitepaper.section3.packages.table.videosPerDay')}</th>
+                      <th className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3 text-left font-semibold w-[28%]">{t('whitepaper.section3.packages.table.devices')}</th>
+                      <th className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3 text-left font-semibold w-[22%]">{t('whitepaper.section3.packages.table.actualViewsRequired')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr className="bg-theme-pink-100">
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packageFree')}</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">10 USDT</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">20</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">20</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">1</td>
+                    </tr>
+                    <tr className="bg-theme-pink-100">
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packageBasic')}</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">10-250 USDT</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">100</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">20</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">5</td>
+                    </tr>
+                    <tr className="bg-theme-pink-100">
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packageMid1')}</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">251-750 USDT</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">400</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">40</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">10</td>
+                    </tr>
+                    <tr className="bg-theme-pink-100">
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packageMid2')}</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">751 - 1,250 USDT</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">900</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">60</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">15</td>
+                    </tr>
+                    <tr className="bg-theme-pink-100">
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packageMid3')}</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">1,251 - 2,000 USDT</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">2,000</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">100</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">20</td>
+                    </tr>
+                    <tr className="bg-theme-pink-100">
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3 font-semibold">{t('whitepaper.section3.packages.packagePremium')}</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">2,001 - 3,500 USDT</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">10,000</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">500</td>
+                      <td className="border border-gray-300 dark:border-gray-600 px-3 sm:px-5 py-2 sm:py-3">20</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
               <span className="text-sm sm:text-base text-theme-red-200 font-semibold italic">{t('whitepaper.section3.maxParticipationNote')}</span>
             </div>
 
@@ -444,17 +575,6 @@ export default function WhitepaperPage() {
             </p>
           </section>
 
-          {/* Footer Note */}
-          <div className="border-t border-gray-300 dark:border-gray-600 pt-4 sm:pt-6 mt-8 sm:mt-12">
-            <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 text-center italic">
-              {t('whitepaper.footer.note')}
-            </p>
-            <div className="mt-3 sm:mt-4 text-center text-xs sm:text-sm text-gray-500 dark:text-gray-400 space-y-1">
-              <p>{t('whitepaper.footer.website')} <span className="text-gray-400 dark:text-gray-500">{t('whitepaper.footer.updating')}</span></p>
-              <p>{t('whitepaper.footer.email')} <span className="text-gray-400 dark:text-gray-500">{t('whitepaper.footer.updating')}</span></p>
-              <p>{t('whitepaper.footer.telegram')} <span className="text-gray-400 dark:text-gray-500">{t('whitepaper.footer.updating')}</span></p>
-            </div>
-          </div>
         </div>
       </div>
     </div>

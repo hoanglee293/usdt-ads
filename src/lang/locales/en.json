@@ -724,7 +724,8 @@
           "package": "Package",
           "capital": "Capital",
           "videosPerDay": "Videos/Day",
-          "devices": "Number of devices supporting simultaneous viewing"
+          "devices": "Number of devices supporting simultaneous viewing",
+          "actualViewsRequired": "Actual views required"
         },
         "packageFree": "Free",
         "packageBasic": "Basic Package",

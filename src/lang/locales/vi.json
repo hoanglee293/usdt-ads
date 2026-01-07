@@ -725,7 +725,8 @@
           "package": "Gói",
           "capital": "Vốn",
           "videosPerDay": "Số Video/Ngày",
-          "devices": "Số thiết bị hỗ trợ xem cùng lúc"
+          "devices": "Số thiết bị hỗ trợ xem cùng lúc",
+          "actualViewsRequired": "Số lượt thực tế phải xem"
         },
         "packageFree": "Free",
         "packageBasic": "Gói Basic",

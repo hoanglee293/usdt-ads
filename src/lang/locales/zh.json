@@ -724,7 +724,8 @@
           "package": "套餐",
           "capital": "资金",
           "videosPerDay": "视频/天",
-          "devices": "支持同时观看的设备数量"
+          "devices": "支持同时观看的设备数量",
+          "actualViewsRequired": "实际需要观看的次数"
         },
         "packageFree": "免费",
         "packageBasic": "基础套餐",

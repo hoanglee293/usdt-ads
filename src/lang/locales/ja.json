@@ -724,7 +724,8 @@
           "package": "パッケージ",
           "capital": "資本",
           "videosPerDay": "ビデオ/日",
-          "devices": "同時視聴をサポートするデバイス数"
+          "devices": "同時視聴をサポートするデバイス数",
+          "actualViewsRequired": "実際に視聴する必要がある回数"
         },
         "packageFree": "無料",
         "packageBasic": "ベーシックパッケージ",
