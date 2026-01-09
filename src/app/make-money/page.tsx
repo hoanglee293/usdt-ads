@@ -1,7 +1,7 @@
 'use client'
 import React, { useState, useMemo, useEffect, useRef } from 'react'
 import html2canvas from 'html2canvas'
-import { Loader2, Calendar, DollarSign, Target, Clock, CheckCircle2, XCircle, ChevronLeft, ChevronRight, Download, Share2 } from 'lucide-react'
+import { Loader2, ChevronLeft, ChevronRight, Download, Share2, PlayCircle, Smartphone } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { Button } from '@/ui/button'
 import { Input } from '@/ui/input'
@@ -778,7 +778,7 @@ export default function MakeMoneyPage() {
     // Format date based on language
     const formatDateOnly = (dateString: string): string => {
         const date = new Date(dateString)
-        
+
         // Map language codes to locale strings
         const localeMap: Record<string, string> = {
             'kr': 'ko-KR',
@@ -787,9 +787,9 @@ export default function MakeMoneyPage() {
             'ja': 'ja-JP',
             'zh': 'zh-CN'
         }
-        
+
         const locale = localeMap[lang] || 'vi-VN'
-        
+
         // For Korean, use custom format: "2025년 3월 8일 15시 30분"
         if (lang === 'kr') {
             const year = date.getFullYear()
@@ -799,14 +799,14 @@ export default function MakeMoneyPage() {
             const minutes = date.getMinutes()
             return `${year}년 ${month}월 ${day}일`
         }
-        
+
         // For other languages, use locale-appropriate format with date and time
         const dateStr = date.toLocaleDateString(locale, {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
         })
-        
+
         // Remove comma from date string (e.g., "4 tháng 12, 2025" -> "4 tháng 12 2025")
         return dateStr.replace(/,/g, '')
     }
@@ -1020,7 +1020,7 @@ export default function MakeMoneyPage() {
                     <div className='flex flex-col items-center justify-center'>
                         <div className='flex items-end justify-center mb-2 sm:mb-4 gap-2 sm:gap-4'>
                             <div className='flex flex-col items-center mx-2 sm:mx-4'>
-                                <h1 className='text-2xl md:text-3xl font-semibold   text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]'>{currentStaking && currentStaking?.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}</h1>
+                                <h1 className='text-2xl md:text-5xl font-semibold   text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]'>{currentStaking && currentStaking?.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}</h1>
                             </div>
                         </div>
                     </div>
@@ -1033,43 +1033,43 @@ export default function MakeMoneyPage() {
                     </div>
                 ) : currentStaking ? (
                     <div className='mb-6 sm:mb-8 p-3 sm:p-4 md:p-6 rounded-lg border border-gray-200 dark:border-[#FE645F] bg-transparent'>
-                        <div className='grid grid-cols-1 md:grid-cols-2 w-full md:max-w-3xl mx-auto gap-3 sm:gap-y-4 sm:gap-x-10 mb-3 sm:mb-4'>
+                        <div className='grid grid-cols-1 md:grid-cols-2 w-full md:max-w-5xl mx-auto gap-3 sm:gap-y-4 sm:gap-x-10 mb-3 sm:mb-4'>
                             {/* Right Column */}
                             <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.stakingType')}:</p>
-                                <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#FE645F]'>{getTypeDurationLabel(currentStaking.type)}</p>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-white pl-1'>{t('makeMoney.stakingType')}:</p>
+                                <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#ed524d]'>{getTypeDurationLabel(currentStaking.type)}</p>
                             </div>
 
                             {/* Left Column */}
                             <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.status')}:</p>
-                                <p className='text-xs sm:text-sm font-medium text-red-600 dark:text-[#FE645F]'>{getStatusText(currentStaking.status)}</p>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-white pl-1'>{t('makeMoney.status')}:</p>
+                                <p className='text-xs sm:text-sm font-medium text-red-600 dark:text-[#ed524d]'>{getStatusText(currentStaking.status)}</p>
                             </div>
 
                             {/* Right Column */}
                             <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.time')}:</p>
-                                <p className='text-xs sm:text-sm font-medium text-red-600 dark:text-[#FE645F]'>{formatDateOnly(currentStaking.date_start)} - {formatDateOnly(currentStaking.date_end)}</p>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-white pl-1'>{t('makeMoney.time')}:</p>
+                                <p className='text-xs sm:text-sm font-medium text-red-600 dark:text-[#ed524d]'>{formatDateOnly(currentStaking.date_start)} - {formatDateOnly(currentStaking.date_end)}</p>
                             </div>
 
                             {/* Left Column */}
                             <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.amount')}:</p>
-                                <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#FE645F]'>{currentStaking.amount} USDT</p>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-white pl-1'>{t('makeMoney.amount')}:</p>
+                                <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#ed524d]'>{currentStaking.amount} USDT</p>
                             </div>
 
                             {/* Right Column */}
                             <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md flex-wrap'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.estimatedReward')}:</p>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-white pl-1'>{t('makeMoney.estimatedReward')}:</p>
                                 <div className='flex gap-1 sm:gap-2 items-center flex-wrap'>
-                                    <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#FE645F]'>{currentStaking.estimated_reward} USDT</p>
+                                    <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#ed524d]'>{currentStaking.estimated_reward} USDT</p>
                                 </div>
                             </div>
 
                             <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md flex-wrap'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.earnedAmount')}:</p>
+                                <p className='text-xs sm:text-sm text-gray-600 dark:text-white pl-1'>{t('makeMoney.earnedAmount')}:</p>
                                 <div className='flex gap-1 sm:gap-2 items-center flex-wrap'>
-                                    <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#FE645F]'>{(currentStaking.real_reward || 0).toFixed(3)} USDT</p>
+                                    <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#ed524d]'>{(currentStaking.real_reward || 0).toFixed(3)} USDT</p>
                                 </div>
                             </div>
                         </div>
@@ -1077,40 +1077,46 @@ export default function MakeMoneyPage() {
                         {stakingWithMissionsResponse?.data ? (
                             <>
                                 {/* Video Views & Devices Info */}
-                                <div className='grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3 md:gap-10 w-full md:max-w-3xl mx-auto mb-3 sm:mb-4'>
-                                    <div className='p-2 sm:p-3 md:p-4 bg-blue-50 dark:bg-blue-900/55 rounded-lg border border-blue-200 dark:border-blue-700'>
-                                        <div className='flex items-center justify-between mb-1 sm:mb-2 gap-3'>
-                                            <p className='text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium'>{t('makeMoney.videoViewsDescription')}</p>
-                                            <p className='text-xs sm:text-sm font-semibold text-blue-900 dark:text-blue-300'>
-                                                {currentStaking?.turn_setting * (currentStaking?.devices_setting || 0) || 0}
-                                            </p>
-                                        </div>
-                                        <div className='flex items-center justify-between mb-1 sm:mb-2'>
-                                            <p className='text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium'>{t('makeMoney.videosWatchedToday')}</p>
-                                            <p className='text-xs sm:text-sm font-semibold text-blue-900 dark:text-blue-300'>
-                                                {missionProgress?.completedDevices ?? 0}
-                                            </p>
+                                <div className='grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3 md:gap-10 w-full md:max-w-5xl mx-auto mb-3 sm:mb-4'>
+                                    <div className='flex items-center gap-5 p-2 sm:p-3 md:p-4 bg-blue-50 dark:bg-blue-900/55 rounded-lg border border-blue-200 dark:border-blue-700'>
+                                        <PlayCircle className='w-5 md:w-8 ml-2 md:ml-0 md:h-8 h-5 text-blue-600 dark:text-white' />
+                                        <div className='flex flex-col gap-1 justify-between flex-1 mt-1'>
+                                            <div className='flex items-center justify-between mb-1 sm:mb-2 gap-3'>
+                                                <p className='text-xs sm:text-sm text-blue-600 dark:text-white font-medium max-w-[90%] md:max-w-full'>{t('makeMoney.videoViewsDescription')}</p>
+                                                <p className='text-xs sm:text-sm font-semibold text-blue-900 dark:text-blue-300'>
+                                                    {currentStaking?.turn_setting * (currentStaking?.devices_setting || 0) || 0}
+                                                </p>
+                                            </div>
+                                            <div className='flex items-center justify-between mb-1 sm:mb-2'>
+                                                <p className='text-xs sm:text-sm text-blue-600 dark:text-white font-medium'>{t('makeMoney.videosWatchedToday')}</p>
+                                                <p className='text-xs sm:text-sm font-semibold text-blue-900 dark:text-blue-300'>
+                                                    {missionProgress?.completedDevices ?? 0}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div className='p-2 sm:p-3 md:p-4 bg-green-50 dark:bg-green-900/65 rounded-lg border border-green-200 dark:border-green-700'>
-                                        <div className='flex items-center justify-between mb-1 sm:mb-2'>
-                                            <p className='text-xs sm:text-sm text-green-600 dark:text-green-400 font-medium'>{t('makeMoney.devices')}</p>
-                                            <p className='text-xs sm:text-sm font-semibold text-green-900 dark:text-green-300'>
-                                                {currentStaking?.devices_setting || 0}
-                                            </p>
-                                        </div>
-                                        <div className='flex items-center justify-between mb-1 sm:mb-2'>
-                                            <p className='text-xs sm:text-sm text-green-600 dark:text-green-400 font-medium'>{t('makeMoney.devicesDescription')}</p>
-                                            <p className='text-xs sm:text-sm font-semibold text-green-900 dark:text-green-300'>
-                                                10
-                                            </p>
+                                    <div className='flex items-center gap-5 p-2 sm:p-3 md:p-4 bg-green-50 dark:bg-green-900/65 rounded-lg border border-green-200 dark:border-green-700'>
+                                        <Smartphone className='w-5 md:w-8 ml-2 md:ml-0 md:h-8 h-5 text-green-600 dark:text-white' />
+                                        <div className='flex flex-col gap-1 justify-between flex-1 mt-1'>
+                                            <div className='flex items-center justify-between mb-1 sm:mb-2'>
+                                                <p className='text-xs sm:text-sm text-green-600 dark:text-white font-medium max-w-[90%] md:max-w-full'>{t('makeMoney.devices')}</p>
+                                                <p className='text-xs sm:text-sm font-semibold text-green-900 dark:text-green-300'>
+                                                    {currentStaking?.devices_setting || 0}
+                                                </p>
+                                            </div>
+                                            <div className='flex items-center justify-between mb-1 sm:mb-2'>
+                                                <p className='text-xs sm:text-sm text-green-600 dark:text-white font-medium'>{t('makeMoney.devicesDescription')}</p>
+                                                <p className='text-xs sm:text-sm font-semibold text-green-900 dark:text-green-300'>
+                                                    10
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 {currentStaking && (
                                     <div className='mb-6 sm:mb-8'>
-                                        <div ref={calendarRef} className='max-w-3xl mx-auto bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 py-4 sm:p-6 shadow-md'>
+                                        <div ref={calendarRef} className='max-w-5xl mx-auto bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 py-4 sm:p-6 shadow-md'>
                                             {(() => {
                                                 const startDate = new Date(currentStaking.date_start)
                                                 const endDate = new Date(currentStaking.date_end)
@@ -1353,7 +1359,7 @@ export default function MakeMoneyPage() {
 
                                 {/* Missions History Table */}
                                 {missions.length > 0 && (
-                                    <div className='w-full md:max-w-3xl mx-auto mb-3 sm:my-8'>
+                                    <div className='w-full md:max-w-5xl mx-auto mb-3 sm:my-8'>
                                         <h3 className='text-lg sm:text-xl font-bold text-theme-red-100 dark:text-[#FE645F] mb-3 sm:mb-4 mt-6 sm:mt-8'>
                                             {t('makeMoney.missionsHistory')}
                                         </h3>
@@ -1466,7 +1472,7 @@ export default function MakeMoneyPage() {
                                 )}
                             </>
                         ) : missionNowResponse?.data ? (
-                            <div className='grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full md:max-w-3xl mx-auto'>
+                            <div className='grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full md:max-w-5xl mx-auto'>
                                 <div className='p-2 sm:p-3 md:p-4 bg-blue-50 dark:bg-blue-900/55 rounded-lg border border-blue-200 dark:border-blue-700'>
                                     <div className='flex items-center justify-between mb-1 sm:mb-2'>
                                         <p className='text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium'>{t('makeMoney.videoViews')}</p>
@@ -1574,7 +1580,7 @@ export default function MakeMoneyPage() {
                                     </div>
                                     {balanceResponse?.data && (balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
                                         <span className='text-xs text-gray-600 dark:text-gray-300 mt-1'>
-                                            ({t('makeMoney.gift')}: {formatBalance(balanceResponse.data.balance_gift) } USDT | {t('makeMoney.reward')}: {formatBalance(balanceResponse.data.balance_reward)} USDT)
+                                            ({t('makeMoney.gift')}: {formatBalance(balanceResponse.data.balance_gift)} USDT | {t('makeMoney.reward')}: {formatBalance(balanceResponse.data.balance_reward)} USDT)
                                         </span>
                                     )}
                                 </div>
@@ -1623,7 +1629,7 @@ export default function MakeMoneyPage() {
                         <div className='mb-6 sm:mb-8 p-3 sm:p-4 md:p-6 bg-transparent rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-sm flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-10 w-full md:w-[50vw] mx-auto'>
                             {/* Gói Base - Luôn hiển thị */}
                             <div className='py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-transparent border border-theme-gray-100 dark:border-[#FE645F] border-solid flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 min-h-[180px] sm:min-h-[200px] md:min-h-[230px] rounded-xl'>
-                                <h3 className='text-2xl sm:text-3xl md:text-4xl font-semibold text-black dark:text-white mb-1 sm:mb-2 text-center'>{t('makeMoney.basePackage')}</h3>
+                                <h3 className='text-2xl sm:text-5xl md:text-5xl font-semibold text-black dark:text-white mb-1 sm:mb-2 text-center'>{t('makeMoney.basePackage')}</h3>
                                 <span className='text-xs sm:text-sm text-yellow-800 dark:text-yellow-300 mb-1 sm:mb-2'>{t('makeMoney.oneDay')}</span>
                                 <Button
                                     onClick={handleJoinBase}
@@ -1643,7 +1649,7 @@ export default function MakeMoneyPage() {
 
                             {/* Gói Staking - Luôn hiển thị */}
                             <div className='py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-gradient-primary border border-green-200 flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 min-h-[180px] sm:min-h-[200px] md:min-h-[230px] rounded-xl'>
-                                <h3 className='text-2xl sm:text-3xl md:text-4xl text-center font-semibold text-white mb-1 sm:mb-2'>{t('makeMoney.stakingTitle')}</h3>
+                                <h3 className='text-2xl sm:text-5xl md:text-5xl text-center font-semibold text-white mb-1 sm:mb-2'>{t('makeMoney.stakingTitle')}</h3>
                                 <span className='text-xs sm:text-sm text-white mb-1 sm:mb-2'>{t('makeMoney.oneDay')} / {t('makeMoney.sevenDays')} / {t('makeMoney.thirtyDays')}</span>
                                 <Button
                                     onClick={() => setIsStakingModalOpen(true)}
@@ -1990,8 +1996,8 @@ export default function MakeMoneyPage() {
                             {/* Mobile Card Layout */}
                             <div className="block sm:hidden space-y-3">
                                 {allPackages.map((pkg, index) => (
-                                    <div 
-                                        key={pkg.id} 
+                                    <div
+                                        key={pkg.id}
                                         onClick={() => router.push(`/make-money/${pkg.id}`)}
                                         className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] p-3 shadow-sm cursor-pointer hover:opacity-90 transition-opacity"
                                     >
@@ -2072,8 +2078,8 @@ export default function MakeMoneyPage() {
                                     <table className={tableStyles}>
                                         <tbody>
                                             {allPackages.map((pkg, index) => (
-                                                <tr 
-                                                    key={pkg.id} 
+                                                <tr
+                                                    key={pkg.id}
                                                     onClick={() => pkg.status !== 'running' ? router.push(`/make-money/${pkg.id}`) : undefined}
                                                     className="group transition-colors cursor-pointer hover:opacity-90"
                                                 >

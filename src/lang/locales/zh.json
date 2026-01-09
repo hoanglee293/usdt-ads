@@ -133,10 +133,11 @@
       "fromAddress": "发送地址",
       "toAddress": "接收地址",
       "transactionId": "交易ID"
-    }
+    },
+    "usdtOnlyNotice": "平台仅接受USDT资产。如果您向平台转账非USDT的其他资产类型，该资产可能会丢失。"
   },
   "ref": {
-    "title": "佣金收入",
+    "title": "推荐佣金",
     "yourReferralLink": "您的推荐链接",
     "referralStructure": "推荐结构",
     "yourReferrals": "您的推荐",
@@ -314,7 +315,7 @@
     "devicesDescription": "使用设备后的实际观看次数",
     "completed": "已完成",
     "notCompleted": "未达成",
-    "missionsHistory": "任务历史",
+    "missionsHistory": "广告观看历史",
     "date": "日期",
     "videosWatched": "已观看视频数",
     "videosWatchedToday": "今日已观看视频数",

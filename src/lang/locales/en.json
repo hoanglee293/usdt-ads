@@ -133,10 +133,11 @@
       "statusPending": "Pending",
       "statusSuccess": "Success",
       "statusError": "Error"
-    }
+    },
+    "usdtOnlyNotice": "The platform only accepts USDT assets. If you transfer a different asset type that is not USDT to the platform, that asset may be lost."
   },
   "ref": {
-    "title": "Commission Income",
+    "title": "Referral Commission",
     "yourReferralLink": "Your Referral Link",
     "referralStructure": "Referral Structure",
     "yourReferrals": "Your Referrals",
@@ -314,7 +315,7 @@
     "devicesDescription": "Actual number of views after using devices",
     "completed": "Completed",
     "notCompleted": "Not Completed",
-    "missionsHistory": "Missions History",
+    "missionsHistory": "Ad Viewing History",
     "date": "Date",
     "videosWatched": "Videos Watched",
     "videosWatchedToday": "Videos watched today",

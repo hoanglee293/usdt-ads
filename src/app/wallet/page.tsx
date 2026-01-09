@@ -3,7 +3,7 @@ import CustomSelect from '@/components/CustomSelect'
 import DepositContent from '@/components/DepositContent'
 import WithdrawContent from '@/components/WithdrawContent'
 import React, { useState, useRef, useMemo, useEffect } from 'react'
-import { Copy, ExternalLink, Plus, Loader2, ChevronDown, ChevronUp, Wallet, ArrowLeft, ArrowRight } from 'lucide-react'
+import { Copy, ExternalLink, Plus, Loader2, ChevronDown, ChevronUp, Wallet, ArrowLeft, ArrowRight, AlertTriangle } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { Button } from '@/ui/button'
 import { useRouter } from 'next/navigation'
@@ -34,6 +34,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import Modal from '@/components/Modal'
 import { Skeleton } from '@/ui/skeleton'
 import { useIsMobile } from '@/ui/use-mobile'
+import { Alert, AlertDescription } from '@/ui/alert'
 
 // Helper function to map API transaction to UI format
 const mapTransactionToUI = (transaction: TransactionHistoryItem, coinSymbol?: string, t?: (key: string, params?: Record<string, any>) => string, lang?: 'en' | 'kr' | 'vi'): {
@@ -655,6 +656,14 @@ export default function WalletPage() {
                         disabled={isLoadingNetworks}
                         className=" max-w-auto sm:max-w-48 text-sm"
                     />
+                </div>
+
+                <div className='mb-4 sm:mb-6 max-w-xl mx-auto px-3 sm:px-0'>
+                    <Alert variant="destructive" className='bg-yellow-500 border-yellow-200 dark:border-yellow-800'>
+                        <AlertDescription className='text-xs sm:text-sm text-white'>
+                            {t('wallet.usdtOnlyNotice')}
+                        </AlertDescription>
+                    </Alert>
                 </div>
 
                 {/* Deposit/Withdraw Buttons */}

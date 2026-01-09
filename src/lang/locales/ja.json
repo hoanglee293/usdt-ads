@@ -133,10 +133,11 @@
       "statusPending": "処理中",
       "statusSuccess": "成功",
       "statusError": "エラー"
-    }
+    },
+    "usdtOnlyNotice": "プラットフォームはUSDT資産のみを受け付けます。USDT以外の資産タイプをプラットフォームに転送した場合、その資産が失われる可能性があります。"
   },
   "ref": {
-    "title": "コミッション収入",
+    "title": "紹介コミッション",
     "yourReferralLink": "あなたの紹介リンク",
     "referralStructure": "紹介構造",
     "yourReferrals": "あなたの紹介",
@@ -314,7 +315,7 @@
     "devicesDescription": "デバイス使用後の実際の視聴数",
     "completed": "完了",
     "notCompleted": "未達成",
-    "missionsHistory": "ミッション履歴",
+    "missionsHistory": "広告視聴履歴",
     "date": "日付",
     "videosWatched": "視聴した動画数",
     "videosWatchedToday": "今日視聴した動画数",

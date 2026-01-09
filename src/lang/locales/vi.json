@@ -133,10 +133,11 @@
       "statusPending": "Đang xử lý",
       "statusSuccess": "Thành công",
       "statusError": "Lỗi"
-    }
+    },
+    "usdtOnlyNotice": "Nền tảng chỉ nhận tài sản USDT nếu chuyển một loại tài sản khác không phải USDT vào nền tảng, tài sản đó có thể bị mất."
   },
   "ref": {
-    "title": "Thu nhập hoa hồng",
+    "title": "Hoa hồng giới thiệu",
     "yourReferralLink": "Liên kết giới thiệu của bạn",
     "referralStructure": "Cấu trúc giới thiệu",
     "yourReferrals": "Người được bạn giới thiệu",
@@ -314,14 +315,14 @@
     "devicesDescription": "Số lượt xem thực tế sau khi sử dụng thiết bị",
     "completed": "Đã hoàn thành",
     "notCompleted": "Chưa đạt",
-    "missionsHistory": "Lịch sử nhiệm vụ",
+    "missionsHistory": "Lịch sử xem quảng cáo",
     "date": "Ngày",
     "videosWatched": "Video đã xem",
     "videosWatchedToday": "Số video đã xem trong ngày",
     "remaining": "Còn lại",
     "canWatchNext": "Có thể xem tiếp sau",
     "canWatchNow": "Có thể xem video ngay",
-    "claim": "Claim",
+    "claim": "Nhận thưởng",
     "processing": "Đang xử lý...",
     "calculating": "Đang tính toán...",
     "previewInfo": "Thông tin xem trước",
