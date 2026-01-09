@@ -298,6 +298,7 @@ const page = () => {
                                 disabled={loading}
                             />
                         </div>
+                        <span className='text-xs text-yellow-500 italic'>{t('register.referralCodeNotice')}</span>
                         <div className='flex justify-center items-center'>
                             <div className='text-sm text-theme-black-100 dark:text-gray-300 hover:text-theme-black-100 dark:hover:text-gray-200 font-medium'>
                                 {t('register.alreadyHaveAccount')} <span className='text-theme-red dark:text-theme-red-200 hover:text-theme-red-100 dark:hover:text-theme-red-200/80 font-medium cursor-pointer' onClick={() => router.push('/login')}>{t('register.signIn')}</span>

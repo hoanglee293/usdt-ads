@@ -248,7 +248,7 @@
     "articleUrlLabel": "文章链接",
     "articleUrlPlaceholder": "https://facebook.com/posts/... 或 https://twitter.com/...",
     "articleUrlRequired": "请输入文章链接",
-    "invalidUrlFormat": "链接格式无效。请输入完整链接（以http://或https://开头）",
+    "invalidArticleUrlFormat": "链接格式无效。请输入完整链接（以http://或https://开头）",
     "articleSubmitSuccess": "文章提交成功！",
     "articleSubmitError": "无法提交文章",
     "articleHistory": "文章历史",
@@ -537,7 +537,8 @@
     "referralCodeNotExist": "无效的推荐代码。推荐代码不存在",
     "userAlreadyExists": "使用此信息的用户已存在",
     "dataAlreadyExists": "数据已存在",
-    "required": "*"
+    "required": "*",
+    "referralCodeNotice": "您需要有推荐链接或推荐代码才能注册"
   },
   "forgotPassword": {
     "getStarted": "开始使用",

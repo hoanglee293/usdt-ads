@@ -276,7 +276,7 @@ export default function SmartRefPage() {
 
         const urlPattern = /^https?:\/\/.+/i
         if (!urlPattern.test(articleUrl.trim())) {
-            setArticleError(t('kol.invalidUrlFormat') || 'Định dạng link không hợp lệ. Vui lòng nhập link đầy đủ (bắt đầu với http:// hoặc https://)')
+            setArticleError(t('kol.invalidArticleUrlFormat') || 'Định dạng link không hợp lệ. Vui lòng nhập link đầy đủ (bắt đầu với http:// hoặc https://)')
             return false
         }
 

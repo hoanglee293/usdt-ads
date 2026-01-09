@@ -248,7 +248,7 @@
     "articleUrlLabel": "Link bài viết",
     "articleUrlPlaceholder": "https://facebook.com/posts/... hoặc https://twitter.com/...",
     "articleUrlRequired": "Vui lòng nhập link bài viết",
-    "invalidUrlFormat": "Định dạng link không hợp lệ. Vui lòng nhập link đầy đủ (bắt đầu với http:// hoặc https://)",
+    "invalidArticleUrlFormat": "Định dạng link không hợp lệ. Vui lòng nhập link đầy đủ (bắt đầu với http:// hoặc https://)",
     "articleSubmitSuccess": "Gửi bài viết thành công!",
     "articleSubmitError": "Không thể gửi bài viết",
     "articleHistory": "Lịch sử bài viết",
@@ -538,7 +538,8 @@
     "referralCodeNotExist": "Mã giới thiệu không hợp lệ. Mã giới thiệu không tồn tại",
     "userAlreadyExists": "Người dùng đã tồn tại với thông tin này",
     "dataAlreadyExists": "Dữ liệu đã tồn tại",
-    "required": "*"
+    "required": "*",
+    "referralCodeNotice": "Bạn cần có link giới thiệu hoặc mã giới thiệu mới có thể đăng ký"
   },
   "forgotPassword": {
     "getStarted": "Bắt đầu với chúng tôi",

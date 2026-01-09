@@ -248,7 +248,7 @@
     "articleUrlLabel": "기사 링크",
     "articleUrlPlaceholder": "https://facebook.com/posts/... 또는 https://twitter.com/...",
     "articleUrlRequired": "기사 링크를 입력하세요",
-    "invalidUrlFormat": "링크 형식이 유효하지 않습니다. 전체 링크를 입력하세요 (http:// 또는 https://로 시작)",
+    "invalidArticleUrlFormat": "링크 형식이 유효하지 않습니다. 전체 링크를 입력하세요 (http:// 또는 https://로 시작)",
     "articleSubmitSuccess": "기사가 성공적으로 제출되었습니다!",
     "articleSubmitError": "기사를 제출할 수 없습니다",
     "articleHistory": "기사 내역",
@@ -538,7 +538,8 @@
     "referralCodeNotExist": "유효하지 않은 추천 코드입니다. 추천 코드가 존재하지 않습니다",
     "userAlreadyExists": "이 정보로 사용자가 이미 존재합니다",
     "dataAlreadyExists": "데이터가 이미 존재합니다",
-    "required": "*"
+    "required": "*",
+    "referralCodeNotice": "등록하려면 추천 링크 또는 추천 코드가 필요합니다"
   },
   "forgotPassword": {
     "getStarted": "우리와 함께 시작하세요",

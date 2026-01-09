@@ -248,7 +248,7 @@
     "articleUrlLabel": "記事リンク",
     "articleUrlPlaceholder": "https://facebook.com/posts/... または https://twitter.com/...",
     "articleUrlRequired": "記事リンクを入力してください",
-    "invalidUrlFormat": "リンク形式が無効です。完全なリンクを入力してください（http://またはhttps://で始まる）",
+    "invalidArticleUrlFormat": "リンク形式が無効です。完全なリンクを入力してください（http://またはhttps://で始まる）",
     "articleSubmitSuccess": "記事の送信が成功しました！",
     "articleSubmitError": "記事を送信できません",
     "articleHistory": "記事履歴",
@@ -537,7 +537,8 @@
     "referralCodeNotExist": "無効な紹介コードです。紹介コードが存在しません",
     "userAlreadyExists": "この情報でユーザーが既に存在します",
     "dataAlreadyExists": "データが既に存在します",
-    "required": "*"
+    "required": "*",
+    "referralCodeNotice": "登録するには紹介リンクまたは紹介コードが必要です"
   },
   "forgotPassword": {
     "getStarted": "始めましょう",

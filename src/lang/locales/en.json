@@ -248,7 +248,7 @@
     "articleUrlLabel": "Article Link",
     "articleUrlPlaceholder": "https://facebook.com/posts/... or https://twitter.com/...",
     "articleUrlRequired": "Please enter the article link",
-    "invalidUrlFormat": "Invalid link format. Please enter a full link (starting with http:// or https://)",
+    "invalidArticleUrlFormat": "Invalid link format. Please enter a full link (starting with http:// or https://)",
     "articleSubmitSuccess": "Article submitted successfully!",
     "articleSubmitError": "Unable to submit article",
     "articleHistory": "Article History",
@@ -537,7 +537,8 @@
     "referralCodeNotExist": "Invalid referral code. Referral code does not exist",
     "userAlreadyExists": "User already exists with this information",
     "dataAlreadyExists": "Data already exists",
-    "required": "*"
+    "required": "*",
+    "referralCodeNotice": "You need to have a referral link or referral code to register"
   },
   "forgotPassword": {
     "getStarted": "Get Started With Us",
