@@ -429,14 +429,14 @@
     }
   },
   "chat": {
-    "support": "Support Chat",
-    "online": "Online",
-    "offline": "Offline",
-    "connecting": "Connecting...",
-    "noMessages": "No messages yet. Start the conversation!",
-    "typeMessage": "Type a message...",
-    "waiting": "Waiting to connect...",
-    "yesterday": "Yesterday"
+    "support": "支持聊天",
+    "online": "在线",
+    "offline": "离线",
+    "connecting": "连接中...",
+    "noMessages": "暂无消息。开始对话吧！",
+    "typeMessage": "输入消息...",
+    "waiting": "等待连接...",
+    "yesterday": "昨天"
   },
   "profile": {
     "loading": "正在加载信息...",

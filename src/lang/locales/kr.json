@@ -429,14 +429,14 @@
     }
   },
   "chat": {
-    "support": "Support Chat",
-    "online": "Online",
-    "offline": "Offline",
-    "connecting": "Connecting...",
-    "noMessages": "No messages yet. Start the conversation!",
-    "typeMessage": "Type a message...",
-    "waiting": "Waiting to connect...",
-    "yesterday": "Yesterday"
+    "support": "지원 채팅",
+    "online": "온라인",
+    "offline": "오프라인",
+    "connecting": "연결 중...",
+    "noMessages": "아직 메시지가 없습니다. 대화를 시작하세요!",
+    "typeMessage": "메시지를 입력하세요...",
+    "waiting": "연결 대기 중...",
+    "yesterday": "어제"
   },
   "profile": {
     "loading": "정보 로딩 중...",

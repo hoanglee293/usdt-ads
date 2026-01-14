@@ -154,10 +154,10 @@ export default function ChatWidget() {
       {!isOpen && (
         <button
           onClick={handleOpenChat}
-          className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-50 w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 active:scale-95 border-none outline-none cursor-pointer"
+          className="fixed bottom-20 sm:bottom-6 right-4 sm:right-6 z-50 w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110 active:scale-95 border-none outline-none cursor-pointer"
           aria-label="Open chat"
         >
-          <MessageCircle className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+          <MessageCircle className="w-6 h-6 sm:w-9 sm:h-9 text-white" />
           {unreadCount > 0 && (
             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center">
               {unreadCount > 9 ? '9+' : unreadCount}
@@ -176,7 +176,7 @@ export default function ChatWidget() {
                 <MessageCircle className="w-5 h-5 text-white" />
               </div>
               <div>
-                <h3 className="text-white font-semibold text-sm sm:text-base">
+                <h3 className="text-white font-semibold text-xs sm:text-base font-inter">
                   {t('chat.support') || 'Support Chat'}
                 </h3>
                 <div className="flex items-center gap-2">

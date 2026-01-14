@@ -429,14 +429,14 @@
     }
   },
   "chat": {
-    "support": "Support Chat",
-    "online": "Online",
-    "offline": "Offline",
-    "connecting": "Connecting...",
-    "noMessages": "No messages yet. Start the conversation!",
-    "typeMessage": "Type a message...",
-    "waiting": "Waiting to connect...",
-    "yesterday": "Yesterday"
+    "support": "サポートチャット",
+    "online": "オンライン",
+    "offline": "オフライン",
+    "connecting": "接続中...",
+    "noMessages": "まだメッセージはありません。会話を始めましょう！",
+    "typeMessage": "メッセージを入力...",
+    "waiting": "接続を待機中...",
+    "yesterday": "昨日"
   },
   "profile": {
     "loading": "情報を読み込み中...",
