@@ -355,13 +355,13 @@ export default function SmartRefPage() {
                             <div className="flex items-center gap-2 relative">
                                 <input
                                     type="text"
-                                    value={`https://usda-demo.vercel.app/?ref=${profile?.ref || ''}`}
+                                    value={`https://adsworld.ai/?ref=${profile?.ref || ''}`}
                                     readOnly
-                                    className="flex-1 bg-gray-50 dark:bg-gray-900/50 text-sm sm:text-base px-3 py-2 rounded-md border border-theme-gray-100 dark:border-gray-700 border-solid text-gray-500 dark:text-gray-400"
+                                    className="flex-1 bg-gray-50 dark:bg-gray-900/50 text-sm font-inter italic sm:text-base px-3 py-2 rounded-md border border-theme-gray-100 dark:border-gray-700 border-solid text-gray-500 dark:text-gray-400"
                                 />
                                 <button
                                     onClick={handleCopyLink}
-                                    className="bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border-none absolute right-2 top-1/2 transform -translate-y-1/2 rounded-md p-2 transition-colors"
+                                    className="bg-transparent hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 border-none absolute right-0 top-1/2 transform -translate-y-1/2 rounded-md p-2 transition-colors"
                                 >
                                     <Copy className="w-4 h-4" />
                                 </button>
@@ -371,14 +371,14 @@ export default function SmartRefPage() {
 
                     {/* Show register button if status is not-register */}
                     {isNotRegister && (
-                        <div className=" max-w-[190px] mx-auto flex justify-center">
+                        <div className=" max-w-[270px] mx-auto flex justify-center">
                             <Button
                                 onClick={() => setShowKolModal(true)}
                                 className='mb-10 relative w-full mx-auto outline-none border-none cursor-pointer hover:shadow-xl transform hover:scale-105 bg-gradient-to-r from-[#fe645f] to-[#c68afe] text-white font-semibold rounded-full hover:opacity-90 text-base sm:text-lg px-8 sm:px-12 py-3 sm:py-4 group'
                                 size='lg'
                             >
-                                <span className="flex items-center absolute right-0 top-1/2 transform -translate-y-1/2">
-                                    {t('kol.registerButton') || 'Đăng ký KOL'}
+                                <span className="flex items-center absolute gap-1 justify-center top-1/2 transform -translate-y-1/2">
+                                    &ensp;&ensp;{t('kol.registerButton') || 'Đăng ký KOL'}
                                     <MousePointer2 className="w-8 h-8 text-gradient-primary-2 animate-bounce group-hover:animate-pulse" />
                                 </span>
                             </Button>

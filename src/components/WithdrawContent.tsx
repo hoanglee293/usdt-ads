@@ -36,10 +36,10 @@ interface WithdrawContentProps {
     onSuccess?: () => void
 }
 
-export default function WithdrawContent({ 
-    networkId, 
-    networkName, 
-    networkSymbol, 
+export default function WithdrawContent({
+    networkId,
+    networkName,
+    networkSymbol,
     coinSymbol,
     coinId,
     onSuccess
@@ -98,7 +98,7 @@ export default function WithdrawContent({
         },
         onError: (error: any) => {
             const errorMessage = error?.response?.data?.message || error?.message || ''
-            
+
             // Map specific error messages to translations
             let translatedMessage = ''
             if (errorMessage.includes('Network not found')) {
@@ -346,9 +346,10 @@ export default function WithdrawContent({
                     </p>
                 )}
             </div>
+            <div className="text-xs text-gray-500 dark:text-gray-400 text-center mt-5">{t('wallet.minimumWithdrawNote', { symbol: selectedCoinInfo?.coin_symbol || coinSymbol || 'USDT' })}</div>
 
             {/* Lower Middle Section - Network and Address */}
-            <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center gap-6 max-w-xl mx-auto mt-10">
+            <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center gap-6 max-w-xl mx-auto mt-5">
                 <div className="grid grid-cols-1 gap-4 w-full">
                     {/* Wallet Address Input */}
                     <div className="space-y-2 w-full">
@@ -360,7 +361,7 @@ export default function WithdrawContent({
                             type="text"
                             value={withdrawAddress}
                             onChange={(e) => setWithdrawAddress(e.target.value)}
-                            placeholder={t('wallet.selectNetworkPlaceholder')}
+                            placeholder={t('wallet.selectAddressPlaceholder')}
                             className="rounded-full placeholder:text-gray-400 border border-gray-200 dark:border-gray-700 border-solid w-full"
                             disabled={withdrawMutation.isPending}
                             required
@@ -535,11 +536,10 @@ export default function WithdrawContent({
                                             <div className="py-1 rounded-full text-xs min-w-20 flex justify-center font-medium bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400">
                                                 {transaction.type}
                                             </div>
-                                            <div className={`py-1 rounded-full text-xs min-w-20 flex justify-center font-medium ${
-                                                transaction.status === t('wallet.transactionStatus.complete')
+                                            <div className={`py-1 rounded-full text-xs min-w-20 flex justify-center font-medium ${transaction.status === t('wallet.transactionStatus.complete')
                                                     ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
                                                     : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
-                                            }`}>
+                                                }`}>
                                                 {transaction.status}
                                             </div>
                                         </div>
