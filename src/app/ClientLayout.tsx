@@ -10,6 +10,7 @@ import { LangProvider } from "@/lang/LangProvider";
 import { ThemeProvider } from "@/theme/ThemeProvider";
 import { useTheme } from "@/theme/useTheme";
 import Header from "@/components/Header";
+import ChatWidget from "@/components/ChatWidget";
 import { Toaster } from "react-hot-toast";
 import toast from "react-hot-toast";
 import { generateCodeVerifyEmail, handleLogout } from "@/services/AuthService";
@@ -184,6 +185,7 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
   return (
     <>
       {!isLoginPage && <Header />}
+      {!isLoginPage && <ChatWidget />}
       {showEmailVerifyModal && pathname !== "/verify-mail" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4">
           <div className="w-full max-w-lg rounded-2xl bg-white px-8 py-6 shadow-2xl dark:bg-neutral-900 border border-theme-orange-100 dark:border-solid">

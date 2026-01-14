@@ -134,7 +134,17 @@
       "statusSuccess": "Success",
       "statusError": "Error"
     },
-    "usdtOnlyNotice": "The platform only accepts USDT assets. If you transfer a different asset type that is not USDT to the platform, that asset may be lost."
+    "usdtOnlyNotice": "The platform only accepts USDT assets. If you transfer a different asset type that is not USDT to the platform, that asset may be lost.",
+    "minimumWithdrawError": "Minimum withdrawal amount is $5",
+    "withdrawConfirmModal": {
+      "title": "Confirm Withdrawal",
+      "message": "Are you sure you want to withdraw the following amount?",
+      "amount": "Withdrawal Amount",
+      "fee": "Withdrawal Fee",
+      "amountReceived": "Amount Received",
+      "confirm": "Confirm",
+      "cancel": "Cancel"
+    }
   },
   "ref": {
     "title": "Referral Commission",
@@ -173,7 +183,10 @@
     "minimumWithdrawError": "Minimum withdrawal amount is $10. Current amount is ${amount}",
     "withdrawConfirmTitle": "Confirm Withdrawal",
     "withdrawConfirmMessage": "Rewards after withdrawal will be transferred to Reward wallet",
-    "you": "YOU"
+    "you": "YOU",
+    "me": "Me",
+    "level1RewardText": "Receive {percentage}% reward corresponding to the reward of the referred person",
+    "level2RewardText": "Receive {percentage}% reward corresponding to the reward of level 2 referred person"
   },
   "smartRef": {
     "title": "Influencer Rewards",
@@ -325,49 +338,6 @@
     "claim": "Claim",
     "processing": "Processing...",
     "calculating": "Calculating...",
-    "playVideo": {
-      "title": "Watch Video",
-      "description": "Watch ads to complete missions and earn rewards",
-      "back": "Back",
-      "progress": "Progress",
-      "videosWatched": "Videos Watched",
-      "remaining": "Remaining",
-      "canWatchNow": "Can watch video now",
-      "canWatchNext": "Can watch next after",
-      "waitTime": "Please wait",
-      "readyToWatch": "You can watch video now",
-      "devicesAllowed": "Devices Allowed",
-      "timeGap": "Time Gap",
-      "minutes": "minutes",
-      "watchVideo": "Watch Video",
-      "loading": "Loading...",
-      "loadingAd": "Loading ad...",
-      "processing": "Processing...",
-      "watchSuccess": "Video watched successfully!",
-      "watchError": "An error occurred while watching video",
-      "adNotReady": "Ad is not ready, please try again later",
-      "initializing": "Initializing ad...",
-      "connecting": "Connecting...",
-      "connectingDevices": "Connecting to {count} devices...",
-      "allVideosWatched": "All videos watched!",
-      "completedMessage": "You have completed all videos for today. Please return to Make Money page to claim your reward.",
-      "backToMakeMoney": "Back to Make Money",
-      "noActiveStaking": "You don't have an active staking package",
-      "countdownTitle": "Waiting",
-      "countdownDescription": "Please wait before watching the next video",
-      "waitingForNextVideo": "Waiting to watch next video",
-      "countdownFinished": "Ready!",
-      "next": "Next",
-      "claimReward": "Claim Reward",
-      "claimSuccess": "Reward claimed successfully",
-      "claimDaySuccess": "Day reward claimed successfully!",
-      "reward": "Reward",
-      "claimError": "An error occurred while claiming reward",
-      "readyToClaim": "You have completed all videos. Press the button below to claim your reward.",
-      "watchToComplete": "Watch videos to complete missions",
-      "remainingVideos": "{count} videos remaining",
-      "watching": "Watching video..."
-    },
     "previewInfo": "Preview Information",
     "videosPerDay": "Videos per day",
     "joinBase": "Join Now",
@@ -457,6 +427,16 @@
       "stakingNotFound": "Staking package not found",
       "invalidStakingId": "Invalid staking package ID"
     }
+  },
+  "chat": {
+    "support": "Support Chat",
+    "online": "Online",
+    "offline": "Offline",
+    "connecting": "Connecting...",
+    "noMessages": "No messages yet. Start the conversation!",
+    "typeMessage": "Type a message...",
+    "waiting": "Waiting to connect...",
+    "yesterday": "Yesterday"
   },
   "profile": {
     "loading": "Loading information...",

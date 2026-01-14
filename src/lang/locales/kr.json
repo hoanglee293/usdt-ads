@@ -134,7 +134,17 @@
       "statusSuccess": "성공",
       "statusError": "오류"
     },
-    "usdtOnlyNotice": "플랫폼은 USDT 자산만 수락합니다. USDT가 아닌 다른 자산 유형을 플랫폼으로 전송하면 해당 자산이 손실될 수 있습니다."
+    "usdtOnlyNotice": "플랫폼은 USDT 자산만 수락합니다. USDT가 아닌 다른 자산 유형을 플랫폼으로 전송하면 해당 자산이 손실될 수 있습니다.",
+    "minimumWithdrawError": "최소 출금 금액은 $5입니다",
+    "withdrawConfirmModal": {
+      "title": "출금 확인",
+      "message": "다음 금액을 출금하시겠습니까?",
+      "amount": "출금 금액",
+      "fee": "출금 수수료",
+      "amountReceived": "수령 금액",
+      "confirm": "확인",
+      "cancel": "취소"
+    }
   },
   "ref": {
     "title": "추천 커미션",
@@ -173,7 +183,10 @@
     "minimumWithdrawError": "최소 출금 금액은 $10입니다. 현재 금액: ${amount}",
     "withdrawConfirmTitle": "출금 확인",
     "withdrawConfirmMessage": "출금 후 보상은 리워드 지갑으로 전송됩니다",
-    "you": "당신"
+    "you": "당신",
+    "me": "나",
+    "level1RewardText": "추천받은 사람의 보상에 해당하는 {percentage}% 보상 받기",
+    "level2RewardText": "2단계 추천받은 사람의 보상에 해당하는 {percentage}% 보상 받기"
   },
   "smartRef": {
     "title": "인플루언서 보상",
@@ -325,49 +338,6 @@
     "claim": "받기",
     "processing": "처리 중...",
     "calculating": "계산 중...",
-    "playVideo": {
-      "title": "동영상 보기",
-      "description": "광고를 시청하여 미션을 완료하고 보상을 받으세요",
-      "back": "뒤로",
-      "progress": "진행률",
-      "videosWatched": "시청한 동영상",
-      "remaining": "남음",
-      "canWatchNow": "지금 동영상을 볼 수 있습니다",
-      "canWatchNext": "다음 시청 가능까지",
-      "waitTime": "잠시 기다려주세요",
-      "readyToWatch": "지금 동영상을 볼 수 있습니다",
-      "devicesAllowed": "허용된 기기 수",
-      "timeGap": "대기 시간",
-      "minutes": "분",
-      "watchVideo": "동영상 보기",
-      "loading": "로딩 중...",
-      "loadingAd": "광고 로딩 중...",
-      "processing": "처리 중...",
-      "watchSuccess": "동영상 시청 성공!",
-      "watchError": "동영상 시청 중 오류가 발생했습니다",
-      "adNotReady": "광고가 준비되지 않았습니다. 나중에 다시 시도해주세요",
-      "initializing": "광고 초기화 중...",
-      "connecting": "연결 중...",
-      "connectingDevices": "{count}개 기기에 연결 중...",
-      "allVideosWatched": "모든 동영상을 시청했습니다!",
-      "completedMessage": "오늘의 모든 동영상을 완료했습니다. 보상을 받으려면 Make Money 페이지로 돌아가세요.",
-      "backToMakeMoney": "Make Money로 돌아가기",
-      "noActiveStaking": "활성 스테이킹 패키지가 없습니다",
-      "countdownTitle": "대기 중",
-      "countdownDescription": "다음 동영상을 보기 전에 잠시 기다려주세요",
-      "waitingForNextVideo": "다음 동영상 시청 대기 중",
-      "countdownFinished": "준비 완료!",
-      "next": "다음",
-      "claimReward": "보상 받기",
-      "claimSuccess": "보상을 성공적으로 받았습니다",
-      "claimDaySuccess": "일일 보상을 성공적으로 받았습니다!",
-      "reward": "보상",
-      "claimError": "보상 받기 중 오류가 발생했습니다",
-      "readyToClaim": "모든 동영상을 완료했습니다. 아래 버튼을 눌러 보상을 받으세요.",
-      "watchToComplete": "동영상을 시청하여 미션 완료",
-      "remainingVideos": "남은 동영상 {count}개",
-      "watching": "동영상 시청 중..."
-    },
     "previewInfo": "미리보기 정보",
     "videosPerDay": "일일 비디오 수",
     "joinBase": "지금 참여",
@@ -457,6 +427,16 @@
       "stakingNotFound": "스테이킹 패키지를 찾을 수 없습니다",
       "invalidStakingId": "유효하지 않은 스테이킹 패키지 ID입니다"
     }
+  },
+  "chat": {
+    "support": "Support Chat",
+    "online": "Online",
+    "offline": "Offline",
+    "connecting": "Connecting...",
+    "noMessages": "No messages yet. Start the conversation!",
+    "typeMessage": "Type a message...",
+    "waiting": "Waiting to connect...",
+    "yesterday": "Yesterday"
   },
   "profile": {
     "loading": "정보 로딩 중...",

@@ -55,6 +55,8 @@ export default function WithdrawContent({
     const [withdrawAmount, setWithdrawAmount] = useState<string>('')
     const [selectedCoinId, setSelectedCoinId] = useState<string>(coinId || '')
     const [showKycModal, setShowKycModal] = useState(false)
+    const [showConfirmModal, setShowConfirmModal] = useState(false)
+    const [pendingWithdrawData, setPendingWithdrawData] = useState<WithdrawRequest | null>(null)
 
     // Fetch networks (only for getting network info if not provided via props)
     const { data: networksResponse } = useQuery<ListNetworksResponse>({
@@ -210,6 +212,13 @@ export default function WithdrawContent({
             return
         }
 
+        // Check minimum withdrawal of $5
+        // Note: Assuming USDT is 1:1 with USD. If other coins, may need price conversion
+        if (amount < 5) {
+            toast.error(t('wallet.minimumWithdrawError'))
+            return
+        }
+
         if (balanceResponse?.data && amount > balanceResponse.data.balance) {
             toast.error('Số tiền vượt quá số dư hiện tại')
             return
@@ -223,7 +232,17 @@ export default function WithdrawContent({
             amount: amount
         }
 
-        withdrawMutation.mutate(withdrawData)
+        // Show confirmation modal instead of submitting directly
+        setPendingWithdrawData(withdrawData)
+        setShowConfirmModal(true)
+    }
+
+    const handleConfirmWithdraw = () => {
+        if (pendingWithdrawData) {
+            withdrawMutation.mutate(pendingWithdrawData)
+            setShowConfirmModal(false)
+            setPendingWithdrawData(null)
+        }
     }
 
     // Format balance number
@@ -365,7 +384,7 @@ export default function WithdrawContent({
                         !withdrawAmount ||
                         isLoadingBalance
                     }
-                    className="w-full bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none h-10 text-lg font-bold uppercase hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                    className="w-full bg-gradient-to-r from-fuchsia-600 cursor-pointer hover:scale-105 transition-all duration-300 via-rose-500 to-indigo-500 text-white rounded-full border-none h-10 text-lg font-bold uppercase hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
                 >
                     {withdrawMutation.isPending ? (
                         <>
@@ -407,6 +426,78 @@ export default function WithdrawContent({
                             className="flex-1 bg-gradient-to-r cursor-pointer border-none outline-none from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full hover:opacity-90"
                         >
                             {t('wallet.kycModal.goToKyc')}
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
+
+            {/* Withdraw Confirmation Modal */}
+            <Modal
+                isOpen={showConfirmModal}
+                onClose={() => {
+                    setShowConfirmModal(false)
+                    setPendingWithdrawData(null)
+                }}
+                title={t('wallet.withdrawConfirmModal.title')}
+                maxWidth="max-w-md"
+            >
+                <div className="flex flex-col gap-4 py-2">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
+                        {t('wallet.withdrawConfirmModal.message')}
+                    </p>
+                    {pendingWithdrawData && (
+                        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-3">
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    {t('wallet.withdrawConfirmModal.amount')}:
+                                </span>
+                                <span className="text-lg font-bold text-theme-red-200 dark:text-theme-red-300">
+                                    {formatBalance(pendingWithdrawData.amount)} {selectedCoinInfo?.coin_symbol || coinSymbol || 'USDT'}
+                                </span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    {t('wallet.withdrawConfirmModal.fee')}:
+                                </span>
+                                <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">
+                                    1 USDT
+                                </span>
+                            </div>
+                            <div className="border-t border-gray-200 dark:border-gray-700  flex items-center justify-between">
+                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                    {t('wallet.withdrawConfirmModal.amountReceived')}:
+                                </span>
+                                <span className="text-lg font-bold text-green-600 dark:text-green-400">
+                                    {formatBalance(Math.max(0, pendingWithdrawData.amount - 1))} {selectedCoinInfo?.coin_symbol || coinSymbol || 'USDT'}
+                                </span>
+                            </div>
+                        </div>
+                    )}
+                    <div className="flex gap-3 w-full mt-2">
+                        <Button
+                            type="button"
+                            onClick={() => {
+                                setShowConfirmModal(false)
+                                setPendingWithdrawData(null)
+                            }}
+                            className="flex-1 bg-gray-200 border-none cursor-pointer outline-none dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600"
+                        >
+                            {t('wallet.withdrawConfirmModal.cancel')}
+                        </Button>
+                        <Button
+                            type="button"
+                            onClick={handleConfirmWithdraw}
+                            disabled={withdrawMutation.isPending}
+                            className="flex-1 bg-gradient-to-r cursor-pointer border-none outline-none from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full hover:opacity-90 disabled:opacity-50"
+                        >
+                            {withdrawMutation.isPending ? (
+                                <>
+                                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                                    {t('common.loading')}
+                                </>
+                            ) : (
+                                t('wallet.withdrawConfirmModal.confirm')
+                            )}
                         </Button>
                     </div>
                 </div>

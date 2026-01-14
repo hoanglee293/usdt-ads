@@ -134,7 +134,17 @@
       "statusSuccess": "成功",
       "statusError": "エラー"
     },
-    "usdtOnlyNotice": "プラットフォームはUSDT資産のみを受け付けます。USDT以外の資産タイプをプラットフォームに転送した場合、その資産が失われる可能性があります。"
+    "usdtOnlyNotice": "プラットフォームはUSDT資産のみを受け付けます。USDT以外の資産タイプをプラットフォームに転送した場合、その資産が失われる可能性があります。",
+    "minimumWithdrawError": "最低出金額は$5です",
+    "withdrawConfirmModal": {
+      "title": "出金確認",
+      "message": "以下の金額を出金してもよろしいですか？",
+      "amount": "出金額",
+      "fee": "出金手数料",
+      "amountReceived": "受取金額",
+      "confirm": "確認",
+      "cancel": "キャンセル"
+    }
   },
   "ref": {
     "title": "紹介コミッション",
@@ -173,7 +183,10 @@
     "minimumWithdrawError": "最低出金額は$10です。現在の金額: ${amount}",
     "withdrawConfirmTitle": "出金の確認",
     "withdrawConfirmMessage": "出金後の報酬はリワードウォレットに転送されます",
-    "you": "あなた"
+    "you": "あなた",
+    "me": "私",
+    "level1RewardText": "紹介された人の報酬に対応する{percentage}%の報酬を受け取る",
+    "level2RewardText": "レベル2で紹介された人の報酬に対応する{percentage}%の報酬を受け取る"
   },
   "smartRef": {
     "title": "インフルエンサー報酬",
@@ -325,49 +338,6 @@
     "claim": "受け取る",
     "processing": "処理中...",
     "calculating": "計算中...",
-    "playVideo": {
-      "title": "動画を見る",
-      "description": "広告を見てミッションを完了し、報酬を獲得",
-      "back": "戻る",
-      "progress": "進捗",
-      "videosWatched": "視聴した動画",
-      "remaining": "残り",
-      "canWatchNow": "今すぐ動画を見ることができます",
-      "canWatchNext": "次回視聴可能まで",
-      "waitTime": "お待ちください",
-      "readyToWatch": "今すぐ動画を見ることができます",
-      "devicesAllowed": "許可されたデバイス数",
-      "timeGap": "待機時間",
-      "minutes": "分",
-      "watchVideo": "動画を見る",
-      "loading": "読み込み中...",
-      "loadingAd": "広告を読み込み中...",
-      "processing": "処理中...",
-      "watchSuccess": "動画の視聴に成功しました！",
-      "watchError": "動画視聴中にエラーが発生しました",
-      "adNotReady": "広告の準備ができていません。後でもう一度お試しください",
-      "initializing": "広告を初期化中...",
-      "connecting": "接続中...",
-      "connectingDevices": "{count}台のデバイスに接続中...",
-      "allVideosWatched": "すべての動画を視聴しました！",
-      "completedMessage": "本日のすべての動画を完了しました。報酬を受け取るには、Make Moneyページに戻ってください。",
-      "backToMakeMoney": "Make Moneyに戻る",
-      "noActiveStaking": "アクティブなステーキングパッケージがありません",
-      "countdownTitle": "待機中",
-      "countdownDescription": "次の動画を見る前にしばらくお待ちください",
-      "waitingForNextVideo": "次の動画を視聴するのを待っています",
-      "countdownFinished": "準備完了！",
-      "next": "次へ",
-      "claimReward": "報酬を受け取る",
-      "claimSuccess": "報酬の受け取りに成功しました",
-      "claimDaySuccess": "日次報酬の受け取りに成功しました！",
-      "reward": "報酬",
-      "claimError": "報酬の受け取り中にエラーが発生しました",
-      "readyToClaim": "すべての動画を完了しました。下のボタンを押して報酬を受け取ってください。",
-      "watchToComplete": "動画を見てミッションを完了",
-      "remainingVideos": "残り{count}本の動画",
-      "watching": "動画を視聴中..."
-    },
     "previewInfo": "プレビュー情報",
     "videosPerDay": "1日の動画数",
     "joinBase": "今すぐ参加",
@@ -457,6 +427,16 @@
       "stakingNotFound": "ステーキングパッケージが見つかりません",
       "invalidStakingId": "無効なステーキングパッケージIDです"
     }
+  },
+  "chat": {
+    "support": "Support Chat",
+    "online": "Online",
+    "offline": "Offline",
+    "connecting": "Connecting...",
+    "noMessages": "No messages yet. Start the conversation!",
+    "typeMessage": "Type a message...",
+    "waiting": "Waiting to connect...",
+    "yesterday": "Yesterday"
   },
   "profile": {
     "loading": "情報を読み込み中...",
@@ -872,4 +852,3 @@
     }
   }
 }
-

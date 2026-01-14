@@ -1,6 +1,6 @@
 'use client'
 
-import { BellRing, SettingsIcon, Menu, Globe, Moon, Sun, User, ChevronDown, ChevronUp, X, Coins, Wallet, Users, Award, Book, Play } from 'lucide-react'
+import { BellRing, SettingsIcon, Menu, Globe, Moon, Sun, User, ChevronDown, ChevronUp, X, Coins, Wallet, Users, Award, Book } from 'lucide-react'
 import Link from 'next/link'
 import React, { useState, useRef, useEffect } from 'react'
 import UserDropdown from './UserDropdown'
@@ -141,11 +141,6 @@ export default function Header() {
       name: t('header.makeMoney'),
       href: '/make-money',
       icon: Coins,
-    },
-    {
-      name: t('makeMoney.playVideo.title'),
-      href: '/play-video',
-      icon: Play,
     },
     {
       name: t('header.wallet'),
@@ -313,10 +308,6 @@ export default function Header() {
                         <Book className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500 dark:text-pink-400" />
                         <span className='text-sm font-inter font-medium text-theme-black-100 dark:text-theme-gray-100'>{t('header.whitepaper')}</span>
                       </Link>
-                      <Link href="/referral/kol" className='flex items-center mt-2 gap-1.5 sm:gap-2 w-[-webkit-fill-available] px-2 mx-3 rounded-lg sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base border-none outline-none bg-gray-200 dark:bg-gray-600' onClick={() => setIsMenuOpen(false)}>
-                        <Users className="w-4 h-4 sm:w-5 sm:h-5 text-pink-500 dark:text-pink-400" />
-                        <span className='text-sm font-inter font-medium text-theme-black-100 dark:text-theme-gray-100'>{t('header.influencerRewards')}</span>
-                      </Link>
                       <div className="border-t border-gray-200 dark:border-theme-gray-100 my-1"></div>
 
                       {/* Language Switcher Section */}
@@ -404,7 +395,7 @@ export default function Header() {
       {isMobile && (
         <div className="fixed bottom-0 left-0 right-0 z-40 bg-transparent border-t border-gray-200 dark:border-theme-gray-100 safe-area-bottom">
           <div className="flex items-center justify-around px-1 py-1.5 shadow-lg bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-t-3xl z-50">
-            {listMenu.filter(item => item.href !== '/whitepaper' && item.href !== '/referral/kol').map((item) => {
+            {listMenu.filter(item => item.href !== '/whitepaper').map((item) => {
               const IconComponent = item.icon;
               const isActive = pathname === item.href;
               return (

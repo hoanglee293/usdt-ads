@@ -134,7 +134,17 @@
       "statusSuccess": "Thành công",
       "statusError": "Lỗi"
     },
-    "usdtOnlyNotice": "Nền tảng chỉ nhận tài sản USDT nếu chuyển một loại tài sản khác không phải USDT vào nền tảng, tài sản đó có thể bị mất."
+    "usdtOnlyNotice": "Nền tảng chỉ nhận tài sản USDT nếu chuyển một loại tài sản khác không phải USDT vào nền tảng, tài sản đó có thể bị mất.",
+    "minimumWithdrawError": "Số tiền tối thiểu để rút là $5",
+    "withdrawConfirmModal": {
+      "title": "Xác nhận rút tiền",
+      "message": "Bạn có chắc chắn muốn rút số tiền sau?",
+      "amount": "Số tiền rút",
+      "fee": "Phí rút",
+      "amountReceived": "Số tiền nhận được",
+      "confirm": "Xác nhận",
+      "cancel": "Hủy"
+    }
   },
   "ref": {
     "title": "Hoa hồng giới thiệu",
@@ -173,7 +183,10 @@
     "minimumWithdrawError": "Số tiền tối thiểu để rút là $10. Số tiền hiện tại là ${amount}",
     "withdrawConfirmTitle": "Xác nhận rút tiền",
     "withdrawConfirmMessage": "Phần thưởng sau khi rút sẽ được chuyển vào ví Reward",
-    "you": "BẠN"
+    "you": "BẠN",
+    "me": "Tôi",
+    "level1RewardText": "Nhận {percentage}% phần thưởng tương ứng với phần thưởng của người được giới thiệu",
+    "level2RewardText": "Nhận {percentage}% phần thưởng tương ứng với phần thưởng của người được giới thiệu cấp 2"
   },
   "smartRef": {
     "title": "Phần thưởng Influencer",
@@ -325,50 +338,6 @@
     "claim": "Nhận thưởng",
     "processing": "Đang xử lý...",
     "calculating": "Đang tính toán...",
-    "playVideo": {
-      "title": "Xem Video",
-      "description": "Xem quảng cáo để hoàn thành nhiệm vụ và nhận phần thưởng",
-      "back": "Quay lại",
-      "progress": "Tiến độ",
-      "videosWatched": "Video đã xem",
-      "remaining": "Còn lại",
-      "canWatchNow": "Có thể xem video ngay",
-      "canWatchNext": "Có thể xem tiếp sau",
-      "waitTime": "Vui lòng đợi",
-      "readyToWatch": "Bạn có thể xem video ngay bây giờ",
-      "devicesAllowed": "Số thiết bị được phép",
-      "timeGap": "Khoảng thời gian chờ",
-      "minutes": "phút",
-      "watchVideo": "Xem Video",
-      "loading": "Đang tải...",
-      "loadingAd": "Đang tải quảng cáo...",
-      "processing": "Đang xử lý...",
-      "watchSuccess": "Xem video thành công!",
-      "watchError": "Có lỗi xảy ra khi xem video",
-      "adNotReady": "Quảng cáo chưa sẵn sàng, vui lòng thử lại sau",
-      "initializing": "Đang khởi tạo quảng cáo...",
-      "connecting": "Đang kết nối...",
-      "connectingDevices": "Đang kết nối đến {count} thiết bị...",
-      "allVideosWatched": "Đã xem đủ video!",
-      "completed": "Hoàn thành!",
-      "completedMessage": "Bạn đã hoàn thành tất cả video cho ngày hôm nay. Hãy quay lại trang Make Money để nhận thưởng.",
-      "backToMakeMoney": "Quay lại Make Money",
-      "noActiveStaking": "Bạn chưa tham gia gói staking nào",
-      "countdownTitle": "Đang đợi",
-      "countdownDescription": "Vui lòng đợi trước khi xem video tiếp theo",
-      "waitingForNextVideo": "Đang đợi để xem video tiếp theo",
-      "countdownFinished": "Đã sẵn sàng xem video tiếp theo!",
-      "next": "Tiếp theo",
-      "claimReward": "Nhận thưởng",
-      "claimSuccess": "Nhận thưởng thành công",
-      "claimDaySuccess": "Nhận thưởng ngày thành công!",
-      "reward": "Phần thưởng",
-      "claimError": "Có lỗi xảy ra khi nhận thưởng",
-      "readyToClaim": "Bạn đã hoàn thành đủ video. Nhấn nút bên dưới để nhận thưởng.",
-      "watchToComplete": "Xem video để hoàn thành nhiệm vụ",
-      "remainingVideos": "Còn {count} video cần xem",
-      "watching": "Đang xem video..."
-    },
     "previewInfo": "Thông tin xem trước",
     "videosPerDay": "Số video mỗi ngày",
     "joinBase": "Tham gia ngay",
@@ -458,6 +427,16 @@
       "stakingNotFound": "Không tìm thấy gói staking",
       "invalidStakingId": "ID gói staking không hợp lệ"
     }
+  },
+  "chat": {
+    "support": "Hỗ trợ trực tuyến",
+    "online": "Trực tuyến",
+    "offline": "Ngoại tuyến",
+    "connecting": "Đang kết nối...",
+    "noMessages": "Chưa có tin nhắn nào. Bắt đầu cuộc trò chuyện!",
+    "typeMessage": "Nhập tin nhắn...",
+    "waiting": "Đang chờ kết nối...",
+    "yesterday": "Hôm qua"
   },
   "profile": {
     "loading": "Đang tải thông tin...",
@@ -874,4 +853,3 @@
     }
   }
 }
-

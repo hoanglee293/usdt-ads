@@ -72,20 +72,6 @@ export interface MissionClaimResponse {
   };
 }
 
-export interface ClaimDayData {
-  id: number;
-  stake_id: number;
-  date: string;        // Date format: "YYYY-MM-DD"
-  turn: number;        // Số lượt xem video đã hoàn thành
-  status: "success";   // Trạng thái claim
-}
-
-export interface ClaimDayResponse {
-  statusCode: 201;
-  message: string;
-  data: ClaimDayData;
-}
-
 export interface MissionNowResponse {
   statusCode: 200;
   message: string;
@@ -247,27 +233,6 @@ export const claimMissionReward = async (): Promise<MissionClaimResponse> => {
 }
 
 /**
- * Claim phần thưởng của ngày (khi đã hoàn thành đủ số video trong ngày)
- * @returns Promise<ClaimDayResponse>
- */
-export const claimDay = async (): Promise<ClaimDayResponse> => {
-  try {
-    const response = await axiosClient.post('/incomes/claim-day');
-    return response.data;
-  } catch (error: any) {
-    // 400 is expected when:
-    // - User does not have a running staking lock
-    // - Mission not completed (Current < Required)
-    // - Summary day already exists for today
-    if (error?.response?.status === 400) {
-      throw error;
-    }
-    console.error('Error claiming day reward:', error);
-    throw error;
-  }
-}
-
-/**
  * Lấy thông tin tiến độ nhiệm vụ xem video
  * @returns Promise<MissionNowResponse>
  */
@@ -281,20 +246,6 @@ export const getMissionNow = async (): Promise<MissionNowResponse> => {
       throw error;
     }
     console.error('Error fetching mission now:', error);
-    throw error;
-  }
-}
-
-/**
- * Ghi nhận việc xem video (sau khi xem quảng cáo)
- * @returns Promise<MissionNowResponse>
- */
-export const watchVideo = async (): Promise<MissionNowResponse> => {
-  try {
-    const response = await axiosClient.post('/incomes/mission-now');
-    return response.data;
-  } catch (error: any) {
-    console.error('Error watching video:', error);
     throw error;
   }
 }
