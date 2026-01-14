@@ -361,10 +361,10 @@ export default function PlayVideoPage() {
         return (
             <div className="min-h-screen flex items-center justify-center px-4 py-8">
                 <div className="w-full max-w-2xl">
-                    <Card className="p-8 bg-slate-400/40 shadow-md">
+                    <Card className="p-8 bg-gradient-primary shadow-md">
                         <div className="text-center space-y-6">
                             <div className="mx-auto w-20 h-20 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                                <Clock className="w-10 h-10 text-blue-600 dark:text-blue-400" />
+                                <Clock className="w-10 h-10 text-white" />
                             </div>
 
                             <div>
@@ -373,16 +373,16 @@ export default function PlayVideoPage() {
 
                                 {!isCountdownFinished ? (
                                     <div className="space-y-4">
-                                        <div className="text-5xl font-bold text-primary mb-4">
+                                        <div className="text-5xl font-bold text-white mb-4">
                                             {formatTimeRemaining(countdownRemaining)}
                                         </div>
-                                        <p className="text-sm text-muted-foreground">
+                                        <p className="text-sm text-white">
                                             {t('makeMoney.playVideo.waitingForNextVideo')}
                                         </p>
                                     </div>
                                 ) : (
                                     <div className="space-y-4">
-                                        <div className="text-2xl font-semibold text-green-600 dark:text-green-400 mb-4">
+                                        <div className="text-2xl font-semibold text-white mb-4">
                                             {t('makeMoney.playVideo.countdownFinished')}
                                         </div>
                                         <Button
@@ -407,12 +407,12 @@ export default function PlayVideoPage() {
     if (viewState === 'connecting') {
         return (
             <div className="fixed inset-0 bg-gray-400/50 dark:bg-gray-800/50 flex items-center justify-center z-50 p-4">
-                <Card className="p-8 max-w-sm w-full bg-white dark:bg-theme-pink-900/50 rounded-lg">
+                <Card className="p-8 max-w-sm w-full bg-gradient-primary rounded-lg">
                     <div className="text-center space-y-4">
                         <Loader2 className="w-16 h-16 animate-spin mx-auto text-primary" />
                         <div>
                             <h3 className="font-semibold text-xl mb-2">{t('makeMoney.playVideo.connecting')}</h3>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-white">
                                 {t('makeMoney.playVideo.connectingDevices', { count: devicesCount })}
                             </p>
                         </div>
@@ -426,14 +426,14 @@ export default function PlayVideoPage() {
     if (viewState === 'watching') {
         return (
             <div className="fixed inset-0 bg-gray-400/50 dark:bg-gray-800/50 flex items-center justify-center z-50 p-4">
-                <Card className="p-8 max-w-sm w-full bg-white dark:bg-theme-pink-900/50 rounded-lg">
+                <Card className="p-8 max-w-sm w-full bg-gradient-primary rounded-lg">
                     <div className="text-center space-y-4">
                         <div className="mx-auto w-20 h-20 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
                             <Video className="w-10 h-10 text-blue-600 dark:text-blue-400 animate-pulse" />
                         </div>
                         <div>
                             <h3 className="font-semibold text-xl mb-2">{t('makeMoney.playVideo.watching')}</h3>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm text-white">
                                 {t('makeMoney.playVideo.watchToComplete')}
                             </p>
                         </div>
@@ -462,18 +462,18 @@ export default function PlayVideoPage() {
                 </div> */}
 
                 {/* Progress Card */}
-                <Card className="p-6 mb-6 bg-white dark:bg-theme-pink-900/50 rounded-lg">
+                <Card className="p-6 mb-6 bg-gradient-primary rounded-lg">
                     <div className="space-y-4">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 {isCompleted ? (
-                                    <CheckCircle2 className="w-5 h-5 text-green-600 dark:text-green-400" />
+                                    <CheckCircle2 className="w-5 h-5 text-white" />
                                 ) : (
-                                    <Video className="w-5 h-5 text-primary" />
+                                    <Video className="w-5 h-5 text-white" />
                                 )}
-                                <span className="font-semibold">{t('makeMoney.playVideo.progress')}</span>
+                                <span className="font-semibold text-white">{t('makeMoney.playVideo.progress')}</span>
                             </div>
-                            <span className={`text-sm ${isCompleted ? 'text-green-600 dark:text-green-400 font-semibold' : 'text-muted-foreground'}`}>
+                            <span className={`text-sm text-white ${isCompleted ? ' font-semibold' : 'text-muted-foreground'}`}>
                                 {missionData?.turn_day || 0} / {missionData?.turn_setting || 0}
                                 {isCompleted && ' ✓'}
                             </span>
@@ -481,20 +481,20 @@ export default function PlayVideoPage() {
 
                         <Progress
                             value={progress}
-                            className={`h-3 bg-gray-200 dark:bg-blue-900 ${isCompleted ? 'ring-2 ring-green-500/50' : ''}`}
-                            indicatorClassName={isCompleted ? 'bg-green-500' : 'bg-gradient-primary'}
+                            className={`h-3 bg-gray-200 dark:bg-white ${isCompleted ? 'ring-2 ring-green-500/50' : ''}`}
+                            indicatorClassName={isCompleted ? 'bg-green-500' : 'bg-white'}
                         />
 
                         <div className="grid grid-cols-2 gap-4 pt-2">
                             <div>
-                                <p className="text-sm text-muted-foreground mb-1">{t('makeMoney.playVideo.videosWatched')}</p>
-                                <p className={`text-2xl font-bold ${isCompleted ? 'text-green-600 dark:text-green-400' : ''}`}>
+                                <p className="text-sm text-white mb-1">{t('makeMoney.playVideo.videosWatched')}</p>
+                                <p className={`text-2xl font-bold text-white ${isCompleted ? 'text-green-600 dark:text-green-400' : ''}`}>
                                     {missionData?.turn_day || 0}
                                 </p>
                             </div>
                             <div>
-                                <p className="text-sm text-muted-foreground mb-1">{t('makeMoney.playVideo.remaining')}</p>
-                                <p className={`text-2xl font-bold ${isCompleted ? 'text-green-600 dark:text-green-400' : 'text-primary'}`}>
+                                <p className="text-sm text-white mb-1">{t('makeMoney.playVideo.remaining')}</p>
+                                <p className={`text-2xl font-bold text-white ${isCompleted ? 'text-green-600 dark:text-green-400' : 'text-primary'}`}>
                                     {missionData ? Math.max(0, missionData.turn_setting - missionData.turn_day) : 0}
                                 </p>
                             </div>
@@ -515,7 +515,7 @@ export default function PlayVideoPage() {
                                     {t('makeMoney.playVideo.completed')}
                                 </h3> */}
                                 <img src="/complete.png" alt="completed" className="w-40 h-40 mx-auto mb-4" />
-                                <p className="text-muted-foreground text-base max-w-md">
+                                <p className="text-muted-foreground dark:text-white text-base max-w-md">
                                     {t('makeMoney.playVideo.readyToClaim')}
                                 </p>
                             </div>
@@ -542,10 +542,10 @@ export default function PlayVideoPage() {
                         // Chưa xem đủ video - Hiện nút Xem video
                         <div className="space-y-4 flex flex-col items-center justify-center">
                             <div className="text-center mb-4">
-                                <p className="text-muted-foreground mb-2">
+                                <p className="text-muted-foreground dark:text-white mb-2">
                                     {t('makeMoney.playVideo.watchToComplete')}
                                 </p>
-                                <p className="text-sm text-muted-foreground">
+                                <p className="text-sm text-muted-foreground dark:text-white">
                                     {t('makeMoney.playVideo.remainingVideos', {
                                         count: missionData ? Math.max(0, missionData.turn_setting - missionData.turn_day) : 0
                                     })}
@@ -555,7 +555,7 @@ export default function PlayVideoPage() {
                             <Button
                                 onClick={handleWatchVideo}
                                 // disabled={isLoadingAd || !isLoaded || watchVideoMutation.isPending || !isReady || viewState === 'watching'}
-                                className="w-fit bg-gradient-primary h-12 text-white rounded-full border-none text-lg cursor-pointer"
+                                className="w-fit bg-theme-red-200 uppercase font-semibold h-12 text-white rounded-full border-none text-lg cursor-pointer"
                                 size="lg"
                             >
                                 {/* {watchVideoMutation.isPending ? (
@@ -605,14 +605,14 @@ export default function PlayVideoPage() {
                             )}
 
                             {missionData && (
-                                <div className="pt-4 w-full max-w-3xl border-none bg-white dark:bg-theme-pink-900/50 rounded-lg p-4 space-y-2 text-sm">
+                                <div className="pt-4 w-full max-w-3xl border-none bg-gradient-primary rounded-lg p-4 space-y-2 text-sm">
                                     <div className="flex justify-between">
-                                        <span className="text-muted-foreground">{t('makeMoney.playVideo.devicesAllowed')}</span>
-                                        <span className="font-medium">{missionData.devices}</span>
+                                        <span className="text-white">{t('makeMoney.playVideo.devicesAllowed')}</span>
+                                        <span className="font-medium text-white">{missionData.devices}</span>
                                     </div>
                                     <div className="flex justify-between">
-                                        <span className="text-muted-foreground">{t('makeMoney.playVideo.timeGap')}</span>
-                                        <span className="font-medium">{missionData.time_gap} {t('makeMoney.playVideo.minutes')}</span>
+                                        <span className="text-white">{t('makeMoney.playVideo.timeGap')}</span>
+                                        <span className="font-medium text-white">{missionData.time_gap} {t('makeMoney.playVideo.minutes')}</span>
                                     </div>
                                 </div>
                             )}
