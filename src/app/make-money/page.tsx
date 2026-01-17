@@ -236,8 +236,7 @@ export default function MakeMoneyPage() {
     const joinStakingMutation = useMutation({
         mutationFn: (data: JoinStakingRequest) => joinStakingPackage(data),
         onSuccess: (response) => {
-            const message = response?.message || t('staking.joinStakingSuccess')
-            toast.success(message)
+            toast.success(t('staking.joinStakingSuccess'))
             setStakingAmount('')
             setDebouncedStakingAmount('')
             setIsStakingModalOpen(false)

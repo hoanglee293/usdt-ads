@@ -411,7 +411,7 @@ export default function PlayVideoPage() {
                     <div className="text-center space-y-4">
                         <Loader2 className="w-16 h-16 animate-spin mx-auto text-primary" />
                         <div>
-                            <h3 className="font-semibold text-xl mb-2">{t('makeMoney.playVideo.connecting')}</h3>
+                            <h3 className="font-semibold text-white text-xl mb-2">{t('makeMoney.playVideo.connecting')}</h3>
                             <p className="text-sm text-white">
                                 {t('makeMoney.playVideo.connectingDevices', { count: devicesCount })}
                             </p>
@@ -432,7 +432,7 @@ export default function PlayVideoPage() {
                             <Video className="w-10 h-10 text-blue-600 dark:text-blue-400 animate-pulse" />
                         </div>
                         <div>
-                            <h3 className="font-semibold text-xl mb-2">{t('makeMoney.playVideo.watching')}</h3>
+                            <h3 className="font-semibold text-white text-xl mb-2">{t('makeMoney.playVideo.watching')}</h3>
                             <p className="text-sm text-white">
                                 {t('makeMoney.playVideo.watchToComplete')}
                             </p>
@@ -482,7 +482,7 @@ export default function PlayVideoPage() {
                         <Progress
                             value={progress}
                             className={`h-3 bg-gray-200 dark:bg-white ${isCompleted ? 'ring-2 ring-green-500/50' : ''}`}
-                            indicatorClassName={isCompleted ? 'bg-green-500' : 'bg-white'}
+                            indicatorClassName={isCompleted ? 'bg-green-500' : 'bg-black'}
                         />
 
                         <div className="grid grid-cols-2 gap-4 pt-2">
