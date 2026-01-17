@@ -91,6 +91,12 @@ export const useChat = (): UseChatReturn => {
   // Expose setIsChatOpen for ChatWidget to update
   const setIsChatOpen = useCallback((isOpen: boolean) => {
     isChatOpenRef.current = isOpen
+    // Clear current conversation when chat is closed to ensure unread count works correctly
+    // This ensures that when chat is closed, new messages will increase unread count
+    if (!isOpen) {
+      setCurrentConversation(null)
+      setMessages([])
+    }
   }, [])
 
   // Get API URL
@@ -200,7 +206,7 @@ export const useChat = (): UseChatReturn => {
       // Update conversations unread count
       // user_unread_count đại diện cho số tin nhắn chưa đọc của USER (tin nhắn của admin mà user chưa đọc)
       // Chỉ tăng user_unread_count khi admin gửi tin nhắn và user chưa đọc
-      // Nếu user đang ở trong chat, không tăng vì sẽ tự động mark as read
+      // Nếu user đang ở trong chat và đang xem conversation này, không tăng vì sẽ tự động mark as read
       setConversations((prev) => {
         const existingConv = prev.find((conv) => conv._id === data.conversation_id)
         
@@ -220,9 +226,10 @@ export const useChat = (): UseChatReturn => {
           if (conv._id === data.conversation_id) {
             // Chỉ tăng user_unread_count nếu:
             // 1. Tin nhắn là từ admin
-            // 2. User không đang xem conversation này (nếu đang xem thì sẽ tự động mark as read)
-            // Nếu user đang ở trong chat nhưng không xem conversation này, vẫn tăng unread_count
-            const shouldIncreaseUnread = isFromAdmin && !isCurrentConversation
+            // 2. User KHÔNG đang mở chat HOẶC không đang xem conversation này
+            //    (Nếu user đang mở chat VÀ đang xem conversation này, thì sẽ tự động mark as read, không tăng unread)
+            //    (Nếu user đóng chat, dù có phải current conversation hay không, vẫn tăng unread vì user không thấy)
+            const shouldIncreaseUnread = isFromAdmin && (!isChatOpen || !isCurrentConversation)
             const newUnreadCount = shouldIncreaseUnread 
               ? (conv.user_unread_count || 0) + 1 
               : (conv.user_unread_count || 0)
