@@ -3,7 +3,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/ui/button';
-import { Loader2, PlayCircle, CheckCircle2, Clock, ArrowLeft, Video, ArrowRight, Gift } from 'lucide-react';
+import { Loader2, PlayCircle, CheckCircle2, Clock, ArrowLeft, Video, ArrowRight, Gift, Eye, Smartphone } from 'lucide-react';
+
 import { useRewardedAd } from '@/hooks/useRewardedAd';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getMissionNow, watchVideo, claimMissionReward, claimDay, type MissionNowResponse } from '@/services/StakingService';
@@ -185,7 +186,7 @@ export default function PlayVideoPage() {
     // Format time remaining
     const formatTimeRemaining = (milliseconds: number): string => {
         const totalSeconds = Math.floor(milliseconds / 1000);
-        const hours = Math.floor(totalSeconds / 3600); 
+        const hours = Math.floor(totalSeconds / 3600);
         const minutes = Math.floor((totalSeconds % 3600) / 60);
         const seconds = totalSeconds % 60;
 
@@ -215,6 +216,10 @@ export default function PlayVideoPage() {
     // Lưu ý: Logic kiểm tra countdown được xử lý bởi useEffect auto-switch ở trên
     // Nếu countdown chưa kết thúc, useEffect auto-switch sẽ chuyển từ connecting sang countdown
     // Nên ở đây chỉ cần kiểm tra nếu vẫn còn ở connecting thì mới chuyển sang watching
+    // Chuyển sang state "watching" khi state "connecting" đã gọi API thành công
+    // Lưu ý: Logic kiểm tra countdown được xử lý bởi useEffect auto-switch ở trên
+    // Nếu countdown chưa kết thúc, useEffect auto-switch sẽ chuyển từ connecting sang countdown
+    // Nên ở đây chỉ cần kiểm tra nếu vẫn còn ở connecting thì mới chuyển sang watching
     useEffect(() => {
         if (viewState === 'connecting' && !isLoadingMission && missionNowResponse?.data) {
             // Chỉ chuyển sang watching nếu countdown đã kết thúc hoặc chưa xem lần nào
@@ -224,21 +229,28 @@ export default function PlayVideoPage() {
                 return;
             }
 
-            console.log('✅ API mission-now loaded, switching to watching state...');
-            setViewState('watching');
+            console.log('✅ API mission-now loaded, waiting 5s before switching to watching state...');
 
-            // Show ad sau khi chuyển sang watching
-            if (GAM_TEST_MODE) {
-                // Test mode: Mock ad watching (simulate 5 seconds of watching)
-                console.log('🧪 TEST MODE: Simulating ad watch...');
-                setTimeout(() => {
-                    console.log('🧪 TEST MODE: Mock reward earned');
-                    setMockEarnedReward(true);
-                }, 5000); // Simulate 5 seconds of watching
-            } else {
-                // Production mode: Show real GAM ad
-                showAd();
-            }
+            // Wait 5 seconds before switching to watching state
+            const timer = setTimeout(() => {
+                console.log('✅ 5s passed, switching to watching state...');
+                setViewState('watching');
+
+                // Show ad sau khi chuyển sang watching
+                if (GAM_TEST_MODE) {
+                    // Test mode: Mock ad watching (simulate 5 seconds of watching)
+                    console.log('🧪 TEST MODE: Simulating ad watch...');
+                    setTimeout(() => {
+                        console.log('🧪 TEST MODE: Mock reward earned');
+                        setMockEarnedReward(true);
+                    }, 5000); // Simulate 5 seconds of watching
+                } else {
+                    // Production mode: Show real GAM ad
+                    showAd();
+                }
+            }, 5000);
+
+            return () => clearTimeout(timer);
         }
     }, [viewState, isLoadingMission, missionNowResponse, GAM_TEST_MODE, showAd, isCountdownFinished, isCompleted]);
 
@@ -358,271 +370,243 @@ export default function PlayVideoPage() {
 
     // Render Countdown Screen
     if (viewState === 'countdown') {
+        const totalDuration = (missionNowResponse?.data?.time_gap || 0) * 60 * 1000;
+        const radius = 60;
+        const stroke = 6;
+        const normalizedRadius = radius - stroke * 2;
+        const circumference = normalizedRadius * 2 * Math.PI;
+        const strokeDashoffset = totalDuration ? circumference - (countdownRemaining / totalDuration) * circumference : 0;
+
         return (
-            <div className="min-h-screen flex items-center justify-center px-4 py-8">
-                <div className="w-full max-w-2xl">
-                    <Card className="p-8 bg-gradient-primary shadow-md">
-                        <div className="text-center space-y-6">
-                            <div className="mx-auto w-20 h-20 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                                <Clock className="w-10 h-10 text-white" />
-                            </div>
+            <div className="w-full min-h-screen lg:py-[15vh] bg-[radial-gradient(100%_100%_at_50%_0%,_#45a6e7_0%,_#e1e7ec_50%,_#a979da_100%)] dark:bg-gray-950 flex flex-col items-center justify-between py-28 px-6 relative overflow-hidden">
+                {/* Background Decor */}
+                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-200/30 rounded-full blur-[100px] pointer-events-none" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-200/30 rounded-full blur-[100px] pointer-events-none" />
 
-                            <div>
-                                {/* <h2 className="text-2xl font-bold mb-2">{t('makeMoney.playVideo.countdownTitle')}</h2>
-                            <p className="text-muted-foreground mb-6">{t('makeMoney.playVideo.countdownDescription')}</p> */}
+                {/* Top Content */}
+                <div className="w-full max-w-md flex flex-col items-center space-y-6 z-10 md:pt-10">
+                    {/* Progress Pill */}
+                    <div className="bg-white dark:bg-gray-800 rounded-full px-6 py-2 shadow-md shadow-blue-100 dark:shadow-none flex items-center gap-1.5 transform transition-all">
+                        <span className="text-slate-600 dark:text-slate-300 font-medium text-sm whitespace-nowrap">
+                            {t('makeMoney.playVideo.watched') || 'Đã xem'}
+                        </span>
+                        <span className="text-[#ef4444] font-bold text-base">
+                            {missionData?.turn_day || 0}/{missionData?.turn_setting || 200}
+                        </span>
+                        <span className="text-slate-600 dark:text-slate-300 font-medium text-sm">
+                            video
+                        </span>
+                    </div>
+                </div>
 
-                                {!isCountdownFinished ? (
-                                    <div className="space-y-4">
-                                        <div className="text-5xl font-bold text-white mb-4">
-                                            {formatTimeRemaining(countdownRemaining)}
-                                        </div>
-                                        <p className="text-sm text-white">
-                                            {t('makeMoney.playVideo.waitingForNextVideo')}
-                                        </p>
-                                    </div>
-                                ) : (
-                                    <div className="space-y-4">
-                                        <div className="text-2xl font-semibold text-white mb-4">
-                                            {t('makeMoney.playVideo.countdownFinished')}
-                                        </div>
-                                        <Button
-                                            onClick={handleNext}
-                                            size="lg"
-                                            className="w-full sm:w-auto outline-none border-none bg-gradient-primary text-white rounded-full h-14 text-lg cursor-pointer"
-                                        >
-                                            {t('makeMoney.playVideo.next')}
-                                            <ArrowRight className="w-4 h-4 ml-2" />
-                                        </Button>
-                                    </div>
-                                )}
+                {/* Center Timer Section */}
+                <div className="flex flex-col items-center justify-center z-10 w-full mb-10">
+                    {!isCountdownFinished ? (
+                        <div className="relative flex items-center justify-center mb-8">
+                            {/* Circular Progress */}
+                            <svg
+                                height={radius * 2 * 1.5}
+                                width={radius * 2 * 1.5}
+                                className="transform -rotate-90 scale-150"
+                            >
+                                <circle
+                                    stroke="currentColor"
+                                    fill="transparent"
+                                    strokeWidth={stroke}
+                                    r={normalizedRadius}
+                                    cx={radius * 1.5}
+                                    cy={radius * 1.5}
+                                    className="text-slate-400 dark:text-slate-700"
+                                />
+                                <circle
+                                    stroke="currentColor"
+                                    fill="transparent"
+                                    strokeWidth={stroke}
+                                    strokeDasharray={circumference + ' ' + circumference}
+                                    style={{ strokeDashoffset, transition: 'stroke-dashoffset 0.5s ease-in-out' }}
+                                    strokeLinecap="round"
+                                    r={normalizedRadius}
+                                    cx={radius * 1.5}
+                                    cy={radius * 1.5}
+                                    className="text-[#d946ef]"
+                                />
+                                {/* Current Position Indicator (Dot) */}
+                                {/* Note: Calculating exact position for dot is complex in CSS/SVG alone without JS for angles, 
+                                    ignoring purely visual dot for now or adding simpler implementation if needed strict fidelity */}
+                            </svg>
+
+                            {/* Time Text */}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <span className="text-4xl md:text-5xl font-bold text-[#f43f5e]">
+                                    {formatTimeRemaining(countdownRemaining)}
+                                </span>
                             </div>
                         </div>
-                    </Card>
+                    ) : (
+                        <div className="text-center w-full space-y-6">
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                                {t('makeMoney.playVideo.countdownFinished')}
+                            </h2>
+                        </div>
+                    )}
+
+                    {!isCountdownFinished && (
+                        <p className="text-[#e13c9c] text-center font-medium italic max-w-xs animate-pulse">
+                            {t('makeMoney.playVideo.waitForNext', { minutes: missionData?.time_gap || 2 }) || `Bạn phải đợi sau ${missionData?.time_gap || 2} phút thì mới được xem tiếp video`}
+                        </p>
+                    )}
+                </div>
+
+                {/* Bottom Action */}
+                <div className="w-full max-w-md z-10">
+                    <Button
+                        onClick={handleNext}
+                        disabled={!isCountdownFinished}
+                        className={`w-full rounded-[2rem] h-10 md:h-14 text-sm md:text-lg font-bold cursor-pointer transition-all duration-300 border-none uppercase ${isCountdownFinished
+                            ? 'bg-gradient-primary hover:from-blue-700 hover:to-purple-700 text-white shadow-xl hover:scale-[1.02]'
+                            : 'bg-[#9ca3af] text-white/90 cursor-not-allowed'
+                            }`}
+                    >
+                        {t('makeMoney.playVideo.next') || 'NEXT'}
+                    </Button>
                 </div>
             </div>
         );
     }
 
-    // Render Connecting Modal
-    if (viewState === 'connecting') {
-        return (
-            <div className="fixed inset-0 bg-gray-400/50 dark:bg-gray-800/50 flex items-center justify-center z-50 p-4">
-                <Card className="p-8 max-w-sm w-full bg-gradient-primary rounded-lg">
-                    <div className="text-center space-y-4">
-                        <Loader2 className="w-16 h-16 animate-spin mx-auto text-primary" />
-                        <div>
-                            <h3 className="font-semibold text-white text-xl mb-2">{t('makeMoney.playVideo.connecting')}</h3>
-                            <p className="text-sm text-white">
-                                {t('makeMoney.playVideo.connectingDevices', { count: devicesCount })}
-                            </p>
-                        </div>
-                    </div>
-                </Card>
-            </div>
-        );
-    }
+
 
     // Render Watching Video Screen
     if (viewState === 'watching') {
         return (
-            <div className="fixed inset-0 bg-gray-400/50 dark:bg-gray-800/50 flex items-center justify-center z-50 p-4">
-                <Card className="p-8 max-w-sm w-full bg-gradient-primary rounded-lg">
-                    <div className="text-center space-y-4">
-                        <div className="mx-auto w-20 h-20 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center">
-                            <Video className="w-10 h-10 text-blue-600 dark:text-blue-400 animate-pulse" />
-                        </div>
-                        <div>
-                            <h3 className="font-semibold text-white text-xl mb-2">{t('makeMoney.playVideo.watching')}</h3>
-                            <p className="text-sm text-white">
-                                {t('makeMoney.playVideo.watchToComplete')}
-                            </p>
-                        </div>
+            <div className="w-full min-h-screen lg:py-[15vh] bg-[radial-gradient(100%_100%_at_50%_0%,_#45a6e7_0%,_#e1e7ec_50%,_#a979da_100%)] dark:bg-gray-950 flex flex-col items-center justify-between py-20 px-6 relative overflow-hidden">
+                {/* Ad Container - GAM will inject ad here */}
+                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-200/30 rounded-full blur-[100px] pointer-events-none" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-200/30 rounded-full blur-[100px] pointer-events-none" />
+                <div id="rewarded-ad-container" className="absolute inset-0 z-0 bg-transparent" />
+
+                {/* Overlay while loading ad or if ad is hidden */}
+                <div className="z-10 bg-white dark:bg-gray-800 backdrop-blur-lg p-8 rounded-3xl border border-white/10 max-w-sm w-full text-center">
+                    <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-purple-500/30 animate-pulse">
+                        <Video className="w-8 h-8 text-white" />
                     </div>
-                </Card>
+                    <h3 className="font-bold text-white text-xl mb-2">{t('makeMoney.playVideo.watching')}</h3>
+                    <p className="text-blue-100/80 text-sm">
+                        {t('makeMoney.playVideo.watchToComplete')}
+                    </p>
+                </div>
             </div>
         );
     }
 
     // Render Main Screen (Idle or Completed)
     return (
-        <div className="w-full min-h-svh flex py-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1">
-            <div className='w-full max-w-7xl bg-[#e6effd63] shadow-md dark:bg-gray-800 rounded-lg p-6 mt-10'>
-                {/* Header */}
-                {/* <div className="mb-6">
-                    <Button
-                        variant="ghost"
-                        onClick={() => router.push('/make-money')}
-                        className="mb-4"
-                    >
-                        <ArrowLeft className="w-4 h-4 mr-2" />
-                        {t('makeMoney.playVideo.back')}
-                    </Button>
-                    <h1 className="text-3xl font-bold mb-2">{t('makeMoney.playVideo.title')}</h1>
-                    <p className="text-muted-foreground">{t('makeMoney.playVideo.description')}</p>
-                </div> */}
+        <div className="w-full min-h-screen bg-[radial-gradient(100%_100%_at_50%_0%,_#45a6e7_0%,_#e1e7ec_50%,_#a979da_100%)] dark:bg-gray-950 flex flex-col items-center justify-between py-32 px-6 relative overflow-hidden">
+            {/* Background Decor */}
+            <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-320/30 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-200/30 rounded-full blur-[100px] pointer-events-none" />
 
-                {/* Progress Card */}
-                <Card className="p-6 mb-6 bg-gradient-primary rounded-lg">
-                    <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                                {isCompleted ? (
-                                    <CheckCircle2 className="w-5 h-5 text-white" />
-                                ) : (
-                                    <Video className="w-5 h-5 text-white" />
-                                )}
-                                <span className="font-semibold text-white">{t('makeMoney.playVideo.progress')}</span>
-                            </div>
-                            <span className={`text-sm text-white ${isCompleted ? ' font-semibold' : 'text-muted-foreground'}`}>
-                                {missionData?.turn_day || 0} / {missionData?.turn_setting || 0}
-                                {isCompleted && ' ✓'}
-                            </span>
+            {/* Top Content */}
+            <div className="w-full max-w-md flex flex-col items-center z-10 pt-0 md:pt-20">
+                {/* Logo Area */}
+                <div className="relative mb-4 md:mb-6">
+                    <img src="/logo.png" alt="logo" className="w-16 md:w-32 h-16 md:h-32 object-contain" />
+                </div>
+
+                {/* Status Section */}
+                <div className="flex flex-col items-center space-y-4 w-full md:space-y-6">
+                    {/* Progress Pill */}
+                    <div className="bg-white dark:bg-gray-800 rounded-full px-8 py-2 shadow-lg shadow-blue-100 dark:shadow-none flex items-center gap-2 transform transition-all hover:scale-105">
+                        <span className="text-slate-600 dark:text-slate-300 font-medium whitespace-nowrap">
+                            {t('makeMoney.playVideo.watched') || 'Đã xem'}
+                        </span>
+                        <span className={`font-semibold text-lg ${isCompleted ? 'text-green-500' : 'text-[#ef4444]'}`}>
+                            {missionData?.turn_day || 0}/{missionData?.turn_setting || 200}
+                        </span>
+                        <span className="text-slate-600 dark:text-slate-300 font-medium">
+                            video
+                        </span>
+                    </div>
+
+                    {/* Devices Info */}
+                    {!isCompleted && (
+                        <div className="flex items-center gap-2 text-theme-red-200 font-semibold bg-transparent px-4 py-2 rounded-lg">
+                        <Eye className="w-6 h-6" />
+                        <span className="text-base">
+                            {(missionData?.devices || 20) > 0 ? missionData?.devices : 20} {t('makeMoney.playVideo.devicesWatching') || 'thiết bị khác xem video'}
+                        </span>
+                    </div>
+                    )}
+                </div>
+            </div>
+            {isCompleted && (
+                <div className="w-full max-w-md z-10 pb-6 flex flex-col gap-5 justify-center items-center">
+                   <img src="/complete.png" alt="completed" className="w-52 h-auto object-contain" />
+                   <p className="text-red-500 font-semibold text-sm px-10 text-center"> {t('makeMoney.playVideo.readyToClaim') || 'Bạn đã hoàn thành tất cả video cho ngày hôm nay. Hãy quay lại trang Make Money để nhận thưởng.'} </p>
+                </div>
+            )}
+            {/* Bottom Action */}
+            <div className="w-full max-w-md z-10 pb-6 flex justify-center items-center">
+                {isCompleted ? (
+                    <Button
+                        onClick={handleClaimReward}
+                        disabled={claimDayMutation.isPending}
+                        className="w-full bg-gradient-primary hover:from-emerald-600 hover:to-teal-700 text-white rounded-[2rem] h-10 md:h-16 text-sm md:text-xl font-bold shadow-xl shadow-emerald-500/30 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border-none cursor-pointer"
+                    >
+                        {claimDayMutation.isPending ? (
+                            <Loader2 className="w-6 h-6 animate-spin mr-2" />
+                        ) : (
+                            <Gift className="w-6 h-6 mr-2 mb-1" />
+                        )}
+                        {t('makeMoney.playVideo.claimReward')}
+                    </Button>
+                ) : (
+                    <Button
+                        onClick={handleWatchVideo}
+                        className="md:w-full px-10 bg-gradient-primary hover:from-[#2563eb] hover:via-[#4f46e5] hover:to-[#7c3aed] text-white rounded-[2rem] h-10 md:h-16 text-sm md:text-xl font-bold shadow-xl shadow-blue-500/30 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border-none cursor-pointer"
+                    >
+                        {t('makeMoney.playVideo.watchVideo').toUpperCase()}
+                    </Button>
+                )}
+
+                {adError && !GAM_TEST_MODE && (
+                    <p className="text-xs text-red-500 text-center mt-3 bg-red-50 dark:bg-red-900/20 py-1 px-3 rounded-full">
+                        {adError.message}
+                    </p>
+                )}
+            </div>
+
+            {/* Ad Container - GAM will inject ad here */}
+            <div id="rewarded-ad-container" className="hidden"></div>
+
+            {/* Connecting Modal Overlay */}
+            {viewState === 'connecting' && (
+                <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-6">
+                    <div className="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl flex flex-col items-center space-y-6 animate-in fade-in zoom-in duration-300">
+                        <div className="text-center space-y-2">
+                            <h3 className="text-[#3b82f6] text-lg font-bold">
+                                {t('makeMoney.playVideo.connectingDevices', { count: devicesCount }) || `Đang kết nối đến ${devicesCount} thiết bị cùng xem`}
+                            </h3>
                         </div>
 
-                        <Progress
-                            value={progress}
-                            className={`h-3 bg-gray-200 dark:bg-white ${isCompleted ? 'ring-2 ring-green-500/50' : ''}`}
-                            indicatorClassName={isCompleted ? 'bg-green-500' : 'bg-black'}
-                        />
+                        <div className="relative w-full h-32 flex items-center justify-center">
+                            {/* Phone Outline */}
+                            <img src="/phone.png" alt="phone" className="w-32 h-32 object-contain" />
 
-                        <div className="grid grid-cols-2 gap-4 pt-2">
-                            <div>
-                                <p className="text-sm text-white mb-1">{t('makeMoney.playVideo.videosWatched')}</p>
-                                <p className={`text-2xl font-bold text-white ${isCompleted ? 'text-green-600 dark:text-green-400' : ''}`}>
-                                    {missionData?.turn_day || 0}
-                                </p>
+                            {/* Eye Icon inside */}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-full p-2 shadow-lg">
+                                    <Eye className="w-6 h-6 text-white" />
+                                </div>
                             </div>
-                            <div>
-                                <p className="text-sm text-white mb-1">{t('makeMoney.playVideo.remaining')}</p>
-                                <p className={`text-2xl font-bold text-white ${isCompleted ? 'text-green-600 dark:text-green-400' : 'text-primary'}`}>
-                                    {missionData ? Math.max(0, missionData.turn_setting - missionData.turn_day) : 0}
-                                </p>
-                            </div>
+                        </div>
+
+                        <div className="w-12 h-12">
+                            <Loader2 className="w-full h-full text-purple-500 animate-spin" />
                         </div>
                     </div>
-                </Card>
-
-                {/* Action Card */}
-                <Card className="p-6 border-none outline-none shadow-none">
-                    {isCompleted ? (
-                        // Đã xem đủ video - Hiện nút Nhận thưởng
-                        <div className="space-y-6 flex flex-col items-center justify-center py-4">
-                            <div className="text-center space-y-4">
-                                {/* <div className="mx-auto w-32 h-32 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mb-4">
-                                    <CheckCircle2 className="w-16 h-16 text-green-600 dark:text-green-400" />
-                                </div>
-                                <h3 className="text-2xl font-bold text-green-600 dark:text-green-400">
-                                    {t('makeMoney.playVideo.completed')}
-                                </h3> */}
-                                <img src="/complete.png" alt="completed" className="w-40 h-40 mx-auto mb-4" />
-                                <p className="text-muted-foreground dark:text-white text-base max-w-md">
-                                    {t('makeMoney.playVideo.readyToClaim')}
-                                </p>
-                            </div>
-                            <Button
-                                onClick={handleClaimReward}
-                                disabled={claimDayMutation.isPending}
-                                className="w-full sm:w-fit bg-gradient-primary h-14 text-white rounded-full border-none text-lg cursor-pointer hover:bg-gradient-primary/80 transition-all duration-300 hover:scale-105 shadow-lg"
-                                size="lg"
-                            >
-                                {claimDayMutation.isPending ? (
-                                    <>
-                                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                                        {t('makeMoney.playVideo.processing')}
-                                    </>
-                                ) : (
-                                    <>
-                                        <Gift className="w-5 h-5 mr-2" />
-                                        {t('makeMoney.playVideo.claimReward')}
-                                    </>
-                                )}
-                            </Button>
-                        </div>
-                    ) : (
-                        // Chưa xem đủ video - Hiện nút Xem video
-                        <div className="space-y-4 flex flex-col items-center justify-center">
-                            <div className="text-center mb-4">
-                                <p className="text-muted-foreground dark:text-white mb-2">
-                                    {t('makeMoney.playVideo.watchToComplete')}
-                                </p>
-                                <p className="text-sm text-muted-foreground dark:text-white">
-                                    {t('makeMoney.playVideo.remainingVideos', {
-                                        count: missionData ? Math.max(0, missionData.turn_setting - missionData.turn_day) : 0
-                                    })}
-                                </p>
-                            </div>
-
-                            <Button
-                                onClick={handleWatchVideo}
-                                // disabled={isLoadingAd || !isLoaded || watchVideoMutation.isPending || !isReady || viewState === 'watching'}
-                                className="w-fit bg-theme-red-200 uppercase font-semibold h-12 text-white rounded-full border-none text-lg cursor-pointer"
-                                size="lg"
-                            >
-                                {/* {watchVideoMutation.isPending ? (
-                                    <>
-                                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                                        {t('makeMoney.playVideo.processing')}
-                                    </>
-                                ) : isLoadingAd ? (
-                                    <>
-                                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                                        {t('makeMoney.playVideo.loadingAd')}
-                                    </>
-                                ) : viewState === 'watching' ? (
-                                    <>
-                                        <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                                        {t('makeMoney.playVideo.watching')}
-                                    </>
-                                ) : (
-                                    <>
-                                        <PlayCircle className="w-5 h-5 mr-2" />
-                                        {t('makeMoney.playVideo.watchVideo')}
-                                    </>
-                                )} */}
-                                <>
-                                    <PlayCircle className="w-5 h-5 mr-2" />
-                                    {t('makeMoney.playVideo.watchVideo')}
-                                </>
-                            </Button>
-                            {adError && !GAM_TEST_MODE && (
-                                <p className="text-sm text-red-600 dark:text-red-400 text-center">
-                                    {adError.message}
-                                </p>
-                            )}
-
-                            {!isReady && !GAM_TEST_MODE && (
-                                <p className="text-sm text-yellow-600 dark:text-yellow-400 text-center">
-                                    {t('makeMoney.playVideo.initializing')}
-                                </p>
-                            )}
-
-                            {GAM_TEST_MODE && (
-                                <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-                                    <p className="text-sm text-yellow-700 dark:text-yellow-300 text-center">
-                                        🧪 <strong>TEST MODE:</strong> GAM đang ở chế độ test. Ad sẽ được mock sau 5 giây.
-                                    </p>
-                                </div>
-                            )}
-
-                            {missionData && (
-                                <div className="pt-4 w-full max-w-3xl border-none bg-gradient-primary rounded-lg p-4 space-y-2 text-sm">
-                                    <div className="flex justify-between">
-                                        <span className="text-white">{t('makeMoney.playVideo.devicesAllowed')}</span>
-                                        <span className="font-medium text-white">{missionData.devices}</span>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <span className="text-white">{t('makeMoney.playVideo.timeGap')}</span>
-                                        <span className="font-medium text-white">{missionData.time_gap} {t('makeMoney.playVideo.minutes')}</span>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    )}
-                </Card>
-
-                {/* Ad Container - GAM will inject ad here */}
-                <div id="rewarded-ad-container" className="hidden"></div>
-            </div>
+                </div>
+            )}
         </div>
     );
 }

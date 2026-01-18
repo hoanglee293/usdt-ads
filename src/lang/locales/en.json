@@ -381,7 +381,10 @@
       "readyToClaim": "You have completed all videos. Press the button below to claim your reward.",
       "watchToComplete": "Watch videos to complete missions",
       "remainingVideos": "{count} videos remaining",
-      "watching": "Watching video..."
+      "watching": "Watching video...",
+      "watched": "Watched",
+      "devicesWatching": "other devices watching",
+      "waitForNext": "You must wait {minutes} minutes to watch the next video"
     },
     "previewInfo": "Preview Information",
     "videosPerDay": "Videos per day",

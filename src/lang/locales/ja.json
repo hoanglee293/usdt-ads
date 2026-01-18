@@ -381,7 +381,10 @@
       "readyToClaim": "すべての動画を完了しました。下のボタンを押して報酬を受け取ってください。",
       "watchToComplete": "動画を見てミッションを完了",
       "remainingVideos": "残り{count}本の動画",
-      "watching": "動画を視聴中..."
+      "watching": "動画を視聴中...",
+      "watched": "視聴済み",
+      "devicesWatching": "他のデバイスが視聴中",
+      "waitForNext": "次の動画を見るには{minutes}分待つ必要があります"
     },
     "previewInfo": "プレビュー情報",
     "videosPerDay": "1日の動画数",

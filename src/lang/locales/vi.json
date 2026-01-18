@@ -363,7 +363,7 @@
       "adNotReady": "Quảng cáo chưa sẵn sàng, vui lòng thử lại sau",
       "initializing": "Đang khởi tạo quảng cáo...",
       "connecting": "Đang kết nối...",
-      "connectingDevices": "Đang kết nối đến {count} thiết bị...",
+      "connectingDevices": "Đang kết nối đến {count} thiết bị cùng xem",
       "allVideosWatched": "Đã xem đủ video!",
       "completed": "Hoàn thành!",
       "completedMessage": "Bạn đã hoàn thành tất cả video cho ngày hôm nay. Hãy quay lại trang Make Money để nhận thưởng.",
@@ -382,7 +382,10 @@
       "readyToClaim": "Bạn đã hoàn thành đủ video. Nhấn nút bên dưới để nhận thưởng.",
       "watchToComplete": "Xem video để hoàn thành nhiệm vụ",
       "remainingVideos": "Còn {count} video cần xem",
-      "watching": "Đang xem video..."
+      "watching": "Đang xem video...",
+      "watched": "Đã xem",
+      "devicesWatching": "thiết bị khác xem video",
+      "waitForNext": "Bạn phải đợi sau {minutes} phút thì mới được xem tiếp video"
     },
     "previewInfo": "Thông tin xem trước",
     "videosPerDay": "Số video mỗi ngày",

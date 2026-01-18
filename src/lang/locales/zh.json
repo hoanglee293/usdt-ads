@@ -381,7 +381,10 @@
       "readyToClaim": "您已完成所有视频。请按下面的按钮领取奖励。",
       "watchToComplete": "观看视频以完成任务",
       "remainingVideos": "还剩 {count} 个视频",
-      "watching": "正在观看视频..."
+      "watching": "正在观看视频...",
+      "watched": "已观看",
+      "devicesWatching": "其他设备正在观看",
+      "waitForNext": "您必须等待 {minutes} 分钟才能观看下一个视频"
     },
     "previewInfo": "预览信息",
     "videosPerDay": "每日视频数",
