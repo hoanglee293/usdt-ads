@@ -177,7 +177,10 @@ export default function PlayVideoPage() {
         // Calculate remaining time
         const remaining = Math.max(0, targetTimeMs - nowMs);
 
-        return remaining;
+        // Clamp remaining time to be at most the time_gap (total duration)
+        // This handles cases where user's local clock is behind server time (in the past)
+        const maxDuration = time_gap * 60 * 1000;
+        return Math.min(remaining, maxDuration);
     }, [missionNowResponse, currentTime]);
 
     // Check if countdown finished
@@ -399,11 +402,7 @@ export default function PlayVideoPage() {
         const stroke = 6;
         const normalizedRadius = radius - stroke * 2;
         const circumference = normalizedRadius * 2 * Math.PI;
-
-        // Clamp the ratio to max 1 to handle cases where remaining time > total duration (e.g. clock skew)
-        // This prevents negative strokeDashoffset which causes visual glitches
-        const progressRatio = totalDuration ? Math.min(1, countdownRemaining / totalDuration) : 0;
-        const strokeDashoffset = circumference - progressRatio * circumference;
+        const strokeDashoffset = totalDuration ? circumference - (countdownRemaining / totalDuration) * circumference : 0;
 
         return (
             <div className="w-full min-h-screen lg:py-[15vh] bg-[radial-gradient(100%_100%_at_50%_0%,_#45a6e7_0%,_#e1e7ec_50%,_#a979da_100%)]   dark:bg-[radial-gradient(100%_100%_at_50%_0%,_#3387ba_0%,_#cfcccc_50%,_#753c95_100%)]  flex flex-col items-center justify-between py-28 px-6 relative overflow-hidden">
