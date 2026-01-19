@@ -153,8 +153,20 @@ export default function PlayVideoPage() {
         }
 
         const { time_watch_new, time_gap } = missionNowResponse.data;
-        const lastWatchTime = new Date(time_watch_new);
+
+        // Ensure time_watch_new is treated as UTC if it doesn't have timezone info
+        // This prevents browser from parsing "YYYY-MM-DD HH:mm:ss" as local time
+        let watchTimeStr = time_watch_new;
+        if (!watchTimeStr.endsWith('Z') && !watchTimeStr.includes('+')) {
+            watchTimeStr += 'Z';
+        }
+
+        const lastWatchTime = new Date(watchTimeStr);
         const nextWatchTime = new Date(lastWatchTime.getTime() + time_gap * 60 * 1000);
+
+        // Use a consistent current time (also ensuring we compare UTC to UTC timestamp)
+        // new Date() returns browser local time object, but getTime() is always UTC timestamp
+        // So the comparison is valid as long as lastWatchTime was parsed correctly as UTC
         const remaining = Math.max(0, nextWatchTime.getTime() - currentTime.getTime());
 
         return remaining;
@@ -186,10 +198,14 @@ export default function PlayVideoPage() {
     // Format time remaining
     const formatTimeRemaining = (milliseconds: number): string => {
         const totalSeconds = Math.floor(milliseconds / 1000);
-        const hours = Math.floor(totalSeconds / 3600);
+        const days = Math.floor(totalSeconds / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
         const minutes = Math.floor((totalSeconds % 3600) / 60);
         const seconds = totalSeconds % 60;
 
+        if (days > 0) {
+            return `${days}d ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
         if (hours > 0) {
             return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
@@ -490,8 +506,8 @@ export default function PlayVideoPage() {
                     <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-purple-500/30 animate-pulse">
                         <Video className="w-8 h-8 text-white" />
                     </div>
-                    <h3 className="font-bold text-white text-xl mb-2">{t('makeMoney.playVideo.watching')}</h3>
-                    <p className="text-blue-100/80 text-sm">
+                    <h3 className="font-bold dark:text-white text-black text-xl mb-2">{t('makeMoney.playVideo.watching')}</h3>
+                    <p className="dark:text-blue-100/80 text-black text-sm">
                         {t('makeMoney.playVideo.watchToComplete')}
                     </p>
                 </div>
@@ -531,18 +547,18 @@ export default function PlayVideoPage() {
                     {/* Devices Info */}
                     {!isCompleted && (
                         <div className="flex items-center gap-2 text-theme-red-200 font-semibold bg-transparent px-4 py-2 rounded-lg">
-                        <Eye className="w-6 h-6" />
-                        <span className="text-base">
-                            {(missionData?.devices || 20) > 0 ? missionData?.devices : 20} {t('makeMoney.playVideo.devicesWatching') || 'thiết bị khác xem video'}
-                        </span>
-                    </div>
+                            <Eye className="w-6 h-6" />
+                            <span className="text-base">
+                                {(missionData?.devices || 20) > 0 ? missionData?.devices : 20} {t('makeMoney.playVideo.devicesWatching') || 'thiết bị khác xem video'}
+                            </span>
+                        </div>
                     )}
                 </div>
             </div>
             {isCompleted && (
                 <div className="w-full max-w-md z-10 pb-6 flex flex-col gap-5 justify-center items-center">
-                   <img src="/complete.png" alt="completed" className="w-52 h-auto object-contain" />
-                   <p className="text-red-500 font-semibold text-sm px-10 text-center"> {t('makeMoney.playVideo.readyToClaim') || 'Bạn đã hoàn thành tất cả video cho ngày hôm nay. Hãy quay lại trang Make Money để nhận thưởng.'} </p>
+                    <img src="/complete.png" alt="completed" className="w-52 h-auto object-contain" />
+                    <p className="text-red-500 font-semibold text-sm px-10 text-center"> {t('makeMoney.playVideo.readyToClaim') || 'Bạn đã hoàn thành tất cả video cho ngày hôm nay. Hãy quay lại trang Make Money để nhận thưởng.'} </p>
                 </div>
             )}
             {/* Bottom Action */}
