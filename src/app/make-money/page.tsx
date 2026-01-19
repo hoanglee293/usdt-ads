@@ -11,6 +11,7 @@ import Modal from '@/components/Modal'
 import { useIsMobile } from '@/ui/use-mobile'
 import { useLang } from '@/lang/useLang'
 import { useRouter } from 'next/navigation'
+import { useServerTime } from '@/hooks/useServerTime'
 import {
     getListCoins,
     getBalance,
@@ -55,7 +56,7 @@ export default function MakeMoneyPage() {
     const [isStakingModalOpen, setIsStakingModalOpen] = useState<boolean>(false)
     const [isBaseConfirmModalOpen, setIsBaseConfirmModalOpen] = useState<boolean>(false)
     const [isStakingConfirmModalOpen, setIsStakingConfirmModalOpen] = useState<boolean>(false)
-    const [currentTime, setCurrentTime] = useState<Date>(new Date())
+    const { currentTime, isLoading: isLoadingTime, error: timeError, isUsingServerTime } = useServerTime(1000)
     const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0) // Index của tháng hiện tại trong danh sách các tháng
 
     // ==================== React Query Hooks ====================
@@ -424,26 +425,12 @@ export default function MakeMoneyPage() {
         }
     }, [coinsResponse, selectedCoin])
 
-    // Update current time every second to check claim availability
-    // Only update when there's an active staking to avoid unnecessary re-renders
+    // Log warning nếu không dùng được server time
     useEffect(() => {
-        // Only set up interval if there's an active staking that needs countdown
-        // This prevents unnecessary re-renders when there's no active staking
-        const needsCountdown = currentStaking && (
-            currentStaking.status === 'running' ||
-            currentStaking.status === 'pending-claim'
-        )
-
-        if (!needsCountdown) {
-            return
+        if (timeError && !isUsingServerTime) {
+            console.warn('⚠️ Using client time for countdown. Countdown may be inaccurate if device time is wrong.');
         }
-
-        const interval = setInterval(() => {
-            setCurrentTime(new Date())
-        }, 1000) // Update every second for accurate countdown
-
-        return () => clearInterval(interval)
-    }, [currentStaking])
+    }, [timeError, isUsingServerTime])
 
     // Handle errors from queries and show notifications
     // Note: Removed 't' from dependencies to prevent infinite re-renders
