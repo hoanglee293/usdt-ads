@@ -189,7 +189,7 @@ export default function Header() {
   }, [isMenuOpen, isLangMenuOpen]);
 
   return (
-    <div className="fixed top-0 lg:top-4 lg:bg-transparent dark:bg-[#1B1B1B]/80 bg-theme-pink-100/80 left-0 right-0 z-50 flex justify-between items-center h-16 md:h-16 px-4 pt-1.5 sm:px-4 md:px-6 2xl:gap-24 gap-4 md:gap-16 dark:lg:bg-transparent">
+    <div className={`fixed top-0 lg:top-4 lg:bg-transparent bg-theme-pink-100/80 left-0 right-0 z-50 flex justify-between items-center h-16 md:h-16 px-4 pt-1.5 sm:px-4 md:px-6 2xl:gap-24 gap-4 md:gap-16 dark:lg:bg-transparent ${pathname === '/play-video' ? 'bg-transparent' : 'dark:bg-[#1B1B1B]/80'}`}>
       {/* Logo Section */}
       <Link href="/" className='flex items-center gap-1.5 md:gap-3 font-inter'>
         <img
@@ -390,7 +390,7 @@ export default function Header() {
                   className="p-1.5 sm:p-2 rounded-full bg-transparent hover:bg-pink-100 dark:hover:bg-theme-gray-200 active:bg-pink-200 dark:active:bg-theme-gray-200/50 transition-colors border-none touch-manipulation"
                   aria-label="Menu"
                 >
-                  <Menu className="w-6 h-5 sm:w-7 pt-1 sm:h-6 text-pink-500 dark:text-pink-400" />
+                  <Menu className="w-6 h-5 sm:w-7 pt-1 sm:h-6 text-pink-500 dark:text-pink-700" />
                 </button>
               </div>
             </>

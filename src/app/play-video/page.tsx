@@ -154,20 +154,28 @@ export default function PlayVideoPage() {
 
         const { time_watch_new, time_gap } = missionNowResponse.data;
 
-        // Ensure time_watch_new is treated as UTC if it doesn't have timezone info
-        // This prevents browser from parsing "YYYY-MM-DD HH:mm:ss" as local time
+        // Ensure time_watch_new is treated as UTC
+        // Format from API might be "2024-05-20T10:00:00" or "2024-05-20 10:00:00"
         let watchTimeStr = time_watch_new;
+
+        // Replace space with T if needed for IOS compatibility
+        watchTimeStr = watchTimeStr.replace(' ', 'T');
+
+        // Append Z if no timezone info to force UTC
         if (!watchTimeStr.endsWith('Z') && !watchTimeStr.includes('+')) {
             watchTimeStr += 'Z';
         }
 
         const lastWatchTime = new Date(watchTimeStr);
-        const nextWatchTime = new Date(lastWatchTime.getTime() + time_gap * 60 * 1000);
+        // Calculate target time (last watch time + gap in minutes)
+        const targetTimeMs = lastWatchTime.getTime() + (time_gap * 60 * 1000);
 
-        // Use a consistent current time (also ensuring we compare UTC to UTC timestamp)
-        // new Date() returns browser local time object, but getTime() is always UTC timestamp
-        // So the comparison is valid as long as lastWatchTime was parsed correctly as UTC
-        const remaining = Math.max(0, nextWatchTime.getTime() - currentTime.getTime());
+        // Current time in stored in state is local Date object, but getTime() returns UTC timestamp
+        // So we can compare directly
+        const nowMs = currentTime.getTime();
+
+        // Calculate remaining time
+        const remaining = Math.max(0, targetTimeMs - nowMs);
 
         return remaining;
     }, [missionNowResponse, currentTime]);
@@ -394,7 +402,7 @@ export default function PlayVideoPage() {
         const strokeDashoffset = totalDuration ? circumference - (countdownRemaining / totalDuration) * circumference : 0;
 
         return (
-            <div className="w-full min-h-screen lg:py-[15vh] bg-[radial-gradient(100%_100%_at_50%_0%,_#45a6e7_0%,_#e1e7ec_50%,_#a979da_100%)] dark:bg-gray-950 flex flex-col items-center justify-between py-28 px-6 relative overflow-hidden">
+            <div className="w-full min-h-screen lg:py-[15vh] bg-[radial-gradient(100%_100%_at_50%_0%,_#45a6e7_0%,_#e1e7ec_50%,_#a979da_100%)]   dark:bg-[radial-gradient(100%_100%_at_50%_0%,_#3387ba_0%,_#cfcccc_50%,_#753c95_100%)]  flex flex-col items-center justify-between py-28 px-6 relative overflow-hidden">
                 {/* Background Decor */}
                 <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-200/30 rounded-full blur-[100px] pointer-events-none" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-200/30 rounded-full blur-[100px] pointer-events-none" />
@@ -495,7 +503,7 @@ export default function PlayVideoPage() {
     // Render Watching Video Screen
     if (viewState === 'watching') {
         return (
-            <div className="w-full min-h-screen lg:py-[15vh] bg-[radial-gradient(100%_100%_at_50%_0%,_#45a6e7_0%,_#e1e7ec_50%,_#a979da_100%)] dark:bg-gray-950 flex flex-col items-center justify-between py-20 px-6 relative overflow-hidden">
+            <div className="w-full min-h-screen lg:py-[15vh] bg-[radial-gradient(100%_100%_at_50%_0%,_#45a6e7_0%,_#e1e7ec_50%,_#a979da_100%)]   dark:bg-[radial-gradient(100%_100%_at_50%_0%,_#3387ba_0%,_#cfcccc_50%,_#753c95_100%)]  flex flex-col items-center justify-between py-20 px-6 relative overflow-hidden">
                 {/* Ad Container - GAM will inject ad here */}
                 <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-200/30 rounded-full blur-[100px] pointer-events-none" />
                 <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-200/30 rounded-full blur-[100px] pointer-events-none" />
@@ -517,7 +525,7 @@ export default function PlayVideoPage() {
 
     // Render Main Screen (Idle or Completed)
     return (
-        <div className="w-full min-h-screen bg-[radial-gradient(100%_100%_at_50%_0%,_#45a6e7_0%,_#e1e7ec_50%,_#a979da_100%)] dark:bg-gray-950 flex flex-col items-center justify-between py-32 px-6 relative overflow-hidden">
+        <div className="w-full min-h-screen bg-[radial-gradient(100%_100%_at_50%_0%,_#45a6e7_0%,_#e1e7ec_50%,_#a979da_100%)]   dark:bg-[radial-gradient(100%_100%_at_50%_0%,_#3387ba_0%,_#cfcccc_50%,_#753c95_100%)]  flex flex-col items-center justify-between py-32 px-6 relative overflow-hidden">
             {/* Background Decor */}
             <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-320/30 rounded-full blur-[100px] pointer-events-none" />
             <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-200/30 rounded-full blur-[100px] pointer-events-none" />
@@ -598,9 +606,9 @@ export default function PlayVideoPage() {
             {/* Connecting Modal Overlay */}
             {viewState === 'connecting' && (
                 <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-6">
-                    <div className="bg-white rounded-[2rem] p-8 w-full max-w-sm shadow-2xl flex flex-col items-center space-y-6 animate-in fade-in zoom-in duration-300">
+                    <div className="bg-white dark:bg-gray-700 rounded-[2rem] p-8 w-full max-w-sm shadow-2xl flex flex-col items-center space-y-6 animate-in fade-in zoom-in duration-300">
                         <div className="text-center space-y-2">
-                            <h3 className="text-[#3b82f6] text-lg font-bold">
+                            <h3 className="dark:text-blue-500 text-black text-lg font-bold">
                                 {t('makeMoney.playVideo.connectingDevices', { count: devicesCount }) || `Đang kết nối đến ${devicesCount} thiết bị cùng xem`}
                             </h3>
                         </div>
