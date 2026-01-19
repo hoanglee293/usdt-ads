@@ -177,7 +177,10 @@ export default function PlayVideoPage() {
         // Calculate remaining time
         const remaining = Math.max(0, targetTimeMs - nowMs);
 
-        return remaining;
+        // Clamp remaining time to be at most the time_gap (total duration)
+        // This handles cases where user's local clock is behind server time (in the past)
+        const maxDuration = time_gap * 60 * 1000;
+        return Math.min(remaining, maxDuration);
     }, [missionNowResponse, currentTime]);
 
     // Check if countdown finished
