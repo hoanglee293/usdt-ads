@@ -4,6 +4,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/ui/button';
 import { Loader2, PlayCircle, CheckCircle2, Clock, ArrowLeft, Video, ArrowRight, Gift, Eye, Smartphone } from 'lucide-react';
+import Modal from '@/components/Modal';
 
 import { useRewardedAd } from '@/hooks/useRewardedAd';
 import { useServerTime } from '@/hooks/useServerTime';
@@ -37,6 +38,7 @@ export default function PlayVideoPage() {
     const [devicesCount, setDevicesCount] = useState(0);
     const { currentTime, isLoading: isLoadingTime, error: timeError, isUsingServerTime } = useServerTime(1000);
     const [videoWatched, setVideoWatched] = useState(false); // Đánh dấu đã xem xong video nhưng chưa gọi API
+    const [showNoStakingModal, setShowNoStakingModal] = useState(false); // Modal hiển thị khi chưa tham gia gói staking nào
 
     // Get mission progress
     const { data: missionNowResponse, isLoading: isLoadingMission, error: missionError } = useQuery<MissionNowResponse>({
@@ -309,15 +311,19 @@ export default function PlayVideoPage() {
         }
     }, [viewState, isCountdownFinished, isLoadingMission]);
 
-    // Redirect if no active staking
+    // Show modal if no active staking
     useEffect(() => {
-        if (missionError && (missionError as any)?.response?.status === 400) {
-            toast.error(t('makeMoney.playVideo.noActiveStaking'));
-            setTimeout(() => {
-                router.push('/make-money');
-            }, 2000);
+        if (missionError) {
+            const errorMessage = (missionError as any)?.response?.data?.message || '';
+            const noStakingMessages = [
+                'User does not have a running staking lock',
+                'User does not have a running staking lock'
+            ];
+            if (noStakingMessages.includes(errorMessage) || (missionError as any)?.response?.status === 400) {
+                setShowNoStakingModal(true);
+            }
         }
-    }, [missionError, router, t]);
+    }, [missionError]);
 
     // Auto reset to idle when countdown finishes (optional, or show Next button)
     // We'll show Next button instead of auto-reset for better UX
@@ -638,6 +644,26 @@ export default function PlayVideoPage() {
                     </div>
                 </div>
             )}
+
+            {/* No Staking Modal */}
+            <Modal
+                isOpen={showNoStakingModal}
+                onClose={() => setShowNoStakingModal(false)}
+                title={t('makeMoney.playVideo.noStakingTitle') || 'Chưa tham gia gói staking'}
+                showCloseButton={false}
+            >
+                <div className="flex flex-col items-center space-y-6 text-center">
+                    <p className="text-gray-700 dark:text-gray-300">
+                        {t('makeMoney.playVideo.noStakingMessage') || 'Hiện tại bạn chưa tham gia gói staking nào. Vui lòng tham gia gói staking để bắt đầu kiếm tiền.'}
+                    </p>
+                    <Button
+                        onClick={() => router.push('/make-money')}
+                        className="w-full bg-gradient-primary text-white rounded-[2rem] h-12 text-base font-bold shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border-none cursor-pointer"
+                    >
+                        {t('staking.joinNow') || 'Tham gia ngay'}
+                    </Button>
+                </div>
+            </Modal>
         </div>
     );
 }

@@ -384,7 +384,10 @@
       "watching": "正在观看视频...",
       "watched": "已观看",
       "devicesWatching": "其他设备正在观看",
-      "waitForNext": "您必须等待 {minutes} 分钟才能观看下一个视频"
+      "waitForNext": "您必须等待 {minutes} 分钟才能观看下一个视频",
+      "noStakingTitle": "未加入任何质押套餐",
+      "noStakingMessage": "您尚未加入任何质押套餐。请加入质押套餐以开始赚钱。",
+      "goToMakeMoney": "前往Make Money"
     },
     "previewInfo": "预览信息",
     "videosPerDay": "每日视频数",

@@ -384,7 +384,10 @@
       "watching": "동영상 시청 중...",
       "watched": "시청 완료",
       "devicesWatching": "다른 기기가 시청 중",
-      "waitForNext": "다음 동영상을 시청하려면 {minutes}분을 기다려야 합니다"
+      "waitForNext": "다음 동영상을 시청하려면 {minutes}분을 기다려야 합니다",
+      "noStakingTitle": "스테이킹 패키지 미참여",
+      "noStakingMessage": "아직 스테이킹 패키지에 참여하지 않았습니다. 돈을 벌기 위해 스테이킹 패키지에 참여하세요.",
+      "goToMakeMoney": "Make Money로 이동"
     },
     "previewInfo": "미리보기 정보",
     "videosPerDay": "일일 비디오 수",

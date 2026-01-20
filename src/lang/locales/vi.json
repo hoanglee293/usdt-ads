@@ -385,7 +385,10 @@
       "watching": "Đang xem video...",
       "watched": "Đã xem",
       "devicesWatching": "thiết bị khác xem video",
-      "waitForNext": "Bạn phải đợi sau {minutes} phút thì mới được xem tiếp video"
+      "waitForNext": "Bạn phải đợi sau {minutes} phút thì mới được xem tiếp video",
+      "noStakingTitle": "Chưa tham gia gói staking",
+      "noStakingMessage": "Hiện tại bạn chưa tham gia gói staking nào. Vui lòng tham gia gói staking để bắt đầu kiếm tiền.",
+      "goToMakeMoney": "Đi đến Make Money"
     },
     "previewInfo": "Thông tin xem trước",
     "videosPerDay": "Số video mỗi ngày",
