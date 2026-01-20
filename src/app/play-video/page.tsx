@@ -651,24 +651,18 @@ export default function PlayVideoPage() {
             <Modal
                 isOpen={showNoStakingModal}
                 onClose={() => setShowNoStakingModal(false)}
-                title={stakingErrorMessage === 'User does not have a running staking lock'
-                    ? (t('makeMoney.playVideo.stakingEndedTitle') || 'Gói staking đã kết thúc')
-                    : (t('makeMoney.playVideo.noStakingTitle') || 'Chưa tham gia gói staking')}
+                title={t('makeMoney.playVideo.noStakingTitle') || 'Chưa tham gia gói staking'}
                 showCloseButton={false}
             >
                 <div className="flex flex-col items-center space-y-6 text-center">
                     <p className="text-gray-700 dark:text-gray-300">
-                        {stakingErrorMessage === 'User does not have a running staking lock'
-                            ? (t('makeMoney.playVideo.stakingEndedMessage') || 'Gói staking của bạn đã kết thúc. Vui lòng quay về trang Make Money để nhận phần thưởng.')
-                            : (t('makeMoney.playVideo.noStakingMessage') || 'Hiện tại bạn chưa tham gia gói staking nào. Vui lòng tham gia gói staking để bắt đầu kiếm tiền.')}
+                        {(t('makeMoney.playVideo.noStakingMessage') || 'Hiện tại bạn chưa tham gia gói staking nào. Vui lòng tham gia gói staking để bắt đầu kiếm tiền.')}
                     </p>
                     <Button
                         onClick={() => router.push('/make-money')}
                         className="w-full bg-gradient-primary text-white rounded-[2rem] h-12 text-base font-bold shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border-none cursor-pointer"
                     >
-                        {stakingErrorMessage === 'User does not have a running staking lock'
-                            ? (t('makeMoney.playVideo.claimReward') || 'Nhận thưởng')
-                            : (t('staking.joinNow') || 'Tham gia ngay')}
+                        {t('staking.joinNow')}
                     </Button>
                 </div>
             </Modal>
