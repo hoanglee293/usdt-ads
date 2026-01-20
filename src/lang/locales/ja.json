@@ -479,6 +479,12 @@
       "balanceInsufficient": "残高不足",
       "stakingNotFound": "ステーキングパッケージが見つかりません",
       "invalidStakingId": "無効なステーキングパッケージIDです"
+    },
+    "insufficientBalanceModal": {
+      "title": "残高不足",
+      "message": "ステーキングに参加するには最低10 USDTの残高が必要です。",
+      "suggestion": "入金するか、報酬ウォレット（ある場合）からメインウォレットに振替してください。",
+      "goToWallet": "ウォレットへ移動"
     }
   },
   "chat": {

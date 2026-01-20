@@ -479,6 +479,12 @@
       "balanceInsufficient": "잔액이 부족합니다",
       "stakingNotFound": "스테이킹 패키지를 찾을 수 없습니다",
       "invalidStakingId": "유효하지 않은 스테이킹 패키지 ID입니다"
+    },
+    "insufficientBalanceModal": {
+      "title": "잔액 부족",
+      "message": "스테이킹 참여를 위해 최소 10 USDT의 잔액이 필요합니다.",
+      "suggestion": "추가 입금하거나 보상 지갑(있는 경우)에서 메인 지갑으로 이체해 주세요.",
+      "goToWallet": "지갑으로 이동"
     }
   },
   "chat": {

@@ -94,7 +94,7 @@ export default function Modal({
 
                 {/* Header */}
                 {(title || description) && (
-                    <div className="px-6 pt-4 border-b border-gray-200 dark:border-theme-gray-100">
+                    <div className="px-4 md:px-6 pt-4 border-b border-gray-200 dark:border-theme-gray-100">
                         {title && (
                             <h2 className="text-2xl font-bold text-theme-red-200 dark:text-theme-red-300 pr-8">
                                 {title}
@@ -109,7 +109,7 @@ export default function Modal({
                 )}
 
                 {/* Content */}
-                <div className="p-6 max-h-[80vh] overflow-y-auto">
+                <div className="p-4 md:p-6 max-h-[80vh] overflow-y-auto">
                     {children}
                 </div>
             </div>

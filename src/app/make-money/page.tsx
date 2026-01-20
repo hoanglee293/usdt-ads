@@ -56,6 +56,7 @@ export default function MakeMoneyPage() {
     const [isStakingModalOpen, setIsStakingModalOpen] = useState<boolean>(false)
     const [isBaseConfirmModalOpen, setIsBaseConfirmModalOpen] = useState<boolean>(false)
     const [isStakingConfirmModalOpen, setIsStakingConfirmModalOpen] = useState<boolean>(false)
+    const [isInsufficientBalanceModalOpen, setIsInsufficientBalanceModalOpen] = useState<boolean>(false)
     const { currentTime, isLoading: isLoadingTime, error: timeError, isUsingServerTime } = useServerTime(1000)
     const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0) // Index của tháng hiện tại trong danh sách các tháng
 
@@ -548,8 +549,8 @@ export default function MakeMoneyPage() {
     }, [usdtBalance, currentStakingResponse])
 
     const isStakingDisabled = useMemo(() => {
-        return usdtBalance < 10 || !!currentStakingResponse?.data
-    }, [usdtBalance, currentStakingResponse])
+        return !!currentStakingResponse?.data
+    }, [currentStakingResponse])
 
     // currentStaking đã được định nghĩa ở trên (sau query mission-now)
 
@@ -836,6 +837,15 @@ export default function MakeMoneyPage() {
     }
 
     // ==================== Event Handlers ====================
+
+    // Handler for staking button click - check balance first
+    const handleStakingButtonClick = () => {
+        if (usdtBalance < 10) {
+            setIsInsufficientBalanceModalOpen(true)
+            return
+        }
+        setIsStakingModalOpen(true)
+    }
 
     const handleJoinBase = () => {
         setIsBaseConfirmModalOpen(true)
@@ -1638,7 +1648,7 @@ export default function MakeMoneyPage() {
                                 <h3 className='text-2xl sm:text-5xl md:text-5xl text-center font-semibold text-white mb-1 sm:mb-2'>{t('makeMoney.stakingTitle')}</h3>
                                 <span className='text-xs sm:text-sm text-white mb-1 sm:mb-2'>{t('makeMoney.oneDay')} / {t('makeMoney.sevenDays')} / {t('makeMoney.thirtyDays')}</span>
                                 <Button
-                                    onClick={() => setIsStakingModalOpen(true)}
+                                    onClick={handleStakingButtonClick}
                                     disabled={isStakingDisabled}
                                     className='w-full bg-[#21ceb3] cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-white text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
                                 >
@@ -1959,6 +1969,39 @@ export default function MakeMoneyPage() {
                                 ) : (
                                     t('makeMoney.confirm')
                                 )}
+                            </Button>
+                        </div>
+                    </div>
+                </Modal>
+
+                {/* Insufficient Balance Modal */}
+                <Modal
+                    isOpen={isInsufficientBalanceModalOpen}
+                    onClose={() => setIsInsufficientBalanceModalOpen(false)}
+                    title={t('makeMoney.insufficientBalanceModal.title')}
+                    maxWidth="max-w-[500px]"
+                >
+                    <div className='space-y-4'>
+                        <div className='text-center'>
+                            <div className='mx-auto w-16 h-16 mb-4 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center'>
+                                <svg className='w-8 h-8 text-yellow-600 dark:text-yellow-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
+                                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z' />
+                                </svg>
+                            </div>
+                            <p className='text-base text-gray-700 dark:text-gray-300 mb-2'>
+                                {t('makeMoney.insufficientBalanceModal.message')}
+                            </p>
+                            <p className='text-sm text-gray-500 dark:text-gray-400'>
+                                {t('makeMoney.insufficientBalanceModal.suggestion')}
+                            </p>
+                        </div>
+
+                        <div className='flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700'>
+                            <Button
+                                onClick={() => router.push('/wallet')}
+                                className='flex-1 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none hover:opacity-90 cursor-pointer'
+                            >
+                                {t('makeMoney.insufficientBalanceModal.goToWallet')}
                             </Button>
                         </div>
                     </div>

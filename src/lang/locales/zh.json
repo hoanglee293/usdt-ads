@@ -477,8 +477,14 @@
       "invalidAmount": "请输入有效金额",
       "amountExceeded": "金额不能超过$3,500",
       "balanceInsufficient": "余额不足",
-      "stakingNotFound": "未找到质押套餐",
-      "invalidStakingId": "无效的质押套餐ID"
+      "stakingNotFound": "未找到质押包",
+      "invalidStakingId": "质押包 ID 无效"
+    },
+    "insufficientBalanceModal": {
+      "title": "余额不足",
+      "message": "参与质押需要至少 10 USDT 余额。",
+      "suggestion": "请充值或从奖励钱包（如有）转账至主钱包。",
+      "goToWallet": "前往钱包"
     }
   },
   "chat": {

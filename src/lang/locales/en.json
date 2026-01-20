@@ -479,6 +479,12 @@
       "balanceInsufficient": "Insufficient balance",
       "stakingNotFound": "Staking package not found",
       "invalidStakingId": "Invalid staking package ID"
+    },
+    "insufficientBalanceModal": {
+      "title": "Insufficient Balance",
+      "message": "Minimum balance of 10 USDT is required to join staking.",
+      "suggestion": "Please deposit more or transfer from reward wallet (if available) to main wallet.",
+      "goToWallet": "Go to Wallet"
     }
   },
   "chat": {

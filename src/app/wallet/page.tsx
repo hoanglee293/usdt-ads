@@ -899,7 +899,7 @@ export default function WalletPage() {
                     showCloseButton={true}
                     className="h-[80vh]"
                 >
-                    <div className="space-y-6 pt-4">
+                    <div className="space-y-6">
                         {/* Transfer Section */}
                         <div className="space-y-4">
                             {isLoadingBalance ? (
@@ -923,7 +923,7 @@ export default function WalletPage() {
                                 <>
                                     <div className="flex items-center md:gap-10 gap-4 flex-wrap">
                                         {/* Reward Wallet Box */}
-                                        <div className="flex-1 bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                                        <div className="flex-1 bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
                                             <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                                                 {t('wallet.transferReward.currentRewardBalance')}
                                             </div>
@@ -940,7 +940,7 @@ export default function WalletPage() {
                                         </div>
 
                                         {/* Main Wallet Box */}
-                                        <div className="flex-1 bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+                                        <div className="flex-1 bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
                                             <div className="text-sm text-gray-600 dark:text-gray-400 mb-2">
                                                 {t('wallet.balanceLabel')}
                                             </div>
@@ -1024,7 +1024,7 @@ export default function WalletPage() {
                                             return (
                                                 <div
                                                     key={item.id}
-                                                    className="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-md px-6 py-3"
+                                                    className="bg-white dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-md px-4 py-3"
                                                 >
                                                     <div className="flex items-center justify-between mb-2">
                                                         <span className="text-sm text-gray-500 dark:text-gray-400">#{item.id}</span>

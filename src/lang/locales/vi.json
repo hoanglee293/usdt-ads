@@ -119,13 +119,13 @@
       "transferButton": "Chuyển đổi",
       "transferSuccess": "Chuyển đổi thành công!",
       "transferError": "Chuyển đổi thất bại",
-      "transferNoBalance": "Không có số dư Reward để chuyển đổi",
-      "transferConfirm": "Bạn có chắc chắn muốn chuyển toàn bộ số dư Reward sang ví Main?",
+      "transferNoBalance": "Không có số dư thưởng để chuyển đổi",
+      "transferConfirm": "Bạn có chắc chắn muốn chuyển toàn bộ số dư thưởng sang ví chính?",
       "transferring": "Đang chuyển đổi...",
       "history": "Lịch sử chuyển đổi",
       "historyEmpty": "Chưa có lịch sử chuyển đổi",
-      "currentRewardBalance": "Số dư Reward",
-      "newRewardBalance": "Số dư Reward sau chuyển đổi",
+      "currentRewardBalance": "Số dư thưởng",
+      "newRewardBalance": "Số dư thưởng sau chuyển đổi",
       "tabTransfer": "Chuyển đổi",
       "tabHistory": "Lịch sử",
       "amount": "Số tiền",
@@ -480,6 +480,12 @@
       "balanceInsufficient": "Số dư không đủ",
       "stakingNotFound": "Không tìm thấy gói staking",
       "invalidStakingId": "ID gói staking không hợp lệ"
+    },
+    "insufficientBalanceModal": {
+      "title": "Số dư không đủ",
+      "message": "Số dư cần tối thiểu 10 USDT để tham gia gói staking.",
+      "suggestion": "Vui lòng nạp thêm hoặc chuyển tiền từ ví thưởng (nếu có) về ví chính.",
+      "goToWallet": "Chuyển đến quản lý ví"
     }
   },
   "chat": {
