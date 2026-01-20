@@ -39,6 +39,7 @@ export default function PlayVideoPage() {
     const { currentTime, isLoading: isLoadingTime, error: timeError, isUsingServerTime } = useServerTime(1000);
     const [videoWatched, setVideoWatched] = useState(false); // Đánh dấu đã xem xong video nhưng chưa gọi API
     const [showNoStakingModal, setShowNoStakingModal] = useState(false); // Modal hiển thị khi chưa tham gia gói staking nào
+    const [stakingErrorMessage, setStakingErrorMessage] = useState(''); // Lưu message lỗi từ API
 
     // Get mission progress
     const { data: missionNowResponse, isLoading: isLoadingMission, error: missionError } = useQuery<MissionNowResponse>({
@@ -320,6 +321,7 @@ export default function PlayVideoPage() {
                 'User does not have a running staking lock'
             ];
             if (noStakingMessages.includes(errorMessage) || (missionError as any)?.response?.status === 400) {
+                setStakingErrorMessage(errorMessage);
                 setShowNoStakingModal(true);
             }
         }
@@ -558,7 +560,7 @@ export default function PlayVideoPage() {
                             {t('makeMoney.playVideo.watched') || 'Đã xem'}
                         </span>
                         <span className={`font-semibold text-lg ${isCompleted ? 'text-green-500' : 'text-[#ef4444]'}`}>
-                            {missionData?.turn_day || 0}/{missionData?.turn_setting || 200}
+                            {missionData?.turn_day || 0}/{missionData?.turn_setting || 10}
                         </span>
                         <span className="text-slate-600 dark:text-slate-300 font-medium">
                             video
@@ -649,18 +651,24 @@ export default function PlayVideoPage() {
             <Modal
                 isOpen={showNoStakingModal}
                 onClose={() => setShowNoStakingModal(false)}
-                title={t('makeMoney.playVideo.noStakingTitle') || 'Chưa tham gia gói staking'}
+                title={stakingErrorMessage === 'User does not have a running staking lock'
+                    ? (t('makeMoney.playVideo.stakingEndedTitle') || 'Gói staking đã kết thúc')
+                    : (t('makeMoney.playVideo.noStakingTitle') || 'Chưa tham gia gói staking')}
                 showCloseButton={false}
             >
                 <div className="flex flex-col items-center space-y-6 text-center">
                     <p className="text-gray-700 dark:text-gray-300">
-                        {t('makeMoney.playVideo.noStakingMessage') || 'Hiện tại bạn chưa tham gia gói staking nào. Vui lòng tham gia gói staking để bắt đầu kiếm tiền.'}
+                        {stakingErrorMessage === 'User does not have a running staking lock'
+                            ? (t('makeMoney.playVideo.stakingEndedMessage') || 'Gói staking của bạn đã kết thúc. Vui lòng quay về trang Make Money để nhận phần thưởng.')
+                            : (t('makeMoney.playVideo.noStakingMessage') || 'Hiện tại bạn chưa tham gia gói staking nào. Vui lòng tham gia gói staking để bắt đầu kiếm tiền.')}
                     </p>
                     <Button
                         onClick={() => router.push('/make-money')}
                         className="w-full bg-gradient-primary text-white rounded-[2rem] h-12 text-base font-bold shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border-none cursor-pointer"
                     >
-                        {t('staking.joinNow') || 'Tham gia ngay'}
+                        {stakingErrorMessage === 'User does not have a running staking lock'
+                            ? (t('makeMoney.playVideo.claimReward') || 'Nhận thưởng')
+                            : (t('staking.joinNow') || 'Tham gia ngay')}
                     </Button>
                 </div>
             </Modal>

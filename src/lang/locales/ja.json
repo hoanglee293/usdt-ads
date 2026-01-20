@@ -387,6 +387,8 @@
       "waitForNext": "次の動画を見るには{minutes}分待つ必要があります",
       "noStakingTitle": "ステーキングパッケージに未参加",
       "noStakingMessage": "まだステーキングパッケージに参加していません。お金を稼ぐにはステーキングパッケージに参加してください。",
+      "stakingEndedTitle": "ステーキングパッケージが終了しました",
+      "stakingEndedMessage": "ステーキングパッケージが終了しました。Make Moneyページに戻って報酬を受け取ってください。",
       "goToMakeMoney": "Make Moneyへ移動"
     },
     "previewInfo": "プレビュー情報",

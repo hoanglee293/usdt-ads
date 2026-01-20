@@ -388,6 +388,8 @@
       "waitForNext": "Bạn phải đợi sau {minutes} phút thì mới được xem tiếp video",
       "noStakingTitle": "Chưa tham gia gói staking",
       "noStakingMessage": "Hiện tại bạn chưa tham gia gói staking nào. Vui lòng tham gia gói staking để bắt đầu kiếm tiền.",
+      "stakingEndedTitle": "Gói staking đã kết thúc",
+      "stakingEndedMessage": "Gói staking của bạn đã kết thúc. Vui lòng quay về trang Make Money để nhận phần thưởng.",
       "goToMakeMoney": "Đi đến Make Money"
     },
     "previewInfo": "Thông tin xem trước",

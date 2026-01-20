@@ -387,6 +387,8 @@
       "waitForNext": "You must wait {minutes} minutes to watch the next video",
       "noStakingTitle": "Not joined any staking package",
       "noStakingMessage": "You haven't joined any staking package yet. Please join a staking package to start earning money.",
+      "stakingEndedTitle": "Staking package ended",
+      "stakingEndedMessage": "Your staking package has ended. Please go back to Make Money page to claim your reward.",
       "goToMakeMoney": "Go to Make Money"
     },
     "previewInfo": "Preview Information",
