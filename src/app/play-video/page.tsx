@@ -651,7 +651,6 @@ export default function PlayVideoPage() {
             <Modal
                 isOpen={showNoStakingModal}
                 onClose={() => setShowNoStakingModal(false)}
-                title={t('makeMoney.playVideo.noStakingTitle') || 'Chưa tham gia gói staking'}
                 showCloseButton={false}
             >
                 <div className="flex flex-col items-center space-y-6 text-center">
@@ -660,7 +659,7 @@ export default function PlayVideoPage() {
                     </p>
                     <Button
                         onClick={() => router.push('/make-money')}
-                        className="w-full bg-gradient-primary text-white rounded-[2rem] h-12 text-base font-bold shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border-none cursor-pointer"
+                        className="w-full bg-gradient-primary text-white rounded-[2rem] h-10 text-base font-bold shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border-none cursor-pointer"
                     >
                         {t('staking.joinNow')}
                     </Button>
