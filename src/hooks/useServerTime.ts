@@ -2,15 +2,27 @@
 
 import { useState, useEffect, useRef } from 'react';
 
-interface WorldTimeApiResponse {
-  datetime: string;
+interface TimeNowApiResponse {
+  abbreviation: string;
+  client_ip: string;
+  datetime: string; // e.g. "2026-01-20T10:01:00.054671+07:00"
+  day_of_week: number;
+  day_of_year: number;
+  dst: boolean;
+  dst_from: null | string;
+  dst_offset: number;
+  dst_until: null | string;
+  raw_offset: number;
+  timezone: string; // e.g. "Asia/Ho_Chi_Minh"
   unixtime: number;
-  timezone: string;
+  utc_datetime: string; // e.g. "2026-01-20T03:01:00.054735Z"
+  utc_offset: string; // e.g. "+07:00"
+  week_number: number;
 }
 
 /**
  * Hook để lấy thời gian hiện tại từ server thông qua API miễn phí
- * Sử dụng worldtimeapi.org để đảm bảo thời gian chính xác không phụ thuộc vào giờ thiết bị
+ * Sử dụng time.now API với timezone UTC để đảm bảo thời gian chính xác không phụ thuộc vào giờ thiết bị
  */
 export const useServerTime = (updateInterval: number = 1000) => {
   const [serverTime, setServerTime] = useState<Date | null>(null);
@@ -26,8 +38,9 @@ export const useServerTime = (updateInterval: number = 1000) => {
   // Fetch thời gian từ API
   const fetchServerTime = async (): Promise<Date | null> => {
     try {
-      // Sử dụng worldtimeapi.org - API miễn phí, không cần API key
-      const response = await fetch('https://worldtimeapi.org/api/timezone/UTC', {
+      // Sử dụng time.now API - API miễn phí, không cần API key
+      // Timezone: UTC
+      const response = await fetch('https://time.now/developer/api/timezone/UTC', {
         method: 'GET',
         headers: {
           'Accept': 'application/json',
@@ -40,10 +53,12 @@ export const useServerTime = (updateInterval: number = 1000) => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data: WorldTimeApiResponse = await response.json();
+      const data: TimeNowApiResponse = await response.json();
       
-      // Parse datetime từ API (format: "2024-01-01T12:00:00.000000+00:00")
-      const serverDate = new Date(data.datetime);
+      // Sử dụng utc_datetime để đảm bảo tính nhất quán với UTC (như logic cũ)
+      // Hoặc có thể dùng datetime nếu muốn theo timezone Việt Nam
+      // Format: "2026-01-20T03:01:00.054735Z" (UTC) hoặc "2026-01-20T10:01:00.054671+07:00" (local)
+      const serverDate = new Date(data.utc_datetime || data.datetime);
       
       // Tính offset giữa server time và client time
       const clientTime = new Date();
