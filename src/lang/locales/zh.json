@@ -11,7 +11,11 @@
     "close": "关闭",
     "copy": "复制",
     "copied": "已复制",
-    "logout": "登出"
+    "logout": "登出",
+    "pending": "待处理",
+    "rejected": "已拒绝",
+    "noData": "暂无数据",
+    "amount": "金额"
   },
   "languages": {
     "kr": "韩语",
@@ -188,7 +192,10 @@
     "you": "您",
     "me": "我",
     "level1RewardText": "获得相当于被推荐人奖励的{percentage}%奖励",
-    "level2RewardText": "获得相当于2级被推荐人奖励的{percentage}%奖励"
+    "level2RewardText": "获得相当于2级被推荐人奖励的{percentage}%奖励",
+    "withdrawHistory": "提现记录",
+    "statusWithdrawn": "已提现",
+    "history": "历史记录提现"
   },
   "smartRef": {
     "title": "网红奖励",

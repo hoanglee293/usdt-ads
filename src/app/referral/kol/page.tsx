@@ -1,6 +1,6 @@
 'use client'
 import React, { useMemo, useState } from 'react'
-import { Copy, Play, Link2, MousePointer2 } from 'lucide-react'
+import { Copy, Play, Link2, MousePointer2, History } from 'lucide-react'
 import { Button } from '@/ui/button'
 import toast from 'react-hot-toast'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -12,6 +12,7 @@ import { useLang } from '@/lang/useLang'
 import { useRouter } from 'next/navigation'
 import Modal from '@/components/Modal'
 import { useRef } from 'react'
+import MemberRefWithdrawHistoryModal from './MemberRefWithdrawHistoryModal'
 
 interface MilestoneItem {
     milestone: number
@@ -38,6 +39,7 @@ export default function SmartRefPage() {
     const tableRef = useRef<HTMLDivElement>(null)
     const [showKolModal, setShowKolModal] = useState(false)
     const [showArticleModal, setShowArticleModal] = useState(false)
+    const [showHistoryModal, setShowHistoryModal] = useState(false)
     const [articleUrl, setArticleUrl] = useState('')
     const [articleError, setArticleError] = useState('')
     const [selectedStatus, setSelectedStatus] = useState<string | undefined>(undefined)
@@ -389,7 +391,7 @@ export default function SmartRefPage() {
                         <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 mt-4 w-full mx-auto lg:mt-6'>
                             <button
                                 onClick={() => setShowArticleModal(true)}
-                                className='min-w-[300px] px-5 border border-solid border-theme-gray-100/50 text-gradient-primary-2 hover:bg-gray-100 dark:hover:bg-gray-600 font-medium rounded-full py-1.5 transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed group hover:text-theme-red-200 hover:border-theme-red-200 text-base sm:text-lg'
+                                className='min-w-[300px] px-5 border border-solid border-black dark:border-theme-gray-100/50 text-gradient-primary-2 hover:bg-gray-100 dark:hover:bg-gray-600 font-medium rounded-full py-1.5 transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed group hover:text-theme-red-200 hover:border-theme-red-200 text-base sm:text-lg font-semibold'
                             >
                                 {t('kol.articleButton') || 'Gửi bài viết'}
                             </button>
@@ -551,7 +553,7 @@ export default function SmartRefPage() {
                     {/* Claim Reward Button - only show if status is success */}
                     {isSuccess && (
                         <>
-                            <div className='flex flex-col items-center gap-4 mt-4'>
+                            <div className='flex flex-col items-center gap-4 mt-4 relative'>
                                 {totalCanWithdraw > 0 && (
                                     <div className='text-center'>
                                         <p className='text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-1'>
@@ -564,14 +566,25 @@ export default function SmartRefPage() {
                                         )}
                                     </div>
                                 )}
-                                <Button
-                                    onClick={handleClaimReward}
-                                    disabled={withdrawMutation.isPending || totalCanWithdraw < 10}
-                                    className='bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white border-none hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-base sm:text-lg font-bold px-8 sm:px-12 py-3 sm:py-4 rounded-full shadow-lg cursor-pointer'
-                                    size='lg'
-                                >
-                                    {withdrawMutation.isPending ? t('smartRef.processing') : t('smartRef.claimReward')}
-                                </Button>
+                                <div className='relative flex flex-col items-center gap-5'>
+                                    <Button
+                                        onClick={handleClaimReward}
+                                        disabled={withdrawMutation.isPending || totalCanWithdraw < 10}
+                                        className='bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white border-none hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed text-base sm:text-lg font-bold px-8 sm:px-12 py-3 sm:py-4 rounded-full shadow-lg cursor-pointer'
+                                        size='lg'
+                                    >
+                                        {withdrawMutation.isPending ? t('smartRef.processing') : t('smartRef.claimReward')}
+                                    </Button>
+                                    <button
+                                        onClick={() => setShowHistoryModal(true)}
+                                        className="md:absolute relative bottom-0 mb-2 left-0 md:left-[100%] w-max-content min-w-[250px] flex items-center justify-center gap-2 text-base md:text-xl underline font-medium underline-offset-4 text-black hover:text-gray-700 dark:text-yellow-500 italic dark:hover:text-gray-200 transition-colors cursor-pointer bg-transparent border-none"
+                                    >
+                                        <History className="w-4 h-4" />
+                                        {t('ref.history') || 'Lịch sử'}
+                                    </button>
+                                </div>
+
+
                             </div>
 
                             {/* Disclaimer */}
@@ -652,7 +665,7 @@ export default function SmartRefPage() {
                             <h3 className='text-xl font-semibold dark:text-white text-gray-800 mb-4'>
                                 {t('kol.articleHistory') || 'Lịch sử bài viết'}
                             </h3>
-                            
+
                             {isLoadingArticles ? (
                                 <div className='flex justify-center items-center py-8'>
                                     <div className='animate-spin rounded-full h-8 w-8 border-b-2 border-[#FE645F]'></div>
@@ -666,26 +679,25 @@ export default function SmartRefPage() {
                                     {/* Mobile Card Layout */}
                                     <div className="block sm:hidden space-y-3">
                                         {kolArticles.map((item: KolArticle, index: number) => (
-                                            <div 
-                                                key={item.id} 
+                                            <div
+                                                key={item.id}
                                                 className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] p-3 shadow-sm"
                                             >
                                                 <div className="flex items-center justify-between mb-2">
                                                     <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
                                                         {t('kol.articleTable.stt') || 'STT'}: {index + 1}
                                                     </span>
-                                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                                                        item.status === 'approved' 
-                                                            ? 'bg-green-500 text-white' 
-                                                            : item.status === 'rejected'
+                                                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${item.status === 'approved'
+                                                        ? 'bg-green-500 text-white'
+                                                        : item.status === 'rejected'
                                                             ? 'bg-red-500 text-white'
                                                             : 'bg-yellow-500 text-white'
-                                                    }`}>
-                                                        {item.status === 'approved' 
+                                                        }`}>
+                                                        {item.status === 'approved'
                                                             ? t('kol.articleTable.statusApproved') || 'Đã duyệt'
                                                             : item.status === 'rejected'
-                                                            ? t('kol.articleTable.statusRejected') || 'Từ chối'
-                                                            : t('kol.articleTable.statusPending') || 'Chờ duyệt'
+                                                                ? t('kol.articleTable.statusRejected') || 'Từ chối'
+                                                                : t('kol.articleTable.statusPending') || 'Chờ duyệt'
                                                         }
                                                     </span>
                                                 </div>
@@ -693,9 +705,9 @@ export default function SmartRefPage() {
                                                 <div className="space-y-2">
                                                     <div className="flex items-start justify-between">
                                                         <span className="text-xs text-gray-600 dark:text-gray-300">{t('kol.articleTable.link') || 'Link bài viết'}:</span>
-                                                        <a 
-                                                            href={item.article_url} 
-                                                            target='_blank' 
+                                                        <a
+                                                            href={item.article_url}
+                                                            target='_blank'
                                                             rel='noopener noreferrer'
                                                             className='text-xs text-blue-600 dark:text-blue-400 hover:underline truncate max-w-[60%] text-right ml-2'
                                                         >
@@ -741,17 +753,17 @@ export default function SmartRefPage() {
                                             <table className={tableStyles}>
                                                 <tbody>
                                                     {kolArticles.map((item: KolArticle, index: number) => (
-                                                        <tr 
-                                                            key={item.id} 
+                                                        <tr
+                                                            key={item.id}
                                                             className="group transition-colors cursor-pointer hover:opacity-90"
                                                         >
                                                             <td className={`${tableCellStyles} w-[5%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
                                                                 {index + 1}
                                                             </td>
                                                             <td className={`${tableCellStyles} w-[40%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                                <a 
-                                                                    href={item.article_url} 
-                                                                    target='_blank' 
+                                                                <a
+                                                                    href={item.article_url}
+                                                                    target='_blank'
                                                                     rel='noopener noreferrer'
                                                                     className='text-blue-600 dark:text-blue-400 hover:underline truncate max-w-full block'
                                                                 >
@@ -759,18 +771,17 @@ export default function SmartRefPage() {
                                                                 </a>
                                                             </td>
                                                             <td className={`${tableCellStyles} w-[20%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                                <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                                                                    item.status === 'approved' 
-                                                                        ? 'bg-green-500 text-white' 
-                                                                        : item.status === 'rejected'
+                                                                <span className={`px-3 py-1 rounded-full text-xs font-medium ${item.status === 'approved'
+                                                                    ? 'bg-green-500 text-white'
+                                                                    : item.status === 'rejected'
                                                                         ? 'bg-red-500 text-white'
                                                                         : 'bg-yellow-500 text-white'
-                                                                }`}>
-                                                                    {item.status === 'approved' 
+                                                                    }`}>
+                                                                    {item.status === 'approved'
                                                                         ? t('kol.articleTable.statusApproved') || 'Đã duyệt'
                                                                         : item.status === 'rejected'
-                                                                        ? t('kol.articleTable.statusRejected') || 'Từ chối'
-                                                                        : t('kol.articleTable.statusPending') || 'Chờ duyệt'
+                                                                            ? t('kol.articleTable.statusRejected') || 'Từ chối'
+                                                                            : t('kol.articleTable.statusPending') || 'Chờ duyệt'
                                                                     }
                                                                 </span>
                                                             </td>
@@ -794,6 +805,12 @@ export default function SmartRefPage() {
                         </div>
                     </div>
                 </Modal>
+
+                {/* Withdraw History Modal */}
+                <MemberRefWithdrawHistoryModal
+                    isOpen={showHistoryModal}
+                    onClose={() => setShowHistoryModal(false)}
+                />
 
                 {/* KOL Registration Modal */}
                 <Modal

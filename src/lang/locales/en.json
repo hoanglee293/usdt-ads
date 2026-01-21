@@ -11,7 +11,11 @@
     "close": "Close",
     "copy": "Copy",
     "copied": "Copied",
-    "logout": "Logout"
+    "logout": "Logout",
+    "pending": "Pending",
+    "rejected": "Rejected",
+    "noData": "No data available",
+    "amount": "Amount"
   },
   "languages": {
     "kr": "Korean",
@@ -124,7 +128,7 @@
       "transferring": "Transferring...",
       "history": "Transfer History",
       "historyEmpty": "No transfer history",
-      "currentRewardBalance": "Reward Balance",
+      "currentRewardBalance": "Current Reward Balance",
       "newRewardBalance": "New Reward Balance",
       "tabTransfer": "Transfer",
       "tabHistory": "History",
@@ -188,7 +192,10 @@
     "you": "YOU",
     "me": "Me",
     "level1RewardText": "Receive {percentage}% reward corresponding to the reward of the referred person",
-    "level2RewardText": "Receive {percentage}% reward corresponding to the reward of level 2 referred person"
+    "level2RewardText": "Receive {percentage}% reward corresponding to the reward of level 2 referred person",
+    "withdrawHistory": "Withdraw History",
+    "statusWithdrawn": "Withdrawn",
+    "history": "History Withdraw"
   },
   "smartRef": {
     "title": "Influencer Rewards",

@@ -16,6 +16,7 @@ import {
     DollarSign,
     Activity,
     Wallet,
+    History,
 } from "lucide-react"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { getSmartRefInfo, getSmartRefTree, getSmartRefDetail, createSmartRefWithdraw } from "@/services/RefService";
@@ -24,6 +25,7 @@ import toast from "react-hot-toast";
 import { useProfile } from "@/hooks/useProfile";
 import { useIsMobile } from "@/ui/use-mobile";
 import Modal from "@/components/Modal";
+import SmartRefWithdrawHistoryModal from "./SmartRefWithdrawHistoryModal";
 
 export default function DirectReferralPage() {
     const { t } = useLang();
@@ -35,6 +37,7 @@ export default function DirectReferralPage() {
     const [activeTab, setActiveTab] = useState("level-referral") // 'level-referral', 'referred-users'
     const [selectedLevel, setSelectedLevel] = useState<number | undefined>(undefined)
     const [showWithdrawConfirm, setShowWithdrawConfirm] = useState(false)
+    const [showHistoryModal, setShowHistoryModal] = useState(false)
 
     // Fetch Smart Ref Info
     const { data: smartRefInfo = {} as any, isLoading: isLoadingInfo } = useQuery({
@@ -153,13 +156,10 @@ export default function DirectReferralPage() {
 
                     {/* Total Can Withdraw Card */}
                     <div className="bg-gradient-primary rounded-lg p-4 sm:px-6 sm:py-4 gap-2 text-white shadow-lg flex flex-col justify-between order-3 sm:order-2 col-span-2 sm:col-span-1">
-                        <h3 className="text-sm font-medium opacity-90">
-                            {t('ref.totalCanWithdraw') || 'Total Can Withdraw'}
-                        </h3>
                         <div className="flex items-center justify-between">
-                            <p className="text-2xl sm:text-3xl font-semibold flex-1">
-                                ${isLoadingInfo ? '...' : (typeof smartRefInfo.data?.total_can_withdraw === 'number' ? smartRefInfo.data.total_can_withdraw.toFixed(2) : '0.00')}
-                            </p>
+                            <h3 className="text-sm font-medium opacity-90">
+                                {t('ref.totalCanWithdraw') || 'Total Can Withdraw'}
+                            </h3>
                             <button
                                 onClick={handleWithdraw}
                                 disabled={withdrawMutation.isPending || isLoadingInfo || (smartRefInfo.data?.total_can_withdraw || 0) < 10}
@@ -167,6 +167,20 @@ export default function DirectReferralPage() {
                             >
                                 <Wallet className="w-4 h-4 text-white group-hover:text-theme-red-200 transition-colors" />
                                 {withdrawMutation.isPending ? (t('common.loading') || 'Loading...') : (t('ref.withdraw') || 'Withdraw')}
+                            </button>
+                        </div>
+                        <div className="flex items-center justify-between gap-2">
+                            <p className="text-2xl sm:text-3xl font-semibold flex-1">
+                                ${isLoadingInfo ? '...' : (typeof smartRefInfo.data?.total_can_withdraw === 'number' ? smartRefInfo.data.total_can_withdraw.toFixed(2) : '0.00')}
+                            </p>
+
+                            <button
+                                onClick={() => setShowHistoryModal(true)}
+                                className="w-fit px-4 h-8 flex gap-2 items-center outline-none border-none justify-center rounded-full bg-white/20 hover:bg-white/30 transition-colors text-white cursor-pointer"
+                                title={t('ref.history') || 'Lịch sử'}
+                            >
+                                <History className="w-4 h-4" />
+                                {t('ref.history')}
                             </button>
                         </div>
 
@@ -193,7 +207,7 @@ export default function DirectReferralPage() {
                         </h2>
                         <button
                             onClick={() => setShowReferralStructure(!showReferralStructure)}
-                            className="text-gray-600 dark:text-black hover:text-gray-800 dark:hover:text-gray-200 px-3 py-0.5 border-none rounded-full transition-colors flex items-center gap-1 text-sm"
+                            className="text-gray-600 dark:text-black cursor-pointer px-3 py-0.5 border-none rounded-full transition-colors flex items-center gap-1 text-sm"
                         >
                             {showReferralStructure ? (
                                 <>
@@ -591,6 +605,12 @@ export default function DirectReferralPage() {
                     </div>
                 </div>
             </Modal>
+
+            {/* Withdraw History Modal */}
+            <SmartRefWithdrawHistoryModal
+                isOpen={showHistoryModal}
+                onClose={() => setShowHistoryModal(false)}
+            />
         </div>
     )
 }

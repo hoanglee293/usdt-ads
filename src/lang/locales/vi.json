@@ -11,7 +11,11 @@
     "close": "Đóng",
     "copy": "Sao chép",
     "copied": "Đã sao chép",
-    "logout": "Đăng xuất"
+    "logout": "Đăng xuất",
+    "pending": "Đang chờ",
+    "rejected": "Đã từ chối",
+    "noData": "Không có dữ liệu",
+    "amount": "Số tiền"
   },
   "languages": {
     "kr": "Tiếng Hàn",
@@ -188,7 +192,10 @@
     "you": "BẠN",
     "me": "Tôi",
     "level1RewardText": "Nhận {percentage}% phần thưởng tương ứng với phần thưởng của người được giới thiệu",
-    "level2RewardText": "Nhận {percentage}% phần thưởng tương ứng với phần thưởng của người được giới thiệu cấp 2"
+    "level2RewardText": "Nhận {percentage}% phần thưởng tương ứng với phần thưởng của người được giới thiệu cấp 2",
+    "withdrawHistory": "Lịch sử rút thưởng",
+    "statusWithdrawn": "Đã rút",
+    "history": "Lịch sử rút thưởng"
   },
   "smartRef": {
     "title": "Phần thưởng Influencer",

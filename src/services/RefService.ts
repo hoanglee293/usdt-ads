@@ -176,6 +176,36 @@ export interface CreateSmartRefWithdrawResponse {
   data: SmartRefWithdrawData;
 }
 
+export interface SmartRefWithdrawHistoryItem {
+  id: number;
+  amount: number;
+  amount_usd: number;
+  status: string;
+  type: string;
+  date: string;
+}
+
+export interface GetSmartRefWithdrawHistoryResponse {
+  statusCode: number;
+  message: string;
+  data: SmartRefWithdrawHistoryItem[];
+}
+
+export interface MemberRefWithdrawHistoryItem {
+  id: number;
+  amount: number;
+  amount_usd: number;
+  status: string;
+  type: string;
+  date: string;
+}
+
+export interface GetMemberRefWithdrawHistoryResponse {
+  statusCode: number;
+  message: string;
+  data: MemberRefWithdrawHistoryItem[];
+}
+
 // ==================== KOL Articles Interfaces ====================
 
 export interface KolArticle {
@@ -294,7 +324,7 @@ export const getSmartRefTree = async (): Promise<GetSmartRefTreeResponse> => {
  */
 export const getSmartRefDetail = async (level?: number): Promise<GetSmartRefDetailResponse> => {
   try {
-    const url = level && level > 0 
+    const url = level && level > 0
       ? `/referrals/smart-ref-detail?level=${level}`
       : "/referrals/smart-ref-detail";
     const response = await axiosClient.get(url);
@@ -398,6 +428,34 @@ export const createSmartRefWithdraw = async (): Promise<CreateSmartRefWithdrawRe
     return response.data;
   } catch (error: any) {
     console.error("Error creating smart ref withdraw:", error);
+    throw error;
+  }
+};
+
+/**
+ * Lấy lịch sử rút thưởng Smart Ref
+ * @returns Promise<GetSmartRefWithdrawHistoryResponse>
+ */
+export const getSmartRefWithdrawHistory = async (): Promise<GetSmartRefWithdrawHistoryResponse> => {
+  try {
+    const response = await axiosClient.get("/referrals/smart-ref-withdraw");
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching smart ref withdraw history:", error);
+    throw error;
+  }
+};
+
+/**
+ * Lấy lịch sử rút thưởng Member Ref
+ * @returns Promise<GetMemberRefWithdrawHistoryResponse>
+ */
+export const getMemberRefWithdrawHistory = async (): Promise<GetMemberRefWithdrawHistoryResponse> => {
+  try {
+    const response = await axiosClient.get("/referrals/member-ref-withdraw");
+    return response.data;
+  } catch (error: any) {
+    console.error("Error fetching member ref withdraw history:", error);
     throw error;
   }
 };
