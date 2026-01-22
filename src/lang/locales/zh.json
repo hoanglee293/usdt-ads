@@ -80,6 +80,7 @@
     "createWalletFor": "为 {symbol} 创建钱包",
     "depositButton": "存款",
     "withdrawButton": "提款",
+    "maxButton": "最大",
     "noTransactions": "暂无交易",
     "kycModal": {
       "title": "警告",
@@ -142,6 +143,10 @@
     "usdtOnlyNotice": "平台仅接受USDT资产。如果您向平台转账非USDT的其他资产类型，该资产可能会丢失。",
     "minimumWithdrawError": "最低提现金额为$5",
     "minimumWithdrawNote": "注意：最低提现金额为 5 {symbol}",
+    "minimumAmountError": "最低金额为 0.00000001",
+    "amountExceedsBalance": "金额超过当前余额",
+    "invalidAddress": "无效的钱包地址",
+    "cannotWithdrawToOwnWalletAddress": "无法提款到您自己的钱包地址",
     "withdrawConfirmModal": {
       "title": "确认提现",
       "message": "您确定要提现以下金额吗？",

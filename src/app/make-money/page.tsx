@@ -195,7 +195,7 @@ export default function MakeMoneyPage() {
     const joinBaseMutation = useMutation({
         mutationFn: joinBasePackage,
         onSuccess: (data) => {
-            const message = data?.message || t('staking.joinBaseSuccess')
+            const message = t('staking.joinBaseSuccess')
             toast.success(message)
             queryClient.invalidateQueries({ queryKey: ['current-staking'] })
             queryClient.invalidateQueries({ queryKey: ['current-staking-with-missions'] })
@@ -242,6 +242,7 @@ export default function MakeMoneyPage() {
             setStakingAmount('')
             setDebouncedStakingAmount('')
             setIsStakingModalOpen(false)
+            setIsStakingConfirmModalOpen(false)
             queryClient.invalidateQueries({ queryKey: ['current-staking'] })
             queryClient.invalidateQueries({ queryKey: ['current-staking-with-missions'] })
             queryClient.invalidateQueries({ queryKey: ['staking-histories'] })
@@ -301,9 +302,7 @@ export default function MakeMoneyPage() {
         onSuccess: async (data: MissionClaimResponse) => {
             const apiMessage = data?.message
             const rewardAmount = formatNumber(data.data.total_reward)
-            const successMessage = apiMessage
-                ? `${apiMessage} ${t('makeMoney.reward')}: ${rewardAmount} USDT`
-                : `${t('makeMoney.claim')} ${t('common.success')}! ${t('makeMoney.reward')}: ${rewardAmount} USDT`
+            const successMessage = `${t('makeMoney.claim')} ${t('common.success')}! ${t('makeMoney.reward')}: ${rewardAmount} USDT`
             toast.success(successMessage)
 
             // Invalidate tất cả các queries liên quan
@@ -886,8 +885,6 @@ export default function MakeMoneyPage() {
 
     const handleConfirmJoinStaking = () => {
         const amount = parseFloat(stakingAmount)
-        setIsStakingConfirmModalOpen(false)
-        setIsStakingModalOpen(false)
         setDebouncedStakingAmount('')
         joinStakingMutation.mutate({
             type: stakingType,
@@ -1014,9 +1011,9 @@ export default function MakeMoneyPage() {
                 {/* Header Section */}
                 {currentStaking && (
                     <div className='flex flex-col items-center justify-center'>
-                        <div className='flex items-end justify-center mb-2 sm:mb-4 gap-2 sm:gap-4'>
+                        <div className='flex items-end justify-center pb-2 sm:pb-4 gap-2 sm:gap-4 h-full'>
                             <div className='flex flex-col items-center mx-2 sm:mx-4'>
-                                <h1 className='text-2xl md:text-5xl font-semibold   text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent]'>{currentStaking && currentStaking?.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}</h1>
+                                <h1 className='text-4xl md:text-5xl font-semibold text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] pb-2 md:pb-4'>{currentStaking && currentStaking?.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}</h1>
                             </div>
                         </div>
                     </div>

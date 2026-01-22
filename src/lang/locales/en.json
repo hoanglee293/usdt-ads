@@ -79,6 +79,7 @@
     "createWalletFor": "Create wallet for {symbol}",
     "depositButton": "Deposit",
     "withdrawButton": "Withdraw",
+    "maxButton": "MAX",
     "noTransactions": "No transactions yet",
     "selectAddressPlaceholder": "Enter wallet address",
     "kycModal": {
@@ -142,6 +143,10 @@
     "usdtOnlyNotice": "The platform only accepts USDT assets. If you transfer a different asset type that is not USDT to the platform, that asset may be lost.",
     "minimumWithdrawError": "Minimum withdrawal amount is $5",
     "minimumWithdrawNote": "Note: Minimum withdrawal amount is 5 {symbol}",
+    "minimumAmountError": "Minimum amount is 0.00000001",
+    "amountExceedsBalance": "Amount exceeds current balance",
+    "invalidAddress": "Invalid wallet address",
+    "cannotWithdrawToOwnWalletAddress": "Cannot withdraw to your own wallet address",
     "withdrawConfirmModal": {
       "title": "Confirm Withdrawal",
       "message": "Are you sure you want to withdraw the following amount?",

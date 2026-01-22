@@ -525,8 +525,6 @@ function WithdrawPageContent() {
                                             <th className={`${tableHeaderStyles} w-[12%]`}>THỜI GIAN</th>
                                             <th className={`${tableHeaderStyles} w-[8%]`}>TYPE</th>
                                             <th className={`${tableHeaderStyles} w-[10%]`}>SỐ TIỀN</th>
-                                            <th className={`${tableHeaderStyles} w-[12%]`}>FROM ADDRESS</th>
-                                            <th className={`${tableHeaderStyles} w-[12%]`}>TO ADDRESS</th>
                                             <th className={`${tableHeaderStyles} w-[12%]`}>TRANSACTION ID</th>
                                             <th className={`${tableHeaderStyles} w-[11%] text-center rounded-r-lg`}>STATUS</th>
                                         </tr>
@@ -564,34 +562,6 @@ function WithdrawPageContent() {
                                                     </td>
                                                     <td className={`${tableCellStyles} w-[10%] border-x-0 border-theme-gray-100 border-solid`}>
                                                         {transaction.amount}
-                                                    </td>
-                                                    <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                        <div className='flex items-center gap-2'>
-                                                            <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
-                                                                {formatAddress(transaction.fromAddress)}
-                                                            </span>
-                                                            <button
-                                                                onClick={() => handleCopy(transaction.fromAddress, 'địa chỉ gửi')}
-                                                                className='text-gray-400 hover:text-gray-200 transition-colors border-none bg-transparent mt-1.5'
-                                                                title='Sao chép địa chỉ'
-                                                            >
-                                                                <Copy className='w-3.5 h-3.5' />
-                                                            </button>
-                                                        </div>
-                                                    </td>
-                                                    <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                        <div className='flex items-center gap-2'>
-                                                            <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
-                                                                {formatAddress(transaction.toAddress)}
-                                                            </span>
-                                                            <button
-                                                                onClick={() => handleCopy(transaction.toAddress, 'địa chỉ nhận')}
-                                                                className='text-gray-400 hover:text-gray-200 transition-colors border-none bg-transparent mt-1.5'
-                                                                title='Sao chép địa chỉ'
-                                                            >
-                                                                <Copy className='w-3.5 h-3.5' />
-                                                            </button>
-                                                        </div>
                                                     </td>
                                                     <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
                                                         <div className='flex items-center gap-2'>

@@ -572,11 +572,7 @@ export default function WalletPage() {
                                     <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500  '>
                                         {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                     </span>
-                                ) : (
-                                    <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500  '>
-                                        0.00 {selectedCoinInfo?.coin_symbol || 'USDT'}
-                                    </span>
-                                )}
+                                ): <Skeleton className="h-6 w-40 rounded-full bg-theme-pink-100" />}
                             </div>
                             {balanceResponse?.data && (balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
                                 <span className='text-xs text-gray-600 dark:text-gray-300 mt-1'>
@@ -614,7 +610,7 @@ export default function WalletPage() {
                                     )}
                                 </div> */}
                                 {isLoadingBalance ? (
-                                    <Skeleton className="h-8 w-48" />
+                                    <Skeleton className="h-10 w-48 rounded-full bg-theme-pink-100" />
                                 ) : balanceResponse?.data ? (
                                     <div className='flex flex-col items-center'>
                                         <span className='text-2xl font-bold text-center text-pink-500 bg-theme-pink-100 py-2 mb-2 px-4 rounded-full'>
@@ -626,17 +622,14 @@ export default function WalletPage() {
                                             </span>
                                         )}
                                         <div
-                                            className='text-sm text-yellow-500 cursor-pointer font-semibold bg-yellow-500/10 rounded-full px-4 py-2 mt-4 hover:bg-yellow-500/20 transition-colors'
+                                            className='text-sm text-white cursor-pointer flex items-center gap-2 hover:scale-105 transition-all duration-300 font-semibold bg-gradient-primary rounded-full px-4 py-2 mt-4'
                                             onClick={() => setShowTransferRewardModal(true)}
                                         >
+                                            <img alt="" className="w-10 h-10" src="/dolar-get.png" />
                                             {t('wallet.transferReward.transferToMain')}
                                         </div>
                                     </div>
-                                ) : (
-                                    <span className='text-2xl font-bold text-center text-pink-500'>
-                                        {t('wallet.balanceLabel')}: 0.00 {selectedCoinInfo?.coin_symbol || 'USDT'}
-                                    </span>
-                                )}
+                                ): <Skeleton className="h-10 w-48 rounded-full bg-theme-pink-100" />}
                             </div>
                         </div>
                     )}
@@ -644,9 +637,6 @@ export default function WalletPage() {
 
                 {/* Network Selection Section */}
                 <div className='mb-4 sm:mb-6 flex flex-col items-center justify-center'>
-                    <label htmlFor="network" className='block mb-1 sm:mb-2 text-xs sm:text-sm font-medium text-theme-red-100 dark:text-[#FE645F]'>
-                        {t('wallet.selectNetwork')}
-                    </label>
                     <CustomSelect
                         id="network"
                         value={selectedNetwork}
@@ -659,7 +649,7 @@ export default function WalletPage() {
                 </div>
 
                 <div className='mb-4 sm:mb-6 max-w-xl mx-auto px-3 sm:px-0'>
-                    <Alert variant="destructive" className='bg-yellow-500 border-yellow-200 dark:border-yellow-800'>
+                    <Alert variant="destructive" className='bg-yellow-500 border-yellow-200 dark:border-yellow-800 py-2'>
                         <AlertDescription className='text-xs sm:text-sm text-white'>
                             {t('wallet.usdtOnlyNotice')}
                         </AlertDescription>

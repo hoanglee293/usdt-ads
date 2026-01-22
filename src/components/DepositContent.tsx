@@ -181,7 +181,7 @@ export default function DepositContent({
 
                         {/* Public Key / Address */}
                         <div className="w-full space-y-2 max-w-xl mx-auto">
-                            <div className="flex items-center gap-12 p-3 bg-theme-pink-100/40 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 shadow-md">
+                            <div className="flex items-center gap-12 p-3 bg-transparent rounded-xl border border-gray-200 dark:border-gray-700 shadow-md">
                                 <label className="text-sm font-medium text-theme-red-100 dark:text-[#FE645F] block">
                                     {t('wallet.walletAddress', { symbol: networkSymbol || '' })} :
                                 </label>
@@ -189,7 +189,7 @@ export default function DepositContent({
                                     {formatAddress(walletResponse.data.public_key)}
                                     <button
                                         onClick={() => handleCopy(walletResponse.data.public_key, t('wallet.copyLabels.walletAddress'))}
-                                        className="text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent p-1"
+                                        className="text-gray-400 cursor-pointer dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent p-1"
                                         title={t('wallet.copyAddress')}
                                     >
                                         <Copy className="w-4 h-4" />
@@ -291,8 +291,6 @@ export default function DepositContent({
                                         <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.time')}</th>
                                         <th className={`${tableHeaderStyles} w-[8%]`}>{t('wallet.tableHeaders.type')}</th>
                                         <th className={`${tableHeaderStyles} w-[10%]`}>{t('wallet.tableHeaders.amount')}</th>
-                                        <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.fromAddress')}</th>
-                                        <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.toAddress')}</th>
                                         <th className={`${tableHeaderStyles} w-[12%]`}>{t('wallet.tableHeaders.transactionId')}</th>
                                         <th className={`${tableHeaderStyles} w-[11%] text-center rounded-r-lg`}>{t('wallet.tableHeaders.status')}</th>
                                     </tr>
@@ -334,43 +332,17 @@ export default function DepositContent({
                                                 <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
                                                     <div className='flex items-center gap-2'>
                                                         <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
-                                                            {formatAddress(transaction.fromAddress)}
+                                                            {transaction.transactionId ? formatAddress(transaction.transactionId) : '-'}
                                                         </span>
-                                                        <button
-                                                            onClick={() => handleCopy(transaction.fromAddress, t('wallet.copyLabels.fromAddress'))}
-                                                            className='text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent mt-1.5'
-                                                            title={t('wallet.copyAddress')}
-                                                        >
-                                                            <Copy className='w-3.5 h-3.5' />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                    <div className='flex items-center gap-2'>
-                                                        <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
-                                                            {formatAddress(transaction.toAddress)}
-                                                        </span>
-                                                        <button
-                                                            onClick={() => handleCopy(transaction.toAddress, t('wallet.copyLabels.toAddress'))}
-                                                            className='text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent mt-1.5'
-                                                            title={t('wallet.copyAddress')}
-                                                        >
-                                                            <Copy className='w-3.5 h-3.5' />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                                <td className={`${tableCellStyles} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                    <div className='flex items-center gap-2'>
-                                                        <span className='text-xs sm:text-sm lg:text-base text-yellow-500 dark:text-yellow-400 italic min-w-20'>
-                                                            {formatAddress(transaction.transactionId)}
-                                                        </span>
+                                                        {transaction.transactionId && (
                                                         <button
                                                             onClick={() => handleCopy(transaction.transactionId, t('wallet.copyLabels.transactionId'))}
                                                             className='text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent mt-1.5'
                                                             title={t('wallet.copyAddress')}
                                                         >
-                                                            <Copy className='w-3.5 h-3.5' />
-                                                        </button>
+                                                                <Copy className='w-3.5 h-3.5' />
+                                                            </button>
+                                                        )}
                                                     </div>
                                                 </td>
                                                 <td className={`${tableCellStyles} w-[11%] text-center rounded-r-lg border-l-0 border-theme-gray-100 border-solid`}>
@@ -380,7 +352,7 @@ export default function DepositContent({
                                                             : 'bg-red-500 text-white'
                                                             }`}
                                                     >
-                                                        {transaction.status}
+                                                        {transaction.status === t('wallet.transactionStatus.complete') ? t('common.success') : t('common.error')}
                                                     </span>
                                                 </td>
                                             </tr>

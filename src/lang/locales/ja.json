@@ -79,6 +79,7 @@
     "createWalletFor": "{symbol} のウォレットを作成",
     "depositButton": "入金",
     "withdrawButton": "出金",
+    "maxButton": "最大",
     "noTransactions": "まだ取引がありません",
     "selectAddressPlaceholder": "ウォレットアドレスを入力",
     "kycModal": {
@@ -142,6 +143,10 @@
     "usdtOnlyNotice": "プラットフォームはUSDT資産のみを受け付けます。USDT以外の資産タイプをプラットフォームに転送した場合、その資産が失われる可能性があります。",
     "minimumWithdrawError": "最低出金額は$5です",
     "minimumWithdrawNote": "注意：最低出金額は5 {symbol}です",
+    "minimumAmountError": "最低金額は0.00000001です",
+    "amountExceedsBalance": "金額が現在の残高を超えています",
+    "invalidAddress": "無効なウォレットアドレスです",
+    "cannotWithdrawToOwnWalletAddress": "自分のウォレットアドレスへの出金はできません",
     "withdrawConfirmModal": {
       "title": "出金確認",
       "message": "以下の金額を出金してもよろしいですか？",

@@ -79,6 +79,7 @@
     "createWalletFor": "Tạo ví cho {symbol}",
     "depositButton": "Nạp",
     "withdrawButton": "Rút",
+    "maxButton": "TỐI ĐA",
     "noTransactions": "Chưa có giao dịch nào",
     "selectAddressPlaceholder": "Nhập địa chỉ ví",
     "kycModal": {
@@ -142,6 +143,10 @@
     "usdtOnlyNotice": "Nền tảng chỉ nhận tài sản USDT nếu chuyển một loại tài sản khác không phải USDT vào nền tảng, tài sản đó có thể bị mất.",
     "minimumWithdrawError": "Số tiền tối thiểu để rút là $5",
     "minimumWithdrawNote": "Lưu ý: Số tiền tối thiểu rút là 5 {symbol}",
+    "minimumAmountError": "Số tiền tối thiểu là 0.00000001",
+    "amountExceedsBalance": "Số tiền vượt quá số dư hiện tại",
+    "invalidAddress": "Địa chỉ ví nhận không hợp lệ",
+    "cannotWithdrawToOwnWalletAddress": "Không thể rút tiền đến địa chỉ ví của chính bạn",
     "withdrawConfirmModal": {
       "title": "Xác nhận rút tiền",
       "message": "Bạn có chắc chắn muốn rút số tiền sau?",
