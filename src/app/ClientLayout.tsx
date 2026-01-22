@@ -108,6 +108,9 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
     }
   }, [isAuth, isLoginPage, pathname, router, isAuthInitialized]);
 
+  // Determine if we should show loading (waiting for redirect)
+  const shouldShowLoading = isAuthInitialized && !isAuth && !isLoginPage;
+
   useEffect(() => {
     if (!isAuth || isLoginPage || !profileError || !isAuthInitialized) return;
 
@@ -170,7 +173,8 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
 
   // Hiển thị loading cho đến khi hoàn thành việc check auth và cập nhật state
   // Điều này đảm bảo không có flash của content không đúng
-  if (!isAuthInitialized) {
+  // Cũng hiển thị loading khi đang chờ redirect về login
+  if (!isAuthInitialized || shouldShowLoading) {
     return (
       <div className="min-h-svh flex items-center justify-center bg-theme-white-100 dark:bg-black">
         <div className="flex flex-col items-center gap-4 relative">
