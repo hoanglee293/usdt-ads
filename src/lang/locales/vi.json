@@ -143,6 +143,8 @@
     "usdtOnlyNotice": "Nền tảng chỉ nhận tài sản USDT nếu chuyển một loại tài sản khác không phải USDT vào nền tảng, tài sản đó có thể bị mất.",
     "minimumWithdrawError": "Số tiền tối thiểu để rút là $5",
     "minimumWithdrawNote": "Lưu ý: Số tiền tối thiểu rút là 5 {symbol}",
+    "withdrawFeeNote": "phí rút tiền mỗi lần giao dịch thành công là 1 USDT. Được miễn phí 5 lần đầu tiên.",
+    "remainingFreeWithdrawals": "Bạn còn {count} lần rút tiền không tính phí",
     "minimumAmountError": "Số tiền tối thiểu là 0.00000001",
     "amountExceedsBalance": "Số tiền vượt quá số dư hiện tại",
     "invalidAddress": "Địa chỉ ví nhận không hợp lệ",
@@ -845,7 +847,7 @@
         "title": "5.1. Hoa Hồng Giới Thiệu",
         "description": "Hoa hồng giao dịch: Bạn sẽ nhận được % hoa hồng từ số USDT người được bạn mời tham gia",
         "level1": "Nhận 25% từ số tiền nạp của người dùng cấp 1 ngay kề bạn",
-        "level2": "Nhận 4% từ số tiền nạp của người dùng cấp 2 (do người cấp 1 giới thiệu)",
+        "level2": "Nhận 8% từ số tiền nạp của người dùng cấp 2 (do người cấp 1 giới thiệu)",
         "totalCommissionNote": "Tổng hoa hồng thu nhập lên tới 15% số tiền staking của mỗi 1 người mới được mời"
       },
       "milestones": {

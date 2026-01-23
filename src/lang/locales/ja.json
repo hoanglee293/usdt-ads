@@ -143,6 +143,8 @@
     "usdtOnlyNotice": "プラットフォームはUSDT資産のみを受け付けます。USDT以外の資産タイプをプラットフォームに転送した場合、その資産が失われる可能性があります。",
     "minimumWithdrawError": "最低出金額は$5です",
     "minimumWithdrawNote": "注意：最低出金額は5 {symbol}です",
+    "withdrawFeeNote": "各成功取引の出金手数料は1 USDTです。最初の5回は無料です。",
+    "remainingFreeWithdrawals": "残り{count}回の無料出金があります",
     "minimumAmountError": "最低金額は0.00000001です",
     "amountExceedsBalance": "金額が現在の残高を超えています",
     "invalidAddress": "無効なウォレットアドレスです",
@@ -843,7 +845,7 @@
         "title": "5.1. 紹介手数料",
         "description": "取引手数料: 招待したユーザーのUSDT金額から%手数料を受け取ります",
         "level1": "レベル1ユーザーの入金額の25%を受け取る（直接下位）",
-        "level2": "レベル2ユーザーの入金額の4%を受け取る（レベル1が紹介）",
+        "level2": "レベル2ユーザーの入金額の8%を受け取る（レベル1が紹介）",
         "totalCommissionNote": "新しく招待された各人のステーキング金額の最大15%までの総コミッション収入"
       },
       "milestones": {

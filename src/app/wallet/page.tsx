@@ -432,6 +432,7 @@ export default function WalletPage() {
         return transactionHistoryResponse.data.map(trans => mapTransactionToUI(trans, selectedCoinInfo?.coin_symbol, t, lang as 'en' | 'kr' | 'vi' | undefined))
     }, [transactionHistoryResponse, selectedCoinInfo, t, lang])
 
+    const getNumberStatusTransaction = transactions.filter(transaction => transaction.status === "Complete" && transaction.type === t('wallet.transactionTypes.withdraw')).length
     // ==================== Event Handlers ====================
 
     const handleNetworkChange = (e: React.ChangeEvent<HTMLSelectElement>) => {

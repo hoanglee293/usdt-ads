@@ -143,6 +143,8 @@
     "usdtOnlyNotice": "플랫폼은 USDT 자산만 수락합니다. USDT가 아닌 다른 자산 유형을 플랫폼으로 전송하면 해당 자산이 손실될 수 있습니다.",
     "minimumWithdrawError": "최소 출금 금액은 $5입니다",
     "minimumWithdrawNote": "참고: 최소 출금 금액은 5 {symbol}입니다",
+    "withdrawFeeNote": "각 성공적인 거래의 출금 수수료는 1 USDT입니다. 처음 5회는 무료입니다.",
+    "remainingFreeWithdrawals": "무료 출금 {count}회가 남아 있습니다",
     "minimumAmountError": "최소 금액은 0.00000001입니다",
     "amountExceedsBalance": "금액이 현재 잔액을 초과합니다",
     "invalidAddress": "유효하지 않은 지갑 주소입니다",
@@ -844,7 +846,7 @@
         "title": "5.1. 추천 수수료",
         "description": "거래 수수료: 초대한 사용자의 USDT 금액에서 % 수수료를 받게 됩니다",
         "level1": "레벨 1 사용자 입금 금액의 25% 받기 (직접 하위)",
-        "level2": "레벨 2 사용자 입금 금액의 4% 받기 (레벨 1이 추천)",
+        "level2": "레벨 2 사용자 입금 금액의 8% 받기 (레벨 1이 추천)",
         "totalCommissionNote": "새로 초대된 각 사람의 스테이킹 금액의 최대 15%까지 총 커미션 수입"
       },
       "milestones": {

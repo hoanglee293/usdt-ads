@@ -317,6 +317,7 @@ export default function WithdrawContent({
             }
         })
     }, [transactionHistoryResponse, selectedCoinInfo, coinSymbol, t, lang])
+    const getNumberStatusTransaction = transactions.filter(transaction => transaction.status === t('wallet.transactionStatus.complete') && transaction.type === t('wallet.transactionTypes.withdraw')).length
 
     return (
         <div className='w-full'>
@@ -351,7 +352,10 @@ export default function WithdrawContent({
                     </p>
                 )}
             </div>
-            <div className="text-xs text-gray-500 dark:text-gray-400 text-center mt-5">{t('wallet.minimumWithdrawNote', { symbol: selectedCoinInfo?.coin_symbol || coinSymbol || 'USDT' })}</div>
+            <div className="text-xs md:text-base max-w-xl mx-auto italic text-yellow-500 text-start mt-5">{t('wallet.minimumWithdrawNote', { symbol: selectedCoinInfo?.coin_symbol || coinSymbol || 'USDT' })}, {t('wallet.withdrawFeeNote')}</div>
+            <div className="text-xs md:text-base max-w-xl mx-auto italic text-yellow-500 text-start">
+                {t('wallet.remainingFreeWithdrawals', { count: getNumberStatusTransaction > 5 ? 0 : 5 - getNumberStatusTransaction })}
+            </div>
 
             {/* Lower Middle Section - Network and Address */}
             <form onSubmit={handleSubmit} className="flex flex-col items-center justify-center gap-6 max-w-xl mx-auto mt-5">

@@ -143,6 +143,8 @@
     "usdtOnlyNotice": "平台仅接受USDT资产。如果您向平台转账非USDT的其他资产类型，该资产可能会丢失。",
     "minimumWithdrawError": "最低提现金额为$5",
     "minimumWithdrawNote": "注意：最低提现金额为 5 {symbol}",
+    "withdrawFeeNote": "每次成功交易的提现手续费为 1 USDT。前5次免费。",
+    "remainingFreeWithdrawals": "您还有 {count} 次免费提现",
     "minimumAmountError": "最低金额为 0.00000001",
     "amountExceedsBalance": "金额超过当前余额",
     "invalidAddress": "无效的钱包地址",
@@ -843,7 +845,7 @@
         "title": "5.1. 推荐佣金",
         "description": "交易佣金: 您将从邀请用户参与的USDT金额中获得%佣金",
         "level1": "从1级用户存款金额中获得25%（直接下级）",
-        "level2": "从2级用户存款金额中获得4%（由1级推荐）",
+        "level2": "从2级用户存款金额中获得8%（由1级推荐）",
         "totalCommissionNote": "每个新邀请人的质押金额的总佣金收入最高可达15%"
       },
       "milestones": {

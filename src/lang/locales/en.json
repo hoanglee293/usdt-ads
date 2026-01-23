@@ -143,6 +143,8 @@
     "usdtOnlyNotice": "The platform only accepts USDT assets. If you transfer a different asset type that is not USDT to the platform, that asset may be lost.",
     "minimumWithdrawError": "Minimum withdrawal amount is $5",
     "minimumWithdrawNote": "Note: Minimum withdrawal amount is 5 {symbol}",
+    "withdrawFeeNote": "withdrawal fee for each successful transaction is 1 USDT. First 5 times are free.",
+    "remainingFreeWithdrawals": "You have {count} free withdrawals remaining",
     "minimumAmountError": "Minimum amount is 0.00000001",
     "amountExceedsBalance": "Amount exceeds current balance",
     "invalidAddress": "Invalid wallet address",
@@ -843,7 +845,7 @@
         "title": "5.1. Referral Commission",
         "description": "Transaction commission: You will receive a % commission from the USDT amount of users you invite to participate",
         "level1": "Receive 25% from Level 1 user deposit amount (directly below you)",
-        "level2": "Receive 4% from Level 2 user deposit amount (referred by Level 1)",
+        "level2": "Receive 8% from Level 2 user deposit amount (referred by Level 1)",
         "totalCommissionNote": "Total commission income up to 15% of the staking amount of each newly invited person"
       },
       "milestones": {
