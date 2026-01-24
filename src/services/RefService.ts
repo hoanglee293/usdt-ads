@@ -350,7 +350,7 @@ export const getMemberRefInfo = async (): Promise<GetMemberRefInfoResponse> => {
       statusCode: 200,
       message: "Get member ref info successfully",
       data: {
-        total_members: 100,
+        total_members: 0,
         current_milestone: null,
         reward_milestone: [
           {
