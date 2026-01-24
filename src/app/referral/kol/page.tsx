@@ -340,8 +340,8 @@ export default function SmartRefPage() {
 
         // Smart Ref page content
         return (
-            <div className='w-full min-h-svh flex py-24 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 md:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
-                <div className='w-full max-w-7xl space-y-6'>
+            <div className='w-full min-h-svh flex py-24 md:pt-28 justify-center items-center px-3 sm:px-4 md:px-6 md:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
+                <div className='w-full max-w-7xl space-y-7 md:space-y-10'>
                     {/* Title Section */}
                     <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6'>
                         <h1 className='text-2xl md:text-4xl font-bold text-center text-gradient-primary-2 '>
@@ -425,148 +425,150 @@ export default function SmartRefPage() {
                         </div>
                     )}
 
-                    <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 !mt-0 md:!w-fit mx-auto'>
-                        <button className="uiverse w-full min-w-3xl sm:w-full text-xs sm:text-sm md:text-base lg:text-lg uppercase tracking-wide h-11">
-                            <div className="wrapper w-full h-11">
-                                {totalRewardsFromMilestones > 0 ? (
-                                    <span>{t('smartRef.totalRewardsUpTo', { total: totalRewardsFromMilestones })}</span>
-                                ): <Skeleton className="w-full min-w-2xl h-11 rounded-lg bg-gray-200 dark:bg-gray-700" />}
-                                <div className="circle circle-12"></div>
-                                <div className="circle circle-11"></div>
-                                <div className="circle circle-10"></div>
-                                <div className="circle circle-9"></div>
-                                <div className="circle circle-8"></div>
-                                <div className="circle circle-7"></div>
-                                <div className="circle circle-6"></div>
-                                <div className="circle circle-5"></div>
-                                <div className="circle circle-4"></div>
-                                <div className="circle circle-3"></div>
-                                <div className="circle circle-2"></div>
-                                <div className="circle circle-1"></div>
-                            </div>
-                        </button>
-                    </div>
 
-                    {/* SVG Gradient Definition for custom icon */}
-                    <svg width='0' height='0' className='absolute'>
-                        <defs>
-                            <linearGradient id='paint0_linear_245_326' x1='49.9999' y1='-0.000366211' x2='49.9999' y2='100' gradientUnits='userSpaceOnUse'>
-                                <stop stopColor='#EB2FBB' />
-                                <stop offset='0.504808' stopColor='#E73A64' />
-                                <stop offset='1' stopColor='#8252DD' />
-                            </linearGradient>
-                            <clipPath id='clip0_245_326'>
-                                <rect width='100' height='100' fill='white' />
-                            </clipPath>
-                        </defs>
-                    </svg>
 
                     {/* Milestone Columns */}
-                    <div className='grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 '>
-                        {isLoadingInfo ? (
-                            // Skeleton loading state
-                            Array.from({ length: 7 }).map((_, index) => (
-                                <div
-                                    key={index}
-                                    className='flex flex-col items-center space-y-2 sm:space-y-3 rounded-lg border border-gray-200 dark:border-[#FE645F] p-3 sm:p-4'
-                                >
-                                    {/* Milestone Label Skeleton */}
-                                    <div className='text-center w-full'>
-                                        <Skeleton className='h-3 w-16 mx-auto mb-2 bg-gray-200 dark:bg-gray-700' />
-                                        <Skeleton className='h-4 w-12 mx-auto bg-gray-300 dark:bg-gray-600' />
-                                    </div>
-
-                                    {/* Icon Skeleton */}
-                                    <div className='flex items-center justify-center'>
-                                        <Skeleton className='w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 dark:bg-gray-700' />
-                                    </div>
-
-                                    {/* Reward Amount Skeleton */}
-                                    <Skeleton className='h-5 sm:h-6 md:h-7 w-16 sm:w-20 bg-gray-300 dark:bg-gray-600' />
-
-                                    {/* Reward Label Skeleton */}
-                                    <Skeleton className='h-3 sm:h-4 w-12 sm:w-16 bg-gray-200 dark:bg-gray-700' />
+                    {!isNotRegister && <>
+                        <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 !mt-6 md:!w-fit mx-auto'>
+                            <button className="uiverse w-full min-w-3xl sm:w-full text-xs sm:text-sm md:text-base lg:text-lg uppercase tracking-wide h-11">
+                                <div className="wrapper w-full h-11">
+                                    {totalRewardsFromMilestones > 0 ? (
+                                        <span>{t('smartRef.totalRewardsUpTo', { total: totalRewardsFromMilestones })}</span>
+                                    ) : <Skeleton className="w-full min-w-2xl h-11 rounded-lg bg-gray-200 dark:bg-gray-700" />}
+                                    <div className="circle circle-12"></div>
+                                    <div className="circle circle-11"></div>
+                                    <div className="circle circle-10"></div>
+                                    <div className="circle circle-9"></div>
+                                    <div className="circle circle-8"></div>
+                                    <div className="circle circle-7"></div>
+                                    <div className="circle circle-6"></div>
+                                    <div className="circle circle-5"></div>
+                                    <div className="circle circle-4"></div>
+                                    <div className="circle circle-3"></div>
+                                    <div className="circle circle-2"></div>
+                                    <div className="circle circle-1"></div>
                                 </div>
-                            ))
-                        ) : (
-                            milestones.map((milestone: MilestoneDefinition, index: number) => (
-                                <div
-                                    key={index}
-                                    className='flex flex-col items-center space-y-2 sm:space-y-3 hover:bg-white dark:hover:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] hover:shadow-md p-3 sm:p-4'
-                                >
-                                    {/* Milestone Label */}
-                                    <div className='text-center'>
-                                        <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1'>{t('smartRef.milestoneLabel')}</p>
-                                        <p className='text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200'>
-                                            {t('smartRef.peopleCount', { count: milestone.count })}
+                            </button>
+                        </div>
+
+                        {/* SVG Gradient Definition for custom icon */}
+                        <svg width='0' height='0' className='absolute'>
+                            <defs>
+                                <linearGradient id='paint0_linear_245_326' x1='49.9999' y1='-0.000366211' x2='49.9999' y2='100' gradientUnits='userSpaceOnUse'>
+                                    <stop stopColor='#EB2FBB' />
+                                    <stop offset='0.504808' stopColor='#E73A64' />
+                                    <stop offset='1' stopColor='#8252DD' />
+                                </linearGradient>
+                                <clipPath id='clip0_245_326'>
+                                    <rect width='100' height='100' fill='white' />
+                                </clipPath>
+                            </defs>
+                        </svg>
+                        <div className='grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 pt-6'>
+                            {isLoadingInfo ? (
+                                // Skeleton loading state
+                                Array.from({ length: 7 }).map((_, index) => (
+                                    <div
+                                        key={index}
+                                        className='flex flex-col items-center space-y-2 sm:space-y-3 rounded-lg border border-gray-200 dark:border-[#FE645F] p-3 sm:p-4'
+                                    >
+                                        {/* Milestone Label Skeleton */}
+                                        <div className='text-center w-full'>
+                                            <Skeleton className='h-3 w-16 mx-auto mb-2 bg-gray-200 dark:bg-gray-700' />
+                                            <Skeleton className='h-4 w-12 mx-auto bg-gray-300 dark:bg-gray-600' />
+                                        </div>
+
+                                        {/* Icon Skeleton */}
+                                        <div className='flex items-center justify-center'>
+                                            <Skeleton className='w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gray-200 dark:bg-gray-700' />
+                                        </div>
+
+                                        {/* Reward Amount Skeleton */}
+                                        <Skeleton className='h-5 sm:h-6 md:h-7 w-16 sm:w-20 bg-gray-300 dark:bg-gray-600' />
+
+                                        {/* Reward Label Skeleton */}
+                                        <Skeleton className='h-3 sm:h-4 w-12 sm:w-16 bg-gray-200 dark:bg-gray-700' />
+                                    </div>
+                                ))
+                            ) : (
+                                milestones.map((milestone: MilestoneDefinition, index: number) => (
+                                    <div
+                                        key={index}
+                                        className='flex flex-col items-center space-y-2 sm:space-y-3 hover:bg-white dark:hover:bg-gray-800 border-solid md:border-none rounded-2xl border border-gray-200 dark:border-[#f47c78]/40 hover:shadow-md p-3 sm:p-4'
+                                    >
+                                        {/* Milestone Label */}
+                                        <div className='text-center'>
+                                            <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1'>{t('smartRef.milestoneLabel')}</p>
+                                            <p className='text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-200'>
+                                                {t('smartRef.peopleCount', { count: milestone.count })}
+                                            </p>
+                                        </div>
+
+                                        {/* Custom Icon */}
+                                        <div className='flex items-center justify-center'>
+                                            {milestone.achieved ? (
+                                                <svg
+                                                    xmlns='http://www.w3.org/2000/svg'
+                                                    className='w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20'
+                                                    viewBox='0 0 100 100'
+                                                    fill='none'
+                                                >
+                                                    <g clipPath='url(#clip0_245_326)'>
+                                                        <path
+                                                            d='M77.4646 37.9541C77.1949 37.6162 76.868 37.6826 76.6967 37.7516C76.5531 37.8098 76.2242 37.9957 76.2697 38.4617C76.3244 39.0213 76.3551 39.5918 76.3609 40.1576C76.3853 42.5049 75.4437 44.8045 73.7777 46.4668C72.1223 48.1184 69.9449 49.0082 67.6266 48.9824C64.4598 48.942 61.8332 47.2903 60.0307 44.2057C58.5402 41.6551 59.1953 38.3655 59.8889 34.8824C60.2947 32.8438 60.7145 30.7356 60.7145 28.7291C60.7145 13.1063 50.2117 4.09299 43.9512 0.110767C43.8217 0.02854 43.6984 -0.000366211 43.5893 -0.000366211C43.4117 -0.000366211 43.2711 0.0761963 43.2018 0.123071C43.0674 0.214087 42.8523 0.421509 42.9215 0.788696C45.3145 13.4961 38.177 21.1389 30.6203 29.2303C22.8313 37.5707 14.0029 47.024 14.0029 64.0733C14.0029 83.8834 30.1195 100 49.9297 100C66.2406 100 80.6217 88.6282 84.9014 72.3457C87.8197 61.2436 84.7615 47.1014 77.4646 37.9541ZM50.826 92.3315C45.8654 92.5576 41.1479 90.7785 37.5445 87.3332C33.9799 83.9246 31.9354 79.1678 31.9354 74.2823C31.9354 65.1141 35.4408 58.3836 44.8693 49.4485C45.0236 49.3022 45.1816 49.2559 45.3193 49.2559C45.4441 49.2559 45.5523 49.294 45.6268 49.3297C45.7836 49.4053 46.0414 49.5924 46.0066 49.9971C45.6695 53.9199 45.6754 57.176 46.0238 59.6752C46.9145 66.059 51.5877 70.3483 57.6531 70.3483C60.6269 70.3483 63.4596 69.2291 65.6293 67.1969C65.8811 66.961 66.1623 66.991 66.2701 67.0139C66.4129 67.0448 66.6041 67.1323 66.7043 67.3739C67.6039 69.5459 68.0637 71.8516 68.0707 74.2264C68.0994 83.7821 60.3635 91.9041 50.826 92.3315Z'
+                                                            fill='url(#paint0_linear_245_326)'
+                                                        />
+                                                    </g>
+                                                    <defs>
+                                                        <linearGradient
+                                                            id='paint0_linear_245_326'
+                                                            x1='49.9999'
+                                                            y1='-0.000366211'
+                                                            x2='49.9999'
+                                                            y2='100'
+                                                            gradientUnits='userSpaceOnUse'
+                                                        >
+                                                            <stop stopColor='#EB2FBB' />
+                                                            <stop offset='0.504808' stopColor='#E73A64' />
+                                                            <stop offset='1' stopColor='#8252DD' />
+                                                        </linearGradient>
+                                                        <clipPath id='clip0_245_326'>
+                                                            <rect width='100' height='100' fill='white' />
+                                                        </clipPath>
+                                                    </defs>
+                                                </svg>
+                                            ) : (
+                                                <svg
+                                                    xmlns='http://www.w3.org/2000/svg'
+                                                    className='w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 opacity-40'
+                                                    viewBox='0 0 100 100'
+                                                    fill='none'
+                                                >
+                                                    <g clipPath='url(#clip0_245_326_inactive)'>
+                                                        <path
+                                                            d='M77.4646 37.9541C77.1949 37.6162 76.868 37.6826 76.6967 37.7516C76.5531 37.8098 76.2242 37.9957 76.2697 38.4617C76.3244 39.0213 76.3551 39.5918 76.3609 40.1576C76.3853 42.5049 75.4437 44.8045 73.7777 46.4668C72.1223 48.1184 69.9449 49.0082 67.6266 48.9824C64.4598 48.942 61.8332 47.2903 60.0307 44.2057C58.5402 41.6551 59.1953 38.3655 59.8889 34.8824C60.2947 32.8438 60.7145 30.7356 60.7145 28.7291C60.7145 13.1063 50.2117 4.09299 43.9512 0.110767C43.8217 0.02854 43.6984 -0.000366211 43.5893 -0.000366211C43.4117 -0.000366211 43.2711 0.0761963 43.2018 0.123071C43.0674 0.214087 42.8523 0.421509 42.9215 0.788696C45.3145 13.4961 38.177 21.1389 30.6203 29.2303C22.8313 37.5707 14.0029 47.024 14.0029 64.0733C14.0029 83.8834 30.1195 100 49.9297 100C66.2406 100 80.6217 88.6282 84.9014 72.3457C87.8197 61.2436 84.7615 47.1014 77.4646 37.9541ZM50.826 92.3315C45.8654 92.5576 41.1479 90.7785 37.5445 87.3332C33.9799 83.9246 31.9354 79.1678 31.9354 74.2823C31.9354 65.1141 35.4408 58.3836 44.8693 49.4485C45.0236 49.3022 45.1816 49.2559 45.3193 49.2559C45.4441 49.2559 45.5523 49.294 45.6268 49.3297C45.7836 49.4053 46.0414 49.5924 46.0066 49.9971C45.6695 53.9199 45.6754 57.176 46.0238 59.6752C46.9145 66.059 51.5877 70.3483 57.6531 70.3483C60.6269 70.3483 63.4596 69.2291 65.6293 67.1969C65.8811 66.961 66.1623 66.991 66.2701 67.0139C66.4129 67.0448 66.6041 67.1323 66.7043 67.3739C67.6039 69.5459 68.0637 71.8516 68.0707 74.2264C68.0994 83.7821 60.3635 91.9041 50.826 92.3315Z'
+                                                            fill='#9CA3AF'
+                                                        />
+                                                    </g>
+                                                    <defs>
+                                                        <clipPath id='clip0_245_326_inactive'>
+                                                            <rect width='100' height='100' fill='white' />
+                                                        </clipPath>
+                                                    </defs>
+                                                </svg>
+                                            )}
+                                        </div>
+
+                                        {/* Reward Amount */}
+                                        <p className='text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200'>
+                                            {milestone.reward} USDT
                                         </p>
-                                    </div>
 
-                                    {/* Custom Icon */}
-                                    <div className='flex items-center justify-center'>
-                                        {milestone.achieved ? (
-                                            <svg
-                                                xmlns='http://www.w3.org/2000/svg'
-                                                className='w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20'
-                                                viewBox='0 0 100 100'
-                                                fill='none'
-                                            >
-                                                <g clipPath='url(#clip0_245_326)'>
-                                                    <path
-                                                        d='M77.4646 37.9541C77.1949 37.6162 76.868 37.6826 76.6967 37.7516C76.5531 37.8098 76.2242 37.9957 76.2697 38.4617C76.3244 39.0213 76.3551 39.5918 76.3609 40.1576C76.3853 42.5049 75.4437 44.8045 73.7777 46.4668C72.1223 48.1184 69.9449 49.0082 67.6266 48.9824C64.4598 48.942 61.8332 47.2903 60.0307 44.2057C58.5402 41.6551 59.1953 38.3655 59.8889 34.8824C60.2947 32.8438 60.7145 30.7356 60.7145 28.7291C60.7145 13.1063 50.2117 4.09299 43.9512 0.110767C43.8217 0.02854 43.6984 -0.000366211 43.5893 -0.000366211C43.4117 -0.000366211 43.2711 0.0761963 43.2018 0.123071C43.0674 0.214087 42.8523 0.421509 42.9215 0.788696C45.3145 13.4961 38.177 21.1389 30.6203 29.2303C22.8313 37.5707 14.0029 47.024 14.0029 64.0733C14.0029 83.8834 30.1195 100 49.9297 100C66.2406 100 80.6217 88.6282 84.9014 72.3457C87.8197 61.2436 84.7615 47.1014 77.4646 37.9541ZM50.826 92.3315C45.8654 92.5576 41.1479 90.7785 37.5445 87.3332C33.9799 83.9246 31.9354 79.1678 31.9354 74.2823C31.9354 65.1141 35.4408 58.3836 44.8693 49.4485C45.0236 49.3022 45.1816 49.2559 45.3193 49.2559C45.4441 49.2559 45.5523 49.294 45.6268 49.3297C45.7836 49.4053 46.0414 49.5924 46.0066 49.9971C45.6695 53.9199 45.6754 57.176 46.0238 59.6752C46.9145 66.059 51.5877 70.3483 57.6531 70.3483C60.6269 70.3483 63.4596 69.2291 65.6293 67.1969C65.8811 66.961 66.1623 66.991 66.2701 67.0139C66.4129 67.0448 66.6041 67.1323 66.7043 67.3739C67.6039 69.5459 68.0637 71.8516 68.0707 74.2264C68.0994 83.7821 60.3635 91.9041 50.826 92.3315Z'
-                                                        fill='url(#paint0_linear_245_326)'
-                                                    />
-                                                </g>
-                                                <defs>
-                                                    <linearGradient
-                                                        id='paint0_linear_245_326'
-                                                        x1='49.9999'
-                                                        y1='-0.000366211'
-                                                        x2='49.9999'
-                                                        y2='100'
-                                                        gradientUnits='userSpaceOnUse'
-                                                    >
-                                                        <stop stopColor='#EB2FBB' />
-                                                        <stop offset='0.504808' stopColor='#E73A64' />
-                                                        <stop offset='1' stopColor='#8252DD' />
-                                                    </linearGradient>
-                                                    <clipPath id='clip0_245_326'>
-                                                        <rect width='100' height='100' fill='white' />
-                                                    </clipPath>
-                                                </defs>
-                                            </svg>
-                                        ) : (
-                                            <svg
-                                                xmlns='http://www.w3.org/2000/svg'
-                                                className='w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 opacity-40'
-                                                viewBox='0 0 100 100'
-                                                fill='none'
-                                            >
-                                                <g clipPath='url(#clip0_245_326_inactive)'>
-                                                    <path
-                                                        d='M77.4646 37.9541C77.1949 37.6162 76.868 37.6826 76.6967 37.7516C76.5531 37.8098 76.2242 37.9957 76.2697 38.4617C76.3244 39.0213 76.3551 39.5918 76.3609 40.1576C76.3853 42.5049 75.4437 44.8045 73.7777 46.4668C72.1223 48.1184 69.9449 49.0082 67.6266 48.9824C64.4598 48.942 61.8332 47.2903 60.0307 44.2057C58.5402 41.6551 59.1953 38.3655 59.8889 34.8824C60.2947 32.8438 60.7145 30.7356 60.7145 28.7291C60.7145 13.1063 50.2117 4.09299 43.9512 0.110767C43.8217 0.02854 43.6984 -0.000366211 43.5893 -0.000366211C43.4117 -0.000366211 43.2711 0.0761963 43.2018 0.123071C43.0674 0.214087 42.8523 0.421509 42.9215 0.788696C45.3145 13.4961 38.177 21.1389 30.6203 29.2303C22.8313 37.5707 14.0029 47.024 14.0029 64.0733C14.0029 83.8834 30.1195 100 49.9297 100C66.2406 100 80.6217 88.6282 84.9014 72.3457C87.8197 61.2436 84.7615 47.1014 77.4646 37.9541ZM50.826 92.3315C45.8654 92.5576 41.1479 90.7785 37.5445 87.3332C33.9799 83.9246 31.9354 79.1678 31.9354 74.2823C31.9354 65.1141 35.4408 58.3836 44.8693 49.4485C45.0236 49.3022 45.1816 49.2559 45.3193 49.2559C45.4441 49.2559 45.5523 49.294 45.6268 49.3297C45.7836 49.4053 46.0414 49.5924 46.0066 49.9971C45.6695 53.9199 45.6754 57.176 46.0238 59.6752C46.9145 66.059 51.5877 70.3483 57.6531 70.3483C60.6269 70.3483 63.4596 69.2291 65.6293 67.1969C65.8811 66.961 66.1623 66.991 66.2701 67.0139C66.4129 67.0448 66.6041 67.1323 66.7043 67.3739C67.6039 69.5459 68.0637 71.8516 68.0707 74.2264C68.0994 83.7821 60.3635 91.9041 50.826 92.3315Z'
-                                                        fill='#9CA3AF'
-                                                    />
-                                                </g>
-                                                <defs>
-                                                    <clipPath id='clip0_245_326_inactive'>
-                                                        <rect width='100' height='100' fill='white' />
-                                                    </clipPath>
-                                                </defs>
-                                            </svg>
-                                        )}
-                                    </div>
+                                        {/* Reward Label */}
+                                        <p className='text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400'>{t('smartRef.rewardLabel')}</p>
 
-                                    {/* Reward Amount */}
-                                    <p className='text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200'>
-                                        {milestone.reward} USDT
-                                    </p>
-
-                                    {/* Reward Label */}
-                                    <p className='text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400'>{t('smartRef.rewardLabel')}</p>
-
-                                    {/* Referral Link Button (only for 20 people milestone) */}
-                                    {/* {milestone.showLink && (
+                                        {/* Referral Link Button (only for 20 people milestone) */}
+                                        {/* {milestone.showLink && (
                                 <button
                                     onClick={() => router.push('/referral/direct')}
                                     className='mt-2 w-full hidden sm:block bg-gradient-to-r from-pink-500 to-red-500 text-white border-none hover:opacity-90 text-xs sm:text-sm font-medium rounded-lg hover:bg-gradient-to-r hover:from-pink-600 hover:to-red-600 cursor-pointer'
@@ -575,15 +577,17 @@ export default function SmartRefPage() {
                                     {t('smartRef.referralLinkButton')}
                                 </button>
                             )} */}
-                                </div>
-                            ))
-                        )}
-                    </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </>}
+
 
                     {/* Claim Reward Button - only show if status is success */}
                     {isSuccess && (
                         <>
-                            <div className='flex flex-col items-center gap-4 mt-4 relative'>
+                            <div className='flex flex-col items-center gap-4 py-0 md:py-4 relative'>
                                 {totalCanWithdraw > 0 && (
                                     <div className='text-center'>
                                         <p className='text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-1'>
@@ -613,8 +617,6 @@ export default function SmartRefPage() {
                                         {t('ref.history') || 'Lịch sử'}
                                     </button>
                                 </div>
-
-
                             </div>
 
                             {/* Disclaimer */}
