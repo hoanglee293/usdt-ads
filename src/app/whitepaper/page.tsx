@@ -473,15 +473,6 @@ export default function WhitepaperPage() {
                 <li className="indent-4">{t('whitepaper.section6.revenue.item2')}</li>
               </ul>
             </div>
-
-            <h3 className="text-xl sm:text-2xl font-semibold text-theme-black-100 dark:text-white mt-4 sm:mt-6 mb-3 sm:mb-4">
-              {t('whitepaper.section6.liquidity.title')}
-            </h3>
-            <div className="bg-gray-50 dark:bg-gray-800 p-3 sm:p-4 rounded-lg mb-4 sm:mb-6">
-              <p className="text-sm sm:text-base text-theme-black-100 dark:text-gray-300">
-                {t('whitepaper.section6.liquidity.description')}
-              </p>
-            </div>
           </section>
 
           {/* Section 7: Bảo Mật & Minh Bạch */}
