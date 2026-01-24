@@ -184,7 +184,6 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
       </div>
     );
   }
-  console.log("showEmailVerifyModal", showEmailVerifyModal);
 
   return (
     <>

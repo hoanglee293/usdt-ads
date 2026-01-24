@@ -104,7 +104,6 @@ const page = () => {
             }
 
             const response = await registerPassword(registerData)
-            console.log("response", response)
             if (response) {
                 toast.success(t('register.registerSuccess'))
                 router.push('/verify-mail')

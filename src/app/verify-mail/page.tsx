@@ -117,7 +117,6 @@ const page = () => {
 
         try {
             const response = await verifyEmail({ code: codeString })
-            console.log(response)
             toast.success(t('verifyMail.verifySuccess'))
             setLoading(false)
             setTimeout(() => {

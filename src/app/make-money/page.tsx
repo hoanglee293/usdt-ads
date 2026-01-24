@@ -1005,6 +1005,21 @@ export default function MakeMoneyPage() {
     const tableHeaderStyles = "px-2 py-2 sm:px-3 text-left text-xs sm:text-sm lg:text-base font-semibold text-theme-red-100 uppercase bg-transparent "
     const tableCellStyles = "px-2 py-3 sm:px-3 text-xs sm:text-sm lg:text-base text-theme-gray-200 dark:text-gray-300 bg-transparent border-y border-black dark:border-gray-700 group-hover:bg-gray-100 dark:group-hover:bg-gray-800 font-light"
 
+    // Check if critical data is still loading
+    const isInitialLoading = isLoadingCoins || isLoadingCurrentStaking || isLoadingHistories
+
+    // Show loading screen before data is fully loaded
+    if (isInitialLoading) {
+        return (
+            <div className="min-h-svh flex items-center justify-center bg-theme-white-100 dark:bg-black">
+                <div className="flex flex-col items-center gap-4 relative">
+                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-x-pink-500 border-y-blue-600 border-double flex items-center justify-center absolute top-0 left-0 z-10 ml-[-17px] mt-[-16px]"></div>
+                    <img src="/logo.png" alt="Loading" className="w-24 h-24" />
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className='w-full min-h-svh flex py-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
             <div className='w-full max-w-7xl'>
@@ -1627,7 +1642,7 @@ export default function MakeMoneyPage() {
                                 <Button
                                     onClick={handleJoinBase}
                                     disabled={joinBaseMutation.isPending || isBaseDisabled}
-                                    className='w-full bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-theme-red-200 dark:text-[#FE645F] text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer'
+                                    className='w-full bg-gray-100 dark:bg-gray-700 hover:scale-x-105 transition-all duration-300 text-theme-red-200 dark:text-[#FE645F] text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer'
                                 >
                                     {joinBaseMutation.isPending ? (
                                         <>
@@ -1647,7 +1662,7 @@ export default function MakeMoneyPage() {
                                 <Button
                                     onClick={handleStakingButtonClick}
                                     disabled={isStakingDisabled}
-                                    className='w-full bg-[#21ceb3] cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-600 text-white text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
+                                    className='w-full bg-[#21ceb3] cursor-pointer hover:scale-x-105 transition-all duration-300 text-white text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
                                 >
                                     {t('makeMoney.joinStaking')}
                                 </Button>

@@ -213,7 +213,6 @@ export default function WalletPage() {
     const queryClient = useQueryClient()
     const router = useRouter()
     const isMobile = useIsMobile()
-    console.log("showCreateWalletDialog", showCreateWalletDialog)
 
     // ==================== React Query Hooks ====================
 

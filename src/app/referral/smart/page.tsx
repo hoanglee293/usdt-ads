@@ -32,7 +32,6 @@ export default function DirectReferralPage() {
     const { profile } = useProfile();
     const queryClient = useQueryClient();
     const isMobile = useIsMobile();
-    console.log(profile);
     const [showReferralStructure, setShowReferralStructure] = useState(true)
     const [activeTab, setActiveTab] = useState("level-referral") // 'level-referral', 'referred-users'
     const [selectedLevel, setSelectedLevel] = useState<number | undefined>(undefined)
@@ -110,6 +109,21 @@ export default function DirectReferralPage() {
     const filteredUsers = selectedLevel
         ? (smartRefDetail.data || []).filter((user: any) => user.level === selectedLevel)
         : (smartRefDetail.data || []);
+
+    // Check if critical data is still loading
+    const isInitialLoading = isLoadingInfo || isLoadingTree || isLoadingDetail
+
+    // Show loading screen before data is fully loaded
+    if (isInitialLoading) {
+        return (
+            <div className="min-h-svh flex items-center justify-center bg-theme-white-100 dark:bg-black">
+                <div className="flex flex-col items-center gap-4 relative">
+                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-x-pink-500 border-y-blue-600 border-double flex items-center justify-center absolute top-0 left-0 z-10 ml-[-17px] mt-[-16px]"></div>
+                    <img src="/logo.png" alt="Loading" className="w-24 h-24" />
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="w-full min-h-svh flex py-24 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1">

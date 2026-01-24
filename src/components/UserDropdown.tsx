@@ -17,7 +17,6 @@ const UserDropdown: React.FC = () => {
   const router = useRouter();
   const { t } = useLang();
   const queryClient = useQueryClient();
-  console.log(profile);
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
