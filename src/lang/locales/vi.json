@@ -205,7 +205,7 @@
     "history": "Lịch sử rút thưởng"
   },
   "smartRef": {
-    "title": "Phần thưởng Influencer",
+    "title": "Phần thưởng dành cho người nổi tiếng",
     "progressText": "Đã giới thiệu: {current}/{total} người",
     "milestoneLabel": "Mốc giới thiệu",
     "peopleCount": "{count} người",
