@@ -121,6 +121,21 @@ export default function DepositContent({
     const tableHeaderStyles = "px-2 py-2 sm:px-3 text-left text-xs sm:text-sm lg:text-base font-semibold text-theme-red-100 dark:text-[#FE645F] uppercase"
     const tableCellStyles = "px-2 py-3 sm:px-3 text-xs sm:text-sm lg:text-base text-theme-gray-200 dark:text-gray-300 bg-white dark:bg-gray-800 border-y border-black dark:border-gray-700 group-hover:bg-gray-100 dark:group-hover:bg-gray-800 font-light"
 
+    // Check if critical data is still loading
+    const isInitialLoading = isLoading
+
+    // Show loading screen before data is fully loaded
+    if (isInitialLoading) {
+        return (
+            <div className="min-h-[20vh] flex items-center justify-center bg-theme-white-100 dark:bg-black">
+                <div className="flex flex-col items-center gap-4 relative">
+                    <div className="animate-spin rounded-full h-20 w-20 border-t-2 border-b-2 border-x-pink-500 border-y-blue-600 border-double flex items-center justify-center absolute top-0 left-0 z-10 ml-[-8.5px] mt-[-9px]"></div>
+                    <img src="/logo.png" alt="Loading" className="w-16 h-16" />
+                </div>
+            </div>
+        )
+    }
+
     return (
         <div className='w-full'>
             {/* Content */}

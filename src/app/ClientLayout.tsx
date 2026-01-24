@@ -22,9 +22,9 @@ interface ClientLayoutProps {
 
 function ThemeAwareToaster() {
   const { theme } = useTheme();
-  
+
   return (
-    <Toaster 
+    <Toaster
       position="top-right"
       toastOptions={{
         duration: 2500,
@@ -87,7 +87,7 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
     if (typeof window !== 'undefined') {
       const urlParams = new URLSearchParams(window.location.search);
       const refCode = urlParams.get('ref');
-      
+
       if (refCode && refCode.trim()) {
         localStorage.setItem('refCode', refCode.trim());
       }
@@ -136,17 +136,17 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
       toast.success(t('verifyMail.resendCodeSuccess'));
     } catch (err: any) {
       console.error('Error resending code:', err);
-      const errorMessage = err?.message || 
-        err?.response?.data?.message || 
+      const errorMessage = err?.message ||
+        err?.response?.data?.message ||
         t('verifyMail.resendCodeError');
-      
+
       // Handle specific error messages
       if (errorMessage.includes('Email is already activated')) {
         toast.error(t('verifyMail.generateCodeEmailAlreadyActivated'));
         setResendLoading(false);
         return;
       }
-      if (errorMessage.includes('JWT token missing/invalid') || 
+      if (errorMessage.includes('JWT token missing/invalid') ||
         errorMessage.includes('JWT token') ||
         errorMessage.includes('token missing') ||
         errorMessage.includes('token invalid')) {
@@ -154,7 +154,7 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
         setResendLoading(false);
         return;
       }
-      
+
       // Default error message
       toast.error(errorMessage);
     } finally {
@@ -178,8 +178,8 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
     return (
       <div className="min-h-svh flex items-center justify-center bg-theme-white-100 dark:bg-black">
         <div className="flex flex-col items-center gap-4 relative">
-          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-x-pink-500 border-y-blue-600 border-double flex items-center justify-center absolute top-0 left-0 z-10 ml-[-17px] mt-[-16px]"></div>
-          <img src="/logo.png" alt="Loading" className="w-24 h-24" />
+          <div className="animate-spin rounded-full md:h-32 md:w-32 h-20 w-20 border-t-2 border-b-2 border-x-pink-500 border-y-blue-600 border-double flex items-center justify-center absolute top-0 left-0 z-10 md:ml-[-17px] md:mt-[-16px] ml-[-8.5px] mt-[-9px]"></div>
+          <img src="/logo.png" alt="Loading" className="md:w-24 md:h-24 w-16 h-16" />
         </div>
       </div>
     );
@@ -197,7 +197,7 @@ function ClientLayoutContent({ children }: ClientLayoutProps) {
             </div>
             <p className="mb-6 text-base text-gray-700 dark:text-gray-300">{emailVerifyMessage}</p>
             <div className="flex justify-end gap-3">
-              <button onClick={() => {handleLogout(); logout(); setShowEmailVerifyModal(false);}} className="rounded-lg bg-transparent border border-gray-500 border-solid cursor-pointer px-4 py-2 dark:text-white text-black hover:dark:bg-gray-500 hover:bg-gray-300">
+              <button onClick={() => { handleLogout(); logout(); setShowEmailVerifyModal(false); }} className="rounded-lg bg-transparent border border-gray-500 border-solid cursor-pointer px-4 py-2 dark:text-white text-black hover:dark:bg-gray-500 hover:bg-gray-300">
                 {t('user.logout')}
               </button>
               <button
