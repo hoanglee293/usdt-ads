@@ -887,7 +887,7 @@ export default function WalletPage() {
                     title={t('wallet.transferReward.title')}
                     maxWidth="max-w-3xl"
                     showCloseButton={true}
-                    className="h-[80vh]"
+                    className="h-[80vh] overflow-hidden"
                 >
                     <div className="space-y-6">
                         {/* Transfer Section */}
