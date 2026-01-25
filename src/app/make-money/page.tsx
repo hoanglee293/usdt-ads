@@ -39,6 +39,7 @@ import {
     type Mission,
 } from '@/services/StakingService'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { formatReward } from '@/utils/format'
 
 export default function MakeMoneyPage() {
     const queryClient = useQueryClient()
@@ -1225,32 +1226,18 @@ export default function MakeMoneyPage() {
                                                                 >
                                                                     <ChevronRight className='w-5 h-5' />
                                                                 </button>
-                                                                <button
-                                                                    onClick={handleDownloadCalendar}
-                                                                    className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-blue-100 dark:bg-blue-900/50 hover:bg-blue-200 dark:hover:bg-blue-900/70 text-blue-700 dark:text-blue-300 cursor-pointer'
-                                                                    title={t('makeMoney.downloadCalendar') || 'Tải xuống'}
-                                                                >
-                                                                    <Download className='w-5 h-5' />
-                                                                </button>
-                                                                <button
-                                                                    onClick={handleShareCalendar}
-                                                                    className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-green-100 dark:bg-green-900/50 hover:bg-green-200 dark:hover:bg-green-900/70 text-green-700 dark:text-green-300 cursor-pointer'
-                                                                    title={t('makeMoney.shareCalendar') || 'Chia sẻ'}
-                                                                >
-                                                                    <Share2 className='w-5 h-5' />
-                                                                </button>
                                                             </div>
                                                         </div>
 
                                                         {/* Calendar */}
                                                         <div className='overflow-x-auto'>
-                                                            <table className='w-full border-collapse'>
+                                                            <table className='w-full border-collapse table-fixed'>
                                                                 <thead>
                                                                     <tr>
                                                                         {dayNames.map((day, index) => (
                                                                             <th
                                                                                 key={index}
-                                                                                className='px-1 py-2 sm:px-2 sm:py-3 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600'
+                                                                                className='w-[14.28%] px-1 py-2 sm:px-2 sm:py-3 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600'
                                                                             >
                                                                                 {day}
                                                                             </th>
@@ -1300,28 +1287,28 @@ export default function MakeMoneyPage() {
                                                                                 return (
                                                                                     <td
                                                                                         key={dayIndex}
-                                                                                        className={`px-[1px] py-1 sm:px-2 h-12 text-center border align-top`}
+                                                                                        className={`w-[14.28%] px-[1px] py-1 sm:px-2 h-12 text-center border align-top`}
                                                                                     >
                                                                                         {day !== null ? (
                                                                                             <div className={`flex py-1 flex-col h-full justify-center items-center gap-0.5 sm:gap-1 ${bgColor} ${mission?.status === 'success'
                                                                                                 ? 'border-green-500 border-solid'
                                                                                                 : mission?.status === 'out'
                                                                                                     ? 'border-red-500 border-solid'
-                                                                                                    : ''} rounded-lg`}>
+                                                                                                    : ''} rounded-lg overflow-hidden`}>
                                                                                                 <span className={`text-xs sm:text-sm font-semibold ${textColor}`}>
                                                                                                     {day}
                                                                                                 </span>
                                                                                                 {mission && (
-                                                                                                    <div className='text-[9px] sm:text-[10px] leading-tight'>
+                                                                                                    <div className='text-[9px] sm:text-[10px] leading-tight w-full overflow-hidden'>
                                                                                                         {/* <div className={`font-medium ${textColor}`}>
                                                                                             {mission.turn}/{currentStaking?.turn_setting || 0}
                                                                                         </div> */}
                                                                                                         {mission.reward !== undefined && (
-                                                                                                            <div className={`mt-0.5 font-semibold ${isSuccess
+                                                                                                            <div className={`mt-0.5 font-semibold truncate ${isSuccess
                                                                                                                 ? 'text-green-600 dark:text-green-400'
                                                                                                                 : 'text-orange-600 dark:text-orange-400'
                                                                                                                 }`}>
-                                                                                                                +{mission.reward.toFixed(2)}$
+                                                                                                                +{formatReward(mission.reward)}$
                                                                                                             </div>
                                                                                                         )}
                                                                                                     </div>
@@ -1361,6 +1348,22 @@ export default function MakeMoneyPage() {
                                                     </div>
                                                 )
                                             })()}
+                                        </div>
+                                        <div className='flex items-center gap-2 justify-end mt-4 max-w-5xl mx-auto'>
+                                        <button
+                                            onClick={handleDownloadCalendar}
+                                            className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-blue-100 dark:bg-blue-900/50 hover:bg-blue-200 dark:hover:bg-blue-900/70 text-blue-700 dark:text-blue-300 cursor-pointer'
+                                            title={t('makeMoney.downloadCalendar') || 'Tải xuống'}
+                                        >
+                                            <Download className='w-5 h-5' />
+                                        </button>
+                                        <button
+                                            onClick={handleShareCalendar}
+                                            className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-green-100 dark:bg-green-900/50 hover:bg-green-200 dark:hover:bg-green-900/70 text-green-700 dark:text-green-300 cursor-pointer'
+                                            title={t('makeMoney.shareCalendar') || 'Chia sẻ'}
+                                        >
+                                            <Share2 className='w-5 h-5' />
+                                        </button>
                                         </div>
                                     </div>
                                 )}
