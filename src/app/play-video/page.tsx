@@ -392,10 +392,10 @@ export default function PlayVideoPage() {
 
     if (isLoadingMission) {
         return (
-            <div className="min-h-svh flex items-center justify-center bg-theme-white-100 dark:bg-black">
-                <div className="flex flex-col items-center gap-4 relative">
-                    <div className="animate-spin rounded-full md:h-32 md:w-32 h-20 w-20 border-t-2 border-b-2 border-x-pink-500 border-y-blue-600 border-double flex items-center justify-center absolute top-0 left-0 z-10 md:ml-[-17px] md:mt-[-16px] ml-[-8.5px] mt-[-9px]"></div>
-                    <img src="/logo.png" alt="Loading" className="md:w-24 md:h-24 w-16 h-16" />
+            <div className="flex items-center justify-center min-h-screen bg-background">
+                <div className="text-center space-y-4">
+                    <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
+                    <p className="text-muted-foreground">{t('makeMoney.playVideo.loading')}</p>
                 </div>
             </div>
         );

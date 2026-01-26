@@ -143,10 +143,10 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
                         "flex w-full rounded-full border border-input bg-background",
                         "text-sm sm:text-base font-medium ring-offset-background",
                         "appearance-none cursor-pointer",
-                        "outline-none transition-all duration-200",
+                        "outline-none shadow-none transition-all duration-200",
                         
                         // Mobile optimized - larger touch targets
-                        "h-11 px-4 py-3 pr-11 sm:h-10 sm:px-4 sm:py-2 sm:pr-10",
+                        "h-9 px-4 py-1.5 pr-11 sm:h-10 sm:px-4 sm:py-2 sm:pr-10",
                         
                         // Dark mode border and background
                         "dark:border-gray-600 dark:bg-gray-800",
@@ -188,7 +188,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
                     ))}
                 </select>
                 <div className={cn(
-                    'absolute right-3 sm:right-4 top-1/2 transform -translate-y-1/2 pointer-events-none',
+                    'absolute right-3 sm:right-4 top-1/2 mt-[1px] transform -translate-y-1/2 pointer-events-none',
                     'transition-transform duration-200'
                 )}>
                     <ChevronDown 

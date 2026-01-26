@@ -455,34 +455,38 @@ export default function WithdrawContent({
                     <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
                         {t('wallet.withdrawConfirmModal.message')}
                     </p>
-                    {pendingWithdrawData && (
-                        <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-3">
-                            <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    {t('wallet.withdrawConfirmModal.amount')}:
-                                </span>
-                                <span className="text-lg font-bold text-theme-red-200 dark:text-theme-red-300">
-                                    {formatBalance(pendingWithdrawData.amount)} {selectedCoinInfo?.coin_symbol || coinSymbol || 'USDT'}
-                                </span>
+                    {pendingWithdrawData && (() => {
+                        const remainingFreeWithdrawals = getNumberStatusTransaction > 5 ? 0 : 5 - getNumberStatusTransaction
+                        const fee = remainingFreeWithdrawals > 0 ? 0 : 1
+                        return (
+                            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        {t('wallet.withdrawConfirmModal.amount')}:
+                                    </span>
+                                    <span className="text-lg font-bold text-theme-red-200 dark:text-theme-red-300">
+                                        {formatBalance(pendingWithdrawData.amount)} {selectedCoinInfo?.coin_symbol || coinSymbol || 'USDT'}
+                                    </span>
+                                </div>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        {t('wallet.withdrawConfirmModal.fee')}:
+                                    </span>
+                                    <span className={`text-sm font-semibold ${fee === 0 ? 'text-green-600 dark:text-green-400' : 'text-gray-600 dark:text-gray-400'}`}>
+                                        {getNumberStatusTransaction < 5 ? <>{t('common.free')} ({5 - getNumberStatusTransaction} / 5)</> : `${fee} ${selectedCoinInfo?.coin_symbol || coinSymbol || 'USDT'}`}
+                                    </span>
+                                </div>
+                                <div className="border-t border-gray-200 dark:border-gray-700  flex items-center justify-between">
+                                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                                        {t('wallet.withdrawConfirmModal.amountReceived')}:
+                                    </span>
+                                    <span className="text-lg font-bold text-green-600 dark:text-green-400">
+                                        {formatBalance(Math.max(0, pendingWithdrawData.amount - fee))} {selectedCoinInfo?.coin_symbol || coinSymbol || 'USDT'}
+                                    </span>
+                                </div>
                             </div>
-                            <div className="flex items-center justify-between">
-                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    {t('wallet.withdrawConfirmModal.fee')}:
-                                </span>
-                                <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">
-                                    1 USDT
-                                </span>
-                            </div>
-                            <div className="border-t border-gray-200 dark:border-gray-700  flex items-center justify-between">
-                                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    {t('wallet.withdrawConfirmModal.amountReceived')}:
-                                </span>
-                                <span className="text-lg font-bold text-green-600 dark:text-green-400">
-                                    {formatBalance(Math.max(0, pendingWithdrawData.amount - 1))} {selectedCoinInfo?.coin_symbol || coinSymbol || 'USDT'}
-                                </span>
-                            </div>
-                        </div>
-                    )}
+                        )
+                    })()}
                     <div className="flex gap-3 w-full mt-2">
                         <Button
                             type="button"
@@ -515,7 +519,7 @@ export default function WithdrawContent({
 
             {/* Transaction History Section */}
             <div className="w-full mt-8">
-                <h3 className="text-lg font-semibold text-theme-red-100 dark:text-[#FE645F] mb-4">
+                <h3 className="text-base md:text-lg font-semibold text-theme-red-100 dark:text-[#FE645F] mb-4">
                     {t('wallet.transactionHistory')} - {t('wallet.transactionTypes.withdraw')}
                 </h3>
                 {isMobile ? (

@@ -15,7 +15,8 @@
     "pending": "待处理",
     "rejected": "已拒绝",
     "noData": "暂无数据",
-    "amount": "金额"
+    "amount": "金额",
+    "free": "免费"
   },
   "languages": {
     "kr": "韩语",
@@ -74,6 +75,7 @@
     "selectNetworkPlaceholder": "选择网络",
     "walletAddress": "钱包地址 {symbol}",
     "copyAddress": "复制地址",
+    "onNetwork": "在网络上",
     "noWalletForNetwork": "您没有 {name} ({symbol}) 网络的钱包",
     "selectAddressPlaceholder": "输入钱包地址",
     "creatingWallet": "正在创建钱包...",

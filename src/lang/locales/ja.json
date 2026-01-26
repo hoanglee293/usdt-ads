@@ -15,7 +15,8 @@
     "pending": "保留中",
     "rejected": "拒否されました",
     "noData": "データなし",
-    "amount": "金額"
+    "amount": "金額",
+    "free": "無料"
   },
   "languages": {
     "kr": "韓国語",
@@ -74,6 +75,7 @@
     "selectNetworkPlaceholder": "ネットワークを選択",
     "walletAddress": "ウォレットアドレス {symbol}",
     "copyAddress": "アドレスをコピー",
+    "onNetwork": "ネットワーク上で",
     "noWalletForNetwork": "ネットワーク {name} ({symbol}) のウォレットがありません",
     "creatingWallet": "ウォレット作成中...",
     "createWalletFor": "{symbol} のウォレットを作成",

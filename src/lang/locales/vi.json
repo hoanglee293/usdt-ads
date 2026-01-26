@@ -15,7 +15,8 @@
     "pending": "Đang chờ",
     "rejected": "Đã từ chối",
     "noData": "Không có dữ liệu",
-    "amount": "Số tiền"
+    "amount": "Số tiền",
+    "free": "Miễn phí"
   },
   "languages": {
     "kr": "Tiếng Hàn",
@@ -74,6 +75,7 @@
     "selectNetworkPlaceholder": "Chọn mạng lưới",
     "walletAddress": "Địa chỉ ví {symbol}",
     "copyAddress": "Sao chép địa chỉ",
+    "onNetwork": "trên mạng",
     "noWalletForNetwork": "Bạn chưa có ví cho mạng lưới {name} ({symbol})",
     "creatingWallet": "Đang tạo ví...",
     "createWalletFor": "Tạo ví cho {symbol}",

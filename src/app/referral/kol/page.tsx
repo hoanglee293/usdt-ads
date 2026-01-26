@@ -307,8 +307,8 @@ export default function SmartRefPage() {
         return (
             <div className="min-h-svh flex items-center justify-center bg-theme-white-100 dark:bg-black">
                 <div className="flex flex-col items-center gap-4 relative">
-                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-x-pink-500 border-y-blue-600 border-double flex items-center justify-center absolute top-0 left-0 z-10 ml-[-17px] mt-[-16px]"></div>
-                    <img src="/logo.png" alt="Loading" className="w-24 h-24" />
+                    <div className="animate-spin rounded-full md:h-32 md:w-32 h-20 w-20 border-t-2 border-b-2 border-x-pink-500 border-y-blue-600 border-double flex items-center justify-center absolute top-0 left-0 z-10 md:ml-[-17px] md:mt-[-16px] ml-[-8.5px] mt-[-9px]"></div>
+                    <img src="/logo.png" alt="Loading" className="md:w-24 md:h-24 w-16 h-16" />
                 </div>
             </div>
         )
@@ -389,10 +389,10 @@ export default function SmartRefPage() {
                     )}
 
                     {isSuccess && (
-                        <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 mt-4 w-full mx-auto lg:mt-6'>
+                        <div className='flex items-center justify-center gap-3 sm:gap-4 mb-6 mt-4 md:w-full w-fit mx-auto lg:mt-6'>
                             <button
                                 onClick={() => setShowArticleModal(true)}
-                                className='min-w-[300px] px-5 border border-solid border-black dark:border-theme-gray-100/50 text-gradient-primary-2 hover:bg-gray-100 dark:hover:bg-gray-600 font-medium rounded-full py-1.5 transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed group hover:text-theme-red-200 hover:border-theme-red-200 text-base sm:text-lg font-semibold'
+                                className='min-w-[200px] px-5 border border-solid border-black dark:border-theme-gray-100/50 text-gradient-primary-2 hover:bg-gray-100 dark:hover:bg-gray-600 font-medium rounded-full py-1.5 transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed group hover:text-theme-red-200 hover:border-theme-red-200 text-base sm:text-lg font-semibold'
                             >
                                 {t('kol.articleButton') || 'Gửi bài viết'}
                             </button>
@@ -433,7 +433,7 @@ export default function SmartRefPage() {
                             <button className="uiverse w-full min-w-3xl sm:w-full text-xs sm:text-sm md:text-base lg:text-lg uppercase tracking-wide h-11">
                                 <div className="wrapper w-full h-11">
                                     {totalRewardsFromMilestones > 0 ? (
-                                        <span>{t('smartRef.totalRewardsUpTo', { total: totalRewardsFromMilestones })}</span>
+                                        <span className='main-content w-full'>{t('smartRef.totalRewardsUpTo', { total: totalRewardsFromMilestones })}</span>
                                     ) : <Skeleton className="w-full min-w-2xl h-11 rounded-lg bg-gray-200 dark:bg-gray-700" />}
                                     <div className="circle circle-12"></div>
                                     <div className="circle circle-11"></div>

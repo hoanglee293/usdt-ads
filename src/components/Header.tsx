@@ -58,7 +58,7 @@ const MobileUserSection: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   }
 
   return (
-    <div className="px-3 sm:px-4 py-2">
+    <div className="px-2 sm:px-4 py-2">
       {/* User Profile Info */}
       <div
         className="flex items-center gap-3 cursor-pointer hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 p-2 rounded-lg touch-manipulation"
@@ -189,7 +189,7 @@ export default function Header() {
   }, [isMenuOpen, isLangMenuOpen]);
 
   return (
-    <div className={`fixed top-0 lg:top-4 lg:bg-transparent bg-theme-pink-100/80 left-0 right-0 z-50 flex justify-between items-center h-16 md:h-16 px-4 pt-1.5 sm:px-4 md:px-6 2xl:gap-24 gap-4 md:gap-16 dark:lg:bg-transparent ${pathname === '/play-video' ? 'bg-transparent' : 'dark:bg-[#1B1B1B]/80'}`}>
+    <div className={`fixed top-0 lg:top-4 lg:bg-transparent bg-theme-pink-100/80 left-0 right-0 z-50 flex justify-between items-center h-16 md:h-16 px-2 pt-1.5 sm:px-4 md:px-6 2xl:gap-24 gap-4 md:gap-16 dark:lg:bg-transparent ${pathname === '/play-video' ? 'bg-transparent' : 'dark:bg-[#1B1B1B]/80'}`}>
       {/* Logo Section */}
       <Link href="/" className='flex items-center gap-1.5 md:gap-3 font-inter'>
         <img
@@ -287,7 +287,7 @@ export default function Header() {
                 {isMenuOpen && (
                   <div className="fixed inset-0 top-0 bg-white dark:bg-theme-gray-200 z-50 overflow-y-auto">
                     {/* Dropdown Header with Logo and Close Button */}
-                    <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200 dark:border-theme-gray-100">
+                    <div className="flex items-center justify-between px-2 py-2.5 border-b border-gray-200 dark:border-theme-gray-100">
                       <Link href="/" className='flex items-center gap-1.5 sm:gap-2' onClick={() => setIsMenuOpen(false)}>
                         <img
                           src="/logo.png"
@@ -404,23 +404,23 @@ export default function Header() {
       {isMobile && (
         <div className="fixed bottom-0 left-0 right-0 z-40 bg-transparent border-t border-gray-200 dark:border-theme-gray-100 safe-area-bottom">
           <div className="flex items-center justify-around px-1 py-1.5 shadow-lg bg-gradient-to-br from-[#fe645f] to-[#c68afe] rounded-t-3xl z-50">
-            {listMenu.filter(item => item.href !== '/whitepaper' && item.href !== '/referral/kol').map((item) => {
+            {listMenu.filter(item => item.href !== '/whitepaper' && item.href !== '/referral/kol').map((item, index) => {
               const IconComponent = item.icon;
               const isActive = pathname === item.href;
               return (
                 <Link
                   href={item.href}
                   key={item.name}
-                  className="flex-1 flex flex-col items-center justify-center py-1.5 px-0 min-w-0"
+                  className="flex-1 flex flex-col items-center justify-center p-0 min-w-0"
                 >
                   <div
-                    className={`w-full flex flex-col items-center justify-center gap-2 py-1 px-2 rounded-lg transition-all touch-manipulation text-white ${isActive
+                    className={`w-full flex flex-col items-center justify-center gap-2 py-1.5 px-1 rounded-xl transition-all touch-manipulation text-white ${isActive
                         ? 'bg-white/20 dark:bg-white/10 shadow-lg shadow-pink-500/50 backdrop-blur-sm border border-white/30'
                         : 'opacity-80'
-                      }`}
+                      } ${item.name === t('header.makeMoney') ? 'rounded-tl-3xl' : ''} ${index === 3 ? 'rounded-tr-3xl' : ''}`}
                   >
                     <IconComponent
-                      className={`w-7 h-7 sm:w-8 sm:h-8 transition-transform ${isActive ? 'scale-125 drop-shadow-lg' : 'scale-100'
+                      className={`w-5 h-5 sm:w-8 sm:h-8 transition-transform ${isActive ? 'scale-125 drop-shadow-lg' : 'scale-100'
                         }`}
                     />
                     <span className={`text-[10px] sm:text-xs font-inter truncate w-full text-center transition-all ${isActive 

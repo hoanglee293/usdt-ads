@@ -35,6 +35,7 @@ import Modal from '@/components/Modal'
 import { Skeleton } from '@/ui/skeleton'
 import { useIsMobile } from '@/ui/use-mobile'
 import { Alert, AlertDescription } from '@/ui/alert'
+import {  formatReward } from '@/utils/format'
 
 // Helper function to map API transaction to UI format
 const mapTransactionToUI = (transaction: TransactionHistoryItem, coinSymbol?: string, t?: (key: string, params?: Record<string, any>) => string, lang?: 'en' | 'kr' | 'vi'): {
@@ -532,15 +533,6 @@ export default function WalletPage() {
     const tableHeaderStyles = "px-2 py-2 sm:px-3 text-left text-xs sm:text-sm lg:text-base font-semibold text-theme-red-100 dark:text-[#FE645F] uppercase bg-transparent"
     const tableCellStyles = "px-2 py-3 sm:px-3 text-xs sm:text-sm lg:text-base text-theme-gray-200 dark:text-gray-300 bg-transparent border-y border-black dark:border-gray-700 group-hover:bg-gray-100 dark:group-hover:bg-gray-800 font-light"
 
-    // Format balance number
-    const formatBalance = (balance: number) => {
-        const balanceFormatted = parseFloat(balance.toFixed(2))
-        return new Intl.NumberFormat('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 6
-        }).format(balanceFormatted)
-    }
-
     return (
         <div className='w-full min-h-svh flex py-24 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
             <div className='w-full max-w-7xl'>
@@ -570,18 +562,18 @@ export default function WalletPage() {
                                     <Skeleton className="h-6 w-40" />
                                 ) : balanceResponse?.data ? (
                                     <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500  '>
-                                        {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                        { formatReward(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                     </span>
                                 ): <Skeleton className="h-6 w-40 rounded-full bg-theme-pink-100" />}
                             </div>
                             {balanceResponse?.data && (balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
                                 <span className='text-xs text-gray-600 dark:text-gray-300 mt-1'>
-                                    ({t('wallet.gift')}: {formatBalance(balanceResponse.data.balance_gift)} USDT | {t('wallet.reward')}: {formatBalance(balanceResponse.data.balance_reward)} USDT)
+                                    ({t('wallet.gift')}: { formatReward(balanceResponse.data.balance_gift)} USDT | {t('wallet.reward')}: { formatReward(balanceResponse.data.balance_reward)} USDT)
                                 </span>
                             )}
                             {balanceResponse?.data && (
                                 <div
-                                    className='text-xs sm:text-sm text-white cursor-pointer font-semibold bg-gradient-primary rounded-full px-3 sm:px-4 py-2 mt-4 hover:bg-yellow-500/20 transition-colors flex items-center justify-center gap-2'
+                                    className='text-xs sm:text-sm text-white text-center pl-0.5 cursor-pointer font-semibold bg-gradient-primary rounded-full px-3 sm:px-4 py-2 mt-4 hover:bg-yellow-500/20 transition-colors flex items-center justify-center md:gap-2 gap-0'
                                     onClick={() => setShowTransferRewardModal(true)}
                                 >
                                     <img src="/dolar-get.png" alt="" className='w-10 h-10' />
@@ -614,11 +606,11 @@ export default function WalletPage() {
                                 ) : balanceResponse?.data ? (
                                     <div className='flex flex-col items-center'>
                                         <span className='text-2xl font-bold text-center text-pink-500 bg-theme-pink-100 py-2 mb-2 px-4 rounded-full'>
-                                            {t('wallet.balanceLabel')}: {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                            {t('wallet.balanceLabel')}: { formatReward(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                         </span>
                                         {(balanceResponse.data.balance_gift !== 0 || balanceResponse.data.balance_reward !== 0) && (
                                             <span className='text-sm text-gray-600 dark:text-gray-300 mt-1'>
-                                                ({t('wallet.gift')}: {formatBalance(balanceResponse.data.balance_gift)} USDT | {t('wallet.reward')}: {formatBalance(balanceResponse.data.balance_reward)} USDT)
+                                                ({t('wallet.gift')}: { formatReward(balanceResponse.data.balance_gift)} USDT | {t('wallet.reward')}: { formatReward(balanceResponse.data.balance_reward)} USDT)
                                             </span>
                                         )}
                                         <div
@@ -644,11 +636,11 @@ export default function WalletPage() {
                         options={networkOptions}
                         placeholder={t('wallet.selectNetworkPlaceholder')}
                         disabled={isLoadingNetworks}
-                        className=" max-w-auto sm:max-w-48 text-sm"
+                        className=" max-w-auto sm:max-w-48 text-sm mb-[1px]"
                     />
                 </div>
 
-                <div className='mb-4 sm:mb-6 max-w-xl mx-auto px-3 sm:px-0'>
+                <div className='mb-4 sm:mb-6 max-w-xl mx-auto px-0 sm:px-0'>
                     <Alert variant="destructive" className='bg-yellow-500 border-yellow-200 dark:border-yellow-800 py-2'>
                         <AlertDescription className='text-xs sm:text-sm text-white'>
                             {t('wallet.usdtOnlyNotice')}
@@ -659,18 +651,18 @@ export default function WalletPage() {
                 {/* Deposit/Withdraw Buttons */}
                 {selectedNetwork && (
                     <>
-                        <div className='flex flex-row items-stretch sm:items-center justify-between max-w-xl mx-auto gap-3 sm:gap-10 mb-6 sm:mb-10 px-3 sm:px-0'>
+                        <div className='flex flex-row items-stretch sm:items-center justify-between max-w-xl mx-auto gap-3 sm:gap-10 mb-6 sm:mb-10 px-0 sm:px-0'>
                             <Button
                                 onClick={handleDeposit}
                                 disabled={!hasWallet || !selectedNetwork}
-                                className='w-full cursor-pointer font-semibold uppercase sm:max-w-80 bg-gradient-primary inline-flex text-white rounded-full border-none h-11 sm:h-12 text-base sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
+                                className='w-full cursor-pointer font-semibold uppercase sm:max-w-80 bg-gradient-primary inline-flex text-white rounded-full border-none h-10 sm:h-12 text-sm sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
                             >
                                 {t('wallet.depositButton')}
                             </Button>
                             <Button
                                 onClick={handleWithdraw}
                                 disabled={!hasWallet || !selectedNetwork}
-                                className='w-full cursor-pointer font-semibold uppercase sm:max-w-80 bg-theme-pink-100 inline-flex text-pink-500 rounded-full border-pink-500 border-solid border h-11 sm:h-12 text-base sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
+                                className='w-full cursor-pointer font-semibold uppercase sm:max-w-80 bg-theme-pink-100 inline-flex text-pink-500 rounded-full border-pink-500 border-solid border h-10 sm:h-12 text-sm sm:text-lg hover:bg-theme-pink-100/80 disabled:opacity-50 disabled:cursor-not-allowed'
                             >
                                 {t('wallet.withdrawButton')}
                             </Button>
@@ -918,7 +910,7 @@ export default function WalletPage() {
                                                 {t('wallet.transferReward.currentRewardBalance')}
                                             </div>
                                             <div className="text-sm font-bold text-yellow-600 dark:text-yellow-400">
-                                                {formatBalance(balanceResponse.data.balance_reward)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                                { formatReward(balanceResponse.data.balance_reward)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                             </div>
                                         </div>
 
@@ -935,7 +927,7 @@ export default function WalletPage() {
                                                 {t('wallet.balanceLabel')}
                                             </div>
                                             <div className="text-sm font-bold text-pink-500 dark:text-[#FE645F]">
-                                                {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                                { formatReward(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                             </div>
                                         </div>
                                     </div>
@@ -1025,7 +1017,7 @@ export default function WalletPage() {
                                                     <div className="flex items-center justify-between">
                                                         <div>
                                                             <div className="text-base font-semibold text-red-500 dark:text-[#FE645F]">
-                                                                {formatBalance(item.amount)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                                                { formatReward(item.amount)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                                             </div>
                                                             <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                                                 {formattedDate}
@@ -1111,7 +1103,7 @@ export default function WalletPage() {
                                                                 </td>
                                                                 <td className={`${tableCellStyles} w-[15%] border-x-0 border-theme-gray-100 border-solid !text-xs`}>
                                                                     <span className="text-red-500 dark:text-[#FE645F] font-semibold !text-xs">
-                                                                        {formatBalance(item.amount)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                                                        { formatReward(item.amount)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                                                     </span>
                                                                 </td>
                                                                 <td className={`${tableCellStyles} w-[20%] border-x-0 border-theme-gray-100 border-solid !text-xs`}>
@@ -1166,7 +1158,7 @@ export default function WalletPage() {
                                         {t('wallet.transferReward.currentRewardBalance')}
                                     </div>
                                     <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 text-center">
-                                        {formatBalance(balanceResponse.data.balance_reward)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                        { formatReward(balanceResponse.data.balance_reward)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                     </div>
                                 </div>
                             )}

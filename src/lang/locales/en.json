@@ -15,7 +15,8 @@
     "pending": "Pending",
     "rejected": "Rejected",
     "noData": "No data available",
-    "amount": "Amount"
+    "amount": "Amount",
+    "free": "Free"
   },
   "languages": {
     "kr": "Korean",
@@ -74,6 +75,7 @@
     "selectNetworkPlaceholder": "Select network",
     "walletAddress": "Wallet address {symbol}",
     "copyAddress": "Copy address",
+    "onNetwork": "on network",
     "noWalletForNetwork": "You don't have a wallet for network {name} ({symbol})",
     "creatingWallet": "Creating wallet...",
     "createWalletFor": "Create wallet for {symbol}",

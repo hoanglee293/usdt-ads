@@ -1,6 +1,6 @@
 'use client'
 import React, { useMemo, useRef } from 'react'
-import { Copy, Wallet, Plus, Loader2 } from 'lucide-react'
+import { Copy, Wallet, Plus, Loader2, X, Check } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useQuery } from '@tanstack/react-query'
 import {
@@ -139,7 +139,7 @@ export default function DepositContent({
     return (
         <div className='w-full'>
             {/* Content */}
-            <div className="flex flex-col items-center justify-center space-y-6 bg-transparent rounded-lg px-4 sm:px-8">
+            <div className="flex flex-col items-center justify-center space-y-6 bg-transparent rounded-lg px-0 sm:px-8">
                 {isLoading ? (
                     <>
                         <Skeleton className="w-64 h-64 rounded-lg" />
@@ -180,34 +180,34 @@ export default function DepositContent({
                     <>
                         {coinSymbol && networkSymbol && (
                             <p className="text-sm text-gray-500 dark:text-gray-400 text-center">
-                                {t('wallet.deposit')} {coinSymbol} trên mạng {networkSymbol}
+                                {t('wallet.deposit')} {coinSymbol} {t('wallet.onNetwork')} {networkSymbol}
                             </p>
                         )}
                         {/* QR Code */}
                         <div className="flex flex-col items-center">
-                            <div className="bg-white dark:bg-gray-800 shadow-md p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700">
+                            <div className="bg-gray-300 dark:bg-gray-800 shadow-lg p-4 rounded-lg border-2 border-gray-200 dark:border-gray-700">
                                 <img
                                     src={walletResponse.data.qr_code}
                                     alt="QR Code"
-                                    className="w-64 h-64 object-contain"
+                                    className="w-48 md:w-64 h-48 md:h-64 object-contain"
                                 />
                             </div>
                         </div>
 
                         {/* Public Key / Address */}
-                        <div className="w-full space-y-2 max-w-xl mx-auto">
-                            <div className="flex items-center gap-12 p-3 bg-transparent rounded-xl border border-gray-200 dark:border-gray-700 shadow-md">
-                                <label className="text-sm font-medium text-theme-red-100 dark:text-[#FE645F] block">
+                        <div className="w-full space-y-2 md:max-w-xl mx-auto">
+                            <div className="flex items-center md:gap-12 gap-2 p-3 bg-transparent rounded-xl border border-gray-200 dark:border-gray-700 shadow-md">
+                                <label className="text-xs md:text-sm font-medium text-theme-red-100 dark:text-[#FE645F] block">
                                     {t('wallet.walletAddress', { symbol: networkSymbol || '' })} :
                                 </label>
-                                <div className="text-sm text-yellow-600 dark:text-yellow-400 italic break-all font-mono flex items-center gap-2">
+                                <div className="text-xs md:text-sm text-yellow-600 dark:text-yellow-400 italic break-all font-mono flex items-center md:gap-2 gap-1">
                                     {formatAddress(walletResponse.data.public_key)}
                                     <button
                                         onClick={() => handleCopy(walletResponse.data.public_key, t('wallet.copyLabels.walletAddress'))}
                                         className="text-gray-400 cursor-pointer dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 transition-colors border-none bg-transparent p-1"
                                         title={t('wallet.copyAddress')}
                                     >
-                                        <Copy className="w-4 h-4" />
+                                        <Copy className="w-3.5 h-3.5 md:w-4 md:h-4" />
                                     </button>
                                 </div>
 
@@ -224,7 +224,7 @@ export default function DepositContent({
             {/* Transaction History Section - Only show when wallet exists */}
             {walletResponse?.data && (
                 <div className="w-full mt-8">
-                <h3 className="text-lg font-semibold text-theme-red-100 dark:text-[#FE645F] mb-4">
+                <h3 className="text-base md:text-lg font-semibold text-theme-red-100 dark:text-[#FE645F] mb-4">
                     {t('wallet.transactionHistory')} - {t('wallet.transactionTypes.deposit')}
                 </h3>
                 {isMobile ? (
@@ -248,17 +248,14 @@ export default function DepositContent({
                         ) : (
                             transactions.map((transaction) => (
                                 <div key={transaction.id} className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-md p-4">
-                                    <div className="flex items-center justify-between mb-4">
+                                    <div className="flex items-center justify-between md:mb-4 mb-2">
                                         <span className="text-sm text-black dark:text-white">#{transaction.id}</span>
                                         <div className="flex items-center gap-2">
-                                            <div className="py-1 rounded-full text-xs min-w-16 flex justify-center font-medium bg-blue-100 dark:bg-blue-900/30 text-black dark:text-white">
-                                                {transaction.type} 
-                                            </div>
-                                            <div className={`py-1 rounded-full text-xs min-w-20 flex justify-center font-medium ${transaction.status === t('wallet.transactionStatus.complete')
+                                            <div className={`py-1 rounded-full text-xs px-1 flex justify-center font-medium ${transaction.status === t('wallet.transactionStatus.complete')
                                                 ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400'
                                                 : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400'
                                                 }`}>
-                                                {transaction.status}
+                                                {transaction.status === t('wallet.transactionStatus.complete') ? <Check className='w-3.5 h-3.5' /> : <X className='w-3.5 h-3.5' />}
                                             </div>
                                             <div className="text-xs text-yellow-600 dark:text-yellow-400 italic">
                                             {transaction.time}
@@ -266,7 +263,7 @@ export default function DepositContent({
                                         </div>
                                     </div>
                                     <div className="flex items-center justify-between gap-2">
-                                        <div className="text-base font-semibold text-black dark:text-white">
+                                        <div className="text-xs md:text-base font-semibold text-black dark:text-white">
                                             {transaction.amount}
                                         </div>
                                         <div className="pt-0 md:pt-3 border-t border-gray-200 dark:border-gray-700 space-y-2">

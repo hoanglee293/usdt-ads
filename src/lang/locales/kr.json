@@ -15,7 +15,8 @@
     "pending": "보류 중",
     "rejected": "거부됨",
     "noData": "데이터 없음",
-    "amount": "금액"
+    "amount": "금액",
+    "free": "무료"
   },
   "languages": {
     "kr": "한국어",
@@ -74,6 +75,7 @@
     "selectNetworkPlaceholder": "네트워크 선택",
     "walletAddress": "지갑 주소 {symbol}",
     "copyAddress": "주소 복사",
+    "onNetwork": "네트워크에서",
     "noWalletForNetwork": "네트워크 {name} ({symbol})에 대한 지갑이 없습니다",
     "selectAddressPlaceholder": "지갑 주소 입력",
     "creatingWallet": "지갑 생성 중...",
