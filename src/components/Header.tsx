@@ -189,7 +189,7 @@ export default function Header() {
   }, [isMenuOpen, isLangMenuOpen]);
 
   return (
-    <div className={`fixed top-0 lg:top-4 lg:bg-transparent bg-theme-pink-100/80 left-0 right-0 z-50 flex justify-between items-center h-16 md:h-16 px-2 pt-1.5 sm:px-4 md:px-6 2xl:gap-24 gap-4 md:gap-16 dark:lg:bg-transparent ${pathname === '/play-video' ? 'bg-transparent' : 'dark:bg-[#1B1B1B]/80'}`}>
+    <div className={`fixed top-0 lg:top-4 lg:bg-transparent bg-theme-pink-100/80 left-0 right-0 z-50 flex justify-between items-center h-16 md:h-16 px-2 sm:px-4 md:px-6 2xl:gap-24 gap-4 md:gap-16 dark:lg:bg-transparent ${pathname === '/play-video' ? 'bg-transparent' : 'dark:bg-[#1B1B1B]/80'}`}>
       {/* Logo Section */}
       <Link href="/" className='flex items-center gap-1.5 md:gap-3 font-inter'>
         <img

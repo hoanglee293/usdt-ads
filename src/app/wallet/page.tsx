@@ -576,7 +576,7 @@ export default function WalletPage() {
                                     className='text-xs sm:text-sm text-white text-center pl-0.5 cursor-pointer font-semibold bg-gradient-primary rounded-full px-3 sm:px-4 py-2 mt-4 hover:bg-yellow-500/20 transition-colors flex items-center justify-center md:gap-2 gap-0'
                                     onClick={() => setShowTransferRewardModal(true)}
                                 >
-                                    <img src="/dolar-get.png" alt="" className='w-10 h-10' />
+                                    <img src="/dolar-get.png" alt="" className='md:w-10 md:h-10 w-8 h-8' />
                                     {t('wallet.transferReward.transferToMain')}
                                 </div>
                             )}

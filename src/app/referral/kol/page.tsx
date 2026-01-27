@@ -433,7 +433,7 @@ export default function SmartRefPage() {
                             <button className="uiverse w-full min-w-3xl sm:w-full text-xs sm:text-sm md:text-base lg:text-lg uppercase tracking-wide h-11">
                                 <div className="wrapper w-full h-11">
                                     {totalRewardsFromMilestones > 0 ? (
-                                        <span className='main-content w-full'>{t('smartRef.totalRewardsUpTo', { total: totalRewardsFromMilestones })}</span>
+                                        <span className='main-content w-full xs:text-base text-xs'>{t('smartRef.totalRewardsUpTo', { total: totalRewardsFromMilestones })}</span>
                                     ) : <Skeleton className="w-full min-w-2xl h-11 rounded-lg bg-gray-200 dark:bg-gray-700" />}
                                     <div className="circle circle-12"></div>
                                     <div className="circle circle-11"></div>
@@ -464,7 +464,7 @@ export default function SmartRefPage() {
                                 </clipPath>
                             </defs>
                         </svg>
-                        <div className='grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 pt-6'>
+                        <div className='grid grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2 xs:gap-3 pt-6'>
                             {isLoadingInfo ? (
                                 // Skeleton loading state
                                 Array.from({ length: 7 }).map((_, index) => (
@@ -494,7 +494,7 @@ export default function SmartRefPage() {
                                 milestones.map((milestone: MilestoneDefinition, index: number) => (
                                     <div
                                         key={index}
-                                        className='flex flex-col items-center space-y-2 sm:space-y-3 hover:bg-white dark:hover:bg-gray-800 border-solid md:border-none rounded-2xl border border-gray-200 dark:border-[#f47c78]/40 hover:shadow-md p-3 sm:p-4'
+                                        className='flex flex-col items-center space-y-2 sm:space-y-3 hover:bg-white dark:hover:bg-gray-800 border-solid md:border-none rounded-2xl border border-gray-200 dark:border-[#f47c78]/40 hover:shadow-md p-2 xs:p-3 sm:p-4'
                                     >
                                         {/* Milestone Label */}
                                         <div className='text-center'>
@@ -560,7 +560,7 @@ export default function SmartRefPage() {
                                         </div>
 
                                         {/* Reward Amount */}
-                                        <p className='text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200'>
+                                        <p className='text-xs xs:text-base sm:text-lg md:text-xl font-bold text-gray-800 dark:text-gray-200'>
                                             {milestone.reward} USDT
                                         </p>
 
