@@ -848,7 +848,7 @@
       "commission": {
         "title": "5.1. Hoa Hồng Giới Thiệu",
         "description": "Hoa hồng giao dịch: Bạn sẽ nhận được % hoa hồng từ số USDT người được bạn mời tham gia",
-        "level1": "Nhận 25% từ số tiền nạp của người dùng cấp 1 ngay kề bạn",
+        "level1": "Nhận 50% từ số tiền nạp của người dùng cấp 1 ngay kề bạn",
         "level2": "Nhận 8% từ số tiền nạp của người dùng cấp 2 (do người cấp 1 giới thiệu)",
         "totalCommissionNote": "Tổng hoa hồng thu nhập lên tới 15% số tiền staking của mỗi 1 người mới được mời"
       },

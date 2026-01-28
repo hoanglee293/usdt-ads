@@ -846,7 +846,7 @@
       "commission": {
         "title": "5.1. Referral Commission",
         "description": "Transaction commission: You will receive a % commission from the USDT amount of users you invite to participate",
-        "level1": "Receive 25% from Level 1 user deposit amount (directly below you)",
+        "level1": "Receive 50% from Level 1 user deposit amount (directly below you)",
         "level2": "Receive 8% from Level 2 user deposit amount (referred by Level 1)",
         "totalCommissionNote": "Total commission income up to 15% of the staking amount of each newly invited person"
       },
