@@ -40,6 +40,14 @@ export default function PlayVideoPage() {
     const [videoWatched, setVideoWatched] = useState(false); // Đánh dấu đã xem xong video nhưng chưa gọi API
     const [showNoStakingModal, setShowNoStakingModal] = useState(false); // Modal hiển thị khi chưa tham gia gói staking nào
     const [stakingErrorMessage, setStakingErrorMessage] = useState(''); // Lưu message lỗi từ API
+    const [isClaimedLocal, setIsClaimedLocal] = useState(false);
+
+    useEffect(() => {
+        const claimed = localStorage.getItem('is_claimed_today');
+        if (claimed === 'true') {
+            setIsClaimedLocal(true);
+        }
+    }, []);
 
     // Get mission progress
     const { data: missionNowResponse, isLoading: isLoadingMission, error: missionError } = useQuery<MissionNowResponse>({
@@ -49,6 +57,13 @@ export default function PlayVideoPage() {
         refetchInterval: false, // Only refetch when idle
         // refetchInterval: viewState === 'idle' ? 30000 : false, // Only refetch when idle
     });
+
+    useEffect(() => {
+        if (missionNowResponse?.data?.turn_day === 0) {
+            localStorage.removeItem('is_claimed_today');
+            setIsClaimedLocal(false);
+        }
+    }, [missionNowResponse?.data?.turn_day]);
 
     // Watch video mutation
     const watchVideoMutation = useMutation({
@@ -89,6 +104,8 @@ export default function PlayVideoPage() {
         mutationFn: claimDay,
         onSuccess: async (data) => {
             toast.success(t('makeMoney.playVideo.claimDaySuccess'));
+            localStorage.setItem('is_claimed_today', 'true');
+            setIsClaimedLocal(true);
 
             // Reset view state về idle để render lại UI
             setViewState('idle');
@@ -587,18 +604,20 @@ export default function PlayVideoPage() {
             {/* Bottom Action */}
             <div className="w-full max-w-md z-10 pb-6 flex justify-center items-center">
                 {isCompleted ? (
-                    <Button
-                        onClick={handleClaimReward}
-                        disabled={claimDayMutation.isPending}
-                        className="w-full bg-gradient-primary hover:from-emerald-600 hover:to-teal-700 text-white rounded-[2rem] h-10 md:h-16 text-sm md:text-xl font-bold shadow-xl shadow-emerald-500/30 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border-none cursor-pointer"
-                    >
-                        {claimDayMutation.isPending ? (
-                            <Loader2 className="w-6 h-6 animate-spin mr-2" />
-                        ) : (
-                            <Gift className="w-6 h-6 mr-2 mb-1" />
-                        )}
-                        {t('makeMoney.playVideo.claimReward')}
-                    </Button>
+                    !isClaimedLocal && (
+                        <Button
+                            onClick={handleClaimReward}
+                            disabled={claimDayMutation.isPending}
+                            className="w-full bg-gradient-primary hover:from-emerald-600 hover:to-teal-700 text-white rounded-[2rem] h-10 md:h-16 text-sm md:text-xl font-bold shadow-xl shadow-emerald-500/30 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border-none cursor-pointer"
+                        >
+                            {claimDayMutation.isPending ? (
+                                <Loader2 className="w-6 h-6 animate-spin mr-2" />
+                            ) : (
+                                <Gift className="w-6 h-6 mr-2 mb-1" />
+                            )}
+                            {t('makeMoney.playVideo.claimReward')}
+                        </Button>
+                    )
                 ) : (
                     <Button
                         onClick={handleWatchVideo}
