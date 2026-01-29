@@ -42,25 +42,30 @@ export default function PlayVideoPage() {
     const [stakingErrorMessage, setStakingErrorMessage] = useState(''); // Lưu message lỗi từ API
     const [isClaimedLocal, setIsClaimedLocal] = useState(false);
 
-    useEffect(() => {
-        const claimed = localStorage.getItem('is_claimed_today');
-        if (claimed === 'true') {
-            setIsClaimedLocal(true);
-        }
-    }, []);
-
     // Get mission progress
     const { data: missionNowResponse, isLoading: isLoadingMission, error: missionError } = useQuery<MissionNowResponse>({
         queryKey: ['mission-now'],
         queryFn: getMissionNow,
         retry: false,
         refetchInterval: false, // Only refetch when idle
-        // refetchInterval: viewState === 'idle' ? 30000 : false, // Only refetch when idle
     });
 
     useEffect(() => {
+        // Restore state from local storage on mount
+        if (typeof window !== 'undefined') {
+            const claimed = localStorage.getItem('is_claimed_today');
+            if (claimed === 'true') {
+                setIsClaimedLocal(true);
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        // Reset state if it's a new day (turn_day resets to 0)
         if (missionNowResponse?.data?.turn_day === 0) {
-            localStorage.removeItem('is_claimed_today');
+            if (typeof window !== 'undefined') {
+                localStorage.removeItem('is_claimed_today');
+            }
             setIsClaimedLocal(false);
         }
     }, [missionNowResponse?.data?.turn_day]);
@@ -104,7 +109,6 @@ export default function PlayVideoPage() {
         mutationFn: claimDay,
         onSuccess: async (data) => {
             toast.success(t('makeMoney.playVideo.claimDaySuccess'));
-            localStorage.setItem('is_claimed_today', 'true');
             setIsClaimedLocal(true);
 
             // Reset view state về idle để render lại UI
@@ -393,6 +397,7 @@ export default function PlayVideoPage() {
     const handleClaimReward = () => {
         // Sử dụng claimDay API để claim phần thưởng của ngày
         claimDayMutation.mutate();
+        localStorage.setItem('is_claimed_today', 'true');
     };
 
     // Calculate progress percentage based on missionData (same as line 365-367)
