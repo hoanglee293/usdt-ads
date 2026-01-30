@@ -339,7 +339,7 @@ export default function DirectReferralPage() {
                 </div>
 
                 {/* Your Referrals Section */}
-                <div className="bg-white dark:bg-gray-800 rounded-lg border border-solid border-theme-gray-100 dark:border-[#FE645F] shadow-sm p-4 sm:p-6 pb-8">
+                <div className="bg-transparent md:bg-white dark:md:bg-gray-800 rounded-lg border md:border-solid border-theme-gray-100 dark:border-[#FE645F] shadow-none md:shadow-sm p-0 sm:p-6 pb-8">
                     <h2 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-gray-200 mb-4">
                         {t('ref.yourReferrals') || 'Your Referrals'}
                     </h2>
@@ -372,17 +372,17 @@ export default function DirectReferralPage() {
                                 <div className="bg-transparent p-2 sm:p-3 text-center">
                                     &ensp;
                                 </div>
-                                <div className="bg-theme-red-200 rounded-lg p-2 sm:p-3 text-center">
+                                <div className="bg-theme-red-200 rounded-lg py-2 px-1 sm:p-3 text-center">
                                     <p className="text-xs sm:text-sm font-semibold text-white">
                                         {t('ref.totalTransactions') || 'Total Transactions'}
                                     </p>
                                 </div>
-                                <div className="bg-theme-red-200 rounded-lg p-2 sm:p-3 text-center">
+                                <div className="bg-theme-red-200 rounded-lg py-2 px-1 sm:p-3 text-center">
                                     <p className="text-xs sm:text-sm font-semibold text-white">
                                         {t('ref.totalRewards') || 'Total Rewards'}
                                     </p>
                                 </div>
-                                <div className="bg-theme-red-200 rounded-lg p-2 sm:p-3 text-center">
+                                <div className="bg-theme-red-200 rounded-lg py-2 px-1 sm:p-3 text-center">
                                     <p className="text-xs sm:text-sm font-semibold text-white">
                                         {t('ref.totalWithdrawn') || 'Total Withdrawn'}
                                     </p>
