@@ -83,7 +83,7 @@ export default function DirectReferralPage() {
         const totalCanWithdraw = smartRefInfo.data?.total_can_withdraw || 0;
 
         if (totalCanWithdraw < 10) {
-            toast.error(t('ref.minimumWithdrawError', { amount: totalCanWithdraw.toFixed(2) }) || `Minimum withdrawal amount is $10. Current amount is $${totalCanWithdraw.toFixed(2)}`);
+            toast.error(t('ref.minimumWithdrawError') || 'Minimum balance of 10 USDT is required to withdraw.');
             return;
         }
 
@@ -176,7 +176,7 @@ export default function DirectReferralPage() {
                             </h3>
                             <button
                                 onClick={handleWithdraw}
-                                disabled={withdrawMutation.isPending || isLoadingInfo || (smartRefInfo.data?.total_can_withdraw || 0) < 10}
+                                disabled={withdrawMutation.isPending || isLoadingInfo}
                                 className="px-3 border border-solid border-theme-gray-100/50 dark:text-white text-black dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 font-medium rounded-full py-2 transition-colors flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed group hover:text-theme-red-200 hover:border-theme-red-200"
                             >
                                 <Wallet className="w-4 h-4 dark:text-white text-black group-hover:text-theme-red-200 transition-colors" />

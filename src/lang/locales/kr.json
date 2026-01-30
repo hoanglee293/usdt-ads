@@ -195,7 +195,7 @@
     "withdraw": "출금",
     "withdrawSuccess": "출금 성공!",
     "withdrawError": "출금에 실패했습니다",
-    "minimumWithdrawError": "최소 출금 금액은 $10입니다. 현재 금액: ${amount}",
+    "minimumWithdrawError": "출금하려면 최소 10 USDT의 잔액이 필요합니다.",
     "withdrawConfirmTitle": "출금 확인",
     "withdrawConfirmMessage": "출금 후 보상은 리워드 지갑으로 전송됩니다",
     "you": "당신",

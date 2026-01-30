@@ -195,7 +195,7 @@
     "withdraw": "出金",
     "withdrawSuccess": "出金成功！",
     "withdrawError": "出金に失敗しました",
-    "minimumWithdrawError": "最低出金額は$10です。現在の金額: ${amount}",
+    "minimumWithdrawError": "出金には最低 10 USDT の残高が必要です。",
     "withdrawConfirmTitle": "出金の確認",
     "withdrawConfirmMessage": "出金後の報酬はリワードウォレットに転送されます",
     "you": "あなた",

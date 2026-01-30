@@ -195,7 +195,7 @@
     "withdraw": "Rút tiền",
     "withdrawSuccess": "Rút tiền thành công!",
     "withdrawError": "Không thể rút tiền",
-    "minimumWithdrawError": "Số tiền tối thiểu để rút là $10. Số tiền hiện tại là ${amount}",
+    "minimumWithdrawError": "Yêu cầu đủ số dư tối thiểu 10 USDT mới có thể rút.",
     "withdrawConfirmTitle": "Xác nhận rút tiền",
     "withdrawConfirmMessage": "Phần thưởng sau khi rút sẽ được chuyển vào ví Reward",
     "you": "BẠN",

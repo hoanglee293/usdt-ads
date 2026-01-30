@@ -195,7 +195,7 @@
     "withdraw": "Withdraw",
     "withdrawSuccess": "Withdrawal successful!",
     "withdrawError": "Failed to withdraw",
-    "minimumWithdrawError": "Minimum withdrawal amount is $10. Current amount is ${amount}",
+    "minimumWithdrawError": "Minimum balance of 10 USDT is required to withdraw.",
     "withdrawConfirmTitle": "Confirm Withdrawal",
     "withdrawConfirmMessage": "Rewards after withdrawal will be transferred to Reward wallet",
     "you": "YOU",

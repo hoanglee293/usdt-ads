@@ -195,7 +195,7 @@
     "withdraw": "提款",
     "withdrawSuccess": "提款成功！",
     "withdrawError": "提款失败",
-    "minimumWithdrawError": "最低提款金额为$10。当前金额: ${amount}",
+    "minimumWithdrawError": "提现需要最低余额 10 USDT。",
     "withdrawConfirmTitle": "确认提款",
     "withdrawConfirmMessage": "提款后的奖励将转入奖励钱包",
     "you": "您",
