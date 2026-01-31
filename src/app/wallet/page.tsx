@@ -35,7 +35,7 @@ import Modal from '@/components/Modal'
 import { Skeleton } from '@/ui/skeleton'
 import { useIsMobile } from '@/ui/use-mobile'
 import { Alert, AlertDescription } from '@/ui/alert'
-import {  formatReward } from '@/utils/format'
+import { formatReward } from '@/utils/format'
 
 // Helper function to map API transaction to UI format
 const mapTransactionToUI = (transaction: TransactionHistoryItem, coinSymbol?: string, t?: (key: string, params?: Record<string, any>) => string, lang?: 'en' | 'kr' | 'vi'): {
@@ -435,8 +435,8 @@ export default function WalletPage() {
     const getNumberStatusTransaction = transactions.filter(transaction => transaction.status === "Complete" && transaction.type === t('wallet.transactionTypes.withdraw')).length
     // ==================== Event Handlers ====================
 
-    const handleNetworkChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const networkId = e.target.value
+    const handleNetworkChange = (value: string) => {
+        const networkId = value
         setSelectedNetwork(networkId)
 
         // Find network symbol
@@ -448,8 +448,8 @@ export default function WalletPage() {
         }
     }
 
-    const handleCoinChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setSelectedCoin(e.target.value)
+    const handleCoinChange = (value: string) => {
+        setSelectedCoin(value)
     }
 
     const handleCreateWallet = () => {
@@ -562,13 +562,13 @@ export default function WalletPage() {
                                     <Skeleton className="h-6 w-40" />
                                 ) : balanceResponse?.data ? (
                                     <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500  '>
-                                        { formatReward(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                        {formatReward(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                     </span>
-                                ): <Skeleton className="h-6 w-40 rounded-full bg-theme-pink-100" />}
+                                ) : <Skeleton className="h-6 w-40 rounded-full bg-theme-pink-100" />}
                             </div>
                             {balanceResponse?.data && (balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
                                 <span className='text-xs text-gray-600 dark:text-gray-300 mt-1'>
-                                    ({t('wallet.gift')}: { formatReward(balanceResponse.data.balance_gift)} USDT | {t('wallet.reward')}: { formatReward(balanceResponse.data.balance_reward)} USDT)
+                                    ({t('wallet.gift')}: {formatReward(balanceResponse.data.balance_gift)} USDT | {t('wallet.reward')}: {formatReward(balanceResponse.data.balance_reward)} USDT)
                                 </span>
                             )}
                             {balanceResponse?.data && (
@@ -606,11 +606,11 @@ export default function WalletPage() {
                                 ) : balanceResponse?.data ? (
                                     <div className='flex flex-col items-center'>
                                         <span className='text-2xl font-bold text-center text-pink-500 bg-theme-pink-100 py-2 mb-2 px-4 rounded-full'>
-                                            {t('wallet.balanceLabel')}: { formatReward(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                            {t('wallet.balanceLabel')}: {formatReward(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                         </span>
                                         {(balanceResponse.data.balance_gift !== 0 || balanceResponse.data.balance_reward !== 0) && (
                                             <span className='text-sm text-gray-600 dark:text-gray-300 mt-1'>
-                                                ({t('wallet.gift')}: { formatReward(balanceResponse.data.balance_gift)} USDT | {t('wallet.reward')}: { formatReward(balanceResponse.data.balance_reward)} USDT)
+                                                ({t('wallet.gift')}: {formatReward(balanceResponse.data.balance_gift)} USDT | {t('wallet.reward')}: {formatReward(balanceResponse.data.balance_reward)} USDT)
                                             </span>
                                         )}
                                         <div
@@ -621,7 +621,7 @@ export default function WalletPage() {
                                             {t('wallet.transferReward.transferToMain')}
                                         </div>
                                     </div>
-                                ): <Skeleton className="h-10 w-48 rounded-full bg-theme-pink-100" />}
+                                ) : <Skeleton className="h-10 w-48 rounded-full bg-theme-pink-100" />}
                             </div>
                         </div>
                     )}
@@ -910,7 +910,7 @@ export default function WalletPage() {
                                                 {t('wallet.transferReward.currentRewardBalance')}
                                             </div>
                                             <div className="text-sm font-bold text-yellow-600 dark:text-yellow-400">
-                                                { formatReward(balanceResponse.data.balance_reward)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                                {formatReward(balanceResponse.data.balance_reward)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                             </div>
                                         </div>
 
@@ -927,7 +927,7 @@ export default function WalletPage() {
                                                 {t('wallet.balanceLabel')}
                                             </div>
                                             <div className="text-sm font-bold text-pink-500 dark:text-[#FE645F]">
-                                                { formatReward(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                                {formatReward(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                             </div>
                                         </div>
                                     </div>
@@ -1017,7 +1017,7 @@ export default function WalletPage() {
                                                     <div className="flex items-center justify-between">
                                                         <div>
                                                             <div className="text-base font-semibold text-red-500 dark:text-[#FE645F]">
-                                                                { formatReward(item.amount)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                                                {formatReward(item.amount)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                                             </div>
                                                             <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                                                 {formattedDate}
@@ -1103,7 +1103,7 @@ export default function WalletPage() {
                                                                 </td>
                                                                 <td className={`${tableCellStyles} w-[15%] border-x-0 border-theme-gray-100 border-solid !text-xs`}>
                                                                     <span className="text-red-500 dark:text-[#FE645F] font-semibold !text-xs">
-                                                                        { formatReward(item.amount)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                                                        {formatReward(item.amount)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                                                     </span>
                                                                 </td>
                                                                 <td className={`${tableCellStyles} w-[20%] border-x-0 border-theme-gray-100 border-solid !text-xs`}>
@@ -1151,14 +1151,14 @@ export default function WalletPage() {
                             <p className="text-sm text-gray-600 dark:text-gray-400 text-center">
                                 {t('wallet.transferReward.transferConfirm')}
                             </p>
-                            
+
                             {balanceResponse?.data && (
                                 <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
                                     <div className="text-sm text-gray-600 dark:text-gray-400 mb-2 text-center">
                                         {t('wallet.transferReward.currentRewardBalance')}
                                     </div>
                                     <div className="text-2xl font-bold text-yellow-600 dark:text-yellow-400 text-center">
-                                        { formatReward(balanceResponse.data.balance_reward)} {selectedCoinInfo?.coin_symbol || 'USDT'}
+                                        {formatReward(balanceResponse.data.balance_reward)} {selectedCoinInfo?.coin_symbol || 'USDT'}
                                     </div>
                                 </div>
                             )}

@@ -1350,20 +1350,20 @@ export default function MakeMoneyPage() {
                                             })()}
                                         </div>
                                         <div className='flex items-center gap-2 justify-end mt-4 max-w-5xl mx-auto'>
-                                        <button
-                                            onClick={handleDownloadCalendar}
-                                            className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-blue-100 dark:bg-blue-900/50 hover:bg-blue-200 dark:hover:bg-blue-900/70 text-blue-700 dark:text-blue-300 cursor-pointer'
-                                            title={t('makeMoney.downloadCalendar') || 'Tải xuống'}
-                                        >
-                                            <Download className='w-5 h-5' />
-                                        </button>
-                                        <button
-                                            onClick={handleShareCalendar}
-                                            className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-green-100 dark:bg-green-900/50 hover:bg-green-200 dark:hover:bg-green-900/70 text-green-700 dark:text-green-300 cursor-pointer'
-                                            title={t('makeMoney.shareCalendar') || 'Chia sẻ'}
-                                        >
-                                            <Share2 className='w-5 h-5' />
-                                        </button>
+                                            <button
+                                                onClick={handleDownloadCalendar}
+                                                className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-blue-100 dark:bg-blue-900/50 hover:bg-blue-200 dark:hover:bg-blue-900/70 text-blue-700 dark:text-blue-300 cursor-pointer'
+                                                title={t('makeMoney.downloadCalendar') || 'Tải xuống'}
+                                            >
+                                                <Download className='w-5 h-5' />
+                                            </button>
+                                            <button
+                                                onClick={handleShareCalendar}
+                                                className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-green-100 dark:bg-green-900/50 hover:bg-green-200 dark:hover:bg-green-900/70 text-green-700 dark:text-green-300 cursor-pointer'
+                                                title={t('makeMoney.shareCalendar') || 'Chia sẻ'}
+                                            >
+                                                <Share2 className='w-5 h-5' />
+                                            </button>
                                         </div>
                                     </div>
                                 )}
@@ -1693,7 +1693,7 @@ export default function MakeMoneyPage() {
                             <CustomSelect
                                 id="staking-type-modal"
                                 value={stakingType}
-                                onChange={(e) => setStakingType(e.target.value as '1d' | '7d' | '30d')}
+                                onChange={(value) => setStakingType(value as '1d' | '7d' | '30d')}
                                 options={stakingTypeOptions}
                                 placeholder={t('makeMoney.selectPackageType')}
                                 className="w-full"

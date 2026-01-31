@@ -163,7 +163,7 @@ const ProfilePage = () => {
 
   const handleChangePassword = async (e: React.FormEvent) => {
     e.preventDefault()
-    
+
     // Validation
     if (!currentPassword.trim()) {
       toast.error(t('changePassword.currentPasswordRequired') || 'Mật khẩu hiện tại là bắt buộc')
@@ -198,11 +198,11 @@ const ProfilePage = () => {
         handleCloseChangePasswordModal()
       }
     } catch (err: any) {
-      const errorMessage = err?.message || 
-        err?.response?.data?.message || 
-        t('changePassword.currentPasswordIncorrect') || 
+      const errorMessage = err?.message ||
+        err?.response?.data?.message ||
+        t('changePassword.currentPasswordIncorrect') ||
         'Có lỗi xảy ra khi đổi mật khẩu'
-      
+
       // Handle specific error messages
       if (errorMessage.includes('Current password is required')) {
         toast.error(t('changePassword.currentPasswordRequired') || 'Mật khẩu hiện tại là bắt buộc')
@@ -413,7 +413,7 @@ const ProfilePage = () => {
                   <CustomSelect
                     id="sex"
                     value={tempSex}
-                    onChange={(e) => setTempSex(e.target.value as 'man' | 'woman' | 'other')}
+                    onChange={(value) => setTempSex(value as 'man' | 'woman' | 'other')}
                     options={sexOptions}
                     disabled={updateLoading}
                   />
