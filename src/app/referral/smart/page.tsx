@@ -368,7 +368,7 @@ export default function DirectReferralPage() {
                     {activeTab === "level-referral" && (
                         <div className="mt-4">
                             {/* Table Header */}
-                            <div className="grid grid-cols-4 gap-2 sm:gap-4 mb-4">
+                            <div className="hidden sm:grid grid-cols-4 gap-2 sm:gap-4 mb-4">
                                 <div className="bg-transparent p-2 sm:p-3 text-center">
                                     &ensp;
                                 </div>
@@ -398,21 +398,30 @@ export default function DirectReferralPage() {
                                     </div>
                                 ) : smartRefTree.data && smartRefTree.data.length > 0 ? (
                                     smartRefTree.data.map((item: any) => (
-                                        <div key={item.level} className="grid grid-cols-4 gap-2 sm:gap-4 items-center">
-                                            <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg p-2 sm:p-3 text-center text-xs sm:text-sm font-medium">
+                                        <div key={item.level} className="grid grid-cols-1 sm:grid-cols-4 gap-2 sm:gap-4 items-center bg-gray-50 dark:bg-gray-900/50 sm:bg-transparent p-3 sm:p-0 rounded-lg sm:rounded-none border sm:border-none border-gray-200 dark:border-gray-700">
+                                            <div className="bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-lg p-2 sm:p-3 text-center text-xs sm:text-sm font-medium mb-1 sm:mb-0">
                                                 {t('ref.level') || 'Level'} {item.level}
                                             </div>
-                                            <div className="bg-white dark:bg-gray-800 border-solid border border-gray-200 dark:border-gray-700 rounded-lg p-2 sm:p-3 text-center">
+                                            <div className="bg-white dark:bg-gray-800 border-solid border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-3 text-center flex items-center justify-between sm:block">
+                                                <p className="sm:hidden text-xs font-semibold text-gray-500 dark:text-gray-400">
+                                                    {t('ref.totalTransactions') || 'Total Transactions'}
+                                                </p>
                                                 <p className="text-xs sm:text-sm text-gray-700 dark:text-gray-300 font-medium">
                                                     {item.total_transactions || 0}
                                                 </p>
                                             </div>
-                                            <div className="bg-white dark:bg-gray-800 border-solid border border-gray-200 dark:border-gray-700 rounded-lg p-2 sm:p-3 text-center">
+                                            <div className="bg-white dark:bg-gray-800 border-solid border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-3 text-center flex items-center justify-between sm:block">
+                                                <p className="sm:hidden text-xs font-semibold text-gray-500 dark:text-gray-400">
+                                                    {t('ref.totalRewards') || 'Total Rewards'}
+                                                </p>
                                                 <p className="text-xs sm:text-sm text-green-600 dark:text-green-400 font-bold">
                                                     ${typeof item.total_rewards === 'number' ? item.total_rewards.toFixed(2) : '0.00'}
                                                 </p>
                                             </div>
-                                            <div className="bg-white dark:bg-gray-800 border-solid border border-gray-200 dark:border-gray-700 rounded-lg p-2 sm:p-3 text-center">
+                                            <div className="bg-white dark:bg-gray-800 border-solid border border-gray-200 dark:border-gray-700 rounded-lg p-3 sm:p-3 text-center flex items-center justify-between sm:block">
+                                                <p className="sm:hidden text-xs font-semibold text-gray-500 dark:text-gray-400">
+                                                    {t('ref.totalWithdrawn') || 'Total Withdrawn'}
+                                                </p>
                                                 <p className="text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-bold">
                                                     ${typeof item.total_withdrawn === 'number' ? item.total_withdrawn.toFixed(2) : '0.00'}
                                                 </p>
