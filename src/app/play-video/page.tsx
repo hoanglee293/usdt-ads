@@ -240,11 +240,11 @@ export default function PlayVideoPage() {
     // Function để detect device type (desktop/mobile)
     const getDeviceType = (): 'desktop' | 'mobile' => {
         if (typeof window === 'undefined') return 'desktop';
-        
+
         const width = window.innerWidth;
         const height = window.innerHeight;
         const isLandscape = width > height;
-        
+
         // PC hoặc tablet xoay ngang: type = desktop
         // Mobile hoặc tablet xoay dọc: type = mobile
         if (width >= 1024) {
@@ -265,13 +265,13 @@ export default function PlayVideoPage() {
             const fetchVideo = async () => {
                 setVideoLoading(true);
                 setVideoError(null);
-                
+
                 try {
                     const deviceType = getDeviceType();
                     const response = await axiosClient.post('/incomes/get-video', {
                         type: deviceType
                     });
-                    
+
                     if (response.data?.statusCode === 200 && response.data?.data?.url) {
                         setVideoUrl(response.data.data.url);
                         console.log('✅ Video URL loaded:', response.data.data.url);
@@ -286,10 +286,10 @@ export default function PlayVideoPage() {
                     setVideoLoading(false);
                 }
             };
-            
+
             fetchVideo();
         }
-        
+
         // Cleanup: reset video state khi rời khỏi watching state
         return () => {
             if (viewState !== 'watching') {
@@ -403,24 +403,8 @@ export default function PlayVideoPage() {
             return;
         }
 
-<<<<<<< HEAD
         // Bắt đầu flow xem video: Connecting -> Watching -> (Nhấn Hoàn thành) -> Gọi API -> Countdown
         const devices = missionNowResponse?.data?.devices || 20; // Fallback về 20 nếu không có
-=======
-        if (!isReady && GAM_TEST_MODE) {
-            toast.error(t('makeMoney.playVideo.adNotReady') + ' - ' + (t('makeMoney.playVideo.serviceStarting')));
-            return;
-        }
-
-        if (!isLoaded && !isLoadingAd && !GAM_TEST_MODE) {
-            // Try to load ad first - ad will load automatically via autoLoad
-            toast.error(t('makeMoney.playVideo.adNotReady'));
-            return;
-        }
-
-        // Bắt đầu flow xem video: Connecting -> Watching -> (Xem xong) -> Gọi API
-        const devices = missionNowResponse?.data?.devices || 0;
->>>>>>> 9637dab5735880db2430aa1e640eaff3107ff8fc
         setDevicesCount(devices);
 
         // Chuyển sang state connecting (hiển thị popup "Đang kết nối")
@@ -595,8 +579,8 @@ export default function PlayVideoPage() {
             <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 md:p-4">
                 <div className="bg-white dark:bg-gray-800 rounded-3xl p-4 md:p-6 w-auto max-w-[95vw] max-h-[95vh] shadow-2xl flex flex-col items-center space-y-4 md:space-y-6 relative overflow-auto">
                     {/* Video Container */}
-                    <div 
-                        className="w-full bg-gray-900 rounded-xl overflow-hidden relative" 
+                    <div
+                        className="w-full bg-gray-900 rounded-xl overflow-hidden relative"
                         style={{
                             aspectRatio: typeof window !== 'undefined' && window.innerWidth < 768 ? 'auto' : '16 / 9',
                             maxHeight: 'calc(95vh - 200px)',
@@ -626,7 +610,7 @@ export default function PlayVideoPage() {
                                     if (duration && isFinite(duration)) {
                                         console.log('✅ Video metadata loaded, duration:', duration, 'seconds');
                                         setVideoDuration(duration);
-                                        
+
                                         // Đảm bảo video loop nếu duration < 45s hoặc > 60s
                                         // (loop đã được set trong props, nhưng đảm bảo nó hoạt động)
                                         if (duration < 45 || duration > 60) {
@@ -653,7 +637,7 @@ export default function PlayVideoPage() {
                                 }}
                             />
                         )}
-                        
+
                         {/* Loading overlay - chỉ hiển thị khi đang load */}
                         {videoLoading && (
                             <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-10 pointer-events-none">
@@ -663,7 +647,7 @@ export default function PlayVideoPage() {
                                 </div>
                             </div>
                         )}
-                        
+
                         {/* Error message nếu không load được video */}
                         {videoError && !videoLoading && (
                             <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-10">
