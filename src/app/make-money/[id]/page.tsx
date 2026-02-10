@@ -75,7 +75,7 @@ export default function StakingHistoryDetailPage() {
     // Format date (date only, no time)
     const formatDateOnly = (dateString: string): string => {
         const date = new Date(dateString)
-        
+
         // Map language codes to locale strings
         const localeMap: Record<string, string> = {
             'kr': 'ko-KR',
@@ -84,9 +84,9 @@ export default function StakingHistoryDetailPage() {
             'ja': 'ja-JP',
             'zh': 'zh-CN'
         }
-        
+
         const locale = localeMap[lang] || 'vi-VN'
-        
+
         // For Korean, use custom format: "2025년 3월 8일 15시 30분"
         if (lang === 'kr') {
             const year = date.getFullYear()
@@ -96,14 +96,14 @@ export default function StakingHistoryDetailPage() {
             const minutes = date.getMinutes()
             return `${year}년 ${month}월 ${day}일`
         }
-        
+
         // For other languages, use locale-appropriate format with date and time
         const dateStr = date.toLocaleDateString(locale, {
             year: 'numeric',
             month: 'long',
             day: 'numeric'
         })
-        
+
         // Remove comma from date string (e.g., "4 tháng 12, 2025" -> "4 tháng 12 2025")
         return dateStr.replace(/,/g, '')
     }
@@ -309,7 +309,7 @@ export default function StakingHistoryDetailPage() {
 
                         <div className='p-2 col-span-2 md:col-span-1 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md'>
                             <p className='text-xs sm:text-sm text-gray-600 dark:text-gray-300 pl-1'>{t('makeMoney.time')}:</p>
-                            <p className='text-xs sm:text-sm font-medium text-red-600 dark:text-[#FE645F]'>{formatDateOnly(stakingLock.date_start)} - {formatDateOnly(stakingLock.date_end)}</p>
+                            <p className='text-xs sm:text-sm font-medium text-red-600 dark:text-[#FE645F]'>{formatDateOnly(stakingLock.date_start)} - {formatDateOnly(stakingLock.date_end)} (UTC +0)</p>
                         </div>
 
                         <div className='p-2 col-span-2 md:col-span-1 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md'>
@@ -541,13 +541,13 @@ export default function StakingHistoryDetailPage() {
                             })()}
                         </div>
                         <div className='flex items-center gap-2 justify-end mt-3 max-w-3xl mx-auto'>
-                            <button
-                            onClick={handleDownloadCalendar}
-                            className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-blue-100 dark:bg-blue-900/50 hover:bg-blue-200 dark:hover:bg-blue-900/70 text-blue-700 dark:text-blue-300 cursor-pointer'
-                            title={t('makeMoney.downloadCalendar') || 'Tải xuống'}
-                        >
-                            <Download className='w-5 h-5' />
-                        </button>
+                                <button
+                                onClick={handleDownloadCalendar}
+                                className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-blue-100 dark:bg-blue-900/50 hover:bg-blue-200 dark:hover:bg-blue-900/70 text-blue-700 dark:text-blue-300 cursor-pointer'
+                                title={t('makeMoney.downloadCalendar') || 'Tải xuống'}
+                            >
+                                <Download className='w-5 h-5' />
+                            </button>
                             <button
                                 onClick={handleShareCalendar}
                                 className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-green-100 dark:bg-green-900/50 hover:bg-green-200 dark:hover:bg-green-900/70 text-green-700 dark:text-green-300 cursor-pointer'

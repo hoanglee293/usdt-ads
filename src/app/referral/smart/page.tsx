@@ -83,7 +83,7 @@ export default function DirectReferralPage() {
         const totalCanWithdraw = smartRefInfo.data?.total_can_withdraw || 0;
 
         if (totalCanWithdraw < 10) {
-            toast.error(t('ref.minimumWithdrawError') || 'Minimum balance of 10 USDT is required to withdraw.');
+            toast.error(t('ref.minimumWithdrawError', { amount: totalCanWithdraw.toFixed(2) }));
             return;
         }
 

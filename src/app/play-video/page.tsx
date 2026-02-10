@@ -6,7 +6,6 @@ import { Button } from '@/ui/button';
 import { Loader2, PlayCircle, CheckCircle2, Clock, ArrowLeft, Video, ArrowRight, Gift, Eye, Smartphone } from 'lucide-react';
 import Modal from '@/components/Modal';
 
-import { useRewardedAd } from '@/hooks/useRewardedAd';
 import { useServerTime } from '@/hooks/useServerTime';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getMissionNow, watchVideo, claimMissionReward, claimDay, type MissionNowResponse } from '@/services/StakingService';
@@ -14,6 +13,7 @@ import { useLang } from '@/lang/useLang';
 import toast from 'react-hot-toast';
 import { Card } from '@/ui/card';
 import { Progress } from '@/ui/progress';
+import axiosClient from '@/utils/axiosClient';
 
 type ViewState = 'idle' | 'connecting' | 'watching' | 'countdown' | 'completed';
 
@@ -22,18 +22,6 @@ export default function PlayVideoPage() {
     const queryClient = useQueryClient();
     const { t } = useLang();
 
-    // GAM Ad Unit ID - TODO: Replace with actual Ad Unit ID from Google Ad Manager
-    const AD_UNIT_ID = process.env.NEXT_PUBLIC_GAM_AD_UNIT_ID || '/123456789/rewarded_ad';
-    const GAM_TEST_MODE = process.env.NEXT_PUBLIC_GAM_TEST_MODE === 'true';
-
-    const { isLoaded, isLoading: isLoadingAd, error: adError, showAd, earnedReward, isReady } = useRewardedAd({
-        adUnitId: AD_UNIT_ID,
-        autoLoad: true,
-    });
-
-    // Mock earnedReward for testing when GAM fails (development only)
-    const [mockEarnedReward, setMockEarnedReward] = useState(false);
-
     const [viewState, setViewState] = useState<ViewState>('idle');
     const [devicesCount, setDevicesCount] = useState(0);
     const { currentTime, isLoading: isLoadingTime, error: timeError, isUsingServerTime } = useServerTime(1000);
@@ -41,6 +29,13 @@ export default function PlayVideoPage() {
     const [showNoStakingModal, setShowNoStakingModal] = useState(false); // Modal hiển thị khi chưa tham gia gói staking nào
     const [stakingErrorMessage, setStakingErrorMessage] = useState(''); // Lưu message lỗi từ API
     const [isClaimedLocal, setIsClaimedLocal] = useState(false);
+    const [videoTimer, setVideoTimer] = useState(30); // Timer đếm ngược (sẽ được cập nhật dựa trên video duration)
+    const [showCompleteButton, setShowCompleteButton] = useState(false); // Hiển thị button "Hoàn thành"
+    const [videoDuration, setVideoDuration] = useState<number | null>(null); // Thời lượng video (giây)
+    const [videoUrl, setVideoUrl] = useState<string | null>(null); // URL video từ API
+    const [videoLoading, setVideoLoading] = useState(false); // Track xem video đang load
+    const [videoError, setVideoError] = useState<string | null>(null); // Lỗi khi load video
+    const videoRef = React.useRef<HTMLVideoElement>(null); // Ref cho video element
 
     // Get mission progress
     const { data: missionNowResponse, isLoading: isLoadingMission, error: missionError } = useQuery<MissionNowResponse>({
@@ -75,11 +70,6 @@ export default function PlayVideoPage() {
         mutationFn: watchVideo,
         onSuccess: async (data) => {
             console.log('✅ watchVideo API success:', data);
-
-            // Reset mock reward if in test mode
-            if (GAM_TEST_MODE) {
-                setMockEarnedReward(false);
-            }
 
             // Invalidate và refetch query mission-now để cập nhật time_watch_new cho countdown
             queryClient.invalidateQueries({ queryKey: ['mission-now'] });
@@ -247,30 +237,101 @@ export default function PlayVideoPage() {
         return `${minutes}:${seconds.toString().padStart(2, '0')}`;
     };
 
-    // Handle reward earned from ad (real GAM or mock) - Chuyển sang countdown sau khi xem xong
-    const actualEarnedReward = GAM_TEST_MODE ? mockEarnedReward : earnedReward;
-
-    useEffect(() => {
-        // Khi xem xong ad (rewarded) → Gọi API watchVideo
-        // State sẽ được chuyển sang countdown trong onSuccess callback của mutation
-        if (actualEarnedReward && viewState === 'watching' && !videoWatched) {
-            console.log('✅ Reward earned, calling watchVideo API...');
-            setVideoWatched(true);
-
-            // Gọi API watchVideo - state sẽ được chuyển sang countdown trong onSuccess
-            watchVideoMutation.mutate();
+    // Function để detect device type (desktop/mobile)
+    const getDeviceType = (): 'desktop' | 'mobile' => {
+        if (typeof window === 'undefined') return 'desktop';
+        
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const isLandscape = width > height;
+        
+        // PC hoặc tablet xoay ngang: type = desktop
+        // Mobile hoặc tablet xoay dọc: type = mobile
+        if (width >= 1024) {
+            // PC hoặc tablet lớn
+            return 'desktop';
+        } else if (width >= 768) {
+            // Tablet: kiểm tra orientation
+            return isLandscape ? 'desktop' : 'mobile';
+        } else {
+            // Mobile
+            return 'mobile';
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [actualEarnedReward, viewState, videoWatched]);
+    };
+
+    // Fetch video URL từ API khi vào state watching
+    useEffect(() => {
+        if (viewState === 'watching' && typeof window !== 'undefined' && !videoUrl && !videoLoading) {
+            const fetchVideo = async () => {
+                setVideoLoading(true);
+                setVideoError(null);
+                
+                try {
+                    const deviceType = getDeviceType();
+                    const response = await axiosClient.post('/incomes/get-video', {
+                        type: deviceType
+                    });
+                    
+                    if (response.data?.statusCode === 200 && response.data?.data?.url) {
+                        setVideoUrl(response.data.data.url);
+                        console.log('✅ Video URL loaded:', response.data.data.url);
+                    } else {
+                        throw new Error('Invalid response format');
+                    }
+                } catch (error: any) {
+                    console.error('❌ Failed to fetch video:', error);
+                    const errorMessage = error?.response?.data?.message || error?.message || 'Không thể tải video';
+                    setVideoError(errorMessage);
+                } finally {
+                    setVideoLoading(false);
+                }
+            };
+            
+            fetchVideo();
+        }
+        
+        // Cleanup: reset video state khi rời khỏi watching state
+        return () => {
+            if (viewState !== 'watching') {
+                setVideoUrl(null);
+                setVideoError(null);
+                setVideoLoading(false);
+                setVideoDuration(null);
+                if (videoRef.current) {
+                    videoRef.current.pause();
+                    videoRef.current.src = '';
+                }
+            }
+        };
+    }, [viewState, videoUrl, videoLoading]);
+
+    // Timer đếm ngược dựa trên video duration (clamp 45-60s) + 1s khi vào state watching
+    useEffect(() => {
+        if (viewState === 'watching' && videoDuration !== null) {
+            // Clamp video duration: tối thiểu 45s, tối đa 60s
+            const clampedDuration = Math.max(45, Math.min(60, Math.ceil(videoDuration)));
+            // Tính thời gian hiển thị nút = clamped duration + 1 giây
+            const timerDuration = clampedDuration + 1;
+            setVideoTimer(timerDuration);
+            setShowCompleteButton(false);
+
+            // Đếm ngược từ timerDuration
+            const interval = setInterval(() => {
+                setVideoTimer((prev) => {
+                    if (prev <= 1) {
+                        clearInterval(interval);
+                        setShowCompleteButton(true);
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+
+            return () => clearInterval(interval);
+        }
+    }, [viewState, videoDuration]);
 
     // Chuyển sang state "watching" khi state "connecting" đã gọi API thành công
-    // Lưu ý: Logic kiểm tra countdown được xử lý bởi useEffect auto-switch ở trên
-    // Nếu countdown chưa kết thúc, useEffect auto-switch sẽ chuyển từ connecting sang countdown
-    // Nên ở đây chỉ cần kiểm tra nếu vẫn còn ở connecting thì mới chuyển sang watching
-    // Chuyển sang state "watching" khi state "connecting" đã gọi API thành công
-    // Lưu ý: Logic kiểm tra countdown được xử lý bởi useEffect auto-switch ở trên
-    // Nếu countdown chưa kết thúc, useEffect auto-switch sẽ chuyển từ connecting sang countdown
-    // Nên ở đây chỉ cần kiểm tra nếu vẫn còn ở connecting thì mới chuyển sang watching
     useEffect(() => {
         if (viewState === 'connecting' && !isLoadingMission && missionNowResponse?.data) {
             // Chỉ chuyển sang watching nếu countdown đã kết thúc hoặc chưa xem lần nào
@@ -280,30 +341,14 @@ export default function PlayVideoPage() {
                 return;
             }
 
-            console.log('✅ API mission-now loaded, waiting 5s before switching to watching state...');
-
-            // Wait 5 seconds before switching to watching state
+            // Wait 3 seconds (hiển thị popup "Đang kết nối") trước khi chuyển sang watching
             const timer = setTimeout(() => {
-                console.log('✅ 5s passed, switching to watching state...');
                 setViewState('watching');
-
-                // Show ad sau khi chuyển sang watching
-                if (GAM_TEST_MODE) {
-                    // Test mode: Mock ad watching (simulate 5 seconds of watching)
-                    console.log('🧪 TEST MODE: Simulating ad watch...');
-                    setTimeout(() => {
-                        console.log('🧪 TEST MODE: Mock reward earned');
-                        setMockEarnedReward(true);
-                    }, 5000); // Simulate 5 seconds of watching
-                } else {
-                    // Production mode: Show real GAM ad
-                    showAd();
-                }
-            }, 5000);
+            }, 3000);
 
             return () => clearTimeout(timer);
         }
-    }, [viewState, isLoadingMission, missionNowResponse, GAM_TEST_MODE, showAd, isCountdownFinished, isCompleted]);
+    }, [viewState, isLoadingMission, missionNowResponse, isCountdownFinished, isCompleted]);
 
     // // Gọi API watchVideo chỉ khi countdown đã hết và đã xem xong video
     // useEffect(() => {
@@ -352,17 +397,18 @@ export default function PlayVideoPage() {
     // We'll show Next button instead of auto-reset for better UX
 
     const handleWatchVideo = async () => {
-        console.log('🎬 handleWatchVideo called', { isReady, isLoaded, isLoadingAd, viewState });
-
         // Kiểm tra nếu countdown chưa kết thúc → chuyển sang countdown state
         if (!isCountdownFinished && !isCompleted && missionNowResponse?.data) {
-            console.log('⏳ Countdown chưa kết thúc, chuyển sang countdown state');
             setViewState('countdown');
             return;
         }
 
+<<<<<<< HEAD
+        // Bắt đầu flow xem video: Connecting -> Watching -> (Nhấn Hoàn thành) -> Gọi API -> Countdown
+        const devices = missionNowResponse?.data?.devices || 20; // Fallback về 20 nếu không có
+=======
         if (!isReady && GAM_TEST_MODE) {
-            toast.error(t('makeMoney.playVideo.adNotReady') + ' - ' + (adError?.message || 'Service đang khởi tạo...'));
+            toast.error(t('makeMoney.playVideo.adNotReady') + ' - ' + (t('makeMoney.playVideo.serviceStarting')));
             return;
         }
 
@@ -374,17 +420,23 @@ export default function PlayVideoPage() {
 
         // Bắt đầu flow xem video: Connecting -> Watching -> (Xem xong) -> Gọi API
         const devices = missionNowResponse?.data?.devices || 0;
+>>>>>>> 9637dab5735880db2430aa1e640eaff3107ff8fc
         setDevicesCount(devices);
 
-        // Chuyển sang state connecting
-        console.log('🔄 Setting viewState to connecting');
+        // Chuyển sang state connecting (hiển thị popup "Đang kết nối")
         setViewState('connecting');
 
         // Gọi lại API getMissionNow để lấy time_watch_new mới nhất
-        console.log('🔄 Refetching mission-now API...');
         await queryClient.refetchQueries({ queryKey: ['mission-now'] });
 
-        // Note: Việc chuyển sang state "watching" sẽ được xử lý bởi useEffect khi API trả về và có time_watch_new
+        // Note: Việc chuyển sang state "watching" sẽ được xử lý bởi useEffect khi API trả về
+    };
+
+    // Xử lý khi nhấn button "Hoàn thành"
+    const handleCompleteVideo = () => {
+        // Gọi API watchVideo
+        watchVideoMutation.mutate();
+        // State sẽ được chuyển sang countdown trong onSuccess callback của mutation
     };
 
     const handleNext = () => {
@@ -449,13 +501,13 @@ export default function PlayVideoPage() {
                     {/* Progress Pill */}
                     <div className="bg-white dark:bg-gray-800 rounded-full px-6 py-2 shadow-md shadow-blue-100 dark:shadow-none flex items-center gap-1.5 transform transition-all">
                         <span className="text-slate-600 dark:text-slate-300 font-medium text-sm whitespace-nowrap">
-                            {t('makeMoney.playVideo.watched') || 'Đã xem'}
+                            {t('makeMoney.playVideo.watched')}
                         </span>
                         <span className="text-[#ef4444] font-bold text-base">
                             {missionData?.turn_day || 0}/{missionData?.turn_setting || 200}
                         </span>
                         <span className="text-slate-600 dark:text-slate-300 font-medium text-sm">
-                            video
+                            {t('makeMoney.playVideo.video')}
                         </span>
                     </div>
                 </div>
@@ -513,7 +565,7 @@ export default function PlayVideoPage() {
 
                     {!isCountdownFinished && (
                         <p className="text-[#e13c9c] text-center font-medium italic max-w-xs animate-pulse">
-                            {t('makeMoney.playVideo.waitForNext', { minutes: missionData?.time_gap || 2 }) || `Bạn phải đợi sau ${missionData?.time_gap || 2} phút thì mới được xem tiếp video`}
+                            {t('makeMoney.playVideo.waitForNext', { minutes: missionData?.time_gap || 2 })}
                         </p>
                     )}
                 </div>
@@ -528,7 +580,7 @@ export default function PlayVideoPage() {
                             : 'bg-[#9ca3af] text-white/90 cursor-not-allowed'
                             }`}
                     >
-                        {t('makeMoney.playVideo.next') || 'NEXT'}
+                        {t('makeMoney.playVideo.next')}
                     </Button>
                 </div>
             </div>
@@ -537,24 +589,115 @@ export default function PlayVideoPage() {
 
 
 
-    // Render Watching Video Screen
+    // Render Watching Video Screen (Popup full màn hình)
     if (viewState === 'watching') {
         return (
-            <div className="w-full min-h-screen lg:py-[15vh] bg-[radial-gradient(100%_100%_at_50%_0%,_#45a6e7_0%,_#e1e7ec_50%,_#a979da_100%)]   dark:bg-[radial-gradient(100%_100%_at_50%_0%,_#3387ba_0%,_#cfcccc_50%,_#753c95_100%)]  flex flex-col items-center justify-between py-20 px-6 relative overflow-hidden">
-                {/* Ad Container - GAM will inject ad here */}
-                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-200/30 rounded-full blur-[100px] pointer-events-none" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-200/30 rounded-full blur-[100px] pointer-events-none" />
-                <div id="rewarded-ad-container" className="absolute inset-0 z-0 bg-transparent" />
-
-                {/* Overlay while loading ad or if ad is hidden */}
-                <div className="z-10 bg-white dark:bg-gray-800 backdrop-blur-lg p-8 rounded-3xl border border-white/10 max-w-sm w-full text-center">
-                    <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4 shadow-lg shadow-purple-500/30 animate-pulse">
-                        <Video className="w-8 h-8 text-white" />
+            <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 md:p-4">
+                <div className="bg-white dark:bg-gray-800 rounded-3xl p-4 md:p-6 w-auto max-w-[95vw] max-h-[95vh] shadow-2xl flex flex-col items-center space-y-4 md:space-y-6 relative overflow-auto">
+                    {/* Video Container */}
+                    <div 
+                        className="w-full bg-gray-900 rounded-xl overflow-hidden relative" 
+                        style={{
+                            aspectRatio: typeof window !== 'undefined' && window.innerWidth < 768 ? 'auto' : '16 / 9',
+                            maxHeight: 'calc(95vh - 200px)',
+                            minHeight: typeof window !== 'undefined' && window.innerWidth < 768 ? 'auto' : '400px',
+                        }}
+                    >
+                        {/* Video element */}
+                        {videoUrl && (
+                            <video
+                                ref={videoRef}
+                                src={videoUrl}
+                                className="w-full h-full object-contain bg-black"
+                                controls={false}
+                                playsInline
+                                autoPlay
+                                muted={false}
+                                loop={true}
+                                style={{
+                                    width: '100%',
+                                    height: typeof window !== 'undefined' && window.innerWidth < 768 ? 'auto' : '100%',
+                                    maxHeight: typeof window !== 'undefined' && window.innerWidth < 768 ? 'calc(95vh - 200px)' : '100%',
+                                    objectFit: 'contain'
+                                }}
+                                onLoadedMetadata={(e) => {
+                                    const video = e.currentTarget;
+                                    const duration = video.duration;
+                                    if (duration && isFinite(duration)) {
+                                        console.log('✅ Video metadata loaded, duration:', duration, 'seconds');
+                                        setVideoDuration(duration);
+                                        
+                                        // Đảm bảo video loop nếu duration < 45s hoặc > 60s
+                                        // (loop đã được set trong props, nhưng đảm bảo nó hoạt động)
+                                        if (duration < 45 || duration > 60) {
+                                            video.loop = true;
+                                        }
+                                    } else {
+                                        console.warn('⚠️ Video duration is not available, using default 45s');
+                                        setVideoDuration(45); // Fallback về 45s (minimum)
+                                    }
+                                }}
+                                onLoadedData={() => {
+                                    console.log('✅ Video loaded');
+                                }}
+                                onPlay={() => {
+                                    console.log('▶️ Video started');
+                                }}
+                                onEnded={() => {
+                                    console.log('✅ Video ended, will loop automatically');
+                                    // Video sẽ tự động phát lại nhờ loop={true}
+                                }}
+                                onError={(e) => {
+                                    console.error('❌ Video error:', e);
+                                    setVideoError('Lỗi phát video');
+                                }}
+                            />
+                        )}
+                        
+                        {/* Loading overlay - chỉ hiển thị khi đang load */}
+                        {videoLoading && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-10 pointer-events-none">
+                                <div className="text-center space-y-4">
+                                    <Loader2 className="w-12 h-12 text-white/50 mx-auto animate-spin" />
+                                    <p className="text-white/70 text-sm">{t('makeMoney.playVideo.loadingAdVideo') || 'Đang tải quảng cáo video...'}</p>
+                                </div>
+                            </div>
+                        )}
+                        
+                        {/* Error message nếu không load được video */}
+                        {videoError && !videoLoading && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-10">
+                                <div className="text-center space-y-4">
+                                    <p className="text-white/70 text-sm">{t('makeMoney.playVideo.adLoadError') || 'Không thể tải quảng cáo video'}</p>
+                                    <p className="text-white/50 text-xs">{videoError}</p>
+                                </div>
+                            </div>
+                        )}
                     </div>
-                    <h3 className="font-bold dark:text-white text-black text-xl mb-2">{t('makeMoney.playVideo.watching')}</h3>
-                    <p className="dark:text-blue-100/80 text-black text-sm">
-                        {t('makeMoney.playVideo.watchToComplete')}
-                    </p>
+
+                    {/* Countdown text hoặc Button "Hoàn thành" */}
+                    {!showCompleteButton ? (
+                        <div className="w-full text-center">
+                            <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg font-medium">
+                                {t('makeMoney.playVideo.canCompleteAfter', { seconds: videoTimer }) || `Bạn có thể hoàn thành nhiệm vụ sau ${videoTimer}s`}
+                            </p>
+                        </div>
+                    ) : (
+                        <Button
+                            onClick={handleCompleteVideo}
+                            disabled={watchVideoMutation.isPending}
+                            className="w-auto min-w-[200px] px-8 bg-gradient-primary hover:from-blue-700 hover:to-purple-700 text-white rounded-[2rem] h-12 md:h-14 text-base md:text-lg font-bold shadow-xl hover:scale-[1.02] transition-all duration-300 border-none"
+                        >
+                            {watchVideoMutation.isPending ? (
+                                <>
+                                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                                    {t('makeMoney.playVideo.processing') || 'Đang xử lý...'}
+                                </>
+                            ) : (
+                                t('makeMoney.playVideo.complete') || 'Hoàn thành'
+                            )}
+                        </Button>
+                    )}
                 </div>
             </div>
         );
@@ -579,13 +722,13 @@ export default function PlayVideoPage() {
                     {/* Progress Pill */}
                     <div className="bg-white dark:bg-gray-800 rounded-full px-8 py-2 shadow-lg shadow-blue-100 dark:shadow-none flex items-center gap-2 transform transition-all hover:scale-105">
                         <span className="text-slate-600 dark:text-slate-300 font-medium whitespace-nowrap">
-                            {t('makeMoney.playVideo.watched') || 'Đã xem'}
+                            {t('makeMoney.playVideo.watched')}
                         </span>
                         <span className={`font-semibold text-lg ${isCompleted ? 'text-green-500' : 'text-[#ef4444]'}`}>
                             {missionData?.turn_day || 0}/{missionData?.turn_setting || 10}
                         </span>
                         <span className="text-slate-600 dark:text-slate-300 font-medium">
-                            video
+                            {t('makeMoney.playVideo.video')}
                         </span>
                     </div>
 
@@ -594,7 +737,7 @@ export default function PlayVideoPage() {
                         <div className="flex items-center gap-2 text-theme-red-200 font-semibold bg-transparent px-4 py-2 rounded-lg">
                             <Eye className="w-6 h-6" />
                             <span className="text-base">
-                                {(missionData?.devices || 20) > 0 ? missionData?.devices : 20} {t('makeMoney.playVideo.devicesWatching') || 'thiết bị khác xem video'}
+                                {(missionData?.devices || 20) > 0 ? missionData?.devices : 20} {t('makeMoney.playVideo.devicesWatching')}
                             </span>
                         </div>
                     )}
@@ -603,7 +746,7 @@ export default function PlayVideoPage() {
             {isCompleted && (
                 <div className="w-full max-w-md z-10 pb-6 flex flex-col gap-5 justify-center items-center">
                     <img src="/complete.png" alt="completed" className="w-52 h-auto object-contain" />
-                    <p className="text-red-500 font-semibold text-sm px-10 text-center"> {t('makeMoney.playVideo.readyToClaim') || 'Bạn đã hoàn thành tất cả video cho ngày hôm nay. Hãy quay lại trang Make Money để nhận thưởng.'} </p>
+                    <p className="text-red-500 font-semibold text-sm px-10 text-center"> {t('makeMoney.playVideo.readyToClaim')} </p>
                 </div>
             )}
             {/* Bottom Action */}
@@ -632,23 +775,15 @@ export default function PlayVideoPage() {
                     </Button>
                 )}
 
-                {adError && !GAM_TEST_MODE && (
-                    <p className="text-xs text-red-500 text-center mt-3 bg-red-50 dark:bg-red-900/20 py-1 px-3 rounded-full">
-                        {adError.message}
-                    </p>
-                )}
             </div>
 
-            {/* Ad Container - GAM will inject ad here */}
-            <div id="rewarded-ad-container" className="hidden"></div>
-
-            {/* Connecting Modal Overlay */}
+            {/* Connecting Modal Overlay - Popup "Đang kết nối đến {x} thiết bị cùng xem" */}
             {viewState === 'connecting' && (
-                <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-6">
-                    <div className="bg-white dark:bg-gray-700 rounded-[2rem] p-8 w-full max-w-sm shadow-2xl flex flex-col items-center space-y-6 animate-in fade-in zoom-in duration-300">
+                <div className="fixed inset-0 z-[9998] flex items-center justify-center bg-black/80 backdrop-blur-sm p-2 md:p-4">
+                    <div className="bg-white dark:bg-gray-800 rounded-3xl p-4 md:p-6 w-auto max-w-[95vw] max-h-[95vh] shadow-2xl flex flex-col items-center space-y-4 md:space-y-6 relative overflow-auto animate-in fade-in zoom-in duration-300">
                         <div className="text-center space-y-2">
                             <h3 className="dark:text-blue-500 text-black text-lg font-bold">
-                                {t('makeMoney.playVideo.connectingDevices', { count: devicesCount }) || `Đang kết nối đến ${devicesCount} thiết bị cùng xem`}
+                                {t('makeMoney.playVideo.connectingDevices', { count: devicesCount })}
                             </h3>
                         </div>
 
@@ -679,7 +814,7 @@ export default function PlayVideoPage() {
             >
                 <div className="flex flex-col items-center space-y-6 text-center">
                     <p className="text-gray-700 dark:text-gray-300">
-                        {(t('makeMoney.playVideo.noStakingMessage') || 'Hiện tại bạn chưa tham gia gói staking nào. Vui lòng tham gia gói staking để bắt đầu kiếm tiền.')}
+                        {(t('makeMoney.playVideo.noStakingMessage'))}
                     </p>
                     <Button
                         onClick={() => router.push('/make-money')}

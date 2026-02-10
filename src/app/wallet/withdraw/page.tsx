@@ -157,12 +157,12 @@ function WithdrawPageContent() {
         router.back()
     }
 
-    const handleNetworkChange = (value: string) => {
-        setSelectedNetworkId(value)
+    const handleNetworkChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedNetworkId(e.target.value)
     }
 
-    const handleCoinChange = (value: string) => {
-        setSelectedCoinId(value)
+    const handleCoinChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedCoinId(e.target.value)
     }
 
     const handleMaxAmount = () => {
@@ -475,10 +475,11 @@ function WithdrawPageContent() {
                                                 <div className="py-1 rounded-full text-xs min-w-20 flex justify-center font-medium bg-orange-100 text-orange-700">
                                                     {transaction.type}
                                                 </div>
-                                                <div className={`py-1 rounded-full text-xs min-w-20 flex justify-center font-medium ${transaction.status === 'Complete'
+                                                <div className={`py-1 rounded-full text-xs min-w-20 flex justify-center font-medium ${
+                                                    transaction.status === 'Complete'
                                                         ? 'bg-green-100 text-green-700'
                                                         : 'bg-red-100 text-red-700'
-                                                    }`}>
+                                                }`}>
                                                     {transaction.status}
                                                 </div>
                                             </div>

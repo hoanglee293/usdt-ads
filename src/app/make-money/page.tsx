@@ -1,2181 +1,813 @@
-'use client'
-import React, { useState, useMemo, useEffect, useRef } from 'react'
-import html2canvas from 'html2canvas'
-import { Loader2, ChevronLeft, ChevronRight, Download, Share2, PlayCircle, Smartphone } from 'lucide-react'
-import toast from 'react-hot-toast'
-import { Button } from '@/ui/button'
-import { Input } from '@/ui/input'
-import CustomSelect from '@/components/CustomSelect'
-import { Skeleton } from '@/ui/skeleton'
-import Modal from '@/components/Modal'
-import { useIsMobile } from '@/ui/use-mobile'
-import { useLang } from '@/lang/useLang'
-import { useRouter } from 'next/navigation'
-import { useServerTime } from '@/hooks/useServerTime'
-import {
-    getListCoins,
-    getBalance,
-    type Coin,
-    type ListCoinsResponse,
-    type BalanceResponse,
-} from '@/services/WalletService'
-import {
-    joinBasePackage,
-    joinStakingPackage,
-    getCurrentStaking,
-    getStakingHistories,
-    claimMissionReward,
-    getMissionNow,
-    getCurrentStakingWithMissions,
-    calculateStaking,
-    type StakingPackage,
-    type JoinStakingRequest,
-    type CurrentStakingResponse,
-    type StakingHistoriesResponse,
-    type MissionClaimResponse,
-    type MissionNowResponse,
-    type CurrentStakingWithMissionsResponse,
-    type CalculateStakingResponse,
-    type Mission,
-} from '@/services/StakingService'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { formatReward } from '@/utils/format'
+'use client';
 
-export default function MakeMoneyPage() {
-    const queryClient = useQueryClient()
-    const router = useRouter()
-    const tableRef = useRef<HTMLDivElement>(null)
-    const calendarRef = useRef<HTMLDivElement>(null)
-    const isMobile = useIsMobile()
-    const { t, lang } = useLang()
+import React, { useState, useEffect, useMemo } from 'react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/ui/button';
+import { Loader2, PlayCircle, CheckCircle2, Clock, ArrowLeft, Video, ArrowRight, Gift, Eye, Smartphone } from 'lucide-react';
+import Modal from '@/components/Modal';
 
-    // Form state
-    const [stakingType, setStakingType] = useState<'1d' | '7d' | '30d'>('1d')
-    const [stakingAmount, setStakingAmount] = useState<string>('')
-    const [usdtCoinId, setUsdtCoinId] = useState<string>('')
-    const [selectedCoin, setSelectedCoin] = useState<string>('')
-    const [isStakingModalOpen, setIsStakingModalOpen] = useState<boolean>(false)
-    const [isBaseConfirmModalOpen, setIsBaseConfirmModalOpen] = useState<boolean>(false)
-    const [isStakingConfirmModalOpen, setIsStakingConfirmModalOpen] = useState<boolean>(false)
-    const [isInsufficientBalanceModalOpen, setIsInsufficientBalanceModalOpen] = useState<boolean>(false)
-    const { currentTime, isLoading: isLoadingTime, error: timeError, isUsingServerTime } = useServerTime(1000)
-    const [currentMonthIndex, setCurrentMonthIndex] = useState<number>(0) // Index của tháng hiện tại trong danh sách các tháng
+import { useServerTime } from '@/hooks/useServerTime';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { getMissionNow, watchVideo, claimMissionReward, claimDay, type MissionNowResponse } from '@/services/StakingService';
+import { useLang } from '@/lang/useLang';
+import toast from 'react-hot-toast';
+import { Card } from '@/ui/card';
+import { Progress } from '@/ui/progress';
+import axiosClient from '@/utils/axiosClient';
 
-    // ==================== React Query Hooks ====================
+type ViewState = 'idle' | 'connecting' | 'watching' | 'countdown' | 'completed';
 
-    // 1. Get Coins to find USDT
-    const { data: coinsResponse, isLoading: isLoadingCoins, error: coinsError, isError: isCoinsError } = useQuery<ListCoinsResponse>({
-        queryKey: ['coins'],
-        queryFn: async () => {
-            const response = await getListCoins()
-            return response
-        },
-        refetchOnWindowFocus: false, // Không cần refetch khi chuyển tab
-        staleTime: 5 * 60 * 1000, // Coins ít thay đổi, cache 5 phút
-    })
+export default function PlayVideoPage() {
+    const router = useRouter();
+    const queryClient = useQueryClient();
+    const { t } = useLang();
 
-    // 2. Get Balance
-    const { data: balanceResponse, isLoading: isLoadingBalance, refetch: refetchBalance, error: balanceError, isError: isBalanceError } = useQuery<BalanceResponse>({
-        queryKey: ['balance', selectedCoin],
-        queryFn: async () => {
-            if (!selectedCoin) return null as any
-            const response = await getBalance(Number(selectedCoin))
-            return response
-        },
-        enabled: !!selectedCoin && selectedCoin !== '',
-        refetchOnWindowFocus: false, // Tắt auto refetch khi focus, chỉ refetch khi cần (sau mutation)
-        staleTime: 30 * 1000, // Cache 30 giây
-    })
+    const [viewState, setViewState] = useState<ViewState>('idle');
+    const [devicesCount, setDevicesCount] = useState(0);
+    const { currentTime, isLoading: isLoadingTime, error: timeError, isUsingServerTime } = useServerTime(1000);
+    const [videoWatched, setVideoWatched] = useState(false); // Đánh dấu đã xem xong video nhưng chưa gọi API
+    const [showNoStakingModal, setShowNoStakingModal] = useState(false); // Modal hiển thị khi chưa tham gia gói staking nào
+    const [stakingErrorMessage, setStakingErrorMessage] = useState(''); // Lưu message lỗi từ API
+    const [isClaimedLocal, setIsClaimedLocal] = useState(false);
+    const [videoTimer, setVideoTimer] = useState(30); // Timer đếm ngược (sẽ được cập nhật dựa trên video duration)
+    const [showCompleteButton, setShowCompleteButton] = useState(false); // Hiển thị button "Hoàn thành"
+    const [videoDuration, setVideoDuration] = useState<number | null>(null); // Thời lượng video (giây)
+    const [videoUrl, setVideoUrl] = useState<string | null>(null); // URL video từ API
+    const [videoLoading, setVideoLoading] = useState(false); // Track xem video đang load
+    const [videoError, setVideoError] = useState<string | null>(null); // Lỗi khi load video
+    const videoRef = React.useRef<HTMLVideoElement>(null); // Ref cho video element
 
-    // 3. Get Current Staking
-    const { data: currentStakingResponse, isLoading: isLoadingCurrentStaking, refetch: refetchCurrentStaking, error: currentStakingError, isError: isCurrentStakingError } = useQuery<CurrentStakingResponse>({
-        queryKey: ['current-staking'],
-        queryFn: getCurrentStaking,
-        retry: false, // Don't retry on 404
-        refetchOnWindowFocus: false, // Không cần refetch khi chuyển tab
-        staleTime: 1 * 60 * 1000, // Cache 1 phút
-    })
-
-    // 4. Get Staking Histories
-    const { data: historiesResponse, isLoading: isLoadingHistories, refetch: refetchHistories, error: historiesError, isError: isHistoriesError } = useQuery<StakingHistoriesResponse>({
-        queryKey: ['staking-histories'],
-        queryFn: getStakingHistories,
-        refetchOnWindowFocus: false, // Không cần refetch khi chuyển tab
-        staleTime: 2 * 60 * 1000, // Cache 2 phút
-    })
-
-    // 5. Get Current Staking with Missions
-    // Query khi đã load xong currentStaking (không cần kiểm tra status, để API tự xử lý 404)
-    const { data: stakingWithMissionsResponse, isLoading: isLoadingStakingWithMissions, refetch: refetchStakingWithMissions, error: stakingWithMissionsError, isError: isStakingWithMissionsError } = useQuery<CurrentStakingWithMissionsResponse>({
-        queryKey: ['current-staking-with-missions'],
-        queryFn: getCurrentStakingWithMissions,
-        enabled: !isLoadingCurrentStaking, // Chỉ cần đợi currentStaking load xong, không cần kiểm tra status
-        refetchInterval: 30000, // Refetch mỗi 30 giây
-        refetchOnWindowFocus: false,
-        retry: false, // Không retry nếu 404 (không có staking)
-    })
-
-    // Get current staking from either source
-    const currentStaking = useMemo(() => {
-        // Ưu tiên dùng staking_lock từ API mới nếu có, fallback về currentStakingResponse
-        return stakingWithMissionsResponse?.data?.staking_lock || currentStakingResponse?.data || null
-    }, [stakingWithMissionsResponse, currentStakingResponse])
-
-    // Get missions list - sorted by date (newest first)
-    const missions = useMemo(() => {
-        const missionsList = stakingWithMissionsResponse?.data?.missions || []
-        // Sort by date descending (newest first)
-        return [...missionsList].sort((a, b) => {
-            const dateA = new Date(a.date).getTime()
-            const dateB = new Date(b.date).getTime()
-            return dateB - dateA
-        })
-    }, [stakingWithMissionsResponse])
-
-    // 6. Get Mission Progress (keep for backward compatibility if needed)
-    const { data: missionNowResponse, isLoading: isLoadingMission, refetch: refetchMissionNow, error: missionError, isError: isMissionError } = useQuery<MissionNowResponse>({
+    // Get mission progress
+    const { data: missionNowResponse, isLoading: isLoadingMission, error: missionError } = useQuery<MissionNowResponse>({
         queryKey: ['mission-now'],
         queryFn: getMissionNow,
-        enabled: !!currentStaking && currentStaking.status === 'running' && !stakingWithMissionsResponse, // Chỉ query khi không có staking-with-missions
-        refetchInterval: 30000, // Refetch mỗi 30 giây để cập nhật countdown
-        refetchOnWindowFocus: false,
-        retry: false, // Không retry nếu 400 (không có staking)
-    })
+        retry: false,
+        refetchInterval: false, // Only refetch when idle
+    });
 
-    // Debounced staking amount for calculator API - chỉ gọi API sau 2s khi user ngừng nhập
-    const [debouncedStakingAmount, setDebouncedStakingAmount] = useState<string>('')
     useEffect(() => {
-        // Reset debounced value nếu input rỗng
-        if (!stakingAmount || stakingAmount.trim() === '') {
-            setDebouncedStakingAmount('')
-            return
+        // Restore state from local storage on mount
+        if (typeof window !== 'undefined') {
+            const claimed = localStorage.getItem('is_claimed_today');
+            if (claimed === 'true') {
+                setIsClaimedLocal(true);
+            }
         }
+    }, []);
 
-        // Chỉ debounce khi có giá trị hợp lệ
-        const timer = setTimeout(() => {
-            setDebouncedStakingAmount(stakingAmount)
-        }, 1000) // 2 seconds delay - tránh gọi API liên tục khi đang nhập
+    useEffect(() => {
+        // Reset state if it's a new day (turn_day resets to 0)
+        if (missionNowResponse?.data?.turn_day === 0) {
+            if (typeof window !== 'undefined') {
+                localStorage.removeItem('is_claimed_today');
+            }
+            setIsClaimedLocal(false);
+        }
+    }, [missionNowResponse?.data?.turn_day]);
 
-        return () => clearTimeout(timer)
-    }, [stakingAmount])
+    // Watch video mutation
+    const watchVideoMutation = useMutation({
+        mutationFn: watchVideo,
+        onSuccess: async (data) => {
+            console.log('✅ watchVideo API success:', data);
 
-    // 7. Calculate Staking (preview) - với debounce 2s
-    const { data: calculatorResponse, isLoading: isLoadingCalculator } = useQuery<CalculateStakingResponse>({
-        queryKey: ['staking-calculator', stakingType, debouncedStakingAmount],
-        queryFn: () => calculateStaking({
-            type: stakingType,
-            amount: Number(debouncedStakingAmount)
-        }),
-        enabled: !!debouncedStakingAmount &&
-            !isNaN(Number(debouncedStakingAmount)) &&
-            Number(debouncedStakingAmount) > 0 &&
-            !!stakingType,
-        refetchOnWindowFocus: false,
-        staleTime: 1 * 1000, // Cache 3 giây
-        retry: false,
-    })
+            // Invalidate và refetch query mission-now để cập nhật time_watch_new cho countdown
+            queryClient.invalidateQueries({ queryKey: ['mission-now'] });
+            await queryClient.refetchQueries({ queryKey: ['mission-now'] });
 
-    // 7b. Calculate Staking for confirm modal (không debounce, chỉ khi modal mở)
-    const { data: calculatorConfirmResponse, isLoading: isLoadingCalculatorConfirm } = useQuery<CalculateStakingResponse>({
-        queryKey: ['staking-calculator-confirm', stakingType, stakingAmount],
-        queryFn: () => calculateStaking({
-            type: stakingType,
-            amount: Number(stakingAmount)
-        }),
-        enabled: isStakingConfirmModalOpen &&
-            !!stakingAmount &&
-            !isNaN(Number(stakingAmount)) &&
-            Number(stakingAmount) > 0 &&
-            !!stakingType,
-        refetchOnWindowFocus: false,
-        staleTime: 3 * 1000, // Cache 30 giây
-        retry: false,
-    })
+            // Invalidate các queries liên quan khác
+            queryClient.invalidateQueries({ queryKey: ['current-staking-with-missions'] });
+            queryClient.invalidateQueries({ queryKey: ['current-staking'] });
 
-    // 8. Join Base Mutation
-    const joinBaseMutation = useMutation({
-        mutationFn: joinBasePackage,
-        onSuccess: (data) => {
-            const message = t('staking.joinBaseSuccess')
-            toast.success(message)
-            queryClient.invalidateQueries({ queryKey: ['current-staking'] })
-            queryClient.invalidateQueries({ queryKey: ['current-staking-with-missions'] })
-            queryClient.invalidateQueries({ queryKey: ['staking-histories'] })
-            queryClient.invalidateQueries({ queryKey: ['mission-now'] })
-            refetchBalance()
-            refetchCurrentStaking()
+            // Chuyển sang màn hình countdown sau khi API thành công và data đã được refetch
+            console.log('🔄 Switching to countdown screen after API success');
+            setViewState('countdown');
         },
         onError: (error: any) => {
-            const message = error?.response?.data?.message || t('staking.joinBaseError')
+            console.error('❌ watchVideo API error:', error);
+            const message = error?.response?.data?.message || t('makeMoney.playVideo.watchError');
+            toast.error(message);
+            // Nếu lỗi khi gọi API sau khi xem video, user vẫn ở màn hình watching hoặc quay về idle?
+            // Tạm thời quay về idle để user thử lại
+            setViewState('idle');
+            setVideoWatched(false);
+        },
+    });
 
-            // Check for specific error messages and use translations
-            if (message.includes('User already has an active staking lock')) {
-                toast.error(t('staking.userAlreadyHasActiveStaking'))
-                return
-            }
-            if (message.includes('USDT coin not found')) {
-                toast.error(t('staking.usdtCoinNotFound'))
-                return
-            }
-            if (message.includes('USDT wallet not found for user')) {
-                toast.error(t('staking.usdtWalletNotFound'))
-                return
-            }
-            if (message.includes('USDT balance must be less than $10')) {
-                toast.error(t('staking.usdtBalanceMustBeLessThan10'))
-                return
-            }
-            if (message.includes('Failed to join base staking')) {
-                toast.error(t('staking.failedToJoinBase'))
-                return
-            }
+    // Claim day reward mutation
+    const claimDayMutation = useMutation({
+        mutationFn: claimDay,
+        onSuccess: async (data) => {
+            toast.success(t('makeMoney.playVideo.claimDaySuccess'));
+            setIsClaimedLocal(true);
 
-            // Fallback to show the original message if no translation found
-            toast.error(message)
-        }
-    })
+            // Reset view state về idle để render lại UI
+            setViewState('idle');
+            setVideoWatched(false);
 
-    // 9. Join Staking Mutation
-    const joinStakingMutation = useMutation({
-        mutationFn: (data: JoinStakingRequest) => joinStakingPackage(data),
-        onSuccess: (response) => {
-            toast.success(t('staking.joinStakingSuccess'))
-            setStakingAmount('')
-            setDebouncedStakingAmount('')
-            setIsStakingModalOpen(false)
-            setIsStakingConfirmModalOpen(false)
-            queryClient.invalidateQueries({ queryKey: ['current-staking'] })
-            queryClient.invalidateQueries({ queryKey: ['current-staking-with-missions'] })
-            queryClient.invalidateQueries({ queryKey: ['staking-histories'] })
-            queryClient.invalidateQueries({ queryKey: ['mission-now'] })
-            refetchBalance()
-            refetchCurrentStaking()
+            // Invalidate và refetch tất cả queries liên quan
+            queryClient.invalidateQueries({ queryKey: ['mission-now'] });
+            queryClient.invalidateQueries({ queryKey: ['current-staking'] });
+            queryClient.invalidateQueries({ queryKey: ['current-staking-with-missions'] });
+            queryClient.invalidateQueries({ queryKey: ['staking-histories'] });
+
+            // Refetch để cập nhật trạng thái mới nhất ngay lập tức
+            await queryClient.refetchQueries({ queryKey: ['mission-now'] });
+            await queryClient.refetchQueries({ queryKey: ['current-staking-with-missions'] });
         },
         onError: (error: any) => {
-            const message = error?.response?.data?.message || t('staking.joinStakingError')
+            const message = error?.response?.data?.message || t('makeMoney.playVideo.claimError');
+            toast.error(message);
+        },
+    });
 
-            // Check for specific error messages and use translations
-            if (message.includes('Type must be one of: 1d, 7d, 30d')) {
-                toast.error(t('staking.typeMustBeOneOf'))
-                return
-            }
-            if (message.includes('Amount must be greater than 0')) {
-                toast.error(t('staking.amountMustBeGreaterThan0'))
-                return
-            }
-            if (message.includes('Amount must not exceed 3500')) {
-                toast.error(t('staking.amountMustNotExceed3500'))
-                return
-            }
-            if (message.includes('User already has an active staking lock')) {
-                toast.error(t('staking.userAlreadyHasActiveStaking'))
-                return
-            }
-            if (message.includes('USDT coin not found')) {
-                toast.error(t('staking.usdtCoinNotFound'))
-                return
-            }
-            if (message.includes('USDT balance must be greater than or equal to $10')) {
-                toast.error(t('staking.usdtBalanceMustBeGreaterOrEqual10'))
-                return
-            }
-            if (message.includes('Insufficient balance')) {
-                toast.error(t('staking.insufficientBalance'))
-                return
-            }
-            if (message.includes('Invalid staking type')) {
-                toast.error(t('staking.invalidStakingType'))
-                return
-            }
-            if (message.includes('Failed to join staking')) {
-                toast.error(t('staking.failedToJoinStaking'))
-                return
-            }
-
-            // Fallback to show the original message if no translation found
-            toast.error(message)
-        }
-    })
-
-    // 9. Claim Mission Reward Mutation
-    const claimMissionMutation = useMutation({
+    // Claim reward mutation (for final reward when staking ends)
+    const claimRewardMutation = useMutation({
         mutationFn: claimMissionReward,
-        onSuccess: async (data: MissionClaimResponse) => {
-            const apiMessage = data?.message
-            const rewardAmount = formatNumber(data.data.total_reward)
-            const successMessage = `${t('makeMoney.claim')} ${t('common.success')}! ${t('makeMoney.reward')}: ${rewardAmount} USDT`
-            toast.success(successMessage)
+        onSuccess: (data) => {
+            const rewardAmount = data?.data?.total_reward || 0;
+            toast.success(
+                `${t('makeMoney.playVideo.claimSuccess')}! ${t('makeMoney.playVideo.reward')}: ${rewardAmount} USDT`
+            );
+            queryClient.invalidateQueries({ queryKey: ['mission-now'] });
+            queryClient.invalidateQueries({ queryKey: ['current-staking'] });
+            queryClient.invalidateQueries({ queryKey: ['current-staking-with-missions'] });
+            queryClient.invalidateQueries({ queryKey: ['staking-histories'] });
 
-            // Invalidate tất cả các queries liên quan
-            queryClient.invalidateQueries({ queryKey: ['current-staking'] })
-            queryClient.invalidateQueries({ queryKey: ['current-staking-with-missions'] })
-            queryClient.invalidateQueries({ queryKey: ['staking-histories'] })
-            queryClient.invalidateQueries({ queryKey: ['mission-now'] })
-            queryClient.invalidateQueries({ queryKey: ['balance', selectedCoin] })
-
-            // Refetch trực tiếp tất cả các queries để đảm bảo dữ liệu được cập nhật ngay lập tức
-            await Promise.all([
-                refetchBalance(),
-                refetchHistories(),
-            ])
-
-            // Kiểm tra trạng thái staking sau khi claim
-            const updatedStaking = data.data.staking_lock
-            if (updatedStaking && updatedStaking.status === 'running') {
-                // Nếu staking vẫn đang running, refetch để cập nhật dữ liệu mới
-                await Promise.all([
-                    refetchCurrentStaking(),
-                    refetchStakingWithMissions(),
-                    refetchMissionNow(),
-                ])
-            } else {
-                // Nếu staking đã kết thúc hoặc không còn active, clear dữ liệu để tránh hiển thị dữ liệu cũ
-                queryClient.setQueryData(['current-staking'], null)
-                queryClient.setQueryData(['current-staking-with-missions'], null)
-                queryClient.setQueryData(['mission-now'], null)
-
-                // Thử refetch để kiểm tra xem còn staking active không
-                // Nếu API trả về 404, query sẽ tự động set data thành undefined
-                try {
-                    const currentStakingResult = await refetchCurrentStaking()
-                    // Nếu refetch thành công nhưng không có data, clear query
-                    if (!currentStakingResult.data) {
-                        queryClient.setQueryData(['current-staking'], null)
-                    }
-                } catch (error: any) {
-                    // 404 là expected khi không còn staking active
-                    if (error?.response?.status === 404) {
-                        queryClient.setQueryData(['current-staking'], null)
-                    }
-                }
-
-                try {
-                    await refetchStakingWithMissions()
-                } catch (error: any) {
-                    // 404 là expected khi không còn staking active
-                    if (error?.response?.status === 404) {
-                        queryClient.setQueryData(['current-staking-with-missions'], null)
-                    }
-                }
-
-                try {
-                    await refetchMissionNow()
-                } catch (error: any) {
-                    // 400 là expected khi không còn staking active
-                    if (error?.response?.status === 400) {
-                        queryClient.setQueryData(['mission-now'], null)
-                    }
-                }
-            }
+            // Quay về trang make-money sau khi claim thành công
+            setTimeout(() => {
+                router.push('/make-money');
+            }, 2000);
         },
         onError: (error: any) => {
-            const message = error?.response?.data?.message || t('staking.claimError')
-
-            // Check for specific error messages and use translations
-            if (message.includes('You have already claimed the reward')) {
-                toast.error(t('staking.alreadyClaimed'))
-                return
-            }
-            if (message.includes('You have not completed the mission')) {
-                toast.error(t('staking.notCompletedMission'))
-                return
-            }
-            if (message.includes('No active staking lock found')) {
-                toast.error(t('staking.noActiveStakingLock'))
-                return
-            }
-            if (message.includes('Can only claim after 00:05:00 UTC of the day after staking ends')) {
-                toast.error(t('staking.canOnlyClaimAfterTime'))
-                return
-            }
-            if (message.includes('Invalid staking lock type')) {
-                toast.error(t('staking.invalidStakingLockType'))
-                return
-            }
-            if (message.includes('USDT coin not found')) {
-                toast.error(t('staking.usdtCoinNotFound'))
-                return
-            }
-            if (message.includes('USDT wallet not found for user')) {
-                toast.error(t('staking.usdtWalletNotFound'))
-                return
-            }
-            if (message.includes('Failed to claim mission')) {
-                toast.error(t('staking.failedToClaimMission'))
-                return
-            }
-
-            // Fallback to show the original message if no translation found
-            toast.error(message)
-        }
-    })
-
-    // ==================== Initialize Coin ====================
-    useEffect(() => {
-        if (coinsResponse?.data && coinsResponse.data.length > 0 && !selectedCoin) {
-            // Find USDT coin
-            const usdtCoin = coinsResponse.data.find(
-                (coin: Coin) => coin.coin_symbol?.toUpperCase() === 'USDT'
-            ) || coinsResponse.data[0] // Fallback to first coin if USDT not found
-
-            if (usdtCoin?.coin_id) {
-                const coinId = usdtCoin.coin_id.toString()
-                setSelectedCoin(coinId)
-                setUsdtCoinId(coinId) // Keep for backward compatibility
-            }
-        }
-    }, [coinsResponse, selectedCoin])
+            const message = error?.response?.data?.message || t('makeMoney.playVideo.claimError');
+            toast.error(message);
+        },
+    });
 
     // Log warning nếu không dùng được server time
     useEffect(() => {
         if (timeError && !isUsingServerTime) {
             console.warn('⚠️ Using client time for countdown. Countdown may be inaccurate if device time is wrong.');
         }
-    }, [timeError, isUsingServerTime])
+    }, [timeError, isUsingServerTime]);
 
-    // Handle errors from queries and show notifications
-    // Note: Removed 't' from dependencies to prevent infinite re-renders
-    // 't' function is recreated on every render, but we only need it inside the effect
-    useEffect(() => {
-        if (isCoinsError && coinsError) {
-            const error: any = coinsError
-            const message = error?.response?.data?.message || t('makeMoney.errors.loadCoinsError')
-            toast.error(message)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isCoinsError, coinsError])
+    // Check if completed (đã xem đủ video)
+    const isCompleted = useMemo(() => {
+        if (!missionNowResponse?.data) return false;
+        const { turn_day, turn_setting } = missionNowResponse.data;
+        return turn_day >= turn_setting;
+    }, [missionNowResponse]);
 
-    useEffect(() => {
-        if (isBalanceError && balanceError) {
-            const error: any = balanceError
-            const message = error?.response?.data?.message || t('makeMoney.errors.loadBalanceError')
-            toast.error(message)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isBalanceError, balanceError])
-
-    useEffect(() => {
-        if (isCurrentStakingError && currentStakingError) {
-            const error: any = currentStakingError
-            // 404 is expected when no active staking exists, reset related data
-            if (error?.response?.status === 404) {
-                // Reset all staking-related data vì không còn staking active
-                queryClient.setQueryData(['current-staking'], null)
-                queryClient.setQueryData(['current-staking-with-missions'], null)
-                queryClient.setQueryData(['mission-now'], null)
-                return
-            }
-            const message = error?.response?.data?.message || t('makeMoney.errors.loadStakingError')
-            toast.error(message)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isCurrentStakingError, currentStakingError, queryClient])
-
-    useEffect(() => {
-        if (isHistoriesError && historiesError) {
-            const error: any = historiesError
-            const message = error?.response?.data?.message || t('makeMoney.errors.loadHistoriesError')
-            toast.error(message)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isHistoriesError, historiesError])
-
-    useEffect(() => {
-        if (isStakingWithMissionsError && stakingWithMissionsError) {
-            const error: any = stakingWithMissionsError
-            // 404 is expected when no active staking exists, reset data to null
-            if (error?.response?.status === 404) {
-                queryClient.setQueryData(['current-staking-with-missions'], null)
-                return
-            }
-            const message = error?.response?.data?.message || t('makeMoney.errors.loadMissionError')
-            toast.error(message)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isStakingWithMissionsError, stakingWithMissionsError, queryClient])
-
-    // Reset currentMonthIndex when currentStaking changes
-    useEffect(() => {
-        setCurrentMonthIndex(0)
-    }, [currentStaking?.id])
-
-    useEffect(() => {
-        if (isMissionError && missionError) {
-            const error: any = missionError
-            // 400 is expected when no active staking exists, reset data to null
-            if (error?.response?.status === 400) {
-                queryClient.setQueryData(['mission-now'], null)
-                return
-            }
-            const message = error?.response?.data?.message || t('makeMoney.errors.loadMissionError')
-            toast.error(message)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isMissionError, missionError, queryClient])
-
-    // ==================== Computed Values ====================
-
-    const coinOptions = useMemo(() => {
-        if (!coinsResponse?.data || !Array.isArray(coinsResponse.data)) {
-            return []
+    // Calculate time remaining for countdown
+    const countdownRemaining = useMemo(() => {
+        if (!missionNowResponse?.data || !missionNowResponse.data.time_watch_new) {
+            // Nếu time_watch_new là null (chưa xem lần nào), countdown = 0
+            return 0;
         }
 
-        return coinsResponse.data.map((coin: Coin) => ({
-            value: coin.coin_id?.toString() || '',
-            label: coin.coin_symbol || coin.coin_name || 'Unknown'
-        }))
-    }, [coinsResponse])
+        const { time_watch_new, time_gap } = missionNowResponse.data;
 
-    // Get selected coin info
-    const selectedCoinInfo = useMemo(() => {
-        if (!selectedCoin || !coinsResponse?.data) return null
-        return coinsResponse.data.find((c: Coin) => c.coin_id?.toString() === selectedCoin)
-    }, [selectedCoin, coinsResponse])
+        // Ensure time_watch_new is treated as UTC
+        // Format from API might be "2024-05-20T10:00:00" or "2024-05-20 10:00:00"
+        let watchTimeStr = time_watch_new;
 
-    const usdtBalance = useMemo(() => {
-        return balanceResponse?.data?.balance || 0
-    }, [balanceResponse])
+        // Replace space with T if needed for IOS compatibility
+        watchTimeStr = watchTimeStr.replace(' ', 'T');
 
-    // Calculate total balance for base package (balance + balance_gift)
-    const totalBaseBalance = useMemo(() => {
-        const balance = balanceResponse?.data?.balance || 0
-        const balanceGift = balanceResponse?.data?.balance_gift || 0
-        return balance + balanceGift
-    }, [balanceResponse])
-
-    // Disable conditions for buttons
-    const isBaseDisabled = useMemo(() => {
-        return usdtBalance >= 10 || !!currentStakingResponse?.data
-    }, [usdtBalance, currentStakingResponse])
-
-    const isStakingDisabled = useMemo(() => {
-        return !!currentStakingResponse?.data
-    }, [currentStakingResponse])
-
-    // currentStaking đã được định nghĩa ở trên (sau query mission-now)
-
-    const stakingHistories = useMemo(() => {
-        return historiesResponse?.data || []
-    }, [historiesResponse])
-
-    // Mission progress computed values
-    const missionProgress = useMemo(() => {
-        if (!missionNowResponse?.data) return null;
-
-        const { turn_setting, turn_day, time_watch_new, time_gap, devices } = missionNowResponse.data;
-
-        // Calculate next watch time
-        let canWatchNext = true;
-        let nextWatchTime: Date | null = null;
-        let timeRemaining: number = 0;
-
-        if (time_watch_new) {
-            const lastWatchTime = new Date(time_watch_new);
-            nextWatchTime = new Date(lastWatchTime.getTime() + time_gap * 60 * 1000);
-            const now = currentTime.getTime();
-            timeRemaining = Math.max(0, nextWatchTime.getTime() - now);
-            canWatchNext = timeRemaining === 0;
+        // Append Z if no timezone info to force UTC
+        if (!watchTimeStr.endsWith('Z') && !watchTimeStr.includes('+')) {
+            watchTimeStr += 'Z';
         }
 
-        return {
-            completed: turn_day,
-            total: turn_setting,
-            progress: turn_setting > 0 ? Math.round((turn_day / turn_setting) * 100) : 0,
-            canWatchNext,
-            nextWatchTime,
-            timeRemaining,
-            isCompleted: turn_day >= turn_setting,
-            devices: devices,
-            completedDevices: turn_day * devices,
-        };
+        const lastWatchTime = new Date(watchTimeStr);
+        // Calculate target time (last watch time + gap in minutes)
+        const targetTimeMs = lastWatchTime.getTime() + (time_gap * 60 * 1000);
+
+        // Current time in stored in state is local Date object, but getTime() returns UTC timestamp
+        // So we can compare directly
+        const nowMs = currentTime.getTime();
+
+        // Calculate remaining time
+        const remaining = Math.max(0, targetTimeMs - nowMs);
+
+        // Clamp remaining time to be at most the time_gap (total duration)
+        // This handles cases where user's local clock is behind server time (in the past)
+        const maxDuration = time_gap * 60 * 1000;
+        return Math.min(remaining, maxDuration);
     }, [missionNowResponse, currentTime]);
 
-    // Combine current staking and histories for table display
-    const allPackages = useMemo(() => {
-        const packages: StakingPackage[] = []
-        const packageIds = new Set<number>()
+    // Check if countdown finished
+    const isCountdownFinished = useMemo(() => {
+        if (missionNowResponse?.data?.time_watch_new === null) return true; // Chưa xem lần nào thì coi như đã finish countdown
+        return countdownRemaining === 0;
+    }, [countdownRemaining, missionNowResponse]);
 
-        // Add current staking if exists
-        if (currentStaking) {
-            packages.push(currentStaking)
-            packageIds.add(currentStaking.id)
+    // Auto-switch to countdown state if in cooldown
+    useEffect(() => {
+        // Nếu đang ở idle và countdown chưa kết thúc → chuyển sang countdown
+        if (viewState === 'idle' && !isCountdownFinished && !isCompleted && missionNowResponse?.data) {
+            console.log('⏳ User is in cooldown, switching to countdown state');
+            setViewState('countdown');
         }
-
-        // Add all histories (excluding duplicates)
-        if (stakingHistories.length > 0) {
-            stakingHistories.forEach((history) => {
-                if (!packageIds.has(history.id)) {
-                    packages.push(history)
-                    packageIds.add(history.id)
-                }
-            })
+        // Nếu đang ở connecting và countdown chưa kết thúc → chuyển sang countdown (không cho phép xem video)
+        else if (viewState === 'connecting' && !isCountdownFinished && !isCompleted && missionNowResponse?.data) {
+            console.log('⏳ Countdown chưa kết thúc, chuyển từ connecting sang countdown state');
+            setViewState('countdown');
         }
+        // Lưu ý: Không tự động chuyển từ watching sang countdown
+        // Vì khi đang xem video (watching), phải giữ nguyên state watching cho đến khi xem xong
+        // Chỉ khi xem xong video (earnedReward = true) mới chuyển sang countdown (xử lý ở useEffect khác)
+    }, [viewState, isCountdownFinished, isCompleted, missionNowResponse]);
 
-        // Sort by date_start (newest first)
-        return packages.sort((a, b) => {
-            return new Date(b.date_start).getTime() - new Date(a.date_start).getTime()
-        })
-    }, [currentStaking, stakingHistories])
-
-    // Calculate progress percentage
-    const calculateProgress = (staking: StakingPackage): number => {
-        const start = new Date(staking.date_start).getTime()
-        const end = new Date(staking.date_end).getTime()
-        const now = new Date().getTime()
-
-        if (now >= end) return 100
-        if (now <= start) return 0
-
-        return Math.round(((now - start) / (end - start)) * 100)
-    }
-
-    // Format dateP
-    const formatDate = (dateString: string): string => {
-        const date = new Date(dateString)
-        return date.toLocaleDateString('vi-VN', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-        })
-    }
-
-    // Format participation time (HH:mm:ss DD/MM/YYYY)
-    const formatParticipationTime = (dateString: string): string => {
-        const date = new Date(dateString)
-        const hours = date.getHours().toString().padStart(2, '0')
-        const minutes = date.getMinutes().toString().padStart(2, '0')
-        const seconds = date.getSeconds().toString().padStart(2, '0')
-        const day = date.getDate().toString().padStart(2, '0')
-        const month = (date.getMonth() + 1).toString().padStart(2, '0')
-        const year = date.getFullYear()
-        return `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`
-    }
-
-    // Format number
-    const formatNumber = (num: number): string => {
-        // Round to 2 decimal places using toFixed to avoid floating point issues
-        const rounded = parseFloat(num.toFixed(2))
-        return new Intl.NumberFormat('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        }).format(rounded)
-    }
-
-    // Format balance number
-    const formatBalance = (balance: number) => {
-        const balanceFormatted = parseFloat(balance.toFixed(2))
-        return new Intl.NumberFormat('en-US', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 6
-        }).format(balanceFormatted)
-    }
-
-    // Get reward amount - ưu tiên real_reward, fallback về estimated_reward hoặc tính toán
-    const getRewardAmount = (staking: StakingPackage): number => {
-        // Cuối cùng tính từ total_reward - amount (nếu total_reward bao gồm cả principal)
-        if (staking.total_reward != null) {
-            return staking.total_reward - staking.amount
-        }
-        return 0
-    }
-
-    // Get status badge
-    const getStatusBadge = (status: string) => {
-        switch (status) {
-            case 'running':
-                return (
-                    <span className="px-3 py-1 bg-blue-500 text-white rounded-full text-xs font-medium">
-                        {t('makeMoney.statusRunning')}
-                    </span>
-                )
-            case 'pending-claim':
-                return (
-                    <span className="px-3 py-1 bg-yellow-500 text-white rounded-full text-xs font-medium">
-                        {t('makeMoney.statusPendingClaim')}
-                    </span>
-                )
-            case 'ended':
-                return (
-                    <span className="px-3 py-1 bg-gray-500 text-white rounded-full text-xs font-medium">
-                        {t('makeMoney.statusEnded')}
-                    </span>
-                )
-            default:
-                return (
-                    <span className="px-3 py-1 bg-gray-400 text-white rounded-full text-xs font-medium">
-                        {status}
-                    </span>
-                )
-        }
-    }
-
-    // Get type label
-    const getTypeLabel = (type: string): string => {
-        switch (type) {
-            case 'base':
-                return t('makeMoney.basePackage')
-            case '1d':
-                return t('makeMoney.oneDay')
-            case '7d':
-                return t('makeMoney.sevenDays')
-            case '30d':
-                return t('makeMoney.thirtyDays')
-            default:
-                return type
-        }
-    }
-
-    // Get type label for display (duration format)
-    const getTypeDurationLabel = (type: string): string => {
-        switch (type) {
-            case 'base':
-                return t('makeMoney.oneDay')
-            case '1d':
-                return t('makeMoney.oneDay')
-            case '7d':
-                return t('makeMoney.sevenDays')
-            case '30d':
-                return t('makeMoney.oneMonth')
-            default:
-                return type
-        }
-    }
-
-    // Get status text
-    const getStatusText = (status: string): string => {
-        switch (status) {
-            case 'running':
-                return t('makeMoney.statusNotCompleted')
-            case 'pending-claim':
-                return t('makeMoney.statusPendingClaim')
-            case 'ended':
-                return t('makeMoney.statusCompleted')
-            default:
-                return status
-        }
-    }
-
-    // Check if reward was claimed (assume ended status means claimed)
-    const isRewardClaimed = (status: string): boolean => {
-        return status === 'ended'
-    }
-
-    // Format date based on language
-    const formatDateOnly = (dateString: string): string => {
-        const date = new Date(dateString)
-
-        // Map language codes to locale strings
-        const localeMap: Record<string, string> = {
-            'kr': 'ko-KR',
-            'en': 'en-US',
-            'vi': 'vi-VN',
-            'ja': 'ja-JP',
-            'zh': 'zh-CN'
-        }
-
-        const locale = localeMap[lang] || 'vi-VN'
-
-        // For Korean, use custom format: "2025년 3월 8일 15시 30분"
-        if (lang === 'kr') {
-            const year = date.getFullYear()
-            const month = date.getMonth() + 1
-            const day = date.getDate()
-            const hours = date.getHours()
-            const minutes = date.getMinutes()
-            return `${year}년 ${month}월 ${day}일`
-        }
-
-        // For other languages, use locale-appropriate format with date and time
-        const dateStr = date.toLocaleDateString(locale, {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        })
-
-        // Remove comma from date string (e.g., "4 tháng 12, 2025" -> "4 tháng 12 2025")
-        return dateStr.replace(/,/g, '')
-    }
-
-    // Format time remaining for countdown
+    // Format time remaining
     const formatTimeRemaining = (milliseconds: number): string => {
-        if (milliseconds <= 0) return t('makeMoney.canWatchNow')
+        const totalSeconds = Math.floor(milliseconds / 1000);
+        const days = Math.floor(totalSeconds / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
 
-        const totalSeconds = Math.floor(milliseconds / 1000)
-        const minutes = Math.floor(totalSeconds / 60)
-        const seconds = totalSeconds % 60
-
-        if (minutes > 0) {
-            return `${minutes} ${t('makeMoney.minute')} ${seconds} ${t('makeMoney.second')}`
+        if (days > 0) {
+            return `${days}d ${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
-        return `${seconds} ${t('makeMoney.second')}`
-    }
-
-    // Check if claim is available based on end date
-    // Can only claim after 00:05:00 UTC of the day after staking ends
-    const canClaimReward = (staking: StakingPackage): boolean => {
-        if (staking.status !== 'pending-claim') {
-            return false
+        if (hours > 0) {
+            return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
+        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    };
 
-        const endDate = new Date(staking.date_end)
+    // Function để detect device type (desktop/mobile)
+    const getDeviceType = (): 'desktop' | 'mobile' => {
+        if (typeof window === 'undefined') return 'desktop';
 
-        // Get UTC date components of end date
-        const endYear = endDate.getUTCFullYear()
-        const endMonth = endDate.getUTCMonth()
-        const endDay = endDate.getUTCDate()
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        const isLandscape = width > height;
 
-        // Create the claim available date: next day at 00:05:00 UTC
-        const claimAvailableDate = new Date(Date.UTC(endYear, endMonth, endDay + 1, 0, 5, 0, 0))
-
-        // Compare with current time (both in UTC)
-        const now = currentTime.getTime()
-        const claimTime = claimAvailableDate.getTime()
-
-        return now >= claimTime
-    }
-
-    // ==================== Event Handlers ====================
-
-    // Handler for staking button click - check balance first
-    const handleStakingButtonClick = () => {
-        if (usdtBalance < 10) {
-            setIsInsufficientBalanceModalOpen(true)
-            return
+        // PC hoặc tablet xoay ngang: type = desktop
+        // Mobile hoặc tablet xoay dọc: type = mobile
+        if (width >= 1024) {
+            // PC hoặc tablet lớn
+            return 'desktop';
+        } else if (width >= 768) {
+            // Tablet: kiểm tra orientation
+            return isLandscape ? 'desktop' : 'mobile';
+        } else {
+            // Mobile
+            return 'mobile';
         }
-        setIsStakingModalOpen(true)
-    }
+    };
 
-    const handleJoinBase = () => {
-        setIsBaseConfirmModalOpen(true)
-    }
+    // Fetch video URL từ API khi vào state watching
+    useEffect(() => {
+        if (viewState === 'watching' && typeof window !== 'undefined' && !videoUrl && !videoLoading) {
+            const fetchVideo = async () => {
+                setVideoLoading(true);
+                setVideoError(null);
 
-    const handleConfirmJoinBase = () => {
-        setIsBaseConfirmModalOpen(false)
-        joinBaseMutation.mutate()
-    }
+                try {
+                    const deviceType = getDeviceType();
+                    const response = await axiosClient.post('/incomes/get-video', {
+                        type: deviceType
+                    });
 
-    const handleJoinStaking = () => {
-        if (usdtBalance < 10) {
-            toast.error(t('makeMoney.errors.insufficientBalance'))
-            return
-        }
-        if (currentStaking) {
-            toast.error(t('makeMoney.errors.stakingRunning'))
-            return
-        }
-
-        const amount = parseFloat(stakingAmount)
-        if (!amount || amount <= 0) {
-            toast.error(t('makeMoney.errors.invalidAmount'))
-            return
-        }
-        if (amount > 3500) {
-            toast.error(t('makeMoney.errors.amountExceeded'))
-            return
-        }
-        if (amount > usdtBalance) {
-            toast.error(t('makeMoney.errors.balanceInsufficient'))
-            return
-        }
-
-        // Mở modal xác nhận thay vì submit trực tiếp
-        setIsStakingConfirmModalOpen(true)
-    }
-
-    const handleConfirmJoinStaking = () => {
-        const amount = parseFloat(stakingAmount)
-        setDebouncedStakingAmount('')
-        joinStakingMutation.mutate({
-            type: stakingType,
-            amount: amount
-        })
-    }
-
-    const handleCoinChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const coinId = e.target.value
-        setSelectedCoin(coinId)
-        setUsdtCoinId(coinId) // Sync with usdtCoinId for balance query
-    }
-
-    // Capture calendar as image and download
-    const handleDownloadCalendar = async () => {
-        if (!calendarRef.current) {
-            toast.error(t('makeMoney.calendarCaptureError') || 'Không thể chụp ảnh lịch')
-            return
-        }
-
-        try {
-            // Detect dark mode
-            const isDarkMode = document.documentElement.classList.contains('dark')
-            const backgroundColor = isDarkMode ? '#1f2937' : '#ffffff' // gray-800 for dark, white for light
-
-            const canvas = await html2canvas(calendarRef.current, {
-                backgroundColor: backgroundColor,
-                scale: 2,
-                logging: false,
-                useCORS: true,
-            })
-
-            const imageUrl = canvas.toDataURL('image/png')
-
-            // Generate filename with current date
-            const date = new Date()
-            const dateStr = date.toISOString().split('T')[0]
-            const filename = `staking-calendar-${dateStr}.png`
-
-            // Create download link
-            const link = document.createElement('a')
-            link.download = filename
-            link.href = imageUrl
-            document.body.appendChild(link)
-            link.click()
-            document.body.removeChild(link)
-
-            toast.success(t('makeMoney.calendarDownloaded') || 'Đã tải xuống hình ảnh lịch')
-        } catch (error) {
-            console.error('Error capturing calendar:', error)
-            toast.error(t('makeMoney.calendarCaptureError') || 'Có lỗi xảy ra khi chụp ảnh')
-        }
-    }
-
-    // Share calendar image
-    const handleShareCalendar = async () => {
-        if (!calendarRef.current) {
-            toast.error(t('makeMoney.calendarCaptureError') || 'Không thể chụp ảnh lịch')
-            return
-        }
-
-        try {
-            // Detect dark mode
-            const isDarkMode = document.documentElement.classList.contains('dark')
-            const backgroundColor = isDarkMode ? '#1f2937' : '#ffffff' // gray-800 for dark, white for light
-
-            const canvas = await html2canvas(calendarRef.current, {
-                backgroundColor: backgroundColor,
-                scale: 2,
-                logging: false,
-                useCORS: true,
-            })
-
-            canvas.toBlob(async (blob) => {
-                if (!blob) {
-                    toast.error(t('makeMoney.calendarCaptureError') || 'Có lỗi xảy ra khi chụp ảnh')
-                    return
-                }
-
-                const file = new File([blob], 'staking-calendar.png', { type: 'image/png' })
-
-                // Check if Web Share API is available
-                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-                    try {
-                        await navigator.share({
-                            files: [file],
-                            title: t('makeMoney.shareCalendarTitle') || 'Staking Calendar',
-                            text: t('makeMoney.shareCalendarText') || 'Lịch staking của tôi',
-                        })
-                        toast.success(t('makeMoney.calendarShared') || 'Đã chia sẻ hình ảnh')
-                    } catch (shareError: any) {
-                        // User cancelled or error occurred, fallback to download
-                        if (shareError.name !== 'AbortError') {
-                            console.error('Share error:', shareError)
-                            handleDownloadCalendar()
-                        }
+                    if (response.data?.statusCode === 200 && response.data?.data?.url) {
+                        setVideoUrl(response.data.data.url);
+                        console.log('✅ Video URL loaded:', response.data.data.url);
+                    } else {
+                        throw new Error('Invalid response format');
                     }
-                } else {
-                    // Fallback to download if share is not available
-                    handleDownloadCalendar()
+                } catch (error: any) {
+                    console.error('❌ Failed to fetch video:', error);
+                    const errorMessage = error?.response?.data?.message || error?.message || 'Không thể tải video';
+                    setVideoError(errorMessage);
+                } finally {
+                    setVideoLoading(false);
                 }
-            }, 'image/png')
-        } catch (error) {
-            console.error('Error sharing calendar:', error)
-            toast.error(t('makeMoney.calendarCaptureError') || 'Có lỗi xảy ra khi chia sẻ')
+            };
+
+            fetchVideo();
         }
-    }
 
-    const stakingTypeOptions = [
-        { value: '1d', label: t('makeMoney.oneDay') },
-        { value: '7d', label: t('makeMoney.sevenDays') },
-        { value: '30d', label: t('makeMoney.thirtyDays') },
-    ]
+        // Cleanup: reset video state khi rời khỏi watching state
+        return () => {
+            if (viewState !== 'watching') {
+                setVideoUrl(null);
+                setVideoError(null);
+                setVideoLoading(false);
+                setVideoDuration(null);
+                if (videoRef.current) {
+                    videoRef.current.pause();
+                    videoRef.current.src = '';
+                }
+            }
+        };
+    }, [viewState, videoUrl, videoLoading]);
 
-    // Table styles (matching wallet page)
-    const tableContainerStyles = "max-h-[60vh] sm:max-h-[65.5vh] overflow-y-auto overflow-x-auto -mx-3 sm:mx-0"
-    const tableStyles = "w-full table-fixed border-separate border-spacing-y-1"
-    const tableHeaderStyles = "px-2 py-2 sm:px-3 text-left text-xs sm:text-sm lg:text-base font-semibold text-theme-red-100 uppercase bg-transparent "
-    const tableCellStyles = "px-2 py-3 sm:px-3 text-xs sm:text-sm lg:text-base text-theme-gray-200 dark:text-gray-300 bg-transparent border-y border-black dark:border-gray-700 group-hover:bg-gray-100 dark:group-hover:bg-gray-800 font-light"
+    // Timer đếm ngược dựa trên video duration (clamp 45-60s) + 1s khi vào state watching
+    useEffect(() => {
+        if (viewState === 'watching' && videoDuration !== null) {
+            // Clamp video duration: tối thiểu 45s, tối đa 60s
+            const clampedDuration = Math.max(45, Math.min(60, Math.ceil(videoDuration)));
+            // Tính thời gian hiển thị nút = clamped duration + 1 giây
+            const timerDuration = clampedDuration + 1;
+            setVideoTimer(timerDuration);
+            setShowCompleteButton(false);
 
-    // Check if critical data is still loading
-    const isInitialLoading = isLoadingCoins || isLoadingCurrentStaking || isLoadingHistories
+            // Đếm ngược từ timerDuration
+            const interval = setInterval(() => {
+                setVideoTimer((prev) => {
+                    if (prev <= 1) {
+                        clearInterval(interval);
+                        setShowCompleteButton(true);
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
 
-    // Show loading screen before data is fully loaded
-    if (isInitialLoading) {
+            return () => clearInterval(interval);
+        }
+    }, [viewState, videoDuration]);
+
+    // Chuyển sang state "watching" khi state "connecting" đã gọi API thành công
+    useEffect(() => {
+        if (viewState === 'connecting' && !isLoadingMission && missionNowResponse?.data) {
+            // Chỉ chuyển sang watching nếu countdown đã kết thúc hoặc chưa xem lần nào
+            // Nếu countdown chưa kết thúc, useEffect auto-switch sẽ chuyển sang countdown trước
+            if (!isCountdownFinished && !isCompleted) {
+                // Không làm gì, để useEffect auto-switch xử lý
+                return;
+            }
+
+            // Wait 3 seconds (hiển thị popup "Đang kết nối") trước khi chuyển sang watching
+            const timer = setTimeout(() => {
+                setViewState('watching');
+            }, 3000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [viewState, isLoadingMission, missionNowResponse, isCountdownFinished, isCompleted]);
+
+    // // Gọi API watchVideo chỉ khi countdown đã hết và đã xem xong video
+    // useEffect(() => {
+    //     if (videoWatched && viewState === 'countdown') {
+    //         console.log('✅ check', missionNowResponse?.data?.time_watch_new);
+    //         console.log('✅ check', isCountdownFinished);
+    //         // Nếu là lần xem đầu tiên (time_watch_new === null), gọi API ngay
+    //         const isFirstWatch = missionNowResponse?.data?.time_watch_new;
+
+    //         if (isCountdownFinished) {
+    //             console.log('✅ Countdown finished (or first watch), calling watchVideo API...');
+    //             watchVideoMutation.mutate();
+    //             setVideoWatched(false); // Reset flag sau khi gọi API
+    //         }
+    //     }
+    // }, [videoWatched, isCountdownFinished, viewState, missionNowResponse]);
+
+    // Reset view state when mission data changes (after refetch)
+    useEffect(() => {
+        if (viewState === 'countdown' && isCountdownFinished) {
+            // Countdown finished, ready to show Next button
+        } else if (viewState === 'countdown' && !isCountdownFinished) {
+            // Still counting down
+        } else if (viewState !== 'idle' && viewState !== 'completed' && !isLoadingMission) {
+            // Reset to idle if not in a persistent state
+            // This handles the case when user navigates away and comes back
+        }
+    }, [viewState, isCountdownFinished, isLoadingMission]);
+
+    // Show modal if no active staking
+    useEffect(() => {
+        if (missionError) {
+            const errorMessage = (missionError as any)?.response?.data?.message || '';
+            const noStakingMessages = [
+                'User does not have a running staking lock',
+                'User does not have a running staking lock'
+            ];
+            if (noStakingMessages.includes(errorMessage) || (missionError as any)?.response?.status === 400) {
+                setStakingErrorMessage(errorMessage);
+                setShowNoStakingModal(true);
+            }
+        }
+    }, [missionError]);
+
+    // Auto reset to idle when countdown finishes (optional, or show Next button)
+    // We'll show Next button instead of auto-reset for better UX
+
+    const handleWatchVideo = async () => {
+        // Kiểm tra nếu countdown chưa kết thúc → chuyển sang countdown state
+        if (!isCountdownFinished && !isCompleted && missionNowResponse?.data) {
+            setViewState('countdown');
+            return;
+        }
+
+        // Bắt đầu flow xem video: Connecting -> Watching -> (Nhấn Hoàn thành) -> Gọi API -> Countdown
+        const devices = missionNowResponse?.data?.devices || 20; // Fallback về 20 nếu không có
+        setDevicesCount(devices);
+
+        // Chuyển sang state connecting (hiển thị popup "Đang kết nối")
+        setViewState('connecting');
+
+        // Gọi lại API getMissionNow để lấy time_watch_new mới nhất
+        await queryClient.refetchQueries({ queryKey: ['mission-now'] });
+
+        // Note: Việc chuyển sang state "watching" sẽ được xử lý bởi useEffect khi API trả về
+    };
+
+    // Xử lý khi nhấn button "Hoàn thành"
+    const handleCompleteVideo = () => {
+        // Gọi API watchVideo
+        watchVideoMutation.mutate();
+        // State sẽ được chuyển sang countdown trong onSuccess callback của mutation
+    };
+
+    const handleNext = () => {
+        setViewState('idle');
+        setVideoWatched(false); // Reset flag khi quay về idle
+        // Refetch mission data to get latest status
+        queryClient.invalidateQueries({ queryKey: ['mission-now'] });
+    };
+
+    const handleClaimReward = () => {
+        // Sử dụng claimDay API để claim phần thưởng của ngày
+        claimDayMutation.mutate();
+        localStorage.setItem('is_claimed_today', 'true');
+    };
+
+    // Calculate progress percentage based on missionData (same as line 365-367)
+    const progress = useMemo(() => {
+        const missionData = missionNowResponse?.data;
+        if (!missionData) return 0;
+        const { turn_day, turn_setting } = missionData;
+        if (turn_setting > 0) {
+            // Đảm bảo progress không vượt quá 100%
+            return Math.min(100, Math.round((turn_day / turn_setting) * 100));
+        }
+        return 0;
+    }, [missionNowResponse]);
+
+    if (isLoadingMission) {
         return (
-            <div className="min-h-svh flex items-center justify-center bg-theme-white-100 dark:bg-black">
-                <div className="flex flex-col items-center gap-4 relative">
-                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-x-pink-500 border-y-blue-600 border-double flex items-center justify-center absolute top-0 left-0 z-10 ml-[-17px] mt-[-16px]"></div>
-                    <img src="/logo.png" alt="Loading" className="w-24 h-24" />
+            <div className="flex items-center justify-center min-h-screen bg-background">
+                <div className="text-center space-y-4">
+                    <Loader2 className="w-8 h-8 animate-spin mx-auto text-primary" />
+                    <p className="text-muted-foreground">{t('makeMoney.playVideo.loading')}</p>
                 </div>
             </div>
-        )
+        );
     }
 
-    return (
-        <div className='w-full min-h-svh flex py-20 md:pt-28 justify-center items-start px-3 sm:px-4 md:px-6 sm:py-6 bg-[#FFFCF9] dark:bg-black flex-1'>
-            <div className='w-full max-w-7xl'>
-                {/* Header Section */}
-                {currentStaking && (
-                    <div className='flex flex-col items-center justify-center'>
-                        <div className='flex items-end justify-center pb-2 sm:pb-4 gap-2 sm:gap-4 h-full'>
-                            <div className='flex flex-col items-center mx-2 sm:mx-4'>
-                                <h1 className='text-4xl md:text-5xl font-semibold text-transparent !bg-clip-text [background:linear-gradient(180deg,_#fe645f,_#c68afe)] [-webkit-background-clip:text] [-webkit-text-fill-color:transparent] pb-2 md:pb-4'>{currentStaking && currentStaking?.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}</h1>
-                            </div>
-                        </div>
+    const missionData = missionNowResponse?.data;
+
+    // Render Countdown Screen
+    if (viewState === 'countdown') {
+        const totalDuration = (missionNowResponse?.data?.time_gap || 0) * 60 * 1000;
+        const radius = 60;
+        const stroke = 6;
+        const normalizedRadius = radius - stroke * 2;
+        const circumference = normalizedRadius * 2 * Math.PI;
+
+        // Clamp the ratio to max 1 to handle cases where remaining time > total duration (e.g. clock skew)
+        // This prevents negative strokeDashoffset which causes visual glitches
+        const progressRatio = totalDuration ? Math.min(1, countdownRemaining / totalDuration) : 0;
+        const strokeDashoffset = circumference - progressRatio * circumference;
+
+        return (
+            <div className="w-full min-h-screen lg:py-[15vh] bg-[radial-gradient(100%_100%_at_50%_0%,_#45a6e7_0%,_#e1e7ec_50%,_#a979da_100%)]   dark:bg-[radial-gradient(100%_100%_at_50%_0%,_#3387ba_0%,_#cfcccc_50%,_#753c95_100%)]  flex flex-col items-center justify-between py-28 px-6 relative overflow-hidden">
+                {/* Background Decor */}
+                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-200/30 rounded-full blur-[100px] pointer-events-none" />
+                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-200/30 rounded-full blur-[100px] pointer-events-none" />
+
+                {/* Top Content */}
+                <div className="w-full max-w-md flex flex-col items-center space-y-6 z-10 md:pt-10">
+                    {/* Progress Pill */}
+                    <div className="bg-white dark:bg-gray-800 rounded-full px-6 py-2 shadow-md shadow-blue-100 dark:shadow-none flex items-center gap-1.5 transform transition-all">
+                        <span className="text-slate-600 dark:text-slate-300 font-medium text-sm whitespace-nowrap">
+                            {t('makeMoney.playVideo.watched')}
+                        </span>
+                        <span className="text-[#ef4444] font-bold text-base">
+                            {missionData?.turn_day || 0}/{missionData?.turn_setting || 200}
+                        </span>
+                        <span className="text-slate-600 dark:text-slate-300 font-medium text-sm">
+                            {t('makeMoney.playVideo.video')}
+                        </span>
                     </div>
-                )}
+                </div>
 
-                {/* Current Staking Section */}
-                {isLoadingCurrentStaking ? (
-                    <div className='mb-6 sm:mb-8'>
-                        <Skeleton className="h-64 w-full rounded-lg" />
-                    </div>
-                ) : currentStaking ? (
-                    <div className='mb-6 sm:mb-8 p-3 sm:p-4 md:p-6 rounded-lg border border-gray-200 dark:border-[#FE645F] bg-transparent'>
-                        <div className='grid grid-cols-1 md:grid-cols-2 w-full md:max-w-5xl mx-auto gap-3 sm:gap-y-4 sm:gap-x-10 mb-3 sm:mb-4'>
-                            {/* Right Column */}
-                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-white pl-1'>{t('makeMoney.stakingType')}:</p>
-                                <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#ed524d]'>{getTypeDurationLabel(currentStaking.type)}</p>
-                            </div>
-
-                            {/* Left Column */}
-                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-white pl-1'>{t('makeMoney.status')}:</p>
-                                <p className='text-xs sm:text-sm font-medium text-red-600 dark:text-[#ed524d]'>{getStatusText(currentStaking.status)}</p>
-                            </div>
-
-                            {/* Right Column */}
-                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-white pl-1'>{t('makeMoney.time')}:</p>
-                                <p className='text-xs sm:text-sm font-medium text-red-600 dark:text-[#ed524d]'>{formatDateOnly(currentStaking.date_start)} - {formatDateOnly(currentStaking.date_end)}</p>
-                            </div>
-
-                            {/* Left Column */}
-                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-white pl-1'>{t('makeMoney.amount')}:</p>
-                                <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#ed524d]'>{currentStaking.amount} USDT</p>
-                            </div>
-
-                            {/* Right Column */}
-                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md flex-wrap'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-white pl-1'>{t('makeMoney.estimatedReward')}:</p>
-                                <div className='flex gap-1 sm:gap-2 items-center flex-wrap'>
-                                    <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#ed524d]'>{currentStaking.estimated_reward} USDT</p>
-                                </div>
-                            </div>
-
-                            <div className='p-2 sm:px-3 sm:py-2 bg-white dark:bg-gray-800 rounded-full flex items-center gap-2 sm:gap-3 md:justify-start justify-between shadow-md flex-wrap'>
-                                <p className='text-xs sm:text-sm text-gray-600 dark:text-white pl-1'>{t('makeMoney.earnedAmount')}:</p>
-                                <div className='flex gap-1 sm:gap-2 items-center flex-wrap'>
-                                    <p className='text-xs sm:text-sm font-semibold text-red-600 dark:text-[#ed524d]'>{(currentStaking.real_reward || 0).toFixed(3)} USDT</p>
-                                </div>
-                            </div>
-                        </div>
-                        {/* Tasks & Missions - Hiển thị khi có dữ liệu staking-with-missions hoặc mission-now */}
-                        {stakingWithMissionsResponse?.data ? (
-                            <>
-                                {/* Video Views & Devices Info */}
-                                <div className='grid grid-cols-1 md:grid-cols-2 gap-2 sm:gap-3 md:gap-10 w-full md:max-w-5xl mx-auto mb-3 sm:mb-4'>
-                                    <div className='flex items-center gap-5 p-2 sm:p-3 md:p-4 bg-blue-50 dark:bg-blue-900/55 rounded-lg border border-blue-200 dark:border-blue-700'>
-                                        <PlayCircle className='w-5 md:w-8 ml-2 md:ml-0 md:h-8 h-5 text-blue-600 dark:text-white' />
-                                        <div className='flex flex-col gap-1 justify-between flex-1 mt-1'>
-                                            <div className='flex items-center justify-between mb-1 sm:mb-2 gap-3'>
-                                                <p className='text-xs sm:text-sm text-blue-600 dark:text-white font-medium max-w-[90%] md:max-w-full'>{t('makeMoney.videoViewsDescription')}</p>
-                                                <p className='text-xs sm:text-sm font-semibold text-blue-900 dark:text-blue-300'>
-                                                    {currentStaking?.turn_setting * (currentStaking?.devices_setting || 0) || 0}
-                                                </p>
-                                            </div>
-                                            <div className='flex items-center justify-between mb-1 sm:mb-2'>
-                                                <p className='text-xs sm:text-sm text-blue-600 dark:text-white font-medium'>{t('makeMoney.videosWatchedToday')}</p>
-                                                <p className='text-xs sm:text-sm font-semibold text-blue-900 dark:text-blue-300'>
-                                                    {missionProgress?.completedDevices ?? 0}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className='flex items-center gap-5 p-2 sm:p-3 md:p-4 bg-green-50 dark:bg-green-900/65 rounded-lg border border-green-200 dark:border-green-700'>
-                                        <Smartphone className='w-5 md:w-8 ml-2 md:ml-0 md:h-8 h-5 text-green-600 dark:text-white' />
-                                        <div className='flex flex-col gap-1 justify-between flex-1 mt-1'>
-                                            <div className='flex items-center justify-between mb-1 sm:mb-2'>
-                                                <p className='text-xs sm:text-sm text-green-600 dark:text-white font-medium max-w-[90%] md:max-w-full'>{t('makeMoney.devices')}</p>
-                                                <p className='text-xs sm:text-sm font-semibold text-green-900 dark:text-green-300'>
-                                                    {currentStaking?.devices_setting || 0}
-                                                </p>
-                                            </div>
-                                            <div className='flex items-center justify-between mb-1 sm:mb-2'>
-                                                <p className='text-xs sm:text-sm text-green-600 dark:text-white font-medium'>{t('makeMoney.devicesDescription')}</p>
-                                                <p className='text-xs sm:text-sm font-semibold text-green-900 dark:text-green-300'>
-                                                    10
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {currentStaking && (
-                                    <div className='mb-6 sm:mb-8'>
-                                        <div ref={calendarRef} className='max-w-5xl mx-auto bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 py-4 sm:p-6 shadow-md'>
-                                            {(() => {
-                                                const startDate = new Date(currentStaking.date_start)
-                                                const endDate = new Date(currentStaking.date_end)
-
-                                                // Normalize dates to just date part (remove time)
-                                                const startDateOnly = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate())
-                                                const endDateOnly = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate())
-
-                                                // Vietnamese day names
-                                                const dayNames = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7']
-                                                const monthNames = [
-                                                    t('makeMoney.months.1'), t('makeMoney.months.2'), t('makeMoney.months.3'), t('makeMoney.months.4'),
-                                                    t('makeMoney.months.5'), t('makeMoney.months.6'), t('makeMoney.months.7'), t('makeMoney.months.8'),
-                                                    t('makeMoney.months.9'), t('makeMoney.months.10'), t('makeMoney.months.11'), t('makeMoney.months.12')
-                                                ]
-
-                                                // Get missions from stakingWithMissionsResponse
-                                                const missionsList = stakingWithMissionsResponse?.data?.missions || []
-
-                                                // Helper to format date as YYYY-MM-DD
-                                                const formatDateString = (y: number, m: number, d: number): string => {
-                                                    return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
-                                                }
-
-                                                // Calculate current month to display based on startDate and currentMonthIndex
-                                                // currentMonthIndex = 0 means startDate's month, negative means previous months, positive means next months
-                                                const displayDate = new Date(startDateOnly)
-                                                displayDate.setMonth(displayDate.getMonth() + currentMonthIndex)
-
-                                                const year = displayDate.getFullYear()
-                                                const month = displayDate.getMonth()
-
-                                                // Helper to check if date is in range
-                                                const isDateInRange = (day: number): boolean => {
-                                                    const currentDate = new Date(year, month, day)
-                                                    return currentDate >= startDateOnly && currentDate <= endDateOnly
-                                                }
-
-                                                // Get first day of month and number of days
-                                                const firstDay = new Date(year, month, 1)
-                                                const lastDay = new Date(year, month + 1, 0)
-                                                const daysInMonth = lastDay.getDate()
-                                                const startingDayOfWeek = firstDay.getDay() // 0 = Sunday, 1 = Monday, etc.
-
-                                                // Helper to find mission by date
-                                                const findMissionByDate = (day: number): Mission | undefined => {
-                                                    const dateString = formatDateString(year, month, day)
-                                                    return missionsList.find(mission => mission.date === dateString)
-                                                }
-
-                                                const isStartDate = (day: number): boolean => {
-                                                    return year === startDateOnly.getFullYear() &&
-                                                        month === startDateOnly.getMonth() &&
-                                                        day === startDateOnly.getDate()
-                                                }
-
-                                                const isEndDate = (day: number): boolean => {
-                                                    return year === endDateOnly.getFullYear() &&
-                                                        month === endDateOnly.getMonth() &&
-                                                        day === endDateOnly.getDate()
-                                                }
-
-                                                // Create calendar days array
-                                                const calendarDays: (number | null)[] = []
-                                                // Add empty cells for days before month starts
-                                                for (let i = 0; i < startingDayOfWeek; i++) {
-                                                    calendarDays.push(null)
-                                                }
-                                                // Add all days of the month
-                                                for (let day = 1; day <= daysInMonth; day++) {
-                                                    calendarDays.push(day)
-                                                }
-
-
-                                                return (
-                                                    <div>
-                                                        <div className='p-2 sm:px-3 sm:py-2 bg-theme-red-200 rounded-full flex items-center gap-2 sm:gap-3 md:justify-center w-fit mx-auto mb-4 justify-start shadow-md flex-wrap'>
-                                                            <p className='text-xs sm:text-sm text-white pl-1'>{t('makeMoney.earnedAmount')}:</p>
-                                                            <div className='flex gap-1 sm:gap-2 items-center flex-wrap'>
-                                                                <p className='text-xs sm:text-sm font-semibold text-white'>{(currentStaking.real_reward || 0).toFixed(2)} USDT</p>
-                                                            </div>
-                                                        </div>
-                                                        {/* Month Navigation */}
-                                                        <div className='flex items-center justify-between mb-4'>
-                                                            <button
-                                                                onClick={() => setCurrentMonthIndex(currentMonthIndex - 1)}
-                                                                className='flex items-center outline-none border-none justify-center w-10 h-10 rounded-lg transition-colors bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 cursor-pointer'
-                                                            >
-                                                                <ChevronLeft className='w-5 h-5' />
-                                                            </button>
-                                                            <h3 className='text-lg sm:text-xl font-semibold text-gray-800 dark:text-gray-200'>
-                                                                {monthNames[month]} {year}
-                                                            </h3>
-                                                            <div className='flex items-center gap-2'>
-                                                                <button
-                                                                    onClick={() => setCurrentMonthIndex(currentMonthIndex + 1)}
-                                                                    className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 cursor-pointer'
-                                                                >
-                                                                    <ChevronRight className='w-5 h-5' />
-                                                                </button>
-                                                            </div>
-                                                        </div>
-
-                                                        {/* Calendar */}
-                                                        <div className='overflow-x-auto'>
-                                                            <table className='w-full border-collapse table-fixed'>
-                                                                <thead>
-                                                                    <tr>
-                                                                        {dayNames.map((day, index) => (
-                                                                            <th
-                                                                                key={index}
-                                                                                className='w-[14.28%] px-1 py-2 sm:px-2 sm:py-3 text-xs sm:text-sm font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700/50 border border-gray-200 dark:border-gray-600'
-                                                                            >
-                                                                                {day}
-                                                                            </th>
-                                                                        ))}
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    {Array.from({ length: Math.ceil(calendarDays.length / 7) }, (_, weekIndex) => (
-                                                                        <tr key={weekIndex}>
-                                                                            {Array.from({ length: 7 }, (_, dayIndex) => {
-                                                                                const day = calendarDays[weekIndex * 7 + dayIndex]
-                                                                                const mission = day !== null ? findMissionByDate(day) : undefined
-                                                                                const isStart = day !== null && isStartDate(day)
-                                                                                const isEnd = day !== null && isEndDate(day)
-                                                                                const inRange = day !== null && isDateInRange(day)
-
-                                                                                // Determine background color based on mission status
-                                                                                const getBackgroundColor = () => {
-                                                                                    if (day === null) return 'bg-gray-50 dark:bg-gray-800/30'
-                                                                                    if (isStart || isEnd) return 'bg-gray-200 dark:bg-gray-500'
-                                                                                    if (inRange) {
-                                                                                        // Khoảng thời gian staking nhưng chưa có dữ liệu
-                                                                                        return 'bg-gray-200 dark:bg-gray-500'
-                                                                                    }
-                                                                                    return 'bg-white dark:bg-gray-800'
-                                                                                }
-
-                                                                                const bgColor = getBackgroundColor()
-                                                                                const hasMission = mission !== undefined
-                                                                                const isSuccess = mission?.status === 'success'
-                                                                                const isOut = mission?.status === 'out'
-
-                                                                                // Determine text color
-                                                                                const getTextColor = () => {
-                                                                                    if (isStart || isEnd) return 'dark:text-white text-theme-black-100'
-                                                                                    if (hasMission) {
-                                                                                        return isSuccess
-                                                                                            ? 'text-green-700 dark:text-green-300'
-                                                                                            : 'text-orange-700 dark:text-orange-300'
-                                                                                    }
-                                                                                    if (inRange) return 'dark:text-white text-theme-black-100'
-                                                                                    return 'text-gray-700 dark:text-gray-300'
-                                                                                }
-
-                                                                                const textColor = getTextColor()
-
-                                                                                return (
-                                                                                    <td
-                                                                                        key={dayIndex}
-                                                                                        className={`w-[14.28%] px-[1px] py-1 sm:px-2 h-12 text-center border align-top`}
-                                                                                    >
-                                                                                        {day !== null ? (
-                                                                                            <div className={`flex py-1 flex-col h-full justify-center items-center gap-0.5 sm:gap-1 ${bgColor} ${mission?.status === 'success'
-                                                                                                ? 'border-green-500 border-solid'
-                                                                                                : mission?.status === 'out'
-                                                                                                    ? 'border-red-500 border-solid'
-                                                                                                    : ''} rounded-lg overflow-hidden`}>
-                                                                                                <span className={`text-xs sm:text-sm font-semibold ${textColor}`}>
-                                                                                                    {day}
-                                                                                                </span>
-                                                                                                {mission && (
-                                                                                                    <div className='text-[9px] sm:text-[10px] leading-tight w-full overflow-hidden'>
-                                                                                                        {/* <div className={`font-medium ${textColor}`}>
-                                                                                            {mission.turn}/{currentStaking?.turn_setting || 0}
-                                                                                        </div> */}
-                                                                                                        {mission.reward !== undefined && (
-                                                                                                            <div className={`mt-0.5 font-semibold truncate ${isSuccess
-                                                                                                                ? 'text-green-600 dark:text-green-400'
-                                                                                                                : 'text-orange-600 dark:text-orange-400'
-                                                                                                                }`}>
-                                                                                                                +{formatReward(mission.reward)}$
-                                                                                                            </div>
-                                                                                                        )}
-                                                                                                    </div>
-                                                                                                )}
-                                                                                            </div>
-                                                                                        ) : (
-                                                                                            ''
-                                                                                        )}
-                                                                                    </td>
-                                                                                )
-                                                                            })}
-                                                                        </tr>
-                                                                    ))}
-                                                                </tbody>
-                                                            </table>
-                                                        </div>
-
-                                                        {/* Legend */}
-                                                        <div className='mt-4 flex flex-wrap gap-3 sm:gap-4 justify-center text-xs sm:text-sm'>
-                                                            <div className='flex items-center gap-2'>
-                                                                <div className='w-4 h-4 bg-gray-400 dark:bg-gray-500 rounded'></div>
-                                                                <span className='text-gray-700 dark:text-gray-300'>{t('makeMoney.stakingPeriod')}</span>
-                                                            </div>
-                                                            {missionsList.length > 0 && (
-                                                                <>
-                                                                    <div className='flex items-center gap-2'>
-                                                                        <div className='w-4 h-4 bg-green-500 rounded'></div>
-                                                                        <span className='text-gray-700 dark:text-gray-300'>{t('makeMoney.completed')}</span>
-                                                                    </div>
-                                                                    <div className='flex items-center gap-2'>
-                                                                        <div className='w-4 h-4 bg-red-500 dark:bg-red-500 rounded'></div>
-                                                                        <span className='text-gray-700 dark:text-gray-300'>{t('makeMoney.notCompleted')}</span>
-                                                                    </div>
-                                                                </>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                )
-                                            })()}
-                                        </div>
-                                        <div className='flex items-center gap-2 justify-end mt-4 max-w-5xl mx-auto'>
-                                            <button
-                                                onClick={handleDownloadCalendar}
-                                                className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-blue-100 dark:bg-blue-900/50 hover:bg-blue-200 dark:hover:bg-blue-900/70 text-blue-700 dark:text-blue-300 cursor-pointer'
-                                                title={t('makeMoney.downloadCalendar') || 'Tải xuống'}
-                                            >
-                                                <Download className='w-5 h-5' />
-                                            </button>
-                                            <button
-                                                onClick={handleShareCalendar}
-                                                className='flex items-center justify-center outline-none border-none w-10 h-10 rounded-lg transition-colors bg-green-100 dark:bg-green-900/50 hover:bg-green-200 dark:hover:bg-green-900/70 text-green-700 dark:text-green-300 cursor-pointer'
-                                                title={t('makeMoney.shareCalendar') || 'Chia sẻ'}
-                                            >
-                                                <Share2 className='w-5 h-5' />
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-
-                                {/* Missions History Table */}
-                                {missions.length > 0 && (
-                                    <div className='w-full md:max-w-5xl mx-auto mb-3 sm:my-8'>
-                                        <h3 className='text-lg sm:text-xl font-bold text-theme-red-100 dark:text-[#FE645F] mb-3 sm:mb-4 mt-6 sm:mt-8'>
-                                            {t('makeMoney.missionsHistory')}
-                                        </h3>
-
-                                        {/* Mobile Card Layout */}
-                                        <div className="block sm:hidden space-y-3">
-                                            {missions.map((mission, index) => (
-                                                <div
-                                                    key={mission.id}
-                                                    className={`bg-white dark:bg-gray-800 rounded-lg border ${mission.status === 'success'
-                                                        ? 'border-green-200 dark:border-green-700'
-                                                        : 'border-orange-200 dark:border-orange-700'
-                                                        } p-3 shadow-sm`}
-                                                >
-                                                    <div className="flex items-center justify-between mb-2">
-                                                        <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
-                                                            {t('wallet.tableHeaders.stt')} {index + 1}
-                                                        </span>
-                                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${mission.status === 'success'
-                                                            ? 'bg-green-500 text-white'
-                                                            : 'bg-orange-500 text-white'
-                                                            }`}>
-                                                            {mission.status === 'success'
-                                                                ? t('makeMoney.completed')
-                                                                : t('makeMoney.notCompleted')}
-                                                        </span>
-                                                    </div>
-                                                    <div className="space-y-2">
-                                                        <div className="flex items-center justify-between">
-                                                            <span className="text-xs text-gray-600 dark:text-gray-300">
-                                                                {t('makeMoney.date')}:</span>
-                                                            <span className="text-xs font-semibold text-gray-700 dark:text-gray-300">
-                                                                {formatDateOnly(mission.date)}
-                                                            </span>
-                                                        </div>
-                                                        <div className="flex items-center justify-between">
-                                                            <span className="text-xs text-gray-600 dark:text-gray-300">
-                                                                {t('makeMoney.videosWatched')}:</span>
-                                                            <span className="text-xs font-semibold text-blue-600 dark:text-blue-400">
-                                                                {mission.turn} / {currentStaking?.turn_setting || 0}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </div>
-
-                                        {/* Desktop Table Layout */}
-                                        <div className="hidden sm:block overflow-hidden rounded-md bg-transparent border border-none">
-                                            {/* Fixed Header */}
-                                            <div className="overflow-hidden rounded-t-md">
-                                                <table className={tableStyles}>
-                                                    <thead>
-                                                        <tr>
-                                                            <th className={`${tableHeaderStyles} w-[15%] text-left rounded-l-lg`}>
-                                                                {t('wallet.tableHeaders.stt')}
-                                                            </th>
-                                                            <th className={`${tableHeaderStyles} w-[30%]`}>
-                                                                {t('makeMoney.date')}
-                                                            </th>
-                                                            <th className={`${tableHeaderStyles} w-[35%]`}>
-                                                                {t('makeMoney.videosWatched')}
-                                                            </th>
-                                                            <th className={`${tableHeaderStyles} w-[37%] text-right rounded-r-lg`}>
-                                                                {t('makeMoney.statusColumn')}
-                                                            </th>
-                                                        </tr>
-                                                    </thead>
-                                                </table>
-                                            </div>
-
-                                            {/* Scrollable Body */}
-                                            <div className={tableContainerStyles}>
-                                                <table className={tableStyles}>
-                                                    <tbody>
-                                                        {missions.map((mission, index) => (
-                                                            <tr key={mission.id} className="group transition-colors">
-                                                                <td className={`${tableCellStyles} w-[15%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
-                                                                    {index + 1}
-                                                                </td>
-                                                                <td className={`${tableCellStyles} w-[30%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                                    <span className="text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300">
-                                                                        {formatDateOnly(mission.date)}
-                                                                    </span>
-                                                                </td>
-                                                                <td className={`${tableCellStyles} w-[35%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                                    <span className="text-xs sm:text-sm font-semibold text-blue-600 dark:text-blue-400">
-                                                                        {mission.turn} / {currentStaking?.turn_setting || 0}
-                                                                    </span>
-                                                                </td>
-                                                                <td className={`${tableCellStyles} w-[37%] border-x-0 border-r text-right rounded-r-lg border-theme-gray-100 border-solid`}>
-                                                                    <div className="flex items-center gap-2 justify-end">
-                                                                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${mission.status === 'success'
-                                                                            ? 'bg-green-500 text-white'
-                                                                            : 'bg-orange-500 text-white'
-                                                                            }`}>
-                                                                            {mission.status === 'success'
-                                                                                ? t('makeMoney.completed')
-                                                                                : t('makeMoney.notCompleted')}
-                                                                        </span>
-                                                                    </div>
-                                                                </td>
-                                                            </tr>
-                                                        ))}
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </>
-                        ) : missionNowResponse?.data ? (
-                            <div className='grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full md:max-w-5xl mx-auto'>
-                                <div className='p-2 sm:p-3 md:p-4 bg-blue-50 dark:bg-blue-900/55 rounded-lg border border-blue-200 dark:border-blue-700'>
-                                    <div className='flex items-center justify-between mb-1 sm:mb-2'>
-                                        <p className='text-xs sm:text-sm text-blue-600 dark:text-blue-400 font-medium'>{t('makeMoney.videoViews')}</p>
-                                        {missionProgress ? (
-                                            <p className='text-xs sm:text-sm font-semibold text-blue-900 dark:text-blue-300'>
-                                                {missionProgress.completed}/{missionProgress.total}
-                                            </p>
-                                        ) : (
-                                            <p className='text-xs sm:text-sm font-semibold text-blue-900 dark:text-blue-300'>
-                                                {missionNowResponse.data.turn_setting}
-                                            </p>
-                                        )}
-                                    </div>
-                                    {missionProgress ? (
-                                        <>
-                                            <p className='text-[10px] sm:text-xs text-blue-500 dark:text-blue-400'>
-                                                {missionProgress.isCompleted ? `✅ ${t('makeMoney.completed')}` : `${t('makeMoney.remaining')}: ${missionProgress.total - missionProgress.completed} video`}
-                                            </p>
-                                            {!missionProgress.canWatchNext && missionProgress.timeRemaining > 0 && (
-                                                <p className='text-[10px] sm:text-xs text-orange-600 dark:text-orange-400 mt-0.5 sm:mt-1'>
-                                                    ⏱️ {t('makeMoney.canWatchNext')}: {formatTimeRemaining(missionProgress.timeRemaining)}
-                                                </p>
-                                            )}
-                                            {missionProgress.canWatchNext && !missionProgress.isCompleted && (
-                                                <p className='text-[10px] sm:text-xs text-green-600 dark:text-green-400 mt-0.5 sm:mt-1'>
-                                                    ✅ {t('makeMoney.canWatchNow')}
-                                                </p>
-                                            )}
-                                        </>
-                                    ) : (
-                                        <Skeleton className='h-2 w-full' />
-                                    )}
-                                </div>
-                                <div className='p-2 sm:p-3 md:p-4 bg-green-50 dark:bg-green-900/65 rounded-lg border border-green-200 dark:border-green-700'>
-                                    <div className='flex items-center justify-between mb-1 sm:mb-2'>
-                                        <p className='text-xs sm:text-sm text-green-600 dark:text-green-400 font-medium'>{t('makeMoney.devices')}</p>
-                                        <p className='text-xs sm:text-sm font-semibold text-green-900 dark:text-green-300'>
-                                            {missionNowResponse.data.devices}
-                                        </p>
-                                    </div>
-                                    <p className='text-[10px] sm:text-xs text-green-500 dark:text-green-400'>
-                                        {t('makeMoney.devicesDescription')}
-                                    </p>
-                                </div>
-                            </div>
-                        ) : isLoadingStakingWithMissions || isLoadingMission ? (
-                            <div className='grid grid-cols-2 gap-2 sm:gap-3 md:gap-4 w-full md:max-w-[50vw] mx-auto'>
-                                <Skeleton className='h-20 sm:h-24 w-full rounded-lg' />
-                                <Skeleton className='h-20 sm:h-24 w-full rounded-lg' />
-                            </div>
-                        ) : null}
-                        <div className='flex flex-col items-center mt-3 sm:mt-6 gap-2'>
-                            <Button
-                                onClick={() => claimMissionMutation.mutate()}
-                                disabled={claimMissionMutation.isPending || !canClaimReward(currentStaking)}
-                                className='w-full sm:w-[200px] text-center bg-theme-red-200 text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-9 sm:h-10 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer text-white'
+                {/* Center Timer Section */}
+                <div className="flex flex-col items-center justify-center z-10 w-full mb-10">
+                    {!isCountdownFinished ? (
+                        <div className="relative flex items-center justify-center mb-8">
+                            {/* Circular Progress */}
+                            <svg
+                                height={radius * 2 * 1.5}
+                                width={radius * 2 * 1.5}
+                                className="transform -rotate-90 scale-150"
                             >
-                                {claimMissionMutation.isPending ? (
-                                    <>
-                                        <Loader2 className='w-3 h-3 sm:w-4 sm:h-4 mr-2 animate-spin' />
-                                        {t('makeMoney.processing')}
-                                    </>
-                                ) : (
-                                    t('makeMoney.claim')
-                                )}
-                            </Button>
-                        </div>
-                    </div>
-                ) : (
-                    /* Join Package Section */
-                    <>
-                        {/* Balance Section */}
-                        <div className='flex flex-col items-center justify-center mb-4 sm:mb-6'>
-                            {isMobile ? (
-                                // Mobile: Stack vertically, compact
-                                <div className='flex flex-col items-center w-full'>
-                                    {/* <div className='flex items-center gap-2 mb-2'>
-                                        <span className='text-xs font-medium text-theme-red-100 dark:text-[#FE645F]'>{t('wallet.coin')}:</span>
-                                        {isLoadingCoins ? (
-                                            <Skeleton className="h-7 w-20" />
-                                        ) : (
-                                            <CustomSelect
-                                                id="coin"
-                                                value={selectedCoin}
-                                                onChange={handleCoinChange}
-                                                options={coinOptions}
-                                                placeholder={t('makeMoney.selectCoinPlaceholder')}
-                                                disabled={isLoadingCoins}
-                                                className="w-24 h-8 text-xs"
-                                            />
-                                        )}
-                                    </div> */}
-                                    <div className='flex items-center gap-2'>
-                                        {isLoadingBalance ? (
-                                            <Skeleton className="h-6 w-40" />
-                                        ) : balanceResponse?.data ? (
-                                            <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500  '>
-                                                {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
-                                            </span>
-                                        ) : (
-                                            <span className='text-lg sm:text-xl md:text-2xl font-bold text-center text-pink-500  '>
-                                                0.00 {selectedCoinInfo?.coin_symbol || 'USDT'}
-                                            </span>
-                                        )}
-                                    </div>
-                                    {balanceResponse?.data && (balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
-                                        <span className='text-xs text-gray-600 dark:text-gray-300 mt-1'>
-                                            ({t('makeMoney.gift')}: {formatBalance(balanceResponse.data.balance_gift)} USDT | {t('makeMoney.reward')}: {formatBalance(balanceResponse.data.balance_reward)} USDT)
-                                        </span>
-                                    )}
-                                </div>
-                            ) : (
-                                // Desktop: Original layout
-                                <div className='flex items-end justify-center mb-3'>
-                                    <div className='flex flex-col items-center mx-4'>
-                                        {/* <div className='flex items-center gap-2 mb-4'>
-                                            <span className='text-sm font-medium text-theme-red-100 dark:text-[#FE645F]'>{t('makeMoney.selectCoin')}:</span>
-                                            {isLoadingCoins ? (
-                                                <Skeleton className="h-8 w-24" />
-                                            ) : (
-                                                <CustomSelect
-                                                    id="coin"
-                                                    value={selectedCoin}
-                                                    onChange={handleCoinChange}
-                                                    options={coinOptions}
-                                                    placeholder={t('makeMoney.selectCoinPlaceholder')}
-                                                    disabled={isLoadingCoins}
-                                                    className="w-24 text-sm"
-                                                />
-                                            )}
-                                        </div> */}
-                                        {isLoadingBalance ? (
-                                            <Skeleton className="h-8 w-48" />
-                                        ) : balanceResponse?.data ? (
-                                            <div className='flex flex-col items-center bg-theme-pink-100 dark:bg-transparent py-3 px-4 rounded-full'>
-                                                <span className='text-2xl font-bold text-center text-pink-500  '>
-                                                    {t('makeMoney.balance')}: {formatBalance(balanceResponse.data.balance)} {selectedCoinInfo?.coin_symbol || 'USDT'}
-                                                </span>
-                                                {(balanceResponse.data.balance_gift > 0 || balanceResponse.data.balance_reward > 0) && (
-                                                    <span className='text-sm text-gray-600 dark:text-gray-300 mt-1'>
-                                                        ({t('makeMoney.gift')}: {formatBalance(balanceResponse.data.balance_gift)} USDT | {t('makeMoney.reward')}: {formatBalance(balanceResponse.data.balance_reward)} USDT)
-                                                    </span>
-                                                )}
-                                            </div>
-                                        ) : (
-                                            <span className='text-2xl font-bold text-center text-pink-500  '>
-                                                {t('makeMoney.balance')}: 0.00 {selectedCoinInfo?.coin_symbol || 'USDT'}
-                                            </span>
-                                        )}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                        <div className='mb-6 sm:mb-8 p-3 sm:p-4 md:p-6 bg-transparent rounded-lg border border-gray-200 dark:border-[#FE645F] shadow-sm flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-10 w-full md:w-[50vw] mx-auto'>
-                            {/* Gói Base - Luôn hiển thị */}
-                            <div className='py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-transparent border border-theme-gray-100 dark:border-[#FE645F] border-solid flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 min-h-[180px] sm:min-h-[200px] md:min-h-[230px] rounded-xl'>
-                                <h3 className='text-2xl sm:text-5xl md:text-5xl font-semibold text-black dark:text-white mb-1 sm:mb-2 text-center'>{t('makeMoney.basePackage')}</h3>
-                                <span className='text-xs sm:text-sm text-yellow-800 dark:text-yellow-300 mb-1 sm:mb-2'>{t('makeMoney.oneDay')}</span>
-                                <Button
-                                    onClick={handleJoinBase}
-                                    disabled={joinBaseMutation.isPending || isBaseDisabled}
-                                    className='w-full bg-gray-100 dark:bg-gray-700 hover:scale-x-105 transition-all duration-300 text-theme-red-200 dark:text-[#FE645F] text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed cursor-pointer'
-                                >
-                                    {joinBaseMutation.isPending ? (
-                                        <>
-                                            <Loader2 className='w-3 h-3 sm:w-4 sm:h-4 mr-2 animate-spin' />
-                                            {t('makeMoney.processing')}
-                                        </>
-                                    ) : (
-                                        t('makeMoney.joinBase')
-                                    )}
-                                </Button>
-                            </div>
-
-                            {/* Gói Staking - Luôn hiển thị */}
-                            <div className='py-3 sm:py-4 px-4 sm:px-6 md:px-8 bg-gradient-primary border border-green-200 flex flex-col items-center justify-center flex-1 gap-3 sm:gap-4 min-h-[180px] sm:min-h-[200px] md:min-h-[230px] rounded-xl'>
-                                <h3 className='text-2xl sm:text-5xl md:text-5xl text-center font-semibold text-white mb-1 sm:mb-2'>{t('makeMoney.stakingTitle')}</h3>
-                                <span className='text-xs sm:text-sm text-white mb-1 sm:mb-2'>{t('makeMoney.oneDay')} / {t('makeMoney.sevenDays')} / {t('makeMoney.thirtyDays')}</span>
-                                <Button
-                                    onClick={handleStakingButtonClick}
-                                    disabled={isStakingDisabled}
-                                    className='w-full bg-[#21ceb3] cursor-pointer hover:scale-x-105 transition-all duration-300 text-white text-sm sm:text-base md:text-lg uppercase font-semibold rounded-full border-none h-10 sm:h-11 md:h-12 hover:opacity-90 disabled:opacity-70 disabled:cursor-not-allowed'
-                                >
-                                    {t('makeMoney.joinStaking')}
-                                </Button>
-                            </div>
-                        </div>
-                    </>
-                )}
-
-                {/* Staking Modal */}
-                <Modal
-                    isOpen={isStakingModalOpen}
-                    onClose={() => {
-                        setIsStakingModalOpen(false)
-                        setStakingAmount('')
-                        setDebouncedStakingAmount('')
-                    }}
-                    title={t('makeMoney.joinStakingModalTitle')}
-                    maxWidth="max-w-[500px]"
-                >
-                    <div className='space-y-4'>
-                        <div>
-                            <label className='block text-sm font-medium text-theme-red-200 dark:text-[#FE645F] mb-2'>
-                                {t('makeMoney.packageType')}
-                            </label>
-                            <CustomSelect
-                                id="staking-type-modal"
-                                value={stakingType}
-                                onChange={(value) => setStakingType(value as '1d' | '7d' | '30d')}
-                                options={stakingTypeOptions}
-                                placeholder={t('makeMoney.selectPackageType')}
-                                className="w-full"
-                            />
-                        </div>
-
-                        <div>
-                            <label className='block text-sm font-medium text-theme-red-200 dark:text-[#FE645F] mb-2'>
-                                {t('makeMoney.amountLabel')}
-                            </label>
-                            <div className='flex items-center gap-2'>
-                                <Input
-                                    type="number"
-                                    value={stakingAmount}
-                                    onChange={(e) => setStakingAmount(e.target.value)}
-                                    placeholder={t('makeMoney.amountPlaceholder')}
-                                    min="0"
-                                    max="3500"
-                                    className="w-full rounded-full"
+                                <circle
+                                    stroke="currentColor"
+                                    fill="transparent"
+                                    strokeWidth={stroke}
+                                    r={normalizedRadius}
+                                    cx={radius * 1.5}
+                                    cy={radius * 1.5}
+                                    className="text-slate-400 dark:text-slate-700"
                                 />
-                                <button
-                                    type="button"
-                                    onClick={() => {
-                                        const maxAmount = Math.min(usdtBalance, 3500)
-                                        setStakingAmount((Math.floor(maxAmount * 100) / 100).toFixed(2))
-                                    }}
-                                    className='text-sm min-w-[50px] underline-offset-2 bg-transparent border-none outline-none cursor-pointer font-medium text-theme-red-200 dark:text-[#FE645F] hover:underline'
-                                >
-                                    {t('makeMoney.useMax')}
-                                </button>
-                            </div>
-                            <div className='flex items-center justify-between mt-2'>
-                                <p className='text-xs text-gray-500 dark:text-gray-400'>
-                                    {t('makeMoney.availableBalance')}: <span className='font-bold text-theme-red-200 dark:text-[#FE645F]'>{formatNumber(usdtBalance)} </span> USDT
-                                </p>
+                                <circle
+                                    stroke="currentColor"
+                                    fill="transparent"
+                                    strokeWidth={stroke}
+                                    strokeDasharray={circumference + ' ' + circumference}
+                                    style={{ strokeDashoffset, transition: 'stroke-dashoffset 0.5s ease-in-out' }}
+                                    strokeLinecap="round"
+                                    r={normalizedRadius}
+                                    cx={radius * 1.5}
+                                    cy={radius * 1.5}
+                                    className="text-[#d946ef]"
+                                />
+                                {/* Current Position Indicator (Dot) */}
+                                {/* Note: Calculating exact position for dot is complex in CSS/SVG alone without JS for angles, 
+                                    ignoring purely visual dot for now or adding simpler implementation if needed strict fidelity */}
+                            </svg>
+
+                            {/* Time Text */}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <span className="text-4xl md:text-5xl font-bold text-[#f43f5e]">
+                                    {formatTimeRemaining(countdownRemaining)}
+                                </span>
                             </div>
                         </div>
+                    ) : (
+                        <div className="text-center w-full space-y-6">
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+                                {t('makeMoney.playVideo.countdownFinished')}
+                            </h2>
+                        </div>
+                    )}
 
-                        {/* Calculator Preview */}
-                        {stakingType && stakingAmount && parseFloat(stakingAmount) > 0 && (
-                            <div className='p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800'>
-                                {isLoadingCalculator ? (
-                                    <div className='flex items-center gap-2'>
-                                        <Loader2 className='w-4 h-4 animate-spin text-theme-red-200 dark:text-[#FE645F]' />
-                                        <span className='text-sm text-gray-600 dark:text-gray-400'>
-                                            {t('makeMoney.calculating')}
-                                        </span>
-                                    </div>
-                                ) : calculatorResponse?.data ? (
-                                    <div className='space-y-3'>
-                                        <h4 className='text-sm font-semibold text-theme-red-200 dark:text-[#FE645F] mb-2'>
-                                            {t('makeMoney.previewInfo')}
-                                        </h4>
-                                        <div className='grid grid-cols-2 gap-3'>
-                                            <div>
-                                                <p className='text-xs text-gray-500 dark:text-gray-400 mb-1'>
-                                                    {t('makeMoney.videosPerDay')}
-                                                </p>
-                                                <p className='text-sm font-semibold text-gray-900 dark:text-gray-100'>
-                                                    {calculatorResponse.data.videos_per_day}
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <p className='text-xs text-gray-500 dark:text-gray-400 mb-1'>
-                                                    {t('makeMoney.devices')}
-                                                </p>
-                                                <p className='text-sm font-semibold text-gray-900 dark:text-gray-100'>
-                                                    {calculatorResponse.data.devices}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ) : null}
+                    {!isCountdownFinished && (
+                        <p className="text-[#e13c9c] text-center font-medium italic max-w-xs animate-pulse">
+                            {t('makeMoney.playVideo.waitForNext', { minutes: missionData?.time_gap || 2 })}
+                        </p>
+                    )}
+                </div>
+
+                {/* Bottom Action */}
+                <div className="w-full max-w-md z-10">
+                    <Button
+                        onClick={handleNext}
+                        disabled={!isCountdownFinished}
+                        className={`w-full rounded-[2rem] h-10 md:h-14 text-sm md:text-lg font-bold cursor-pointer transition-all duration-300 border-none uppercase ${isCountdownFinished
+                            ? 'bg-gradient-primary hover:from-blue-700 hover:to-purple-700 text-white shadow-xl hover:scale-[1.02]'
+                            : 'bg-[#9ca3af] text-white/90 cursor-not-allowed'
+                            }`}
+                    >
+                        {t('makeMoney.playVideo.next')}
+                    </Button>
+                </div>
+            </div>
+        );
+    }
+
+
+
+    // Render Watching Video Screen (Popup full màn hình)
+    if (viewState === 'watching') {
+        return (
+            <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-sm flex items-center justify-center p-2 md:p-4">
+                <div className="bg-white dark:bg-gray-800 rounded-3xl p-4 md:p-6 w-auto max-w-[95vw] max-h-[95vh] shadow-2xl flex flex-col items-center space-y-4 md:space-y-6 relative overflow-auto">
+                    {/* Video Container */}
+                    <div
+                        className="w-full bg-gray-900 rounded-xl overflow-hidden relative"
+                        style={{
+                            aspectRatio: typeof window !== 'undefined' && window.innerWidth < 768 ? 'auto' : '16 / 9',
+                            maxHeight: 'calc(95vh - 200px)',
+                            minHeight: typeof window !== 'undefined' && window.innerWidth < 768 ? 'auto' : '400px',
+                        }}
+                    >
+                        {/* Video element */}
+                        {videoUrl && (
+                            <video
+                                ref={videoRef}
+                                src={videoUrl}
+                                className="w-full h-full object-contain bg-black"
+                                controls={false}
+                                playsInline
+                                autoPlay
+                                muted={false}
+                                loop={true}
+                                style={{
+                                    width: '100%',
+                                    height: typeof window !== 'undefined' && window.innerWidth < 768 ? 'auto' : '100%',
+                                    maxHeight: typeof window !== 'undefined' && window.innerWidth < 768 ? 'calc(95vh - 200px)' : '100%',
+                                    objectFit: 'contain'
+                                }}
+                                onLoadedMetadata={(e) => {
+                                    const video = e.currentTarget;
+                                    const duration = video.duration;
+                                    if (duration && isFinite(duration)) {
+                                        console.log('✅ Video metadata loaded, duration:', duration, 'seconds');
+                                        setVideoDuration(duration);
+
+                                        // Đảm bảo video loop nếu duration < 45s hoặc > 60s
+                                        // (loop đã được set trong props, nhưng đảm bảo nó hoạt động)
+                                        if (duration < 45 || duration > 60) {
+                                            video.loop = true;
+                                        }
+                                    } else {
+                                        console.warn('⚠️ Video duration is not available, using default 45s');
+                                        setVideoDuration(45); // Fallback về 45s (minimum)
+                                    }
+                                }}
+                                onLoadedData={() => {
+                                    console.log('✅ Video loaded');
+                                }}
+                                onPlay={() => {
+                                    console.log('▶️ Video started');
+                                }}
+                                onEnded={() => {
+                                    console.log('✅ Video ended, will loop automatically');
+                                    // Video sẽ tự động phát lại nhờ loop={true}
+                                }}
+                                onError={(e) => {
+                                    console.error('❌ Video error:', e);
+                                    setVideoError('Lỗi phát video');
+                                }}
+                            />
+                        )}
+
+                        {/* Loading overlay - chỉ hiển thị khi đang load */}
+                        {videoLoading && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-10 pointer-events-none">
+                                <div className="text-center space-y-4">
+                                    <Loader2 className="w-12 h-12 text-white/50 mx-auto animate-spin" />
+                                    <p className="text-white/70 text-sm">{t('makeMoney.playVideo.loadingAdVideo') || 'Đang tải quảng cáo video...'}</p>
+                                </div>
                             </div>
                         )}
 
-                        <div className='flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700'>
-                            <Button
-                                variant="outline"
-                                onClick={() => {
-                                    setIsStakingModalOpen(false)
-                                    setStakingAmount('')
-                                    setDebouncedStakingAmount('')
-                                }}
-                                disabled={joinStakingMutation.isPending}
-                                className='flex-1 bg-transparent border border-solid border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-theme-gray-100 dark:hover:bg-theme-gray-100/20 cursor-pointer'
-                            >
-                                {t('makeMoney.cancel')}
-                            </Button>
-                            <Button
-                                onClick={handleJoinStaking}
-                                disabled={joinStakingMutation.isPending || !stakingAmount || parseFloat(stakingAmount || '0') <= 0}
-                                className='flex-1 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer'
-                            >
-                                {joinStakingMutation.isPending ? (
-                                    <>
-                                        <Loader2 className='w-4 h-4 mr-2 animate-spin' />
-                                        {t('makeMoney.processing')}
-                                    </>
-                                ) : (
-                                    t('makeMoney.confirm')
-                                )}
-                            </Button>
-                        </div>
+                        {/* Error message nếu không load được video */}
+                        {videoError && !videoLoading && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-gray-900 z-10">
+                                <div className="text-center space-y-4">
+                                    <p className="text-white/70 text-sm">{t('makeMoney.playVideo.adLoadError') || 'Không thể tải quảng cáo video'}</p>
+                                    <p className="text-white/50 text-xs">{videoError}</p>
+                                </div>
+                            </div>
+                        )}
                     </div>
-                </Modal>
 
-                {/* Base Confirmation Modal */}
-                <Modal
-                    isOpen={isBaseConfirmModalOpen}
-                    onClose={() => setIsBaseConfirmModalOpen(false)}
-                    showCloseButton={false}
-                    maxWidth="max-w-[500px]"
-                    className='p-4'
-                >
-                    <div className='space-y-4'>
-                        <div className='text-center'>
-                            <p className='text-base text-gray-700 dark:text-gray-300 mb-2'>
-                                {t('makeMoney.baseConfirmMessage')} <span className='font-semibold text-theme-red-200 dark:text-[#FE645F]'>{t('makeMoney.basePackage')}</span>?
+                    {/* Countdown text hoặc Button "Hoàn thành" */}
+                    {!showCompleteButton ? (
+                        <div className="w-full text-center">
+                            <p className="text-gray-700 dark:text-gray-300 text-base md:text-lg font-medium">
+                                {t('makeMoney.playVideo.canCompleteAfter', { seconds: videoTimer }) || `Bạn có thể hoàn thành nhiệm vụ sau ${videoTimer}s`}
                             </p>
-                            <p className='text-sm text-gray-500 dark:text-gray-400 mb-4'>
-                                {t('makeMoney.baseConfirmDescription')} <span className='font-medium'>{t('makeMoney.baseConfirmDuration')}</span> {t('makeMoney.baseConfirmRequirement')}
-                            </p>
-                        </div>
-
-                        {/* Thông tin số tiền sẽ stake */}
-                        <div className='space-y-3'>
-                            {/* Tổng số tiền sẽ stake */}
-                            <div className='p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700'>
-                                <div className='flex items-center justify-between'>
-                                    <span className='text-sm font-medium text-blue-600 dark:text-blue-400'>{t('makeMoney.amountLabelConfirm')}</span>
-                                    <span className='text-base font-semibold text-blue-700 dark:text-blue-300'>
-                                        {formatNumber(totalBaseBalance)} USDT
-                                    </span>
-                                </div>
-                            </div>
-                            <div className='p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700'>
-                                <div className='flex items-center justify-between'>
-                                    <span className='text-sm font-medium text-blue-600 dark:text-blue-400'>{t('makeMoney.profitPercent')}:</span>
-                                    <span className='text-base font-semibold text-blue-700 dark:text-blue-300'>
-                                        0.2%
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className='flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700'>
-                            <Button
-                                variant="outline"
-                                onClick={() => setIsBaseConfirmModalOpen(false)}
-                                disabled={joinBaseMutation.isPending}
-                                className='flex-1 bg-transparent border border-solid border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer '
-                            >
-                                {t('makeMoney.cancel')}
-                            </Button>
-                            <Button
-                                onClick={handleConfirmJoinBase}
-                                disabled={joinBaseMutation.isPending}
-                                className='flex-1 bg-gray-100 dark:bg-gray-700 text-theme-red-200 dark:text-[#FE645F] hover:bg-pink-100 dark:hover:bg-pink-900/30 rounded-full border-none hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer '
-                            >
-                                {joinBaseMutation.isPending ? (
-                                    <>
-                                        <Loader2 className='w-4 h-4 mr-2 animate-spin' />
-                                        {t('makeMoney.processing')}
-                                    </>
-                                ) : (
-                                    t('makeMoney.confirm')
-                                )}
-                            </Button>
-                        </div>
-                    </div>
-                </Modal>
-
-                {/* Staking Confirmation Modal */}
-                <Modal
-                    isOpen={isStakingConfirmModalOpen}
-                    onClose={() => setIsStakingConfirmModalOpen(false)}
-                    title={t('makeMoney.stakingConfirmModalTitle')}
-                    maxWidth="max-w-[500px]"
-                >
-                    <div className='space-y-4'>
-                        <div className='space-y-3'>
-                            <p className='text-base text-gray-700 dark:text-gray-300 mb-4 text-center'>
-                                {t('makeMoney.stakingConfirmMessage')}
-                            </p>
-
-                            {/* Thông tin loại gói */}
-                            <div className='p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700'>
-                                <div className='flex items-center justify-between'>
-                                    <span className='text-sm font-medium text-gray-600 dark:text-gray-400'>{t('makeMoney.packageTypeLabel')}</span>
-                                    <span className='text-base font-semibold text-theme-red-200 dark:text-[#FE645F]'>
-                                        {stakingTypeOptions.find(opt => opt.value === stakingType)?.label || stakingType}
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Thông tin số tiền */}
-                            <div className='p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700'>
-                                <div className='flex items-center justify-between'>
-                                    <span className='text-sm font-medium text-gray-600 dark:text-gray-400'>{t('makeMoney.amountLabelConfirm')}</span>
-                                    <span className='text-base font-semibold text-theme-red-200 dark:text-[#FE645F]'>
-                                        {formatNumber(parseFloat(stakingAmount || '0'))} USDT
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Thông tin số dư khả dụng */}
-                            <div className='p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700'>
-                                <div className='flex items-center justify-between'>
-                                    <span className='text-sm font-medium text-gray-600 dark:text-gray-400'>{t('makeMoney.availableBalanceLabel')}</span>
-                                    <span className='text-base font-semibold text-gray-700 dark:text-gray-300'>
-                                        {formatNumber(usdtBalance)} USDT
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Thông tin số dư còn lại sau khi tham gia */}
-                            <div className='p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700'>
-                                <div className='flex items-center justify-between'>
-                                    <span className='text-sm font-medium text-blue-600 dark:text-blue-400'>{t('makeMoney.remainingBalance')}</span>
-                                    <span className='text-base font-semibold text-blue-700 dark:text-blue-300'>
-                                        {formatNumber(usdtBalance - parseFloat(stakingAmount || '0'))} USDT
-                                    </span>
-                                </div>
-                            </div>
-
-                            {/* Thông tin số video cần làm mỗi ngày và số thiết bị */}
-                            {(calculatorConfirmResponse?.data || calculatorResponse?.data) && (
-                                <>
-                                    {isLoadingCalculatorConfirm ? (
-                                        <div className='p-3 bg-gray-50 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700'>
-                                            <div className='flex items-center justify-center gap-2'>
-                                                <Loader2 className='w-4 h-4 animate-spin text-theme-red-200 dark:text-[#FE645F]' />
-                                                <span className='text-sm text-gray-600 dark:text-gray-400'>
-                                                    {t('makeMoney.calculating')}
-                                                </span>
-                                            </div>
-                                        </div>
-                                    ) : (
-                                        <>
-                                            <div className='p-3 bg-green-50 dark:bg-green-900/20 rounded-lg border border-green-200 dark:border-green-700'>
-                                                <div className='flex items-center justify-between'>
-                                                    <span className='text-sm font-medium text-green-600 dark:text-green-400'>
-                                                        {t('makeMoney.videosPerDay')}
-                                                    </span>
-                                                    <span className='text-base font-semibold text-green-700 dark:text-green-300'>
-                                                        {(calculatorConfirmResponse?.data || calculatorResponse?.data)?.videos_per_day}
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            {/* Thông tin số thiết bị */}
-                                            <div className='p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg border border-purple-200 dark:border-purple-700'>
-                                                <div className='flex items-center justify-between'>
-                                                    <span className='text-sm font-medium text-purple-600 dark:text-purple-400'>
-                                                        {t('makeMoney.devices')}
-                                                    </span>
-                                                    <span className='text-base font-semibold text-purple-700 dark:text-purple-300'>
-                                                        {(calculatorConfirmResponse?.data || calculatorResponse?.data)?.devices}
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </>
-                                    )}
-                                </>
-                            )}
-                        </div>
-
-                        <div className='flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700'>
-                            <Button
-                                variant="outline"
-                                onClick={() => setIsStakingConfirmModalOpen(false)}
-                                disabled={joinStakingMutation.isPending}
-                                className='flex-1 bg-transparent border border-solid border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-full hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer '
-                            >
-                                {t('makeMoney.cancel')}
-                            </Button>
-                            <Button
-                                onClick={handleConfirmJoinStaking}
-                                disabled={joinStakingMutation.isPending}
-                                className='flex-1 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer '
-                            >
-                                {joinStakingMutation.isPending ? (
-                                    <>
-                                        <Loader2 className='w-4 h-4 mr-2 animate-spin' />
-                                        {t('makeMoney.processing')}
-                                    </>
-                                ) : (
-                                    t('makeMoney.confirm')
-                                )}
-                            </Button>
-                        </div>
-                    </div>
-                </Modal>
-
-                {/* Insufficient Balance Modal */}
-                <Modal
-                    isOpen={isInsufficientBalanceModalOpen}
-                    onClose={() => setIsInsufficientBalanceModalOpen(false)}
-                    title={t('makeMoney.insufficientBalanceModal.title')}
-                    maxWidth="max-w-[500px]"
-                >
-                    <div className='space-y-4'>
-                        <div className='text-center'>
-                            <div className='mx-auto w-16 h-16 mb-4 bg-yellow-100 dark:bg-yellow-900/30 rounded-full flex items-center justify-center'>
-                                <svg className='w-8 h-8 text-yellow-600 dark:text-yellow-400' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
-                                    <path strokeLinecap='round' strokeLinejoin='round' strokeWidth='2' d='M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z' />
-                                </svg>
-                            </div>
-                            <p className='text-base text-gray-700 dark:text-gray-300 mb-2'>
-                                {t('makeMoney.insufficientBalanceModal.message')}
-                            </p>
-                            <p className='text-sm text-gray-500 dark:text-gray-400'>
-                                {t('makeMoney.insufficientBalanceModal.suggestion')}
-                            </p>
-                        </div>
-
-                        <div className='flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700'>
-                            <Button
-                                onClick={() => router.push('/wallet')}
-                                className='flex-1 bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white rounded-full border-none hover:opacity-90 cursor-pointer'
-                            >
-                                {t('makeMoney.insufficientBalanceModal.goToWallet')}
-                            </Button>
-                        </div>
-                    </div>
-                </Modal>
-
-                {/* All Packages Table Section */}
-                <h2 className='text-lg sm:text-xl font-bold text-theme-red-100 dark:text-[#FE645F] mb-3 sm:mb-4 mt-6 sm:mt-8'>{t('makeMoney.packagesTableTitle')}</h2>
-                <div className=' border-none'>
-                    {isLoadingCurrentStaking || isLoadingHistories ? (
-                        <div className='space-y-2 sm:space-y-3'>
-                            <Skeleton className="h-12 sm:h-16 w-full rounded-lg" />
-                            <Skeleton className="h-12 sm:h-16 w-full rounded-lg" />
-                            <Skeleton className="h-12 sm:h-16 w-full rounded-lg" />
-                        </div>
-                    ) : allPackages.length === 0 ? (
-                        <div className='text-center py-6 sm:py-8 text-gray-500 dark:text-gray-400'>
-                            <p className='text-sm sm:text-base'>{t('makeMoney.noPackages')}</p>
                         </div>
                     ) : (
-                        <>
-                            {/* Mobile Card Layout */}
-                            <div className="block sm:hidden space-y-3">
-                                {allPackages.map((pkg, index) => (
-                                    <div
-                                        key={pkg.id}
-                                        onClick={() => router.push(`/make-money/${pkg.id}`)}
-                                        className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-[#FE645F] p-3 shadow-sm cursor-pointer hover:opacity-90 transition-opacity"
-                                    >
-                                        <div className="flex items-center justify-between mb-2">
-                                            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">{t('makeMoney.packageNumber')}{index + 1}</span>
-                                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${pkg.status === 'running'
-                                                ? 'bg-gray-400 text-white'
-                                                : pkg.status === 'pending-claim'
-                                                    ? 'bg-yellow-500 text-white'
-                                                    : 'bg-gray-500 text-white'
-                                                }`}>
-                                                {getStatusText(pkg.status)}
-                                            </span>
-                                        </div>
-
-                                        <div className="space-y-2">
-                                            <div className="flex items-center justify-between">
-                                                <span className="text-xs text-gray-600 dark:text-gray-300">{t('makeMoney.stakingTypeLabel')}</span>
-                                                <span className="px-2 py-0.5 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-full text-xs font-medium">
-                                                    {getTypeDurationLabel(pkg.type)}
-                                                </span>
-                                            </div>
-
-                                            <div className="flex items-center justify-between">
-                                                <span className="text-xs text-gray-600 dark:text-gray-300">{t('makeMoney.typeLabel')}</span>
-                                                <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${pkg.amount > 10
-                                                    ? 'bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white'
-                                                    : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
-                                                    }`}>
-                                                    {pkg.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}
-                                                </span>
-                                            </div>
-
-                                            <div className="flex items-center justify-between">
-                                                <span className="text-xs text-gray-600 dark:text-gray-300">{t('makeMoney.amount')}:</span>
-                                                <span className="text-xs font-semibold text-red-600 dark:text-[#FE645F]">{formatNumber(pkg.amount)} USDT</span>
-                                            </div>
-
-                                            <div className="flex items-start justify-between">
-                                                <span className="text-xs text-gray-600 dark:text-gray-300">{t('makeMoney.participationTimeLabel')}</span>
-                                                <span className="text-[10px] text-gray-700 dark:text-gray-300 text-right flex-1 ml-2">{formatParticipationTime(pkg.date_start)}</span>
-                                            </div>
-
-                                            <div className="flex items-center justify-between pt-1 border-t border-gray-100 dark:border-gray-700">
-                                                <span className="text-xs text-gray-600 dark:text-gray-300">{t('makeMoney.totalRewardLabel')}</span>
-                                                {pkg.status === 'running' ? (
-                                                    <span className="text-xs text-gray-500 dark:text-gray-400">--</span>
-                                                ) : (
-                                                    <span className="text-xs font-semibold text-green-600 dark:text-green-400">{formatNumber(getRewardAmount(pkg))} USDT</span>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-
-                            {/* Desktop Table Layout */}
-                            <div className="hidden sm:block overflow-hidden rounded-md bg-transparent border border-none">
-                                {/* Fixed Header */}
-                                <div className="overflow-hidden rounded-t-md">
-                                    <table className={tableStyles}>
-                                        <thead>
-                                            <tr>
-                                                <th className={`${tableHeaderStyles} w-[5%] text-left rounded-l-lg`}>{t('wallet.tableHeaders.stt')}</th>
-                                                <th className={`${tableHeaderStyles} w-[12%]`}>{t('makeMoney.packageTypeColumn')}</th>
-                                                <th className={`${tableHeaderStyles} w-[10%]`}>{t('makeMoney.typeColumn')}</th>
-                                                <th className={`${tableHeaderStyles} w-[12%]`}>{t('makeMoney.amountColumn')}</th>
-                                                <th className={`${tableHeaderStyles} w-[15%]`}>{t('makeMoney.participationTimeColumn')}</th>
-                                                <th className={`${tableHeaderStyles} w-[12%]`}>{t('makeMoney.totalRewardColumn')}</th>
-                                                <th className={`${tableHeaderStyles} w-[12%]`}>{t('makeMoney.statusColumn')}</th>
-                                            </tr>
-                                        </thead>
-                                    </table>
-                                </div>
-
-                                {/* Scrollable Body */}
-                                <div className={tableContainerStyles} ref={tableRef}>
-                                    <table className={tableStyles}>
-                                        <tbody>
-                                            {allPackages.map((pkg, index) => (
-                                                <tr
-                                                    key={pkg.id}
-                                                    onClick={() => pkg.status !== 'running' ? router.push(`/make-money/${pkg.id}`) : undefined}
-                                                    className="group transition-colors cursor-pointer hover:opacity-90"
-                                                >
-                                                    <td className={`${tableCellStyles} ${pkg.status === 'running' && "group-hover:!bg-transparent cursor-not-allowed"} w-[5%] text-left !pl-4 rounded-l-lg border-l border-r-0 border-theme-gray-100 border-solid`}>
-                                                        {index + 1}
-                                                    </td>
-                                                    <td className={`${tableCellStyles} ${pkg.status === 'running' && "group-hover:!bg-transparent cursor-not-allowed"} w-[12%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                        <span className="px-3 py-1 bg-pink-100 dark:bg-pink-900/30 text-pink-700 dark:text-pink-300 rounded-full text-sm font-medium">
-                                                            {getTypeDurationLabel(pkg.type)}
-                                                        </span>
-                                                    </td>
-                                                    <td className={`${tableCellStyles} ${pkg.status === 'running' && "group-hover:!bg-transparent cursor-not-allowed"} w-[10%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                        <span className={`px-3 py-1 rounded-full text-sm font-semibold ${pkg.amount > 10
-                                                            ? 'bg-gradient-to-r from-fuchsia-600 via-rose-500 to-indigo-500 text-white'
-                                                            : 'bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300'
-                                                            }`}>
-                                                            {pkg.amount > 10 ? t('makeMoney.stakingTitle') : t('makeMoney.baseTitle')}
-                                                        </span>
-                                                    </td>
-                                                    <td className={`${tableCellStyles} ${pkg.status === 'running' && "group-hover:!bg-transparent cursor-not-allowed"} w-[12%] border-x-0 border-theme-gray-100 border-solid font-semibold text-red-600 dark:text-[#FE645F]`}>
-                                                        {formatNumber(pkg.amount)} USDT
-                                                    </td>
-                                                    <td className={`${tableCellStyles} ${pkg.status === 'running' && "group-hover:!bg-transparent cursor-not-allowed"} w-[15%] border-x-0 border-theme-gray-100 border-solid`}>
-                                                        {formatParticipationTime(pkg.date_start)}
-                                                    </td>
-                                                    <td className={`${tableCellStyles} ${pkg.status === 'running' && "group-hover:!bg-transparent cursor-not-allowed"} w-[12%] border-x-0 border-theme-gray-100 border-solid font-semibold`}>
-                                                        {pkg.status === 'running' ? (
-                                                            <span className="text-gray-500 dark:text-gray-400">--</span>
-                                                        ) : (
-                                                            <span className="text-green-600 dark:text-green-400">{formatNumber(getRewardAmount(pkg))} USDT</span>
-                                                        )}
-                                                    </td>
-                                                    <td className={`${tableCellStyles} ${pkg.status === 'running' && "group-hover:!bg-transparent cursor-not-allowed"} w-[12%] border-x-0 border-r rounded-r-lg border-theme-gray-100 border-solid`}>
-                                                        <span className={`px-3 py-1 rounded-full text-xs font-medium ${pkg.status === 'running'
-                                                            ? 'bg-gray-400 text-white'
-                                                            : pkg.status === 'pending-claim'
-                                                                ? 'bg-yellow-500 text-white'
-                                                                : 'bg-green-500 text-white'
-                                                            }`}>
-                                                            {getStatusText(pkg.status)}
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </>
+                        <Button
+                            onClick={handleCompleteVideo}
+                            disabled={watchVideoMutation.isPending}
+                            className="w-auto min-w-[200px] px-8 bg-gradient-primary hover:from-blue-700 hover:to-purple-700 text-white rounded-[2rem] h-12 md:h-14 text-base md:text-lg font-bold shadow-xl hover:scale-[1.02] transition-all duration-300 border-none"
+                        >
+                            {watchVideoMutation.isPending ? (
+                                <>
+                                    <Loader2 className="w-5 h-5 animate-spin mr-2" />
+                                    {t('makeMoney.playVideo.processing') || 'Đang xử lý...'}
+                                </>
+                            ) : (
+                                t('makeMoney.playVideo.complete') || 'Hoàn thành'
+                            )}
+                        </Button>
                     )}
                 </div>
             </div>
+        );
+    }
+
+    // Render Main Screen (Idle or Completed)
+    return (
+        <div className="w-full min-h-screen bg-[radial-gradient(100%_100%_at_50%_0%,_#45a6e7_0%,_#e1e7ec_50%,_#a979da_100%)]   dark:bg-[radial-gradient(100%_100%_at_50%_0%,_#3387ba_0%,_#cfcccc_50%,_#753c95_100%)]  flex flex-col items-center justify-between py-32 px-6 relative overflow-hidden">
+            {/* Background Decor */}
+            <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-320/30 rounded-full blur-[100px] pointer-events-none" />
+            <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-purple-200/30 rounded-full blur-[100px] pointer-events-none" />
+
+            {/* Top Content */}
+            <div className="w-full max-w-md flex flex-col items-center z-10 pt-0 md:pt-20">
+                {/* Logo Area */}
+                <div className="relative mb-4 md:mb-6">
+                    <img src="/logo.png" alt="logo" className="w-16 md:w-32 h-16 md:h-32 object-contain" />
+                </div>
+
+                {/* Status Section */}
+                <div className="flex flex-col items-center space-y-4 w-full md:space-y-6">
+                    {/* Progress Pill */}
+                    <div className="bg-white dark:bg-gray-800 rounded-full px-8 py-2 shadow-lg shadow-blue-100 dark:shadow-none flex items-center gap-2 transform transition-all hover:scale-105">
+                        <span className="text-slate-600 dark:text-slate-300 font-medium whitespace-nowrap">
+                            {t('makeMoney.playVideo.watched')}
+                        </span>
+                        <span className={`font-semibold text-lg ${isCompleted ? 'text-green-500' : 'text-[#ef4444]'}`}>
+                            {missionData?.turn_day || 0}/{missionData?.turn_setting || 10}
+                        </span>
+                        <span className="text-slate-600 dark:text-slate-300 font-medium">
+                            {t('makeMoney.playVideo.video')}
+                        </span>
+                    </div>
+
+                    {/* Devices Info */}
+                    {!isCompleted && (
+                        <div className="flex items-center gap-2 text-theme-red-200 font-semibold bg-transparent px-4 py-2 rounded-lg">
+                            <Eye className="w-6 h-6" />
+                            <span className="text-base">
+                                {(missionData?.devices || 20) > 0 ? missionData?.devices : 20} {t('makeMoney.playVideo.devicesWatching')}
+                            </span>
+                        </div>
+                    )}
+                </div>
+            </div>
+            {isCompleted && (
+                <div className="w-full max-w-md z-10 pb-6 flex flex-col gap-5 justify-center items-center">
+                    <img src="/complete.png" alt="completed" className="w-52 h-auto object-contain" />
+                    <p className="text-red-500 font-semibold text-sm px-10 text-center"> {t('makeMoney.playVideo.readyToClaim')} </p>
+                </div>
+            )}
+            {/* Bottom Action */}
+            <div className="w-full max-w-md z-10 pb-6 flex justify-center items-center">
+                {isCompleted ? (
+                    !isClaimedLocal && (
+                        <Button
+                            onClick={handleClaimReward}
+                            disabled={claimDayMutation.isPending}
+                            className="w-full bg-gradient-primary hover:from-emerald-600 hover:to-teal-700 text-white rounded-[2rem] h-10 md:h-16 text-sm md:text-xl font-bold shadow-xl shadow-emerald-500/30 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border-none cursor-pointer"
+                        >
+                            {claimDayMutation.isPending ? (
+                                <Loader2 className="w-6 h-6 animate-spin mr-2" />
+                            ) : (
+                                <Gift className="w-6 h-6 mr-2 mb-1" />
+                            )}
+                            {t('makeMoney.playVideo.claimReward')}
+                        </Button>
+                    )
+                ) : (
+                    <Button
+                        onClick={handleWatchVideo}
+                        className="md:w-full px-10 bg-gradient-primary hover:from-[#2563eb] hover:via-[#4f46e5] hover:to-[#7c3aed] text-white rounded-[2rem] h-10 md:h-16 text-sm md:text-xl font-bold shadow-xl shadow-blue-500/30 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border-none cursor-pointer"
+                    >
+                        {t('makeMoney.playVideo.watchVideo').toUpperCase()}
+                    </Button>
+                )}
+
+            </div>
+
+            {/* Connecting Modal Overlay - Popup "Đang kết nối đến {x} thiết bị cùng xem" */}
+            {viewState === 'connecting' && (
+                <div className="fixed inset-0 z-[9998] flex items-center justify-center bg-black/80 backdrop-blur-sm p-2 md:p-4">
+                    <div className="bg-white dark:bg-gray-800 rounded-3xl p-4 md:p-6 w-auto max-w-[95vw] max-h-[95vh] shadow-2xl flex flex-col items-center space-y-4 md:space-y-6 relative overflow-auto animate-in fade-in zoom-in duration-300">
+                        <div className="text-center space-y-2">
+                            <h3 className="dark:text-blue-500 text-black text-lg font-bold">
+                                {t('makeMoney.playVideo.connectingDevices', { count: devicesCount })}
+                            </h3>
+                        </div>
+
+                        <div className="relative w-full h-32 flex items-center justify-center">
+                            {/* Phone Outline */}
+                            <img src="/phone.png" alt="phone" className="w-32 h-32 object-contain" />
+
+                            {/* Eye Icon inside */}
+                            <div className="absolute inset-0 flex items-center justify-center">
+                                <div className="bg-gradient-to-r from-blue-500 to-purple-500 rounded-full p-2 shadow-lg">
+                                    <Eye className="w-6 h-6 text-white" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="w-12 h-12">
+                            <Loader2 className="w-full h-full text-purple-500 animate-spin" />
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* No Staking Modal */}
+            <Modal
+                isOpen={showNoStakingModal}
+                onClose={() => setShowNoStakingModal(false)}
+                showCloseButton={false}
+            >
+                <div className="flex flex-col items-center space-y-6 text-center">
+                    <p className="text-gray-700 dark:text-gray-300">
+                        {(t('makeMoney.playVideo.noStakingMessage'))}
+                    </p>
+                    <Button
+                        onClick={() => router.push('/make-money')}
+                        className="w-full bg-gradient-primary text-white rounded-[2rem] h-10 text-base font-bold shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] border-none cursor-pointer"
+                    >
+                        {t('staking.joinNow')}
+                    </Button>
+                </div>
+            </Modal>
         </div>
-    )
+    );
 }
